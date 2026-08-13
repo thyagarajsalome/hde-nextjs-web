@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { HeroService, HeroBanner } from "../../services/heroService";
 import { useGSAPHeroParallax } from "../../hooks/useGSAP";
 
