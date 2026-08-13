@@ -11,6 +11,7 @@ import InteriorCalculator from "@/features/construction/InteriorCalculator";
 import DoorsWindowsCalculator from "@/features/construction/DoorsWindowsCalculator";
 import MaterialQuantityCalculator from "@/features/construction/MaterialQuantityCalculator";
 import { useUser } from "@/context/UserContext";
+import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 
 type CalculatorType =
   | "construction"
@@ -40,6 +41,8 @@ export default function CalculatorFeature() {
     }
   };
 
+  const { panelRef } = useGSAPTabSwitch(activeCalculator);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl" id="tools">
       {/* Service Disclaimer Notice */}
@@ -61,7 +64,7 @@ export default function CalculatorFeature() {
         hasPaid={hasPaid}
       />
 
-      <div className="mt-8 min-h-[600px]">
+      <div ref={panelRef} className="mt-8 min-h-[600px]">
         {renderCalculator()}
       </div>
     </div>
