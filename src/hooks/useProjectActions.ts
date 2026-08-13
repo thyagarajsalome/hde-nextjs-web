@@ -267,7 +267,7 @@ export const useProjectActions = (projectType: string) => {
           doc.setTextColor(150, 150, 150);
           doc.text("Thank you for using Home Design English. This estimate is for reference based on local market factors.", 14, pageHeight - 10);
           
-          const pageStr = "Page " + doc.internal.getNumberOfPages();
+          const pageStr = "Page " + doc.getNumberOfPages();
           doc.text(pageStr, pageWidth - 14 - doc.getTextWidth(pageStr), pageHeight - 10);
         }
       });
