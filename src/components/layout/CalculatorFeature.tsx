@@ -10,8 +10,10 @@ import ElectricalCalculator from "@/features/construction/ElectricalCalculator";
 import InteriorCalculator from "@/features/construction/InteriorCalculator";
 import DoorsWindowsCalculator from "@/features/construction/DoorsWindowsCalculator";
 import MaterialQuantityCalculator from "@/features/construction/MaterialQuantityCalculator";
+import USAFramingCalculator from "@/features/construction/USAFramingCalculator";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
+import { useRegion } from "@/context/RegionContext";
 
 type CalculatorType =
   | "construction"
@@ -21,15 +23,18 @@ type CalculatorType =
   | "painting"
   | "plumbing"
   | "electrical"
-  | "materials";
+  | "materials"
+  | "usa-framing";
 
 export default function CalculatorFeature() {
   const { hasPaid } = useUser();
+  const { region } = useRegion();
   const [activeCalculator, setActiveCalculator] = useState<CalculatorType>("construction");
 
   const renderCalculator = () => {
     switch (activeCalculator) {
       case "construction":  return <ConstructionCalculator />;
+      case "usa-framing":   return <USAFramingCalculator />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
       case "doors-windows": return <DoorsWindowsCalculator hasPaid={hasPaid} />;
@@ -37,7 +42,7 @@ export default function CalculatorFeature() {
       case "painting":      return <PaintingCalculator />;
       case "plumbing":      return <PlumbingCalculator />;
       case "electrical":    return <ElectricalCalculator />;
-      default:              return <ConstructionCalculator />;
+      default:              return region === 'US' ? <USAFramingCalculator /> : <ConstructionCalculator />;
     }
   };
 

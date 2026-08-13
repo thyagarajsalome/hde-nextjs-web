@@ -1,17 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
+import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
   setActiveCalculator: (calculator: CalculatorType) => void;
-  hasPaid: boolean; // Add this line here
+  hasPaid: boolean;
 }
 
-const CALCULATORS: { id: CalculatorType; name: string; icon: string; reqTier: number }[] = [
+const INDIA_CALCULATORS = [
   { id: "construction",  name: "Construction",   icon: "fas fa-home",        reqTier: 0 },
   { id: "interior",      name: "Interiors",      icon: "fas fa-couch",       reqTier: 1 },
   { id: "flooring",      name: "Flooring",       icon: "fas fa-layer-group", reqTier: 1 },
@@ -20,12 +21,29 @@ const CALCULATORS: { id: CalculatorType; name: string; icon: string; reqTier: nu
   { id: "plumbing",      name: "Plumbing",       icon: "fas fa-bath",        reqTier: 2 },
   { id: "electrical",    name: "Electrical",     icon: "fas fa-bolt",        reqTier: 2 },
   { id: "materials",     name: "Materials BOQ",  icon: "fas fa-cubes",       reqTier: 3 },
-];
+] as const;
+
+const USA_CALCULATORS = [
+  { id: "usa-framing",   name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "painting",      name: "Painting",          icon: "fas fa-paint-roller",reqTier: 1 },
+] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
   const { tierValue } = useUser();
+  const { region } = useRegion();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useRouter();
+
+  const CALCULATORS = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
+
+  useEffect(() => {
+    // If we switched regions, ensure the active calculator is valid for this region
+    if (region === 'US' && activeCalculator !== 'usa-framing' && activeCalculator !== 'painting') {
+      setActiveCalculator('usa-framing');
+    } else if (region === 'IN' && activeCalculator === 'usa-framing') {
+      setActiveCalculator('construction');
+    }
+  }, [region, activeCalculator, setActiveCalculator]);
 
   const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
 
@@ -58,7 +76,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
             {CALCULATORS.map((calc) => (
               <button
                 key={calc.id}
-                onClick={() => handleTabClick(calc.id, calc.reqTier)}
+                onClick={() => handleTabClick(calc.id as CalculatorType, calc.reqTier)}
                 className={`w-full flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-zinc-800 last:border-none hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors
                   ${activeCalculator === calc.id ? "bg-primary/10" : ""}`}
               >
@@ -82,7 +100,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           return (
             <button
               key={id}
-              onClick={() => handleTabClick(id, reqTier)}
+              onClick={() => handleTabClick(id as CalculatorType, reqTier)}
               className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-200 border-2
                 ${isActive ? "bg-white dark:bg-zinc-900 text-secondary dark:text-zinc-100 border-primary shadow-md scale-[1.02]" : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 border-gray-100 dark:border-zinc-800 hover:border-primary/30 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}
                 ${isLocked ? "opacity-80" : ""}`}
