@@ -95,7 +95,9 @@ export const useProjectActions = (projectType: string) => {
     showToast("Generating PDF...", "info");
     
     try {
-      const html2canvas = (await import("html2canvas")).default;`n      const jsPDF = (await import("jspdf")).default;`n      const canvas = await html2canvas(elementRef.current, { scale: 2, useCORS: true });
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+      const canvas = await html2canvas(elementRef.current, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
