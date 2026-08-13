@@ -24,8 +24,8 @@ const INDIA_CALCULATORS = [
 ] as const;
 
 const USA_CALCULATORS = [
+  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
   { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
-  { id: "usa-roofing" | "usa-accent-wall", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
   { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
 ] as const;
 
