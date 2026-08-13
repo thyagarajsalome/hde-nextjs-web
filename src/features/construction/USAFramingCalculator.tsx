@@ -1,7 +1,26 @@
 "use client";
 import React, { useState } from "react";
-import { CostCard } from "../../components/ui/CostCard";
+const CostCard = ({ title, amount, icon, color, subtitle, prefix }: any) => {
+  const colorClasses: Record<string, string> = {
+    emerald: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400",
+    blue: "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400",
+    amber: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400",
+    gray: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  };
 
+  return (
+    <div className="bg-gray-50 dark:bg-zinc-950 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 flex items-center gap-4">
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-inner ${colorClasses[color] || colorClasses.gray}`}>
+        <i className={`fas ${icon}`}></i>
+      </div>
+      <div>
+        <p className="text-sm font-bold text-gray-500 dark:text-zinc-400">{title}</p>
+        <p className="text-xl font-black text-gray-900 dark:text-zinc-100">{prefix}{amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+        <p className="text-xs font-medium text-gray-400 dark:text-zinc-500">{subtitle}</p>
+      </div>
+    </div>
+  );
+};
 export default function USAFramingCalculator() {
   const [length, setLength] = useState<number>(20);
   const [width, setWidth] = useState<number>(15);
