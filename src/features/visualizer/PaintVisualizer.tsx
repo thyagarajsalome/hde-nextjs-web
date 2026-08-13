@@ -128,7 +128,7 @@ export default function PaintVisualizer() {
 
           {/* Color Grid */}
           <div className="p-4 flex-grow overflow-y-auto">
-            <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-4 xl:grid-cols-5 gap-2 lg:gap-3">
+            <div className="grid grid-cols-8 sm:grid-cols-10 lg:grid-cols-6 xl:grid-cols-8 gap-2 lg:gap-3">
               {availableColors.map(colorId => (
                 <button
                   key={colorId}
