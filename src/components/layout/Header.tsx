@@ -88,6 +88,22 @@ const Header = () => {
       {menuOpen && (
         <div className="md:hidden bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 absolute w-full left-0 shadow-lg">
           <div className="px-4 pt-2 pb-4 space-y-2 flex flex-col">
+            {/* Mobile Region Selector */}
+            <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 mb-4 shadow-inner">
+              <button 
+                onClick={() => { setRegion('IN'); setMenuOpen(false); }}
+                className={`flex-1 px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+              >
+                🇮🇳 India
+              </button>
+              <button 
+                onClick={() => { setRegion('US'); setMenuOpen(false); }}
+                className={`flex-1 px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+              >
+                🇺🇸 USA
+              </button>
+            </div>
+
             <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
