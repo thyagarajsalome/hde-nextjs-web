@@ -95,7 +95,7 @@ export const useProjectActions = (projectType: string) => {
     showToast("Generating PDF...", "info");
     
     try {
-      const canvas = await html2canvas(elementRef.current, { scale: 2, useCORS: true });
+      const html2canvas = (await import("html2canvas")).default;`n      const jsPDF = (await import("jspdf")).default;`n      const canvas = await html2canvas(elementRef.current, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -149,7 +149,7 @@ export const useProjectActions = (projectType: string) => {
   };
 
   // --- 3. NEW UNIVERSAL SPREADSHEET-STYLE PDF ---
-  const downloadSpreadsheetPDF = (
+  const downloadSpreadsheetPDF = async (
     projectName: string, 
     headers: string[], 
     rows: (string | number)[][], 
@@ -160,6 +160,8 @@ export const useProjectActions = (projectType: string) => {
     setIsDownloading(true);
     showToast("Generating PDF...", "info");
     try {
+      const jsPDF = (await import("jspdf")).default;
+      const autoTable = (await import("jspdf-autotable")).default;
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
