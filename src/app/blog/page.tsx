@@ -19,7 +19,7 @@ export default function BlogIndex() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {posts.map((post) => (
-          <Link href={/blog/ + post.slug} key={post.slug} className="group">
+          <Link href={`/blog/${post.slug}`} key={post.slug} className="group">
             <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 h-full flex flex-col">
               <span className="text-primary text-sm font-bold mb-2 block">{post.meta.category}</span>
               <h2 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">{post.meta.title}</h2>
