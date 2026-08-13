@@ -42,7 +42,11 @@ export default function PaintVisualizer() {
                   setCurrentRoom(room);
                   setCurrentColor(null);
                 }}
-                className={\px-4 py-2 rounded-full text-sm font-bold transition-all \\}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  currentRoom.id === room.id
+                    ? 'bg-primary text-white shadow-md'
+                    : 'text-gray-600 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800'
+                }`}
               >
                 {room.label}
               </button>
@@ -53,7 +57,7 @@ export default function PaintVisualizer() {
           <div className="relative w-full aspect-[4/3] flex-grow">
             {/* Base Room Image */}
             <img 
-              src={\\/base.jpg\}
+              src={`${currentRoom.basePath}/base.jpg`}
               alt="Base Room"
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -61,7 +65,7 @@ export default function PaintVisualizer() {
             {/* Color Overlay */}
             {currentColor && (
               <img 
-                src={\\/\.jpg\}
+                src={`${currentRoom.basePath}/${currentColor}.jpg`}
                 alt="Color Overlay"
                 className="absolute inset-0 w-full h-full object-cover mix-blend-multiply transition-opacity duration-300"
               />
@@ -123,9 +127,11 @@ export default function PaintVisualizer() {
                 <button
                   key={colorId}
                   onClick={() => setCurrentColor(colorId)}
-                  className={\spect-square rounded-full transition-transform hover:scale-110 shadow-sm border-2 \\}
+                  className={`aspect-square rounded-full transition-transform hover:scale-110 shadow-sm border-2 ${
+                    currentColor === colorId ? 'border-primary ring-2 ring-primary/30' : 'border-transparent'
+                  }`}
                   style={{ backgroundColor: colors[colorId] }}
-                  title={\Color \\}
+                  title={`Color ${colorId}`}
                 />
               ))}
             </div>
