@@ -154,102 +154,143 @@ export const useProjectActions = (projectType: string) => {
     headers: string[], 
     rows: (string | number)[][], 
     footerLabel?: string, 
-    footerValue?: string | number
+    footerValue?: string | number,
+    projectSpecs: string[] = []
   ) => {
     setIsDownloading(true);
     showToast("Generating PDF...", "info");
     try {
       const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
 
-      // Top brand accent line (HDE Gold / Amber)
-      doc.setDrawColor(217, 164, 67);
-      doc.setLineWidth(1.5);
-      doc.line(14, 12, 196, 12);
-
-      // Header Brand
+      // --- Watermark ---
+      doc.setTextColor(245, 245, 245);
+      doc.setFontSize(60);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9);
-      doc.setTextColor(150, 150, 150);
-      doc.text("HOME DESIGN ENGLISH (HDE)", 14, 18);
+      // Rotate text for diagonal watermark
+      doc.text("HOME DESIGN ENGLISH", pageWidth / 2, pageHeight / 2, { angle: 45, align: "center" });
       
-      const categoryLabel = `ESTIMATE REPORT - ${projectType.toUpperCase()}`;
-      doc.text(categoryLabel, 196 - doc.getTextWidth(categoryLabel), 18);
+      // --- Header Brand ---
+      doc.setDrawColor(217, 164, 67); // Gold accent
+      doc.setLineWidth(2);
+      doc.line(14, 15, pageWidth - 14, 15);
 
-      // Estimate Title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(30, 30, 30);
+      doc.text("HDE", 14, 25);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      doc.text("Home Design English", 26, 25);
+      
+      doc.setFontSize(9);
+      doc.text("www.homedesignenglish.com", 14, 30);
+      doc.text("Email: support@homedesignenglish.com", 14, 35);
+      
+      const categoryLabel = `ESTIMATE REPORT`;
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(217, 164, 67);
+      doc.text(categoryLabel, pageWidth - 14 - doc.getTextWidth(categoryLabel), 25);
+      
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(100, 100, 100);
+      doc.text(projectType.toUpperCase(), pageWidth - 14 - doc.getTextWidth(projectType.toUpperCase()), 30);
+
+      // --- Estimate Title ---
       const titleText = projectName
         .replace(/-/g, " ")
         .replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
-      doc.setFontSize(18);
+      doc.setFontSize(16);
       doc.setTextColor(30, 30, 30);
-      doc.text(titleText, 14, 28);
+      doc.setFont("helvetica", "bold");
+      doc.text(titleText, 14, 48);
 
-      // Metadata Block
+      // --- Metadata Block ---
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Date: ${new Date().toLocaleDateString("en-IN")}`, 14, 34);
+      doc.setTextColor(80, 80, 80);
+      doc.text(`Date: ${new Date().toLocaleDateString("en-IN")}`, 14, 54);
+      
+      let specY = 59;
+      if (projectSpecs.length > 0) {
+        projectSpecs.forEach(spec => {
+          doc.text(spec, 14, specY);
+          specY += 5;
+        });
+      }
 
       // Horizontal Divider
       doc.setDrawColor(230, 230, 230);
       doc.setLineWidth(0.5);
-      doc.line(14, 37, 196, 37);
+      doc.line(14, specY + 2, pageWidth - 14, specY + 2);
 
       let footData = undefined;
       if (footerLabel && footerValue !== undefined) {
-        const footRow = Array(headers.length).fill('');
+        const footRow = Array(headers.length).fill("");
         footRow[headers.length - 2] = footerLabel;
         footRow[headers.length - 1] = footerValue.toString();
         footData = [footRow];
       }
 
       autoTable(doc, {
-        startY: 42,
+        startY: specY + 8,
         head: [headers],
         body: rows,
-        theme: 'striped', 
+        theme: "striped", 
         styles: {
-          font: 'helvetica',
+          font: "helvetica",
           fontSize: 9,
-          cellPadding: 4,
+          cellPadding: 5,
           textColor: [40, 40, 40], 
         },
         headStyles: {
           fillColor: [30, 30, 30], 
           textColor: [255, 255, 255],
-          fontStyle: 'bold',
+          fontStyle: "bold",
         },
         columnStyles: {
-          [headers.length - 1]: { halign: 'right' }
+          [headers.length - 1]: { halign: "right", fontStyle: "bold" }
         },
         foot: footData,
         footStyles: {
           fillColor: [245, 245, 245],
           textColor: [30, 30, 30],
-          fontStyle: 'bold',
+          fontStyle: "bold",
+        },
+        // Add Page Numbers in Footer
+        didDrawPage: function (data) {
+          doc.setFontSize(8);
+          doc.setFont("helvetica", "italic");
+          doc.setTextColor(150, 150, 150);
+          doc.text("Thank you for using Home Design English. This estimate is for reference based on local market factors.", 14, pageHeight - 10);
+          
+          const pageStr = "Page " + doc.internal.getNumberOfPages();
+          doc.text(pageStr, pageWidth - 14 - doc.getTextWidth(pageStr), pageHeight - 10);
         }
       });
 
-      // Amount in Words
-      const finalY = (doc as any).lastAutoTable.finalY || 42;
-      if (footerValue) {
+      // Amount in Words (Highlighted Box)
+      const finalY = (doc as any).lastAutoTable.finalY || specY + 8;
+      if (footerValue && finalY + 25 < pageHeight) {
+        doc.setDrawColor(217, 164, 67);
+        doc.setFillColor(255, 253, 245);
+        doc.roundedRect(14, finalY + 8, pageWidth - 28, 18, 2, 2, "FD");
+
         doc.setFontSize(9);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(30, 30, 30);
-        
         const words = convertNumberToWords(footerValue);
-        doc.text(`Amount in Words:`, 14, finalY + 12);
+        doc.text(`Total Amount in Words:`, 18, finalY + 14);
+        
         doc.setFont("helvetica", "normal");
-        doc.setTextColor(80, 80, 80);
-        doc.text(words, 14, finalY + 17);
+        doc.setTextColor(60, 60, 60);
+        doc.text(words, 18, finalY + 21);
       }
 
-      // Footer
-      doc.setFontSize(8);
-      doc.setFont("helvetica", "italic");
-      doc.setTextColor(150, 150, 150);
-      doc.text("Thank you for using Home Design English. This estimate is for reference based on local market factors.", 14, 285);
-
-      doc.save(`${projectName.replace(/\s+/g, '-')}.pdf`);
+      doc.save(`${projectName.replace(/\s+/g, "-")}.pdf`);
       showToast("PDF downloaded successfully!", "success");
 
     } catch (error) {
