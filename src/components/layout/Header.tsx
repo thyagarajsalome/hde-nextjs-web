@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { supabase } from "../../config/supabaseClient";
+import { useRegion } from "../../context/RegionContext";
 
 const Header = () => {
   const { user, hasPaid, signOut } = useUser();
+  const { region, setRegion } = useRegion();
   const navigate = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -56,6 +58,22 @@ const Header = () => {
                 Sign In
               </Link>
             )}
+            
+            {/* Region Selector */}
+            <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 ml-4 shadow-inner">
+              <button 
+                onClick={() => setRegion('IN')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+              >
+                🇮🇳 IND
+              </button>
+              <button 
+                onClick={() => setRegion('US')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+              >
+                🇺🇸 USA
+              </button>
+            </div>
           </nav>
 
           <div className="md:hidden flex items-center">

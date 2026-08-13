@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
-import '../styles/global.css'; // Assuming you have a global CSS file, Next.js usually uses globals.css
+import '../styles/global.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { UserProvider } from '@/context/UserContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { RegionProvider } from '@/context/RegionContext';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'HDE - Dream Home Construction & Interior Cost Calculator',
-  description: 'Calculate your dream home construction, materials BOQ, interior design, flooring, and MEP utility costs in India accurately.',
+  description: 'Calculate your dream home construction, materials BOQ, interior design, flooring, and MEP utility costs accurately.',
 };
 
 export default function RootLayout({
@@ -25,13 +26,15 @@ export default function RootLayout({
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
         <ToastProvider>
           <UserProvider>
-            <div className="flex flex-col min-h-screen bg-gray-50">
-              <Header />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <RegionProvider>
+              <div className="flex flex-col min-h-screen bg-gray-50">
+                <Header />
+                <main className="flex-grow">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </RegionProvider>
           </UserProvider>
         </ToastProvider>
       </body>
