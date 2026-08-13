@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -24,7 +24,8 @@ const INDIA_CALCULATORS = [
 ] as const;
 
 const USA_CALCULATORS = [
-  { id: "usa-framing",   name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
+  { id: "usa-framing" | "usa-roofing",   name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
 ] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {

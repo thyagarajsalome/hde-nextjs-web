@@ -11,6 +11,7 @@ import InteriorCalculator from "@/features/construction/InteriorCalculator";
 import DoorsWindowsCalculator from "@/features/construction/DoorsWindowsCalculator";
 import MaterialQuantityCalculator from "@/features/construction/MaterialQuantityCalculator";
 import USAFramingCalculator from "@/features/construction/USAFramingCalculator";
+import USARoofingCalculator from "@/features/construction/USARoofingCalculator";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
@@ -24,7 +25,7 @@ type CalculatorType =
   | "plumbing"
   | "electrical"
   | "materials"
-  | "usa-framing";
+  | "usa-framing" | "usa-roofing";
 
 export default function CalculatorFeature() {
   const { hasPaid } = useUser();
@@ -35,6 +36,7 @@ export default function CalculatorFeature() {
     switch (activeCalculator) {
       case "construction":  return <ConstructionCalculator />;
       case "usa-framing":   return <USAFramingCalculator />;
+      case "usa-roofing":   return <USARoofingCalculator />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
       case "doors-windows": return <DoorsWindowsCalculator hasPaid={hasPaid} />;
