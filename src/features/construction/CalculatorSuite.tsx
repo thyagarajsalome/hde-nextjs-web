@@ -23,6 +23,7 @@ const DoorsWindowsCalculator     = lazyWithRetry(() => import("./DoorsWindowsCal
 const MaterialQuantityCalculator = lazyWithRetry(() => import("./MaterialQuantityCalculator"));
 const USAFramingCalculator       = lazyWithRetry(() => import("./USAFramingCalculator"));
 const USARoofingCalculator       = lazyWithRetry(() => import("./USARoofingCalculator"));
+const USAAccentWallCalculator    = lazyWithRetry(() => import("./USAAccentWallCalculator"));
 
 type CalculatorType =
   | "construction"
@@ -33,7 +34,7 @@ type CalculatorType =
   | "plumbing"
   | "electrical"
   | "materials"
-  | "usa-framing" | "usa-roofing";
+  | "usa-framing" | "usa-roofing" | "usa-accent-wall";
 
 const Loading = () => (
   <div className="flex flex-col justify-center items-center min-h-[600px] bg-gray-50 rounded-2xl border border-gray-100 animate-pulse">
@@ -82,6 +83,7 @@ export default function CalculatorSuite() {
       case "construction":  return <ConstructionCalculator projectData={projectData} />;
       case "usa-framing":   return <USAFramingCalculator />;
       case "usa-roofing":   return <USARoofingCalculator />;
+      case "usa-accent-wall":   return <USAAccentWallCalculator />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
       case "doors-windows": return <DoorsWindowsCalculator hasPaid={hasPaid} />;
@@ -119,3 +121,4 @@ export default function CalculatorSuite() {
     </div>
   );
 }
+

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -24,7 +24,8 @@ const INDIA_CALCULATORS = [
 ] as const;
 
 const USA_CALCULATORS = [
-  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
+  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
+  { id: "usa-roofing" | "usa-accent-wall", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
   { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
 ] as const;
 
@@ -38,9 +39,9 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    if (region === 'US' && activeCalculator !== 'usa-framing' && activeCalculator !== 'usa-roofing') {
+    if (region === 'US' && activeCalculator !== 'usa-framing' && activeCalculator !== 'usa-roofing' && activeCalculator !== 'usa-accent-wall') {
       setActiveCalculator('usa-framing');
-    } else if (region === 'IN' && (activeCalculator === 'usa-framing' || activeCalculator === 'usa-roofing')) {
+    } else if (region === 'IN' && (activeCalculator === 'usa-framing' || activeCalculator === 'usa-roofing' || activeCalculator === 'usa-accent-wall')) {
       setActiveCalculator('construction');
     }
   }, [region, activeCalculator, setActiveCalculator]);
@@ -117,3 +118,4 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 };
 
 export default CalculatorTabs;
+
