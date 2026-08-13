@@ -113,7 +113,11 @@ export default function PaintVisualizer() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border \\}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                  activeCategory === cat
+                    ? 'bg-gray-800 border-gray-800 text-white dark:bg-white dark:border-white dark:text-zinc-900'
+                    : 'bg-white border-gray-200 text-gray-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300 hover:border-gray-400'
+                }`}
               >
                 {cat}
               </button>
