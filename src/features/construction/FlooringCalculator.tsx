@@ -103,7 +103,7 @@ const FlooringCalculator: React.FC = () => {
   const isLocked = !hasPaid;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
       {/* ── Left ── */}
       <div className="space-y-5">

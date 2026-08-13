@@ -305,7 +305,7 @@ const MaterialQuantityCalculator: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6">
 
       {/* ── Input Card ── */}
       <Card title="📐 Material BOQ Estimator">

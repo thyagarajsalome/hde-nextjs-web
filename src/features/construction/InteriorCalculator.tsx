@@ -111,7 +111,7 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <section>
         <Card title="Interior Requirements">
           <form onSubmit={(e) => e.preventDefault()} className="space-y-6">

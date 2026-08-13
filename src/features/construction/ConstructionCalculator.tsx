@@ -385,7 +385,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in font-sans">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start font-sans">
 
       {/* ── Left Column — Form and Wizard Steps ── */}
       <section
@@ -402,7 +402,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
               </div>
 
               {detectedCityName && (
-                <div className="px-3.5 py-3 bg-emerald-50/60 border border-emerald-100 rounded-xl text-emerald-800 text-xs font-semibold flex items-center gap-2 animate-fade-in">
+                <div className="px-3.5 py-3 bg-emerald-50/60 border border-emerald-100 rounded-xl text-emerald-800 text-xs font-semibold flex items-center gap-2">
                   <i className="fas fa-map-marker-alt text-emerald-500 text-sm"></i>
                   <span>Pre-loaded regional calculations for <strong>{detectedCityName}</strong>.</span>
                 </div>
