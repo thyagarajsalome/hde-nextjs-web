@@ -21,8 +21,8 @@ const ElectricalCalculator       = lazyWithRetry(() => import("./ElectricalCalcu
 const InteriorCalculator         = lazyWithRetry(() => import("./InteriorCalculator"));
 const DoorsWindowsCalculator     = lazyWithRetry(() => import("./DoorsWindowsCalculator"));
 const MaterialQuantityCalculator = lazyWithRetry(() => import("./MaterialQuantityCalculator"));
-const USAFramingCalculator       = lazyWithRetry(() => import(./USAFramingCalculator));
-const USARoofingCalculator       = lazyWithRetry(() => import(./USARoofingCalculator));
+const USAFramingCalculator       = lazyWithRetry(() => import("./USAFramingCalculator"));
+const USARoofingCalculator       = lazyWithRetry(() => import("./USARoofingCalculator"));
 
 type CalculatorType =
   | "construction"

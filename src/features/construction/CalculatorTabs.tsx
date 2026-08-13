@@ -25,7 +25,7 @@ const INDIA_CALCULATORS = [
 
 const USA_CALCULATORS = [
   { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
-  { id: "usa-framing" | "usa-roofing",   name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
 ] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
@@ -38,9 +38,9 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    if (region === 'US' && activeCalculator !== 'usa-framing') {
+    if (region === 'US' && activeCalculator !== 'usa-framing' && activeCalculator !== 'usa-roofing') {
       setActiveCalculator('usa-framing');
-    } else if (region === 'IN' && activeCalculator === 'usa-framing') {
+    } else if (region === 'IN' && (activeCalculator === 'usa-framing' || activeCalculator === 'usa-roofing')) {
       setActiveCalculator('construction');
     }
   }, [region, activeCalculator, setActiveCalculator]);
