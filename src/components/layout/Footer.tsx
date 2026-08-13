@@ -1,8 +1,12 @@
+"use client";
 // src/components/layout/Footer.tsx
 import React from "react";
 import Link from "next/link";
+import { useRegion } from "../../context/RegionContext";
 
 export default function Footer() {
+  const { region } = useRegion();
+
   return (
     <footer className="footer bg-white border-t border-gray-100 pt-8 pb-4">
       <div className="container mx-auto px-4">
@@ -54,23 +58,25 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* City links - compact */}
-        <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-          <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
-          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
-            <Link href="/cost/construction-in-mumbai" className="text-gray-500 hover:text-primary transition-colors no-underline">Mumbai</Link>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <Link href="/cost/construction-in-bengaluru" className="text-gray-500 hover:text-primary transition-colors no-underline">Bengaluru</Link>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <Link href="/cost/construction-in-delhi-ncr" className="text-gray-500 hover:text-primary transition-colors no-underline">Delhi NCR</Link>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <Link href="/cost/construction-in-chennai" className="text-gray-500 hover:text-primary transition-colors no-underline">Chennai</Link>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <Link href="/cost/construction-in-hyderabad" className="text-gray-500 hover:text-primary transition-colors no-underline">Hyderabad</Link>
-            <span className="hidden md:inline text-gray-300">|</span>
-            <Link href="/cost/construction-in-pune" className="text-gray-500 hover:text-primary transition-colors no-underline">Pune</Link>
+        {/* City links - compact (India Only) */}
+        {region !== 'US' && (
+          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
+            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
+              <Link href="/cost/construction-in-mumbai" className="text-gray-500 hover:text-primary transition-colors no-underline">Mumbai</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/cost/construction-in-bengaluru" className="text-gray-500 hover:text-primary transition-colors no-underline">Bengaluru</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/cost/construction-in-delhi-ncr" className="text-gray-500 hover:text-primary transition-colors no-underline">Delhi NCR</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/cost/construction-in-chennai" className="text-gray-500 hover:text-primary transition-colors no-underline">Chennai</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/cost/construction-in-hyderabad" className="text-gray-500 hover:text-primary transition-colors no-underline">Hyderabad</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/cost/construction-in-pune" className="text-gray-500 hover:text-primary transition-colors no-underline">Pune</Link>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Disclaimer & Copyright */}
         <div className="border-t border-gray-100 pt-4 text-center max-w-4xl mx-auto">
@@ -78,7 +84,7 @@ export default function Footer() {
             Disclaimer: Home Design English (HDE) is an independent budget calculation and estimation platform. All rates, material quantities, and cost estimates provided are approximate projections for general guidance only. HDE does not provide building contractor services, architectural supervision, or physical construction works. Users should verify final quotes and structural designs with licensed local builders and engineers before commencing actual construction.
           </p>
           <p className="text-gray-400 text-xs font-medium">
-            &copy; 2025 Home Design English (HDE). All rights reserved.
+            &copy; 2026 Home Design English (HDE). All rights reserved.
           </p>
         </div>
       </div>
