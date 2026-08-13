@@ -49,7 +49,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <>
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link href="/" className="text-3xl font-extrabold text-secondary flex justify-center items-center gap-2">
           <i className="fas fa-home text-primary"></i> 
@@ -57,8 +57,8 @@ const SignUp = () => {
         </Link>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100">
+
+
           <h2 className="text-center text-2xl font-bold text-gray-900 mb-6">Create a free account</h2>
           
           <button
@@ -104,9 +104,7 @@ const SignUp = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-zinc-400">Already have an account? <Link href="/signin" className="font-medium text-primary hover:text-primary-hover">Sign In</Link></p>
           </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
