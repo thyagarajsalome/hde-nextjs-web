@@ -1,0 +1,24 @@
+// src/components/AuthLayout.tsx
+import React from "react";
+import Link from "next/link";
+
+const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <Link href="/" className="text-3xl font-extrabold text-secondary flex justify-center items-center gap-2">
+          <i className="fas fa-home text-primary"></i> 
+          <span>HDE</span>
+        </Link>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthLayout;

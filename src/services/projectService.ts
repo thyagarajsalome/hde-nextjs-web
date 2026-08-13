@@ -1,0 +1,48 @@
+import { supabase } from '../config/supabaseClient';
+
+export interface ProjectData {
+  user_id: string;
+  name: string;
+  type: string;
+  data: any;
+  date: string;
+}
+
+export const ProjectService = {
+  save: async (project: ProjectData) => {
+    // 1. Write to Supabase (primary database)
+    const { data, error } = await supabase
+      .from('projects')
+      .insert(project)
+      .select()
+      .single();
+      
+    if (error) throw new Error(error.message);
+
+    return data;
+  },
+
+  getAllByUser: async (userId: string) => {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: false });
+
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
+  // NEW: Added the delete function
+  deleteProject: async (projectId: string) => {
+    // 1. Delete from Supabase
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', projectId);
+
+    if (error) throw new Error(error.message);
+
+    return true;
+  }
+};
