@@ -51,17 +51,19 @@ export default function CalculatorFeature() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl" id="tools">
       {/* Service Disclaimer Notice */}
-      <div className="mb-6 flex items-start gap-4 px-5 py-4 bg-amber-50/50 border border-amber-200/60 rounded-2xl text-sm backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
-        <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-amber-100/80 text-amber-700 mt-0.5">
-          <i className="fas fa-info-circle text-base"></i>
-        </span>
-        <div className="space-y-1">
-          <h5 className="font-semibold text-amber-900 leading-tight">HDE Budget & Estimation Notice</h5>
-          <p className="text-amber-800/90 leading-relaxed font-medium">
-            Home Design English (HDE) is strictly an **estimation and budgeting platform**. We provide calculations, material list forecasts, and planning tools. HDE is **not** a construction developer, contractor, or builder, and does not execute or take liability for physical house construction.
-          </p>
+      {region !== 'US' && (
+        <div className="mb-6 flex items-start gap-4 px-5 py-4 bg-amber-50/50 border border-amber-200/60 rounded-2xl text-sm backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-amber-100/80 text-amber-700 mt-0.5">
+            <i className="fas fa-info-circle text-base"></i>
+          </span>
+          <div className="space-y-1">
+            <h5 className="font-semibold text-amber-900 leading-tight">HDE Budget & Estimation Notice</h5>
+            <p className="text-amber-800/90 leading-relaxed font-medium">
+              Home Design English (HDE) is strictly an **estimation and budgeting platform**. We provide calculations, material list forecasts, and planning tools. HDE is **not** a construction developer, contractor, or builder, and does not execute or take liability for physical house construction.
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <CalculatorTabs 
         activeCalculator={activeCalculator} 

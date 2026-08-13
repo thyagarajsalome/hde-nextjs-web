@@ -1,5 +1,6 @@
-// src/components/layout/Testimonials.tsx
+"use client";
 import React from "react";
+import { useRegion } from "../../context/RegionContext";
 
 const TESTIMONIALS = [
   { name: "Anand Sharma", city: "Delhi", comment: "The construction calculator is spot on. It saved me from a major budgeting error during my foundation phase." },
@@ -13,6 +14,10 @@ const TESTIMONIALS = [
 ];
 
 export default function Testimonials() {
+  const { region } = useRegion();
+
+  if (region === 'US') return null;
+
   return (
     <section className="bg-gray-900 py-16 overflow-hidden">
       <div className="container mx-auto px-4 mb-10 text-center">
