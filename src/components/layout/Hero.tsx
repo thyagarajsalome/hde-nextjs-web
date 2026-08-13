@@ -7,7 +7,6 @@ import { useRegion } from "../../context/RegionContext";
 
 export default function Hero() {
   const [banners, setBanners] = useState<HeroBanner[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const { region, setRegion, isReady } = useRegion();
@@ -44,15 +43,6 @@ export default function Hero() {
     };
     loadBanners();
   }, []);
-
-  // Auto-slide logic: changes image every 5 seconds
-  useEffect(() => {
-    if (banners.length < 2) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % banners.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [banners]);
 
   const scrollToTools = () => {
     const toolsSection = document.getElementById("tools");
@@ -125,30 +115,26 @@ export default function Hero() {
   }
 
   // STANDARD HERO (If region is selected)
+  const displayBanner = region === 'US' && banners.length > 1 ? banners[1] : banners[0];
+
   return (
     <section 
       id="home" 
       className="relative w-full h-[30vh] lg:h-[65vh] overflow-hidden flex items-center justify-center bg-secondary"
     >
-      {/* Background Banner Slides (Now visible on all screens with dynamic resolution selection) */}
+      {/* Background Banner */}
       <div className="absolute inset-0">
-        {banners.map((banner, index) => (
-          <div
-            key={banner.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentIndex ? "opacity-100 scale-105" : "opacity-0 scale-100"
-            }`}
-            style={{
-              backgroundImage: `url(${getOptimizedImageUrl(banner.image_url)})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              transitionProperty: "opacity, transform",
-            }}
-          >
-            {/* Slightly darker overlay on mobile to ensure button accessibility */}
-            <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
-          </div>
-        ))}
+        <div
+          className="absolute inset-0 opacity-100 scale-100"
+          style={{
+            backgroundImage: `url(${getOptimizedImageUrl(displayBanner.image_url)})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* Slightly darker overlay on mobile to ensure button accessibility */}
+          <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
+        </div>
       </div>
 
       {/* Button Content - Centered and visible on all devices */}
@@ -174,20 +160,6 @@ export default function Hero() {
           Try Paint Visualizer
           <i className="fas fa-paint-roller text-sm"></i>
         </Link>
-      </div>
-
-      {/* Indicators hidden on mobile/tablet to avoid cluttering small sections */}
-      <div className="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-20 gap-3">
-        {banners.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentIndex(i)}
-            className={`transition-all duration-300 rounded-full ${
-              i === currentIndex ? "w-8 h-2 bg-primary" : "w-2 h-2 bg-white/40 hover:bg-white"
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
       </div>
     </section>
   );
