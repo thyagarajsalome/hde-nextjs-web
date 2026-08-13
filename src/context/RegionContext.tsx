@@ -18,6 +18,7 @@ const RegionContext = createContext<RegionContextType>({
 export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
   const [region, setRegionState] = useState<Region>(null);
   const [isReady, setIsReady] = useState(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('hde_region') as Region;
@@ -39,6 +40,11 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const setRegion = (r: Region) => {
+    if (isReady && r && r !== region) {
+      setToastMsg(r === 'US' ? "Switched to USA Mode 🇺🇸" : "Switched to India Mode 🇮🇳");
+      setTimeout(() => setToastMsg(null), 3000);
+    }
+
     setRegionState(r);
     if (r) {
       localStorage.setItem('hde_region', r);
@@ -50,6 +56,12 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <RegionContext.Provider value={{ region, setRegion, isReady }}>
       {children}
+      {toastMsg && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[9999] bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-3 animate-fade-in-up">
+          <i className="fas fa-check-circle text-green-400"></i>
+          {toastMsg}
+        </div>
+      )}
     </RegionContext.Provider>
   );
 };
