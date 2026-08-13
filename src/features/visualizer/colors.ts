@@ -99,7 +99,7 @@ export function rgbStringToHex(rgbStr: string): string {
   const r = parseInt(result[1]).toString(16).padStart(2, '0');
   const g = parseInt(result[2]).toString(16).padStart(2, '0');
   const b = parseInt(result[3]).toString(16).padStart(2, '0');
-  return \#\\\\;
+  return `#${r}${g}${b}`;
 }
 
 export const CATEGORIES = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Brown', 'Neutral'];
