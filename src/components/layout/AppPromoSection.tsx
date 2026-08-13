@@ -1,8 +1,13 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import { useRegion } from "../../context/RegionContext";
 
 const AppPromoSection = () => {
+  const { region } = useRegion();
   const playStoreLink = "https://play.google.com/store/apps/details?id=in.toolwebsite.twa";
+
+  if (region === 'US') return null;
 
   // Injected CSS animations for the banner
   const customStyles = `
