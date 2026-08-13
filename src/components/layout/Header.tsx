@@ -37,6 +37,7 @@ const Header = () => {
             <Link href="/plans" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">House Plans</Link>
 
             <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Mobile App</Link>
+            <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
 
             {user ? (
                <>
