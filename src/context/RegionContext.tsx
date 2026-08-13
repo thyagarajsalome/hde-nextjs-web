@@ -23,6 +23,17 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
     const saved = localStorage.getItem('hde_region') as Region;
     if (saved === 'IN' || saved === 'US') {
       setRegionState(saved);
+    } else {
+      // Auto-detect based on timezone
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (tz && (tz.startsWith('America/') || tz.startsWith('US/'))) {
+          setRegionState('US');
+          localStorage.setItem('hde_region', 'US');
+        }
+      } catch (e) {
+        // Fallback to null if Intl is unsupported
+      }
     }
     setIsReady(true);
   }, []);
