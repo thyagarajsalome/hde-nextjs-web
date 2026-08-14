@@ -95,7 +95,7 @@ const ElectricalCalculator: React.FC = () => {
         }
       }
     }
-  }, [location]);
+  }, []);
 
   const calc = useMemo(() => {
     const lCount = parseInt(lightPoints) || 0;

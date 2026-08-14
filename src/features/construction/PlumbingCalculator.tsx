@@ -90,7 +90,7 @@ const PlumbingCalculator: React.FC = () => {
         }
       }
     }
-  }, [location]);
+  }, []);
 
   const calc = useMemo(() => {
     const kCount = parseInt(kitchens)    || 0;

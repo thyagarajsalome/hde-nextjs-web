@@ -58,7 +58,7 @@ const PaintingCalculator: React.FC = () => {
         if (sharedArea && !carpetArea) setCarpetArea(sharedArea);
       }
     }
-  }, [location]);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && carpetArea) {

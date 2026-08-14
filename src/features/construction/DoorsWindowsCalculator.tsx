@@ -59,7 +59,7 @@ const DoorsWindowsCalculator: React.FC<DoorsWindowsCalculatorProps> = ({ hasPaid
         }
       }
     }
-  }, [location]);
+  }, []);
 
   const handleDownloadPDF = () => {
     const rows = [

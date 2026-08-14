@@ -60,7 +60,7 @@ const FlooringCalculator: React.FC = () => {
         if (sharedArea && !area) setArea(sharedArea);
       }
     }
-  }, [location]);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && area) {
