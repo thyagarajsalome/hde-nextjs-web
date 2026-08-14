@@ -94,8 +94,8 @@ export default function USAAccentWallCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Wall Width (in)</label>
                 <input
                   type="number"
-                  value={wallWidthInches}
-                  onChange={(e) => setWallWidthInches(Number(e.target.value))}
+                  value={wallWidthInches || ""}
+                  onChange={(e) => setWallWidthInches(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -103,8 +103,8 @@ export default function USAAccentWallCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Wall Height (in)</label>
                 <input
                   type="number"
-                  value={wallHeightInches}
-                  onChange={(e) => setWallHeightInches(Number(e.target.value))}
+                  value={wallHeightInches || ""}
+                  onChange={(e) => setWallHeightInches(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -115,8 +115,8 @@ export default function USAAccentWallCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Target Panels (Spaces)</label>
                 <input
                   type="number"
-                  value={numPanels}
-                  onChange={(e) => setNumPanels(Number(e.target.value))}
+                  value={numPanels || ""}
+                  onChange={(e) => setNumPanels(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -125,8 +125,8 @@ export default function USAAccentWallCalculator() {
                 <input
                   type="number"
                   step="0.5"
-                  value={battenWidth}
-                  onChange={(e) => setBattenWidth(Number(e.target.value))}
+                  value={battenWidth || ""}
+                  onChange={(e) => setBattenWidth(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>

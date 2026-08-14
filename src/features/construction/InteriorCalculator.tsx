@@ -61,33 +61,6 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
       }
     } else {
       if (typeof window !== "undefined") {
-        const sharedArea = window.localStorage.getItem("hde_shared_area");
-        const sharedQuality = window.localStorage.getItem("hde_shared_quality");
-        if (sharedArea) setArea(sharedArea);
-        if (sharedQuality) {
-          if (sharedQuality in QUALITY_RATES) {
-            setQuality(sharedQuality as any);
-          } else if (sharedQuality === "economy") {
-            setQuality("basic");
-          } else {
-            setQuality("standard");
-          }
-        }
-      }
-    }
-  }, [location]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (area) window.localStorage.setItem("hde_shared_area", area);
-      if (quality) window.localStorage.setItem("hde_shared_quality", quality);
-    }
-  }, [area, quality]);
-
-  const parsedArea = parseFloat(area) || 0;
-  const ratePreset = QUALITY_RATES[quality] || QUALITY_RATES.standard;
-  const totalCost = parsedArea * ratePreset.rate;
-
   const handleSave = () => {
     saveProject({
       area,

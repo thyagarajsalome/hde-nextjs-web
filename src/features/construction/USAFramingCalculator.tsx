@@ -81,8 +81,8 @@ export default function USAFramingCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Length (ft)</label>
                 <input
                   type="number"
-                  value={length}
-                  onChange={(e) => setLength(Number(e.target.value))}
+                  value={length || ""}
+                  onChange={(e) => setLength(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -90,8 +90,8 @@ export default function USAFramingCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Width (ft)</label>
                 <input
                   type="number"
-                  value={width}
-                  onChange={(e) => setWidth(Number(e.target.value))}
+                  value={width || ""}
+                  onChange={(e) => setWidth(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -101,8 +101,8 @@ export default function USAFramingCalculator() {
               <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Ceiling Height (ft)</label>
               <input
                 type="number"
-                value={height}
-                onChange={(e) => setHeight(Number(e.target.value))}
+                value={height || ""}
+                onChange={(e) => setHeight(e.target.value === "" ? 0 : Number(e.target.value))}
                 className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
               />
             </div>
@@ -118,8 +118,8 @@ export default function USAFramingCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">2x4x8 Stud ($)</label>
                 <input
                   type="number"
-                  value={studPrice}
-                  onChange={(e) => setStudPrice(Number(e.target.value))}
+                  value={studPrice || ""}
+                  onChange={(e) => setStudPrice(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
@@ -127,8 +127,8 @@ export default function USAFramingCalculator() {
                 <label className="block text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase tracking-wider mb-2">Drywall 4x8 ($)</label>
                 <input
                   type="number"
-                  value={drywallPrice}
-                  onChange={(e) => setDrywallPrice(Number(e.target.value))}
+                  value={drywallPrice || ""}
+                  onChange={(e) => setDrywallPrice(e.target.value === "" ? 0 : Number(e.target.value))}
                   className="w-full p-3 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-semibold"
                 />
               </div>
