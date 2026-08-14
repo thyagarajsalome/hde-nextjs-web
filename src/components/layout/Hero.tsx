@@ -122,6 +122,9 @@ export default function Hero() {
       id="home" 
       className="relative w-full h-[30vh] lg:h-[65vh] overflow-hidden flex items-center justify-center bg-secondary"
     >
+      {/* Preload critical LCP image */}
+      <link rel="preload" as="image" href={getOptimizedImageUrl(displayBanner.image_url)} />
+
       {/* Background Banner */}
       <div className="absolute inset-0">
         <div

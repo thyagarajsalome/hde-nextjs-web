@@ -26,7 +26,6 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       </head>
       <body className="bg-background text-zinc-900 min-h-screen flex flex-col font-sans">
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
         <ToastProvider>
           <UserProvider>
             <RegionProvider>
