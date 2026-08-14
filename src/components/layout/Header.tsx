@@ -79,8 +79,8 @@ const Header = () => {
           </nav>
 
           <div className="md:hidden flex items-center">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 dark:text-zinc-400 hover:text-primary focus:outline-none p-2 cursor-pointer">
-              <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"} text-xl`}></i>
+            <button aria-label="Toggle navigation menu" onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 dark:text-zinc-400 hover:text-primary focus:outline-none p-2 cursor-pointer">
+              <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"} text-xl`} aria-hidden="true"></i>
             </button>
           </div>
         </div>
