@@ -16,12 +16,13 @@ import USAAccentWallCalculator from "@/features/construction/USAAccentWallCalcul
 import USAFlooringCalculator from "@/features/construction/USAFlooringCalculator";
 import USAPlumbingCalculator from "@/features/construction/USAPlumbingCalculator";
 import USAElectricalCalculator from "@/features/construction/USAElectricalCalculator";
+import USARentVsBuyCalculator from "@/features/construction/USARentVsBuyCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "visualizer";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -52,6 +53,7 @@ export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProp
       case "usa-flooring":  return <USAFlooringCalculator />;
       case "usa-plumbing":  return <USAPlumbingCalculator />;
       case "usa-electrical":return <USAElectricalCalculator />;
+      case "usa-rent-vs-buy":return <USARentVsBuyCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
