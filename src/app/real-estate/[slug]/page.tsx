@@ -7,9 +7,9 @@ import USAPropertyTaxCalculator from '@/features/construction/USAPropertyTaxCalc
 import USASalaryCalculator from '@/features/construction/USASalaryCalculator';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static routes for all USA locations x 3 tools
@@ -33,6 +33,7 @@ export async function generateStaticParams() {
 
 // Helper to parse slug
 function parseSlug(slug: string) {
+  if (!slug) return null;
   const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy)-in-(.+)$/);
   if (!match) return null;
   return {
@@ -42,7 +43,8 @@ function parseSlug(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const parsed = parseSlug(params.slug);
+  const resolvedParams = await params;
+  const parsed = parseSlug(resolvedParams.slug);
   if (!parsed) return { title: 'Not Found' };
 
   const { toolType, citySlug } = parsed;
@@ -67,7 +69,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function RealEstateToolPage({ params }: PageProps) {
-  const parsed = parseSlug(params.slug);
+  const resolvedParams = await params;
+  const parsed = parseSlug(resolvedParams.slug);
   if (!parsed) notFound();
 
   const { toolType, citySlug } = parsed;
