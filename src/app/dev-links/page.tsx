@@ -45,8 +45,9 @@ export default async function DevLinksPage() {
           {/* USA SECTION */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i className="fas fa-globe-americas text-blue-600"></i> USA Pages ({usCities.length})
+              <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 4})
             </h2>
+            <p className="text-xs text-gray-500 mb-4">Showing 4 unique SEO routes per city ({usCities.length} cities total)</p>
             <ul className="space-y-4">
               {usCities.map((loc) => (
                 <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
@@ -87,7 +88,7 @@ export default async function DevLinksPage() {
           {/* INDIA SECTION */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i className="fas fa-map-marker-alt text-orange-500"></i> India Pages ({inCities.length})
+              <i className="fas fa-map-marker-alt text-orange-500"></i> India Generated URLs ({inCities.length})
             </h2>
             <ul className="space-y-2">
               {inCities.map((loc) => (
