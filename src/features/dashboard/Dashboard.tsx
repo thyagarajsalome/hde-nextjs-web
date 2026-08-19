@@ -262,7 +262,9 @@ const Dashboard = () => {
                           <div className="text-right">
                             <p className="text-base font-extrabold text-secondary dark:text-zinc-100">
                               {project.data?.totalCost
-                                ? `₹${project.data.totalCost.toLocaleString("en-IN")}`
+                                ? (project.type?.startsWith('usa-')
+                                    ? `$${project.data.totalCost.toLocaleString("en-US")}`
+                                    : `₹${project.data.totalCost.toLocaleString("en-IN")}`)
                                 : "—"}
                             </p>
                           </div>
