@@ -28,6 +28,7 @@ const USAFlooringCalculator      = lazyWithRetry(() => import("./USAFlooringCalc
 const USAPlumbingCalculator      = lazyWithRetry(() => import("./USAPlumbingCalculator"));
 const USAElectricalCalculator    = lazyWithRetry(() => import("./USAElectricalCalculator"));
 const USARentVsBuyCalculator     = lazyWithRetry(() => import("./USARentVsBuyCalculator"));
+const USASalaryCalculator      = lazyWithRetry(() => import("./USASalaryCalculator"));
 const PaintVisualizer            = lazyWithRetry(() => import("../visualizer/PaintVisualizer"));
 
 type CalculatorType =
@@ -39,7 +40,7 @@ type CalculatorType =
   | "plumbing"
   | "electrical"
   | "materials"
-  | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "visualizer";
+  | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "visualizer";
 
 const Loading = () => (
   <div className="flex flex-col justify-center items-center min-h-[600px] bg-gray-50 rounded-2xl border border-gray-100 animate-pulse">
@@ -93,6 +94,7 @@ export default function CalculatorSuite() {
       case "usa-plumbing":  return <USAPlumbingCalculator />;
       case "usa-electrical":return <USAElectricalCalculator />;
       case "usa-rent-vs-buy":return <USARentVsBuyCalculator />;
+      case "usa-salary-calculator": return <USASalaryCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
