@@ -134,8 +134,8 @@ export default function CityContent({ cityData }: CityContentProps) {
 
       {/* Rich Statically Rendered Localized Content Section for search crawlers */}
       <section className="bg-stone-50 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2 space-y-8">
+        <div className="max-w-7xl mx-auto flex flex-col gap-12">
+          <div className="w-full max-w-4xl space-y-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900">
               Understanding Building Costs in {cityName}
             </h2>
@@ -164,19 +164,6 @@ export default function CityContent({ cityData }: CityContentProps) {
             <p className="text-stone-600 text-sm leading-relaxed">
               Before initiating building work in {cityName}, ensure you secure all necessary municipal approvals (like building plan sanctions, local water line connections, and electrical sub-meter clearances). These clearances usually require structural drawings prepared by registered local structural engineers to guarantee safety.
             </p>
-          </div>
-
-          <div className="bg-stone-900 text-stone-100 p-8 rounded-3xl border border-stone-800 flex flex-col justify-between">
-            <div>
-              <span className="text-amber-400 text-xs font-bold uppercase tracking-widest">💡 Expert Advice</span>
-              <h3 className="text-xl font-bold mt-2 mb-4 text-stone-100">Builder Margin Control</h3>
-              <p className="text-stone-400 text-sm leading-relaxed mb-6">
-                Contractors typically charge a markup of 10% to 20% on materials and labor. By upgrading to <strong>HDE Pro</strong>, you can configure your exact contractor margin, generating white-label PDFs that hide raw profit margins from clients—ensuring clean client relationships.
-              </p>
-            </div>
-            <div className="p-4 bg-stone-800 rounded-2xl border border-stone-700 text-xs text-stone-300">
-              <strong>Tip:</strong> Share inputs automatically between the flooring, plumbing, electrical, and structural calculators by using the top tabs sequence.
-            </div>
           </div>
         </div>
       </section>
