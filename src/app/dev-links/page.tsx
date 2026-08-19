@@ -45,7 +45,7 @@ export default async function DevLinksPage() {
           {/* USA SECTION */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              ???? USA Pages ({usCities.length})
+              <i className="fas fa-globe-americas text-blue-600"></i> USA Pages ({usCities.length})
             </h2>
             <ul className="space-y-2">
               {usCities.map((loc) => (
@@ -66,7 +66,7 @@ export default async function DevLinksPage() {
           {/* INDIA SECTION */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              ???? India Pages ({inCities.length})
+              <i className="fas fa-map-marker-alt text-orange-500"></i> India Pages ({inCities.length})
             </h2>
             <ul className="space-y-2">
               {inCities.map((loc) => (
