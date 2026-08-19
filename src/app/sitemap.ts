@@ -47,8 +47,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Dynamic City SEO Routes from Supabase
-  const { data: locations } = await supabase.from('pseo_locations').select('slug');
+  const { data: locations } = await supabase.from('pseo_locations').select('slug, country');
   let cityRoutes: MetadataRoute.Sitemap = [];
+  let realEstateRoutes: MetadataRoute.Sitemap = [];
   
   if (locations && locations.length > 0) {
     cityRoutes = locations.map((loc: any) => ({
@@ -57,6 +58,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     }));
+
+    // USA Real Estate tools
+    const usaLocations = locations.filter((loc: any) => loc.country === 'USA');
+    usaLocations.forEach((loc: any) => {
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/rent-vs-buy-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/property-tax-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/salary-needed-to-buy-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+    });
   } else {
     // Fallback
     cityRoutes = Object.keys(CITIES_DATA).map((cityKey) => ({
@@ -76,5 +100,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...cityRoutes, ...blogRoutes];
+  return [...staticRoutes, ...cityRoutes, ...realEstateRoutes, ...blogRoutes];
 }
