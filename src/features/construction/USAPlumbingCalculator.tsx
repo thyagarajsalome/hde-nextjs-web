@@ -95,7 +95,7 @@ const USAPlumbingCalculator: React.FC = () => {
     return { kitchenCost, commonBathCost, masterBathCost, heaterCost, total, kCount, cCount, mCount };
   }, [kitchens, commonBaths, masterBaths, includeHeater, quality]);
 
-  const isLocked = !hasPaid;
+  const isLocked = false;
 
   const handleSave = () => {
     if (calc.total > 0) saveProject({ kitchens, commonBaths, masterBaths, includeHeater, quality, breakdown: calc }, calc.total);

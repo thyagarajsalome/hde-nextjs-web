@@ -29,9 +29,9 @@ const USA_CALCULATORS = [
   { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
   { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
   { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
-  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 1 },
-  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 2 },
-  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 2 },
+  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 0 },
+  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 0 },
+  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 0 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
 ] as const;
 

@@ -91,7 +91,7 @@ const USAElectricalCalculator: React.FC = () => {
     return { lightCost, fanCost, powerCost, dedCost, gfciCost, panelCost, total, lCount, fCount, pCount, dCount, gCount };
   }, [lightPoints, fanPoints, powerPoints, dedicated240, gfciPoints, quality]);
 
-  const isLocked = !hasPaid;
+  const isLocked = false;
 
   const handleSave = () => {
     if (calc.total > 0) saveProject({ lightPoints, fanPoints, powerPoints, dedicated240, gfciPoints, quality, breakdown: calc }, calc.total);
