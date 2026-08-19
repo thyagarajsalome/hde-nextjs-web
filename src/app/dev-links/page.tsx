@@ -51,7 +51,7 @@ export default async function DevLinksPage() {
               {usCities.map((loc) => (
                 <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
                   <Link 
-                    href={/cost/construction-in- + loc.slug} 
+                    href={'/cost/construction-in-' + loc.slug} 
                     target="_blank"
                     className="text-primary hover:underline font-medium text-sm"
                   >
@@ -72,7 +72,7 @@ export default async function DevLinksPage() {
               {inCities.map((loc) => (
                 <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
                   <Link 
-                    href={/cost/construction-in- + loc.slug} 
+                    href={'/cost/construction-in-' + loc.slug} 
                     target="_blank"
                     className="text-primary hover:underline font-medium text-sm"
                   >
