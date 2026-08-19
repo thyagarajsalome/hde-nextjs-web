@@ -4,7 +4,8 @@ import { useUser } from "../../context/UserContext";
 import Chart from "../../components/ui/Chart";
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
+const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const POINT_RATES = { light: 150, fan: 200, power: 180, panel: 3000 };

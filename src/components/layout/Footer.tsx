@@ -2,10 +2,13 @@
 // src/components/layout/Footer.tsx
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useRegion } from "../../context/RegionContext";
 
 export default function Footer() {
   const { region } = useRegion();
+  const pathname = usePathname() || "";
+  const isUSRoute = region === 'US' || pathname.includes('/real-estate/') || ['texas', 'california', 'new-york', 'florida', 'illinois', 'arizona', 'washington', 'pennsylvania', 'north-carolina'].some(state => pathname.includes(state));
 
   return (
     <footer className="footer bg-white border-t border-gray-100 pt-8 pb-4">
@@ -59,7 +62,7 @@ export default function Footer() {
         </div>
 
         {/* City links - compact (India Only) */}
-        {region !== 'US' && (
+        {!isUSRoute && (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
             <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">

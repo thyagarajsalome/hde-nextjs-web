@@ -5,7 +5,8 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
+const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
 // ── Types & Constants ─────────────────────────────────────────────────────────
 const FLOORING_TYPES = {
