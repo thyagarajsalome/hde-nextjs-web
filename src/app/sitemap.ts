@@ -1,10 +1,11 @@
 import { MetadataRoute } from 'next';
 import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
+import { supabase } from '@/config/supabaseClient';
 
 const BASE_URL = 'https://homedesignenglish.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -45,13 +46,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   ];
 
-  // Dynamic City SEO Routes
-  const cityRoutes: MetadataRoute.Sitemap = Object.keys(CITIES_DATA).map((cityKey) => ({
-    url: `${BASE_URL}/cost/construction-in-${cityKey}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
+  // Dynamic City SEO Routes from Supabase
+  const { data: locations } = await supabase.from('pseo_locations').select('slug');
+  let cityRoutes: MetadataRoute.Sitemap = [];
+  
+  if (locations && locations.length > 0) {
+    cityRoutes = locations.map((loc: any) => ({
+      url: `${BASE_URL}/cost/construction-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+  } else {
+    // Fallback
+    cityRoutes = Object.keys(CITIES_DATA).map((cityKey) => ({
+      url: `${BASE_URL}/cost/construction-in-${cityKey}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+  }
 
   // Dynamic Blog Routes
   const blogPosts = getAllPosts();
