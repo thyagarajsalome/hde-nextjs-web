@@ -41,6 +41,7 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
       slug: loc.slug,
       cityName: loc.city_name,
       stateName: loc.state_name,
+      country: loc.country,
       metaDesc: `Calculate house construction cost in ${loc.city_name}, ${loc.state_name}. Check local standard & premium building rates, ${rates.primary_material_name} rates, plumbing and electrical charges in ${loc.city_name}.`,
       neighborhoods: loc.neighborhoods || 'prime sectors and local neighborhoods',
       soilType: loc.soil_type || 'local soil types',
@@ -112,6 +113,8 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
     }
   };
 
+  const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
+
   return (
     <>
       <script
@@ -119,7 +122,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <CityContent cityData={cityData} />
-      <CalculatorFeature />
+      <CalculatorFeature forceRegion={forceRegion} />
       <AppPromoSection />
       <Testimonials />
       <FAQ />

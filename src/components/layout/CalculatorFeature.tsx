@@ -28,10 +28,25 @@ type CalculatorType =
   | "materials"
   | "usa-framing" | "usa-roofing" | "usa-accent-wall";
 
-export default function CalculatorFeature() {
+interface CalculatorFeatureProps {
+  forceRegion?: "US" | "IN";
+}
+
+export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProps = {}) {
   const { hasPaid } = useUser();
-  const { region } = useRegion();
+  const { region, setRegion } = useRegion();
   const [activeCalculator, setActiveCalculator] = useState<CalculatorType>("construction");
+
+  // Force region switch based on props (e.g. from pSEO pages)
+  React.useEffect(() => {
+    if (forceRegion && region !== forceRegion) {
+      setRegion(forceRegion);
+      // Auto-switch default calculator tab if they entered a US page
+      if (forceRegion === 'US' && activeCalculator === 'construction') {
+        setActiveCalculator('usa-framing');
+      }
+    }
+  }, [forceRegion, region, setRegion, activeCalculator]);
 
   const renderCalculator = () => {
     switch (activeCalculator) {

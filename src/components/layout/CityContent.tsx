@@ -5,6 +5,7 @@ export interface CityData {
   slug: string;
   cityName: string;
   stateName: string;
+  country?: string;
   metaDesc: string;
   neighborhoods: string;
   soilType: string;
