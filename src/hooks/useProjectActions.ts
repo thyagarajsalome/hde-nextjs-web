@@ -114,7 +114,9 @@ export const useProjectActions = (projectType: string) => {
     }
   };
 
-  // --- Helper: Convert Number to Words (Indian numbering system) ---
+  // --- Helper: Convert Number to Words (Region-aware) ---
+  const isUSProject = projectType.startsWith('usa-');
+
   const convertNumberToWords = (amount: number | string): string => {
     let num = 0;
     if (typeof amount === "number") {
@@ -124,7 +126,8 @@ export const useProjectActions = (projectType: string) => {
       num = parseInt(cleanStr, 10) || 0;
     }
 
-    if (num === 0) return "Rupees Zero Only";
+    const currencyWord = isUSProject ? "Dollars" : "Rupees";
+    if (num === 0) return `${currencyWord} Zero Only`;
 
     const a = [
       "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
@@ -132,22 +135,36 @@ export const useProjectActions = (projectType: string) => {
     ];
     const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
 
-    function numToWords(n: number): string {
+    function numToWordsIndian(n: number): string {
       if (n < 20) return a[n];
       if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + a[n % 10] : "");
-      if (n < 1000) return a[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " and " + numToWords(n % 100) : "");
-      
+      if (n < 1000) return a[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " and " + numToWordsIndian(n % 100) : "");
       // Indian system: Thousands, Lakhs, Crores
       if (n < 100000) {
-        return numToWords(Math.floor(n / 1000)) + " Thousand" + (n % 1000 !== 0 ? " " + numToWords(n % 1000) : "");
+        return numToWordsIndian(Math.floor(n / 1000)) + " Thousand" + (n % 1000 !== 0 ? " " + numToWordsIndian(n % 1000) : "");
       }
       if (n < 10000000) {
-        return numToWords(Math.floor(n / 100000)) + " Lakh" + (n % 100000 !== 0 ? " " + numToWords(n % 100000) : "");
+        return numToWordsIndian(Math.floor(n / 100000)) + " Lakh" + (n % 100000 !== 0 ? " " + numToWordsIndian(n % 100000) : "");
       }
-      return numToWords(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 !== 0 ? " " + numToWords(n % 10000000) : "");
+      return numToWordsIndian(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 !== 0 ? " " + numToWordsIndian(n % 10000000) : "");
     }
 
-    return "Rupees " + numToWords(num) + " Only";
+    function numToWordsUS(n: number): string {
+      if (n < 20) return a[n];
+      if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + a[n % 10] : "");
+      if (n < 1000) return a[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " and " + numToWordsUS(n % 100) : "");
+      // US system: Thousands, Millions, Billions
+      if (n < 1000000) {
+        return numToWordsUS(Math.floor(n / 1000)) + " Thousand" + (n % 1000 !== 0 ? " " + numToWordsUS(n % 1000) : "");
+      }
+      if (n < 1000000000) {
+        return numToWordsUS(Math.floor(n / 1000000)) + " Million" + (n % 1000000 !== 0 ? " " + numToWordsUS(n % 1000000) : "");
+      }
+      return numToWordsUS(Math.floor(n / 1000000000)) + " Billion" + (n % 1000000000 !== 0 ? " " + numToWordsUS(n % 1000000000) : "");
+    }
+
+    const words = isUSProject ? numToWordsUS(num) : numToWordsIndian(num);
+    return `${currencyWord} ${words} Only`;
   };
 
   // --- 3. NEW UNIVERSAL SPREADSHEET-STYLE PDF ---
@@ -216,7 +233,7 @@ export const useProjectActions = (projectType: string) => {
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(80, 80, 80);
-      doc.text(`Date: ${new Date().toLocaleDateString("en-IN")}`, 14, 54);
+      doc.text(`Date: ${new Date().toLocaleDateString(isUSProject ? "en-US" : "en-IN")}`, 14, 54);
       
       let specY = 59;
       if (projectSpecs.length > 0) {
