@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "visualizer";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -27,6 +27,9 @@ const USA_CALCULATORS = [
   { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
   { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
   { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 1 },
+  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 2 },
+  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 2 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
 ] as const;
 
@@ -40,9 +43,10 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    if (region === 'US' && activeCalculator !== 'usa-framing' && activeCalculator !== 'usa-roofing' && activeCalculator !== 'usa-accent-wall' && activeCalculator !== 'visualizer') {
+    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'visualizer'];
+    if (region === 'US' && !usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('usa-framing');
-    } else if (region === 'IN' && (activeCalculator === 'usa-framing' || activeCalculator === 'usa-roofing' || activeCalculator === 'usa-accent-wall' || activeCalculator === 'visualizer')) {
+    } else if (region === 'IN' && usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('construction');
     }
   }, [region, activeCalculator, setActiveCalculator]);
