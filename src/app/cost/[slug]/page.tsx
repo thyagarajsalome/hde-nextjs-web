@@ -94,26 +94,59 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": `Construction Cost Calculator ${cityData.cityName}`,
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": cityData.basicRate.includes('$') ? 'USD' : 'INR'
-    },
-    "description": cityData.metaDesc,
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1250"
-    }
-  };
+
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
+
+  // 1. Generate Dynamic FAQs based on City Data
+  const dynamicFaqs = [
+    {
+      question: `How much does it cost to build a house in ${cityData.cityName}?`,
+      answer: `The average cost to build a house in ${cityData.cityName} starts at ${cityData.basicRate} for a basic finish, ${cityData.standardRate} for standard, and can go up to ${cityData.premiumRate} for a premium luxury finish. Prices vary based on ${cityData.neighborhoods} and local material costs.`
+    },
+    {
+      question: `What are the primary construction materials used in ${cityData.cityName}?`,
+      answer: `Due to the ${cityData.soilType} and ${cityData.country === 'USA' ? 'local building codes' : 'weather conditions'}, builders in ${cityData.cityName} primarily rely on materials that fit the region's climate. Prices fluctuate, but current estimates include these local rates.`
+    },
+    {
+      question: `Do I need to account for local labor rates in ${cityData.cityName}?`,
+      answer: `Yes, labor rates in ${cityData.cityName}, ${cityData.stateName} differ from national averages. Our calculator automatically adjusts estimates using real-time local multipliers for framing, plumbing, roofing, and electrical work.`
+    }
+  ];
+
+  // 2. Build JSON-LD Schema (Software + FAQ)
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": `Construction Cost Calculator ${cityData.cityName}`,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": cityData.basicRate.includes('$') ? 'USD' : 'INR'
+      },
+      "description": cityData.metaDesc,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": dynamicFaqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    }
+  ];
 
   return (
     <>
@@ -123,9 +156,35 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       />
       <CityContent cityData={cityData} />
       <CalculatorFeature forceRegion={forceRegion} />
-      <AppPromoSection />
-      <Testimonials />
-      <FAQ />
+      
+      {/* Hide specific sections for USA mode as requested previously */}
+      {forceRegion !== 'US' && (
+        <>
+          <AppPromoSection />
+          <Testimonials />
+        </>
+      )}
+      
+      {/* Dynamic SEO FAQ Section */}
+      <section className="py-16 bg-white border-t border-gray-100">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-secondary mb-4">Frequently Asked Questions about {cityData.cityName}</h2>
+            <p className="text-gray-500">Local building insights and cost factors for {cityData.cityName}, {cityData.stateName}.</p>
+          </div>
+          <div className="space-y-6">
+            {dynamicFaqs.map((faq, index) => (
+              <div key={index} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{faq.question}</h3>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Keep the generic FAQ only for India, or remove if Dynamic is enough. Let's keep it for IN. */}
+      {forceRegion !== 'US' && <FAQ />}
     </>
   );
 }
