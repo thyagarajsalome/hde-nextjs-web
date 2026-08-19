@@ -13,21 +13,15 @@ import MaterialQuantityCalculator from "@/features/construction/MaterialQuantity
 import USAFramingCalculator from "@/features/construction/USAFramingCalculator";
 import USARoofingCalculator from "@/features/construction/USARoofingCalculator";
 import USAAccentWallCalculator from "@/features/construction/USAAccentWallCalculator";
+import USAFlooringCalculator from "@/features/construction/USAFlooringCalculator";
+import USAPlumbingCalculator from "@/features/construction/USAPlumbingCalculator";
+import USAElectricalCalculator from "@/features/construction/USAElectricalCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType =
-  | "construction"
-  | "interior"
-  | "doors-windows"
-  | "flooring"
-  | "painting"
-  | "plumbing"
-  | "electrical"
-  | "materials"
-  | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "visualizer";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -55,6 +49,9 @@ export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProp
       case "usa-framing":   return <USAFramingCalculator />;
       case "usa-roofing":   return <USARoofingCalculator />;
       case "usa-accent-wall":   return <USAAccentWallCalculator />;
+      case "usa-flooring":  return <USAFlooringCalculator />;
+      case "usa-plumbing":  return <USAPlumbingCalculator />;
+      case "usa-electrical":return <USAElectricalCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
