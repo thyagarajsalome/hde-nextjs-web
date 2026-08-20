@@ -20,12 +20,13 @@ import USARentVsBuyCalculator from "@/features/construction/USARentVsBuyCalculat
 import USASalaryCalculator from "@/features/construction/USASalaryCalculator";
 import USAPropertyTaxCalculator from "@/features/construction/USAPropertyTaxCalculator";
 import USARemodelROICalculator from "@/features/construction/USARemodelROICalculator";
+import USAGardenBedCalculator from "@/features/construction/USAGardenBedCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "visualizer";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -60,6 +61,7 @@ export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProp
       case "usa-salary-calculator": return <USASalaryCalculator />;
       case "usa-property-tax": return <USAPropertyTaxCalculator />;
       case "usa-remodel-roi": return <USARemodelROICalculator />;
+      case "usa-garden-bed": return <USAGardenBedCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
