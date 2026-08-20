@@ -30,8 +30,8 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Home</Link>
+          <nav className="hidden lg:flex items-center space-x-3 xl:space-x-6 text-sm">
+            <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap">Home</Link>
             
             {/* Professional Directory Link (India Only) */}
             {region !== 'US' && (
