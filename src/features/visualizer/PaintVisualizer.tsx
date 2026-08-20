@@ -26,6 +26,25 @@ export default function PaintVisualizer() {
         <p className="text-gray-500 dark:text-zinc-400 font-medium text-sm lg:text-base max-w-2xl mx-auto">
           Visualize 500+ premium paint colors instantly on interior and exterior walls.
         </p>
+        
+        {/* App Promo Banner */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 p-4 rounded-2xl max-w-2xl mx-auto">
+          <div className="bg-white dark:bg-zinc-900 p-3 rounded-full shadow-sm text-primary">
+            <i className="fas fa-magic text-xl"></i>
+          </div>
+          <div className="text-center sm:text-left flex-grow">
+            <h4 className="text-sm font-bold text-gray-900 dark:text-zinc-100">Want full AI-powered Interior Design?</h4>
+            <p className="text-xs text-gray-500 dark:text-zinc-400">Generate 3D room concepts instantly with our dedicated Android app.</p>
+          </div>
+          <a 
+            href="https://play.google.com/store/apps/details?id=com.aihomedecorator.twa" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:scale-105 transition-transform no-underline"
+          >
+            <i className="fab fa-google-play"></i> Get the App
+          </a>
+        </div>
       </div>
 
       <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-12 flex-col lg:flex-row">
