@@ -27,15 +27,15 @@ const USA_CALCULATORS = [
   { id: "usa-rent-vs-buy", name: "Rent vs. Buy", icon: "fas fa-balance-scale", reqTier: 0 },
   { id: "usa-salary-calculator", name: "Salary Needed", icon: "fas fa-money-bill-wave", reqTier: 0 },
   { id: "usa-property-tax", name: "Property Tax", icon: "fas fa-file-invoice-dollar", reqTier: 0 },
-  { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 0 },
-  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
-  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
-  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
-  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 0 },
-  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 0 },
-  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 0 },
   { id: "usa-garden-bed", name: "Garden Bed", icon: "fas fa-leaf", reqTier: 0 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
+  { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 1 },
+  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 1 },
+  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 1 },
+  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 2 },
+  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 2 },
+  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 2 },
+  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 2 },
 ] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {

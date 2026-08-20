@@ -97,11 +97,11 @@ const usaPlans = {
     useCase: "Best for: Comparing rent vs. buy scenarios in your city.",
     badge: undefined,
     features: [
+      "Unlock ROI, Roofing & Flooring Calculators",
       "Save up to 5 unique property estimates",
       "Export Professional PDF Reports",
       "Side-by-side scenario tracking",
-      "Lifetime access to saved projects",
-      "All USA Calculators (Free forever)"
+      "Lifetime access to saved projects"
     ],
     color: "blue",
     icon: "fa-home"
@@ -117,10 +117,10 @@ const usaPlans = {
     useCase: "Best for: Realtors and buyers comparing across multiple cities.",
     badge: "Best Value",
     features: [
+      "Unlock Plumbing, Electrical & Framing Tools",
+      "Unlock Accent Walls & Woodwork",
       "Save up to 15 unique property estimates",
       "Export Professional PDF Reports",
-      "Side-by-side scenario tracking",
-      "Lifetime access to saved projects",
       "Priority Email Support"
     ],
     color: "amber",
@@ -137,9 +137,9 @@ const usaPlans = {
     useCase: "Best for: Professionals managing multiple client projects.",
     badge: undefined,
     features: [
+      "Unlimited Saving & PDF Exports",
       "Save up to 100 unique property estimates",
       "Client-ready Professional PDF Reports",
-      "Everything in Standard",
       "10 Daily Save Limit (Anti-Bot Protection)",
       "White-glove technical support"
     ],
