@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../config/supabaseClient";
 import { useUser } from "../../context/UserContext";
 import { useToast } from "../../context/ToastContext";
+import { useRegion } from "../../context/RegionContext";
 
 // 1. Define the strict TypeScript interface for your plans
 type PlanType = {
@@ -84,12 +85,79 @@ const plans = {
   },
 };
 
+const usaPlans = {
+  basic: {
+    id: "usa_basic",
+    name: "Basic",
+    tier: "basic",
+    price: 9.99,
+    originalPrice: 14.99,
+    description: "Perfect for first-time home buyers exploring a single property purchase.",
+    credits: "5 Project Credits",
+    useCase: "Best for: Comparing rent vs. buy scenarios in your city.",
+    badge: undefined,
+    features: [
+      "Save up to 5 unique projects",
+      "Professional PDF Cost Reports",
+      "Rent vs. Buy Calculator",
+      "Property Tax Estimator",
+      "Salary Needed Calculator"
+    ],
+    color: "blue",
+    icon: "fa-home"
+  },
+  standard: {
+    id: "usa_standard",
+    name: "Standard",
+    tier: "standard",
+    price: 24.99,
+    originalPrice: 39.99,
+    description: "Ideal for serious buyers or realtors comparing multiple properties and locations.",
+    credits: "15 Project Credits",
+    useCase: "Best for: Realtors and buyers comparing across multiple cities.",
+    badge: "Best Value",
+    features: [
+      "Everything in Basic",
+      "Save up to 15 unique projects",
+      "Flooring, Plumbing & Electrical Estimators",
+      "Framing & Roofing Calculators",
+      "Side-by-side scenario comparison"
+    ],
+    color: "amber",
+    icon: "fa-building"
+  },
+  pro: {
+    id: "usa_pro",
+    name: "Pro",
+    tier: "pro",
+    price: 59.99,
+    originalPrice: 89.99,
+    description: "Built for professional realtors, contractors, and mortgage brokers who need unlimited access.",
+    credits: "100 Project Credits",
+    useCase: "Best for: Professionals managing multiple client projects.",
+    badge: undefined,
+    features: [
+      "100 Project Credits",
+      "Everything in Standard",
+      "Material BOQ (Bill of Quantities)",
+      "10 Daily Save Limit (Anti-Bot Protection)",
+      "Priority Support"
+    ],
+    color: "gray",
+    icon: "fa-hard-hat"
+  },
+};
+
 const UpgradePage = () => {
   const { user, refreshProfile, planTier } = useUser();
   const { showToast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
   const navigate = useRouter();
+  const { region } = useRegion();
+
+  const activePlans = region === 'US' ? usaPlans : plans;
+  const currencySymbol = region === 'US' ? '$' : '₹';
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -109,7 +177,7 @@ const UpgradePage = () => {
       }
 
       const { data: order, error: orderError } = await supabase.functions.invoke('create-order', {
-        body: { planId } 
+        body: { planId, currency: region === 'US' ? 'USD' : 'INR' } 
       });
 
       if (orderError || !order || order.error) throw new Error(order?.error || "Failed to create order.");
@@ -123,7 +191,7 @@ const UpgradePage = () => {
         order_id: order.id,
         handler: async (response: any) => {
           const { data: result } = await supabase.functions.invoke('verify-payment', {
-            body: { ...response, planId }
+            body: { ...response, planId, currency: region === 'US' ? 'USD' : 'INR' }
           });
           if (result?.status === "success") {
             await refreshProfile();
@@ -152,7 +220,7 @@ const UpgradePage = () => {
             Choose Your Plan
           </h1>
           <p className="text-gray-600 dark:text-zinc-400 text-lg max-w-2xl mx-auto">
-            Get the precision tools you need to build with confidence and save on material costs.
+            {region === 'US' ? "Get the precision tools you need to make smarter real estate decisions." : "Get the precision tools you need to build with confidence and save on material costs."}
           </p>
           
           <div className="mt-8 inline-flex items-center gap-4 bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
@@ -161,7 +229,9 @@ const UpgradePage = () => {
             </div>
             <div className="text-left">
               <p className="font-bold text-gray-800 dark:text-zinc-200">What is a credit?</p>
-              <p className="text-sm text-gray-500 dark:text-zinc-400">1 Credit = 1 Unique Project. Use it to design, calculate, and save a full building plan.</p>
+              <p className="text-sm text-gray-500 dark:text-zinc-400">
+                {region === 'US' ? "1 Credit = 1 Saved Project. Use it to save estimates, download professional PDF reports, and compare scenarios." : "1 Credit = 1 Unique Project. Use it to design, calculate, and save a full building plan."}
+              </p>
             </div>
           </div>
         </div>
@@ -173,7 +243,7 @@ const UpgradePage = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-          {Object.entries(plans).map(([key, plan]) => {
+          {Object.entries(activePlans).map(([key, plan]) => {
             const isBestValue = plan.badge;
             const isActiveTier = planTier === plan.tier;
             const isCurrentPlan = plan.tier === "pro" && planTier === "pro";
@@ -212,11 +282,11 @@ const UpgradePage = () => {
 
                 <div className="mb-6">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-400 dark:text-zinc-500 line-through text-lg">₹{plan.originalPrice}</span>
+                    <span className="text-gray-400 dark:text-zinc-500 line-through text-lg">{currencySymbol}{plan.originalPrice}</span>
                     <span className="bg-green-100 dark:bg-green-950/20 text-green-700 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded">Save 30%</span>
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-gray-900 dark:text-zinc-100">₹{plan.price}</span>
+                    <span className="text-5xl font-black text-gray-900 dark:text-zinc-100">{currencySymbol}{plan.price}</span>
                     <span className="text-gray-500 dark:text-zinc-400 font-medium">/once</span>
                   </div>
                 </div>
@@ -268,5 +338,3 @@ const UpgradePage = () => {
 };
 
 export default UpgradePage;
-
-
