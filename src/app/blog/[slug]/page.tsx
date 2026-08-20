@@ -56,13 +56,12 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         <MDXRemote source={post.content} />
       </div>
 
-      <div className="mt-16 p-8 bg-amber-50 rounded-2xl border border-amber-100">
-        <h3 className="text-xl font-bold text-amber-900 mb-2">Disclaimer</h3>
-        <p className="text-amber-800 text-sm leading-relaxed">
-          The information provided in this article is for educational and general estimation purposes only. 
-          The author is not a licensed architect, civil engineer, or legal professional. 
-          Construction rates, material costs, and building codes vary significantly by location and over time. 
-          Always consult with certified local professionals before making financial or structural decisions regarding your home.
+      <div className="mt-16 p-6 bg-gray-50 dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-200 mb-2 flex items-center gap-2">
+          <i className="fas fa-info-circle text-primary"></i> Friendly Reminder
+        </h3>
+        <p className="text-gray-600 dark:text-zinc-400 text-sm leading-relaxed">
+          The guides and calculators provided by HDE are designed for educational and general estimation purposes to help you plan your home journey. Real estate markets, mortgage rates, and construction costs vary by location and change over time. We always recommend consulting with your local lender, financial advisor, or certified contractor to get the most accurate figures for your specific situation.
         </p>
       </div>
       
