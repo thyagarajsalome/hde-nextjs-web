@@ -87,7 +87,7 @@ const Header = () => {
             </div>
           </nav>
 
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button aria-label="Toggle navigation menu" onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 dark:text-zinc-400 hover:text-primary focus:outline-none p-2 cursor-pointer">
               <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"} text-xl`} aria-hidden="true"></i>
             </button>
@@ -97,7 +97,7 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 absolute w-full left-0 shadow-lg">
+        <div className="lg:hidden bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 absolute w-full left-0 shadow-lg">
           <div className="px-4 pt-2 pb-4 space-y-2 flex flex-col">
             {/* Mobile Region Selector */}
             <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 mb-4 shadow-inner">
