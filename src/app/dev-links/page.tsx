@@ -39,6 +39,11 @@ export default async function DevLinksPage() {
             This is a hidden page (<code className="bg-gray-100 px-2 py-0.5 rounded text-sm">/dev-links</code>) with a robots.txt rule to prevent Google from indexing it. 
             Use this to quickly verify all {locations.length} dynamically generated pages.
           </p>
+          <div className="mt-4 flex gap-4">
+            <Link href="/upgrade" target="_blank" className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-bold hover:opacity-90">
+              <i className="fas fa-credit-card"></i> View Upgrade Page (Region Aware)
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
