@@ -98,10 +98,9 @@ const usaPlans = {
     badge: undefined,
     features: [
       "Unlock ROI, Roofing & Flooring Calculators",
-      "Save up to 5 unique property estimates",
+      "5 Consumable Project Credits",
       "Export Professional PDF Reports",
-      "Side-by-side scenario tracking",
-      "Lifetime access to saved projects"
+      "Side-by-side scenario tracking"
     ],
     color: "blue",
     icon: "fa-home"
@@ -119,7 +118,7 @@ const usaPlans = {
     features: [
       "Unlock Plumbing, Electrical & Framing Tools",
       "Unlock Accent Walls & Woodwork",
-      "Save up to 15 unique property estimates",
+      "15 Consumable Project Credits",
       "Export Professional PDF Reports",
       "Priority Email Support"
     ],
@@ -137,7 +136,7 @@ const usaPlans = {
     useCase: "Best for: Professionals managing multiple client projects.",
     badge: undefined,
     features: [
-      "Unlimited Saving & PDF Exports",
+      "100 Consumable Project Credits",
       "Save up to 100 unique property estimates",
       "Client-ready Professional PDF Reports",
       "10 Daily Save Limit (Anti-Bot Protection)",
