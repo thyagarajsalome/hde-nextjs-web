@@ -97,11 +97,11 @@ const usaPlans = {
     useCase: "Best for: Comparing rent vs. buy scenarios in your city.",
     badge: undefined,
     features: [
-      "Save up to 5 unique projects",
-      "Professional PDF Cost Reports",
-      "Rent vs. Buy Calculator",
-      "Property Tax Estimator",
-      "Salary Needed Calculator"
+      "Save up to 5 unique property estimates",
+      "Export Professional PDF Reports",
+      "Side-by-side scenario tracking",
+      "Lifetime access to saved projects",
+      "All USA Calculators (Free forever)"
     ],
     color: "blue",
     icon: "fa-home"
@@ -117,11 +117,11 @@ const usaPlans = {
     useCase: "Best for: Realtors and buyers comparing across multiple cities.",
     badge: "Best Value",
     features: [
-      "Everything in Basic",
-      "Save up to 15 unique projects",
-      "Flooring, Plumbing & Electrical Estimators",
-      "Framing & Roofing Calculators",
-      "Side-by-side scenario comparison"
+      "Save up to 15 unique property estimates",
+      "Export Professional PDF Reports",
+      "Side-by-side scenario tracking",
+      "Lifetime access to saved projects",
+      "Priority Email Support"
     ],
     color: "amber",
     icon: "fa-building"
@@ -137,11 +137,11 @@ const usaPlans = {
     useCase: "Best for: Professionals managing multiple client projects.",
     badge: undefined,
     features: [
-      "100 Project Credits",
+      "Save up to 100 unique property estimates",
+      "Client-ready Professional PDF Reports",
       "Everything in Standard",
-      "Material BOQ (Bill of Quantities)",
       "10 Daily Save Limit (Anti-Bot Protection)",
-      "Priority Support"
+      "White-glove technical support"
     ],
     color: "gray",
     icon: "fa-hard-hat"
