@@ -62,7 +62,7 @@ export default function Footer() {
         </div>
 
         {/* City links - compact (India Only) */}
-        {!isUSRoute && (
+        {!isUSRoute ? (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
             <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
@@ -77,6 +77,25 @@ export default function Footer() {
               <Link href="/cost/construction-in-hyderabad" className="text-gray-500 hover:text-primary transition-colors no-underline">Hyderabad</Link>
               <span className="hidden md:inline text-gray-300">|</span>
               <Link href="/cost/construction-in-pune" className="text-gray-500 hover:text-primary transition-colors no-underline">Pune</Link>
+            </div>
+          </div>
+        ) : (
+          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
+            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Real Estate Calculators By City</h4>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
+              <Link href="/real-estate/rent-vs-buy-in-austin-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Austin</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/property-tax-in-dallas-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Dallas</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/salary-needed-to-buy-in-houston-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Houston</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/rent-vs-buy-in-los-angeles-california" className="text-gray-500 hover:text-primary transition-colors no-underline">Los Angeles</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/property-tax-in-chicago-illinois" className="text-gray-500 hover:text-primary transition-colors no-underline">Chicago</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" className="text-gray-500 hover:text-primary transition-colors no-underline">Miami</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/real-estate/rent-vs-buy-in-new-york-city" className="text-gray-500 hover:text-primary transition-colors no-underline">New York</Link>
             </div>
           </div>
         )}
