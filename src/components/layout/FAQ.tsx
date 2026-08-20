@@ -25,7 +25,7 @@ export default function FAQ() {
             </p>
           </details>
 
-          {region !== 'US' && (
+          {region !== 'US' ? (
             <details className="group bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden open:border-primary/30 open:ring-1 open:ring-primary/20">
               <summary className="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none text-base md:text-lg focus:outline-none">
                 <span>What is included in the "Pro" version?</span>
@@ -35,6 +35,18 @@ export default function FAQ() {
               </summary>
               <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
                 Upgrading to a Pro plan (unlocked by purchasing credit packages starting from ₹199) unlocks all specialized calculators (<strong className="text-primary">Materials BOQ</strong>, Flooring, Painting, Plumbing, Electrical, Interiors, Doors & Windows), enables Standard & Premium quality estimates in the main construction calculator, and removes all restrictions on saving or sharing reports.
+              </p>
+            </details>
+          ) : (
+            <details className="group bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden open:border-primary/30 open:ring-1 open:ring-primary/20">
+              <summary className="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none text-base md:text-lg focus:outline-none">
+                <span>What is included in the Premium features?</span>
+                <span className="transition-transform duration-300 group-open:rotate-180 text-primary">
+                  <i className="fas fa-chevron-down"></i>
+                </span>
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                All of our real estate and construction calculators are completely free to use. Purchasing a credit package (starting at $9.99) unlocks the ability to save your projects to a secure dashboard, export professional PDF reports for your lender or contractor, and compare multiple property scenarios side-by-side.
               </p>
             </details>
           )}

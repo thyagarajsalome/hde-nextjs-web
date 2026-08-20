@@ -23,6 +23,9 @@ export default function TermsPage() {
       
       <h3>4. User Accounts</h3>
       <p>You are responsible for safeguarding your login credentials. We reserve the right to terminate accounts that violate our terms or attempt to abuse the system.</p>
+      
+      <h3>5. Payments & Refunds</h3>
+      <p>All credit packages and premium features are billed in your local currency (e.g., USD or INR) via our third-party payment processor. Because credits are delivered and usable instantly upon purchase, all sales are considered final and non-refundable unless otherwise required by local law. We do not offer auto-renewing subscriptions; all purchases are one-time credit top-ups.</p>
     </div>
   );
 }
