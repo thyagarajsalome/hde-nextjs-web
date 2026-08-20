@@ -75,11 +75,66 @@ export const CITIES_DATA: Record<string, CityData> = {
     cityName: 'Pune',
     stateName: 'Maharashtra',
     metaDesc: 'Calculate house construction cost in Pune per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Pune.',
-    neighborhoods: 'Baner, Kothrud, Hinjawadi, Wakad, Hadapsar, Kharadi',
-    soilType: 'Black cotton soil to hard rock. Heavy expansive soils in some regions require deep RCC columns and footings.',
-    basicRate: 'Rs. 1,550 - 2,100/sqft',
-    standardRate: 'Rs. 2,100 - 3,000/sqft',
-    premiumRate: 'Rs. 3,000 - 4,200/sqft'
+    neighborhoods: 'Kothrud, Hinjewadi, Viman Nagar, Kharadi, Baner, Wakad',
+    soilType: 'Deccan trap basaltic rock. High bearing capacity, saving on foundation depth and costs.',
+    basicRate: 'Rs. 1,500 - 2,050/sqft',
+    standardRate: 'Rs. 2,050 - 2,900/sqft',
+    premiumRate: 'Rs. 2,900 - 4,000/sqft'
+  },
+  ahmedabad: {
+    slug: 'ahmedabad',
+    cityName: 'Ahmedabad',
+    stateName: 'Gujarat',
+    metaDesc: 'Calculate house construction cost in Ahmedabad per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Ahmedabad.',
+    neighborhoods: 'SG Highway, Bopal, Gota, Satellite, Prahlad Nagar',
+    soilType: 'Sandy loam and alluvial soil. Requires proper compaction and standard spread footings.',
+    basicRate: 'Rs. 1,450 - 1,900/sqft',
+    standardRate: 'Rs. 1,900 - 2,700/sqft',
+    premiumRate: 'Rs. 2,700 - 3,800/sqft'
+  },
+  kolkata: {
+    slug: 'kolkata',
+    cityName: 'Kolkata',
+    stateName: 'West Bengal',
+    metaDesc: 'Calculate house construction cost in Kolkata per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Kolkata.',
+    neighborhoods: 'New Town, Rajarhat, Salt Lake, Jadavpur, Behala',
+    soilType: 'Alluvial and clayey soil with high water table. Pile foundations are strictly recommended.',
+    basicRate: 'Rs. 1,500 - 2,050/sqft',
+    standardRate: 'Rs. 2,050 - 2,900/sqft',
+    premiumRate: 'Rs. 2,900 - 4,000/sqft'
+  },
+  jaipur: {
+    slug: 'jaipur',
+    cityName: 'Jaipur',
+    stateName: 'Rajasthan',
+    metaDesc: 'Calculate house construction cost in Jaipur per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Jaipur.',
+    neighborhoods: 'Mansarovar, Vaishali Nagar, Malviya Nagar, Jagatpura',
+    soilType: 'Sandy and arid soil. Excellent bearing capacity, standard isolated footings are sufficient.',
+    basicRate: 'Rs. 1,400 - 1,850/sqft',
+    standardRate: 'Rs. 1,850 - 2,600/sqft',
+    premiumRate: 'Rs. 2,600 - 3,600/sqft'
+  },
+  lucknow: {
+    slug: 'lucknow',
+    cityName: 'Lucknow',
+    stateName: 'Uttar Pradesh',
+    metaDesc: 'Calculate house construction cost in Lucknow per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Lucknow.',
+    neighborhoods: 'Gomti Nagar, Indira Nagar, Aliganj, Hazratganj',
+    soilType: 'Indo-Gangetic alluvial soil. Moderate bearing capacity requiring standard spread or raft footings.',
+    basicRate: 'Rs. 1,450 - 1,900/sqft',
+    standardRate: 'Rs. 1,900 - 2,650/sqft',
+    premiumRate: 'Rs. 2,650 - 3,700/sqft'
+  },
+  kochi: {
+    slug: 'kochi',
+    cityName: 'Kochi',
+    stateName: 'Kerala',
+    metaDesc: 'Calculate house construction cost in Kochi per sq ft. Check local standard & premium building rates, brick wall rates, plumbing and electrical charges in Kochi.',
+    neighborhoods: 'Kakkanad, Edappally, Palarivattom, Marine Drive',
+    soilType: 'Coastal marshy and clayey soil. Highly requires pile foundations due to low bearing capacity.',
+    basicRate: 'Rs. 1,600 - 2,150/sqft',
+    standardRate: 'Rs. 2,150 - 3,100/sqft',
+    premiumRate: 'Rs. 3,100 - 4,300/sqft'
   }
 };
 
