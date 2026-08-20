@@ -160,7 +160,7 @@ const AppPromoPage = () => {
               </a>
 
               <a 
-                href="#screenshots" 
+                href="#features" 
                 className="w-full sm:w-auto flex items-center justify-center gap-2 border-2 border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-100/50 dark:hover:bg-zinc-800/50 px-8 py-4 rounded-2xl font-bold text-lg transition-all no-underline"
               >
                 Explore Features <i className="fas fa-arrow-down text-sm"></i>
@@ -244,57 +244,10 @@ const AppPromoPage = () => {
           </div>
         </section>
 
-        <hr className="border-gray-100 dark:border-zinc-800/80 my-12" id="screenshots" />
 
-        {/* DETAILS AND SCREENSHOT GRID */}
-        <section className="py-8 space-y-12">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-bold text-secondary dark:text-zinc-100 tracking-tight">
-              App Features & Visuals
-            </h2>
-            <p className="text-gray-500 dark:text-zinc-400 max-w-xl mx-auto font-medium text-sm sm:text-base">
-              Swipe or click through the high-quality interface preview to see what HDE Construction App offers.
-            </p>
-          </div>
-
-          {/* Full Screen Visual Carousel Showcase */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {screenshots.map((slide, index) => (
-              <div 
-                key={index} 
-                onClick={() => setActiveSlide(index)}
-                className={`cursor-pointer rounded-2xl overflow-hidden border-2 p-1.5 transition-all duration-300 hover:scale-[1.03] ${
-                  activeSlide === index 
-                    ? "border-primary bg-primary/5 shadow-md shadow-primary/10" 
-                    : "border-gray-100 dark:border-zinc-800/60 bg-white dark:bg-zinc-900 shadow-sm"
-                }`}
-              >
-                <div className="relative aspect-[9/16] rounded-xl overflow-hidden bg-gray-50 dark:bg-zinc-950">
-                  <img 
-                    src={slide.src} 
-                    alt={slide.title} 
-                    className="w-full h-full object-cover" 
-                  />
-                  {activeSlide === index && (
-                    <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
-                      <span className="bg-primary text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
-                        Viewing
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-3 text-center">
-                  <h4 className="text-xs font-bold text-gray-900 dark:text-zinc-200 line-clamp-1">{slide.title}</h4>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <hr className="border-gray-100 dark:border-zinc-800/80 my-12" />
 
         {/* VALUE PROPOSITION GRID */}
-        <section className="py-8 space-y-12">
+        <section className="py-8 space-y-12" id="features">
           <div className="text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl font-bold text-secondary dark:text-zinc-100 tracking-tight">
               Powerful Tools at Your Fingertips
