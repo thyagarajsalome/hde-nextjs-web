@@ -74,15 +74,17 @@ const Header = () => {
             <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 ml-4 shadow-inner">
               <button 
                 onClick={() => setRegion('IN')}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
               >
-                🇮🇳 IND
+                <img src="https://flagcdn.com/w20/in.png" srcSet="https://flagcdn.com/w40/in.png 2x" width="16" alt="India" className="mr-1.5 rounded-sm" />
+                IND
               </button>
               <button 
                 onClick={() => setRegion('US')}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
               >
-                🇺🇸 USA
+                <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="16" alt="USA" className="mr-1.5 rounded-sm" />
+                USA
               </button>
             </div>
           </nav>
@@ -103,15 +105,17 @@ const Header = () => {
             <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 mb-4 shadow-inner">
               <button 
                 onClick={() => { setRegion('IN'); setMenuOpen(false); }}
-                className={`flex-1 px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
               >
-                🇮🇳 India
+                <img src="https://flagcdn.com/w20/in.png" srcSet="https://flagcdn.com/w40/in.png 2x" width="18" alt="India" className="mr-2 rounded-sm" />
+                India
               </button>
               <button 
                 onClick={() => { setRegion('US'); setMenuOpen(false); }}
-                className={`flex-1 px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
               >
-                🇺🇸 USA
+                <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="18" alt="USA" className="mr-2 rounded-sm" />
+                USA
               </button>
             </div>
 
