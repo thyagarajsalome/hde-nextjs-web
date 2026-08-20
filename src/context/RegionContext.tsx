@@ -21,22 +21,36 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('hde_region') as Region;
-    if (saved === 'IN' || saved === 'US') {
-      setRegionState(saved);
-    } else {
-      // Auto-detect based on timezone
+    const initRegion = async () => {
+      const saved = localStorage.getItem('hde_region') as Region;
+      if (saved === 'IN' || saved === 'US') {
+        setRegionState(saved);
+        setIsReady(true);
+        return;
+      }
+
       try {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (tz && (tz.startsWith('America/') || tz.startsWith('US/'))) {
+        // Auto-detect based on Vercel IP Geolocation
+        const res = await fetch('/api/geo');
+        const data = await res.json();
+        
+        if (data.country === 'US') {
           setRegionState('US');
           localStorage.setItem('hde_region', 'US');
+        } else {
+          // Default all other traffic (including India) to IN
+          setRegionState('IN');
+          localStorage.setItem('hde_region', 'IN');
         }
       } catch (e) {
-        // Fallback to null if Intl is unsupported
+        // Fallback to IN if the API fails
+        setRegionState('IN');
+        localStorage.setItem('hde_region', 'IN');
       }
-    }
-    setIsReady(true);
+      setIsReady(true);
+    };
+
+    initRegion();
   }, []);
 
   const setRegion = (r: Region) => {
