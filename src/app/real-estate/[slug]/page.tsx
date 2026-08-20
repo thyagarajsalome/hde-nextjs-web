@@ -6,13 +6,15 @@ import USARentVsBuyCalculator from '@/features/construction/USARentVsBuyCalculat
 import USAPropertyTaxCalculator from '@/features/construction/USAPropertyTaxCalculator';
 import USASalaryCalculator from '@/features/construction/USASalaryCalculator';
 
+import USARemodelROICalculator from '@/features/construction/USARemodelROICalculator';
+
 interface PageProps {
   params: Promise<{
     slug: string;
   }>;
 }
 
-// Generate static routes for all USA locations x 3 tools
+// Generate static routes for all USA locations x 4 tools
 export async function generateStaticParams() {
   const { data: locations } = await supabase
     .from('pseo_locations')
@@ -26,6 +28,7 @@ export async function generateStaticParams() {
     params.push({ slug: `rent-vs-buy-in-${loc.slug}` });
     params.push({ slug: `property-tax-in-${loc.slug}` });
     params.push({ slug: `salary-needed-to-buy-in-${loc.slug}` });
+    params.push({ slug: `remodel-roi-in-${loc.slug}` });
   }
 
   return params;
@@ -34,7 +37,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -61,6 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (toolType === 'rent-vs-buy') titlePrefix = 'Rent vs. Buy Calculator';
   else if (toolType === 'property-tax') titlePrefix = 'Property Tax Calculator';
   else if (toolType === 'salary-needed-to-buy') titlePrefix = 'Salary Needed to Buy a House';
+  else if (toolType === 'remodel-roi') titlePrefix = 'Remodel ROI Calculator';
 
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
@@ -95,6 +99,9 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'salary-needed-to-buy') {
     toolName = 'Salary Needed to Buy a House';
     CalculatorComponent = USASalaryCalculator;
+  } else if (toolType === 'remodel-roi') {
+    toolName = 'Remodel ROI Calculator';
+    CalculatorComponent = USARemodelROICalculator;
   }
 
   return (

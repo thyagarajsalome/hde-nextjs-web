@@ -50,9 +50,9 @@ export default async function DevLinksPage() {
           {/* USA SECTION */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 4})
+              <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 5})
             </h2>
-            <p className="text-xs text-gray-500 mb-4">Showing 4 unique SEO routes per city ({usCities.length} cities total)</p>
+            <p className="text-xs text-gray-500 mb-4">Showing 5 unique SEO routes per city ({usCities.length} cities total)</p>
             <ul className="space-y-4">
               {usCities.map((loc) => (
                 <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
@@ -84,6 +84,13 @@ export default async function DevLinksPage() {
                     className="text-primary hover:underline font-medium text-sm"
                   >
                     /real-estate/salary-needed-to-buy-in-{loc.slug}
+                  </Link>
+                  <Link 
+                    href={'/real-estate/remodel-roi-in-' + loc.slug} 
+                    target="_blank"
+                    className="text-primary hover:underline font-medium text-sm"
+                  >
+                    /real-estate/remodel-roi-in-{loc.slug}
                   </Link>
                 </li>
               ))}
