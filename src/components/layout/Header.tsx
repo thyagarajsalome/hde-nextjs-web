@@ -47,7 +47,7 @@ const Header = () => {
             )}
             
             <Link href="/visualizer" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">
-              AI Decorator <span className="ml-1 text-sm">🪄</span>
+              Paint Visualizer <span className="ml-1 text-sm">🎨</span>
             </Link>
 
             <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
@@ -134,7 +134,7 @@ const Header = () => {
               </Link>
             )}
             <Link href="/visualizer" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
-              AI Decorator 🪄
+              Paint Visualizer 🎨
             </Link>
             <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Guides
