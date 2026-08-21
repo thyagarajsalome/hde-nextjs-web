@@ -20,6 +20,7 @@ import USARentVsBuyCalculator from "@/features/construction/USARentVsBuyCalculat
 import USASalaryCalculator from "@/features/construction/USASalaryCalculator";
 import USAPropertyTaxCalculator from "@/features/construction/USAPropertyTaxCalculator";
 import USARemodelROICalculator from "@/features/construction/USARemodelROICalculator";
+import USAInteriorDesignCalculator from "@/features/construction/USAInteriorDesignCalculator";
 import USAGardenBedCalculator from "@/features/construction/USAGardenBedCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import { useUser } from "@/context/UserContext";
@@ -62,6 +63,7 @@ export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProp
       case "usa-property-tax": return <USAPropertyTaxCalculator />;
       case "usa-remodel-roi": return <USARemodelROICalculator />;
       case "usa-garden-bed": return <USAGardenBedCalculator />;
+      case "usa-interior-design": return <USAInteriorDesignCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
