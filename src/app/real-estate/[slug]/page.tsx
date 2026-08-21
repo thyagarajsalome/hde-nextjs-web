@@ -40,9 +40,14 @@ export async function generateStaticParams() {
     .select('slug')
     .eq('country', 'USA');
 
-  const locations = dbLocations && dbLocations.length > 0 
-    ? dbLocations 
-    : USA_CITIES_FALLBACK;
+  let locations = dbLocations || [];
+  if (locations.length === 0) {
+    locations = USA_CITIES_FALLBACK;
+  } else {
+    const existingSlugs = new Set(locations.map(l => l.slug));
+    const toAdd = USA_CITIES_FALLBACK.filter(c => !existingSlugs.has(c.slug));
+    locations = [...locations, ...toAdd];
+  }
 
 
 

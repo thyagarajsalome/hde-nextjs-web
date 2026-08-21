@@ -68,6 +68,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // USA Real Estate tools
     const usaLocations = locations.filter((loc: any) => loc.country === 'USA');
+    
+    // Merge fallbacks
+    const existingSlugs = new Set(usaLocations.map((l: any) => l.slug));
+    USA_CITIES_FALLBACK.forEach((slug) => {
+      if (!existingSlugs.has(slug)) {
+        usaLocations.push({ slug, country: 'USA' });
+      }
+    });
+
     usaLocations.forEach((loc: any) => {
       realEstateRoutes.push({
         url: `${BASE_URL}/real-estate/rent-vs-buy-in-${loc.slug}`,
