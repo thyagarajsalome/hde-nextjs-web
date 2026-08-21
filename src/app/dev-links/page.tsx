@@ -1,5 +1,6 @@
 import React from 'react';
-import Link from 'next/link';
+import { supabase } from '@/config/supabaseClient';
+import DevLinksClient from '@/components/dev/DevLinksClient';
 import { supabase } from '@/config/supabaseClient';
 
 export const metadata = {
@@ -52,96 +53,7 @@ export default async function DevLinksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-        <div className="border-b border-gray-100 pb-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <i className="fas fa-hammer text-primary"></i> 
-            Developer Dashboard: SEO Links
-          </h1>
-          <p className="text-gray-500 mt-2">
-            This is a hidden page (<code className="bg-gray-100 px-2 py-0.5 rounded text-sm">/dev-links</code>) with a robots.txt rule to prevent Google from indexing it. 
-            Use this to quickly verify all {locations.length} dynamically generated pages.
-          </p>
-          <div className="mt-4 flex gap-4">
-            <Link href="/upgrade" target="_blank" className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-bold hover:opacity-90">
-              <i className="fas fa-credit-card"></i> View Upgrade Page (Region Aware)
-            </Link>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* USA SECTION */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 5})
-            </h2>
-            <p className="text-xs text-gray-500 mb-4">Showing 5 unique SEO routes per city ({usCities.length} cities total)</p>
-            <ul className="space-y-4">
-              {usCities.map((loc) => (
-                <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
-                  <span className="text-xs font-bold text-gray-500 mb-1">{loc.city_name}, {loc.state_name}</span>
-                  <Link 
-                    href={'/cost/construction-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /cost/construction-in-{loc.slug}
-                  </Link>
-                  <Link 
-                    href={'/real-estate/rent-vs-buy-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /real-estate/rent-vs-buy-in-{loc.slug}
-                  </Link>
-                  <Link 
-                    href={'/real-estate/property-tax-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /real-estate/property-tax-in-{loc.slug}
-                  </Link>
-                  <Link 
-                    href={'/real-estate/salary-needed-to-buy-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /real-estate/salary-needed-to-buy-in-{loc.slug}
-                  </Link>
-                  <Link 
-                    href={'/real-estate/remodel-roi-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /real-estate/remodel-roi-in-{loc.slug}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* INDIA SECTION */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <i className="fas fa-map-marker-alt text-orange-500"></i> India Generated URLs ({inCities.length})
-            </h2>
-            <ul className="space-y-2">
-              {inCities.map((loc) => (
-                <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
-                  <Link 
-                    href={'/cost/construction-in-' + loc.slug} 
-                    target="_blank"
-                    className="text-primary hover:underline font-medium text-sm"
-                  >
-                    /cost/construction-in-{loc.slug}
-                  </Link>
-                  <span className="text-xs text-gray-400">{loc.city_name}, {loc.state_name}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
+      <DevLinksClient usCities={usCities} inCities={inCities} />
     </div>
   );
 }
