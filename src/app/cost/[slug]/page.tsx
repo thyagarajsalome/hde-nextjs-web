@@ -9,11 +9,36 @@ import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import CityContent, { CITIES_DATA, CityData } from "@/components/layout/CityContent";
 import { supabase } from "@/config/supabaseClient";
 
+const USA_CITIES_FALLBACK = [
+  { slug: 'dallas-texas', city_name: 'Dallas', state_name: 'Texas', country: 'USA' },
+  { slug: 'miami-florida', city_name: 'Miami', state_name: 'Florida', country: 'USA' },
+  { slug: 'atlanta-georgia', city_name: 'Atlanta', state_name: 'Georgia', country: 'USA' },
+  { slug: 'seattle-washington', city_name: 'Seattle', state_name: 'Washington', country: 'USA' },
+  { slug: 'phoenix-arizona', city_name: 'Phoenix', state_name: 'Arizona', country: 'USA' },
+  { slug: 'chicago-illinois', city_name: 'Chicago', state_name: 'Illinois', country: 'USA' },
+  { slug: 'denver-colorado', city_name: 'Denver', state_name: 'Colorado', country: 'USA' },
+  { slug: 'charlotte-north-carolina', city_name: 'Charlotte', state_name: 'North Carolina', country: 'USA' },
+  { slug: 'orlando-florida', city_name: 'Orlando', state_name: 'Florida', country: 'USA' },
+  { slug: 'nashville-tennessee', city_name: 'Nashville', state_name: 'Tennessee', country: 'USA' },
+  { slug: 'las-vegas-nevada', city_name: 'Las Vegas', state_name: 'Nevada', country: 'USA' },
+  { slug: 'tampa-florida', city_name: 'Tampa', state_name: 'Florida', country: 'USA' },
+  { slug: 'raleigh-north-carolina', city_name: 'Raleigh', state_name: 'North Carolina', country: 'USA' },
+  { slug: 'salt-lake-city-utah', city_name: 'Salt Lake City', state_name: 'Utah', country: 'USA' },
+  { slug: 'san-diego-california', city_name: 'San Diego', state_name: 'California', country: 'USA' }
+];
+
 export async function generateStaticParams() {
   // Try to fetch slugs from Supabase
-  const { data: locations } = await supabase.from('pseo_locations').select('slug');
+  const { data: dbLocations } = await supabase.from('pseo_locations').select('slug');
   
-  if (locations && locations.length > 0) {
+  let locations = dbLocations || [];
+  
+  // Merge in the hardcoded USA fallback
+  const existingSlugs = new Set(locations.map((l: any) => l.slug));
+  const toAdd = USA_CITIES_FALLBACK.filter((c: any) => !existingSlugs.has(c.slug));
+  locations = [...locations, ...toAdd];
+  
+  if (locations.length > 0) {
     return locations.map((loc: any) => ({
       slug: `construction-in-${loc.slug}`,
     }));
@@ -51,7 +76,25 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
     };
   }
 
-  // Fallback
+
+  // Check if it is in our USA_CITIES_FALLBACK
+  const usaFallback = USA_CITIES_FALLBACK.find(c => c.slug === cityKey);
+  if (usaFallback) {
+    return {
+      slug: usaFallback.slug,
+      cityName: usaFallback.city_name,
+      stateName: usaFallback.state_name,
+      country: usaFallback.country,
+      metaDesc: Calculate construction and remodeling costs in , . Check local standard building rates, plumbing, and electrical charges.,
+      neighborhoods: 'prime sectors and local neighborhoods',
+      soilType: 'local soil types',
+      basicRate: '/sqft',
+      standardRate: '/sqft',
+      premiumRate: '/sqft',
+    };
+  }
+
+  // Fallback to CITIES_DATA
   return CITIES_DATA[cityKey] || null;
 }
 
