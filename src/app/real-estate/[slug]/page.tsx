@@ -104,19 +104,64 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     CalculatorComponent = USARemodelROICalculator;
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": `${toolName} - ${location.city_name}`,
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "description": `Use our free ${toolName.toLowerCase()} for ${location.city_name}, ${location.state_name}.`,
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
+  const faqs = [];
+  if (toolType === 'rent-vs-buy') {
+    faqs.push({
+      question: `Is it better to rent or buy in ${location.city_name} right now?`,
+      answer: `The decision to rent or buy in ${location.city_name}, ${location.state_name} depends on your current interest rate, property tax rate, and how long you plan to stay. Use our calculator above to compare the exact 5-year cost of renting versus building equity through a mortgage in the local ${location.city_name} market.`
+    });
+    faqs.push({
+      question: `How much down payment do I need for a house in ${location.city_name}?`,
+      answer: `While the traditional down payment is 20%, many lenders in ${location.state_name} offer conventional loans for as little as 3-5% down, and FHA loans at 3.5%. Keep in mind that putting down less than 20% in ${location.city_name} will usually require Private Mortgage Insurance (PMI).`
+    });
+  } else if (toolType === 'property-tax') {
+    faqs.push({
+      question: `How are property taxes calculated in ${location.city_name}?`,
+      answer: `Property taxes in ${location.city_name}, ${location.state_name} are calculated based on the assessed value of your home multiplied by the local tax rate. This rate funds local services like public schools, infrastructure, and emergency services.`
+    });
+    faqs.push({
+      question: `Does my monthly mortgage payment include ${location.city_name} property taxes?`,
+      answer: `Yes, in most cases. If you have an escrow account, your lender will collect a portion of your annual ${location.city_name} property tax every month along with your principal and interest, and they will pay the tax bill on your behalf when it is due.`
+    });
+  } else if (toolType === 'salary-needed-to-buy') {
+    faqs.push({
+      question: `What salary do I need to afford a median home in ${location.city_name}?`,
+      answer: `The exact salary needed depends on the current interest rates and your debt-to-income (DTI) ratio. Lenders generally recommend that your housing payment (PITI) does not exceed 28% of your gross monthly income in ${location.city_name}.`
+    });
+  } else if (toolType === 'remodel-roi') {
+    faqs.push({
+      question: `What home renovations add the most value in ${location.city_name}?`,
+      answer: `In ${location.city_name}, ${location.state_name}, kitchen remodels, bathroom updates, and adding usable square footage typically yield the highest Return on Investment (ROI) when it comes time to sell your property.`
+    });
+  }
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": `${toolName} - ${location.city_name}`,
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "description": `Use our free ${toolName.toLowerCase()} for ${location.city_name}, ${location.state_name}.`,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
     }
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -140,6 +185,21 @@ export default async function RealEstateToolPage({ params }: PageProps) {
       <div className="max-w-4xl mx-auto py-12 px-4">
         {CalculatorComponent && <CalculatorComponent />}
       </div>
+
+      {/* Dynamic FAQ Section */}
+      {faqs.length > 0 && (
+        <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            {faqs.map((faq, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{faq.question}</h3>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
