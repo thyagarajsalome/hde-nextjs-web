@@ -5,6 +5,13 @@ import { supabase } from '@/config/supabaseClient';
 
 const BASE_URL = 'https://homedesignenglish.com';
 
+const USA_CITIES_FALLBACK = [
+  'dallas-texas', 'miami-florida', 'atlanta-georgia', 'seattle-washington',
+  'phoenix-arizona', 'chicago-illinois', 'denver-colorado', 'charlotte-north-carolina',
+  'orlando-florida', 'nashville-tennessee', 'las-vegas-nevada', 'tampa-florida',
+  'raleigh-north-carolina', 'salt-lake-city-utah', 'san-diego-california'
+];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -95,6 +102,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     }));
+
+    USA_CITIES_FALLBACK.forEach((slug) => {
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/rent-vs-buy-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/property-tax-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/salary-needed-to-buy-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/remodel-roi-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+    });
   }
 
   // Dynamic Blog Routes
