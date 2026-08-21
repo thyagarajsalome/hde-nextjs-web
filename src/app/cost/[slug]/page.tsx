@@ -85,12 +85,12 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
       cityName: usaFallback.city_name,
       stateName: usaFallback.state_name,
       country: usaFallback.country,
-      metaDesc: Calculate construction and remodeling costs in , . Check local standard building rates, plumbing, and electrical charges.,
+      metaDesc: `Calculate construction and remodeling costs in ${usaFallback.city_name}, ${usaFallback.state_name}. Check local standard building rates, plumbing, and electrical charges.`,
       neighborhoods: 'prime sectors and local neighborhoods',
       soilType: 'local soil types',
-      basicRate: '/sqft',
-      standardRate: '/sqft',
-      premiumRate: '/sqft',
+      basicRate: '$120/sqft',
+      standardRate: '$160/sqft',
+      premiumRate: '$220/sqft',
     };
   }
 
