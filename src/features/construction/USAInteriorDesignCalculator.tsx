@@ -45,12 +45,13 @@ export default function USAInteriorDesignCalculator() {
   const results = calculateCosts();
 
   const chartData = {
-    labels: ['Furniture & Decor', 'Paint/Wallcoverings', 'Lighting', 'Designer Fees'],
-    datasets: [{
-      data: [results.furniture, results.paint, results.lighting, results.designerFees],
-      backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
-    }]
+    'Furniture & Decor': results.furniture,
+    'Paint/Wallcoverings': results.paint,
+    'Lighting': results.lighting,
+    'Designer Fees': results.designerFees
   };
+
+  const chartColors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
 
   const formatCurrency = (val: number) => 
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
@@ -123,7 +124,7 @@ export default function USAInteriorDesignCalculator() {
               </div>
             </div>
             <div className="h-64 flex justify-center">
-              <Chart type="doughnut" data={chartData as any} options={{ maintainAspectRatio: false }} />
+              <Chart data={chartData} colors={chartColors} />
             </div>
           </div>
 
