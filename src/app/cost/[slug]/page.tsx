@@ -77,8 +77,27 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
   }
 
 
-  // Check if it is in our USA_CITIES_FALLBACK
+
+  // If the location was found in DB but missing rates, and it's a USA city, provide defaults
+  if (loc && loc.country === 'USA') {
+    return {
+      slug: loc.slug,
+      cityName: loc.city_name,
+      stateName: loc.state_name,
+      country: loc.country,
+
+      metaDesc: `Calculate construction and remodeling costs in ${loc.city_name}, ${loc.state_name}. Check local standard building rates, plumbing, and electrical charges.`,
+      neighborhoods: 'prime sectors and local neighborhoods',
+      soilType: 'local soil types',
+      basicRate: '$120/sqft',
+      standardRate: '$160/sqft',
+      premiumRate: '$220/sqft',
+    };
+  }
+
+  // Check if it is in our USA_CITIES_FALLBACK (for cities not in DB at all)
   const usaFallback = USA_CITIES_FALLBACK.find(c => c.slug === cityKey);
+
   if (usaFallback) {
     return {
       slug: usaFallback.slug,
