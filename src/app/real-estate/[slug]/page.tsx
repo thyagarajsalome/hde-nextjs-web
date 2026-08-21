@@ -104,8 +104,26 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     CalculatorComponent = USARemodelROICalculator;
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": `${toolName} - ${location.city_name}`,
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "description": `Use our free ${toolName.toLowerCase()} for ${location.city_name}, ${location.state_name}.`,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Section */}
       <div className="bg-primary text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
