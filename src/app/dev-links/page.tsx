@@ -1,5 +1,4 @@
 import React from 'react';
-import { supabase } from '@/config/supabaseClient';
 import DevLinksClient from '@/components/dev/DevLinksClient';
 import { supabase } from '@/config/supabaseClient';
 
