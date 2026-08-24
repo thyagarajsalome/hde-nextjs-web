@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/dashboard/', '/upgrade/', '/signin/', '/signup/'],
     },
-    sitemap: 'https://homedesignenglish.com/sitemap.xml',
+    sitemap: 'https://www.homedesignenglish.com/sitemap.xml',
   };
 }

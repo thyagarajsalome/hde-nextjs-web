@@ -3,7 +3,7 @@ import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
 
-const BASE_URL = 'https://homedesignenglish.com';
+const BASE_URL = 'https://www.homedesignenglish.com';
 
 const USA_CITIES_FALLBACK = [
   'dallas-texas', 'miami-florida', 'atlanta-georgia', 'seattle-washington',
