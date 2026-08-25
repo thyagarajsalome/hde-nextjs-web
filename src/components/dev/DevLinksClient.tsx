@@ -26,6 +26,8 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
       urls.push(`/real-estate/property-tax-in-${loc.slug}`);
       urls.push(`/real-estate/salary-needed-to-buy-in-${loc.slug}`);
       urls.push(`/real-estate/remodel-roi-in-${loc.slug}`);
+      urls.push(`/real-estate/kitchen-remodel-in-${loc.slug}`);
+      urls.push(`/real-estate/home-addition-in-${loc.slug}`);
     });
     
     inCities.forEach(loc => {
@@ -117,7 +119,7 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
         {/* USA SECTION */}
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 5})
+            <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 7})
           </h2>
           <ul className="space-y-4">
             {usCities.map((loc) => (
@@ -157,6 +159,20 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
                     /real-estate/remodel-roi-in-{loc.slug}
                   </Link>
                   {renderBadge('/real-estate/remodel-roi-in-' + loc.slug)}
+                </div>
+
+                <div className="flex items-center py-1">
+                  <Link href={'/real-estate/kitchen-remodel-in-' + loc.slug} target="_blank" className="text-primary hover:underline font-medium text-sm">
+                    /real-estate/kitchen-remodel-in-{loc.slug}
+                  </Link>
+                  {renderBadge('/real-estate/kitchen-remodel-in-' + loc.slug)}
+                </div>
+
+                <div className="flex items-center py-1">
+                  <Link href={'/real-estate/home-addition-in-' + loc.slug} target="_blank" className="text-primary hover:underline font-medium text-sm">
+                    /real-estate/home-addition-in-{loc.slug}
+                  </Link>
+                  {renderBadge('/real-estate/home-addition-in-' + loc.slug)}
                 </div>
               </li>
             ))}

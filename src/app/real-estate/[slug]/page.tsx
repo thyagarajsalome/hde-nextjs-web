@@ -7,6 +7,8 @@ import USAPropertyTaxCalculator from '@/features/construction/USAPropertyTaxCalc
 import USASalaryCalculator from '@/features/construction/USASalaryCalculator';
 
 import USARemodelROICalculator from '@/features/construction/USARemodelROICalculator';
+import USAKitchenRemodelCalculator from '@/features/construction/USAKitchenRemodelCalculator';
+import USAHomeAdditionCalculator from '@/features/construction/USAHomeAdditionCalculator';
 
 interface PageProps {
   params: Promise<{
@@ -57,6 +59,8 @@ export async function generateStaticParams() {
     params.push({ slug: `property-tax-in-${loc.slug}` });
     params.push({ slug: `salary-needed-to-buy-in-${loc.slug}` });
     params.push({ slug: `remodel-roi-in-${loc.slug}` });
+    params.push({ slug: `kitchen-remodel-in-${loc.slug}` });
+    params.push({ slug: `home-addition-in-${loc.slug}` });
   }
 
   return params;
@@ -65,7 +69,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -102,6 +106,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   else if (toolType === 'property-tax') titlePrefix = 'Property Tax Calculator';
   else if (toolType === 'salary-needed-to-buy') titlePrefix = 'Salary Needed to Buy a House';
   else if (toolType === 'remodel-roi') titlePrefix = 'Remodel ROI Calculator';
+  else if (toolType === 'kitchen-remodel') titlePrefix = 'Kitchen Remodel Cost Estimator';
+  else if (toolType === 'home-addition') titlePrefix = 'Home Addition Cost Estimator';
 
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
@@ -148,6 +154,12 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'remodel-roi') {
     toolName = 'Remodel ROI Calculator';
     CalculatorComponent = USARemodelROICalculator;
+  } else if (toolType === 'kitchen-remodel') {
+    toolName = 'Kitchen Remodel Cost Estimator';
+    CalculatorComponent = USAKitchenRemodelCalculator;
+  } else if (toolType === 'home-addition') {
+    toolName = 'Home Addition Cost Estimator';
+    CalculatorComponent = USAHomeAdditionCalculator;
   }
 
   const faqs = [];
@@ -178,6 +190,20 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `What home renovations add the most value in ${location.city_name}?`,
       answer: `In ${location.city_name}, ${location.state_name}, kitchen remodels, bathroom updates, and adding usable square footage typically yield the highest Return on Investment (ROI) when it comes time to sell your property.`
+    });
+  } else if (toolType === 'kitchen-remodel') {
+    faqs.push({
+      question: `How much does a kitchen remodel cost in ${location.city_name}?`,
+      answer: `The cost varies significantly based on size and materials. Use our ${location.city_name} Kitchen Remodel Estimator above to get a breakdown of cabinets, countertops, and labor costs.`
+    });
+    faqs.push({
+      question: `Do I need a permit for a kitchen remodel in ${location.city_name}?`,
+      answer: `Usually, yes. If you are moving plumbing or electrical lines, ${location.city_name} building codes require permits. Replacing cabinets or countertops generally does not require a permit.`
+    });
+  } else if (toolType === 'home-addition') {
+    faqs.push({
+      question: `How much does it cost to add a room in ${location.city_name}?`,
+      answer: `Costs depend on whether you are building a sunroom, a bedroom, or a second story. Use our Home Addition Cost Estimator to check local pricing for ${location.city_name}, ${location.state_name}.`
     });
   }
 
