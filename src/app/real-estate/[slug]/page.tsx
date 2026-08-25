@@ -5,10 +5,10 @@ import { supabase } from '@/config/supabaseClient';
 import USARentVsBuyCalculator from '@/features/construction/USARentVsBuyCalculator';
 import USAPropertyTaxCalculator from '@/features/construction/USAPropertyTaxCalculator';
 import USASalaryCalculator from '@/features/construction/USASalaryCalculator';
-
 import USARemodelROICalculator from '@/features/construction/USARemodelROICalculator';
 import USAKitchenRemodelCalculator from '@/features/construction/USAKitchenRemodelCalculator';
 import USAHomeAdditionCalculator from '@/features/construction/USAHomeAdditionCalculator';
+import USASwimmingPoolCalculator from '@/features/construction/USASwimmingPoolCalculator';
 
 interface PageProps {
   params: Promise<{
@@ -61,6 +61,7 @@ export async function generateStaticParams() {
     params.push({ slug: `remodel-roi-in-${loc.slug}` });
     params.push({ slug: `kitchen-remodel-in-${loc.slug}` });
     params.push({ slug: `home-addition-in-${loc.slug}` });
+    params.push({ slug: `swimming-pool-cost-in-${loc.slug}` });
   }
 
   return params;
@@ -69,7 +70,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition|swimming-pool-cost)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -108,6 +109,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   else if (toolType === 'remodel-roi') titlePrefix = 'Remodel ROI Calculator';
   else if (toolType === 'kitchen-remodel') titlePrefix = 'Kitchen Remodel Cost Estimator';
   else if (toolType === 'home-addition') titlePrefix = 'Home Addition Cost Estimator';
+  else if (toolType === 'swimming-pool-cost') titlePrefix = 'Swimming Pool Cost Estimator';
 
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
@@ -160,6 +162,9 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'home-addition') {
     toolName = 'Home Addition Cost Estimator';
     CalculatorComponent = USAHomeAdditionCalculator;
+  } else if (toolType === 'swimming-pool-cost') {
+    toolName = 'Swimming Pool Cost Estimator';
+    CalculatorComponent = USASwimmingPoolCalculator;
   }
 
   const faqs = [];
@@ -204,6 +209,15 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `How much does it cost to add a room in ${location.city_name}?`,
       answer: `Costs depend on whether you are building a sunroom, a bedroom, or a second story. Use our Home Addition Cost Estimator to check local pricing for ${location.city_name}, ${location.state_name}.`
+    });
+  } else if (toolType === 'swimming-pool-cost') {
+    faqs.push({
+      question: `How much does it cost to build a pool in ${location.city_name}?`,
+      answer: `The cost of pool construction in ${location.city_name} depends heavily on the material (gunite vs fiberglass) and size. Use our Swimming Pool Cost Estimator above to get a tailored estimate.`
+    });
+    faqs.push({
+      question: `Who are the best pool builders in ${location.city_name}?`,
+      answer: `When looking for pool contractors in ${location.city_name}, ${location.state_name}, always ensure they are fully licensed and bonded. Get at least 3 quotes and compare them against our cost estimator.`
     });
   }
 
