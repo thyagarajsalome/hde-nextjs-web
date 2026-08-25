@@ -35,6 +35,7 @@ const USAInteriorDesignCalculator = lazyWithRetry(() => import("./USAInteriorDes
 const USAGardenBedCalculator     = lazyWithRetry(() => import("./USAGardenBedCalculator"));
 const USAKitchenRemodelCalculator = lazyWithRetry(() => import("./USAKitchenRemodelCalculator"));
 const USAHomeAdditionCalculator   = lazyWithRetry(() => import("./USAHomeAdditionCalculator"));
+const USASwimmingPoolCalculator   = lazyWithRetry(() => import("./USASwimmingPoolCalculator"));
 const PaintVisualizer            = lazyWithRetry(() => import("../visualizer/PaintVisualizer"));
 
 type CalculatorType =
@@ -60,6 +61,7 @@ type CalculatorType =
   | "usa-interior-design"
   | "usa-kitchen-remodel"
   | "usa-home-addition"
+  | "usa-swimming-pool"
   | "visualizer";
 
 const Loading = () => (
@@ -124,6 +126,7 @@ export default function CalculatorSuite() {
         return <USAInteriorDesignCalculator />;
       case 'usa-kitchen-remodel': return <USAKitchenRemodelCalculator />;
       case 'usa-home-addition': return <USAHomeAdditionCalculator />;
+      case 'usa-swimming-pool': return <USASwimmingPoolCalculator />;
       case 'visualizer':    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
