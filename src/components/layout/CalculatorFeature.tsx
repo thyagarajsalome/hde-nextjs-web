@@ -22,12 +22,14 @@ import USAPropertyTaxCalculator from "@/features/construction/USAPropertyTaxCalc
 import USARemodelROICalculator from "@/features/construction/USARemodelROICalculator";
 import USAInteriorDesignCalculator from "@/features/construction/USAInteriorDesignCalculator";
 import USAGardenBedCalculator from "@/features/construction/USAGardenBedCalculator";
+import USAKitchenRemodelCalculator from "@/features/construction/USAKitchenRemodelCalculator";
+import USAHomeAdditionCalculator from "@/features/construction/USAHomeAdditionCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "visualizer";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -64,6 +66,8 @@ export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProp
       case "usa-remodel-roi": return <USARemodelROICalculator />;
       case "usa-garden-bed": return <USAGardenBedCalculator />;
       case "usa-interior-design": return <USAInteriorDesignCalculator />;
+      case "usa-kitchen-remodel": return <USAKitchenRemodelCalculator />;
+      case "usa-home-addition": return <USAHomeAdditionCalculator />;
       case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;

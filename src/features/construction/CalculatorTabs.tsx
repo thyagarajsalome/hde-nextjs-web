@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "visualizer";
+type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "visualizer";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -29,6 +29,8 @@ const USA_CALCULATORS = [
   { id: "usa-property-tax", name: "Property Tax", icon: "fas fa-file-invoice-dollar", reqTier: 0 },
   { id: "usa-garden-bed", name: "Garden Bed", icon: "fas fa-leaf", reqTier: 0 },
   { id: "usa-interior-design", name: "Interior Design", icon: "fas fa-couch", reqTier: 0 },
+  { id: "usa-kitchen-remodel", name: "Kitchen Remodel", icon: "fas fa-utensils", reqTier: 0 },
+  { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 0 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
   { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 1 },
   { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 1 },
@@ -49,7 +51,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'visualizer'];
+    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel', 'usa-home-addition', 'visualizer'];
     if (region === 'US' && !usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('usa-framing');
     } else if (region === 'IN' && usaCalcs.includes(activeCalculator)) {
