@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { HeroService, HeroBanner } from "../../services/heroService";
 import { useGSAPHeroParallax } from "../../hooks/useGSAP";
 import { useRegion } from "../../context/RegionContext";
 
-export default function Hero() {
-  const [banners, setBanners] = useState<HeroBanner[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function Hero({ initialBanners }: { initialBanners: any[] }) {
+  const [banners, setBanners] = useState<HeroBanner[]>(initialBanners);
   const [isMobile, setIsMobile] = useState(false);
   const { region, setRegion, isReady } = useRegion();
 
@@ -30,15 +30,12 @@ export default function Hero() {
         const cached = localStorage.getItem("hde_hero_banners_cache");
         if (cached) {
           setBanners(JSON.parse(cached));
-          setLoading(false);
         }
         const data = await HeroService.getBanners();
         setBanners(data);
         localStorage.setItem("hde_hero_banners_cache", JSON.stringify(data));
       } catch (err) {
         console.error("Failed to load hero images", err);
-      } finally {
-        setLoading(false);
       }
     };
     loadBanners();
@@ -60,8 +57,8 @@ export default function Hero() {
     return url;
   };
 
-  if (!isReady || loading || banners.length === 0) {
-    return <div className="h-[30vh] lg:h-[65vh] bg-gray-200 animate-pulse"></div>;
+  if (!isReady || banners.length === 0) {
+    return null;
   }
 
   // FIRST TIME VISIT: Country Selection Screen
@@ -69,14 +66,9 @@ export default function Hero() {
     return (
       <section className="relative w-full h-[65vh] overflow-hidden flex flex-col items-center justify-center bg-secondary">
         <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 opacity-40 scale-105"
-            style={{
-              backgroundImage: `url(${getOptimizedImageUrl(banners[0].image_url)})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          ></div>
+          <div className="absolute inset-0 opacity-40 scale-105">
+            <Image src={getOptimizedImageUrl(banners[0].image_url)} alt="Hero" fill priority className="object-cover" />
+          </div>
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
 
@@ -122,19 +114,10 @@ export default function Hero() {
       id="home" 
       className="relative w-full h-[30vh] lg:h-[65vh] overflow-hidden flex items-center justify-center bg-secondary"
     >
-      {/* Preload critical LCP image */}
-      <link rel="preload" as="image" href={getOptimizedImageUrl(displayBanner.image_url)} />
-
       {/* Background Banner */}
       <div className="absolute inset-0">
-        <div
-          className="absolute inset-0 opacity-100 scale-100"
-          style={{
-            backgroundImage: `url(${getOptimizedImageUrl(displayBanner.image_url)})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
+        <div className="absolute inset-0 opacity-100 scale-100">
+          <Image src={getOptimizedImageUrl(displayBanner.image_url)} alt="Hero" fill priority className="object-cover" />
           {/* Slightly darker overlay on mobile to ensure button accessibility */}
           <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
         </div>
