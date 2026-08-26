@@ -1,8 +1,15 @@
 import { notFound } from 'next/navigation';
 import { designStyles } from '@/data/designStyles';
 
-export default function StyleDetailPage({ params }: { params: { slug: string } }) {
-  const style = designStyles.find((s) => s.id === params.slug);
+export async function generateStaticParams() {
+  return designStyles.map((style) => ({
+    slug: style.id,
+  }));
+}
+
+export default async function StyleDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const style = designStyles.find((s) => s.id === resolvedParams.slug);
 
   if (!style) {
     notFound();
