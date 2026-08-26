@@ -46,17 +46,6 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
     if (toolsSection) toolsSection.scrollIntoView({ behavior: "smooth" });
   };
 
-  const getOptimizedImageUrl = (url: string) => {
-    if (url.includes("supabase.co/storage/v1/object/public/")) {
-      const separator = url.includes("?") ? "&" : "?";
-      // Compress heavily for mobile screens to save bandwidth and load instantly
-      const width = isMobile ? 600 : 1200;
-      const quality = isMobile ? 70 : 80;
-      return `${url}${separator}width=${width}&quality=${quality}`;
-    }
-    return url;
-  };
-
   if (!isReady || banners.length === 0) {
     return null;
   }
@@ -67,7 +56,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       <section className="relative w-full h-[65vh] overflow-hidden flex flex-col items-center justify-center bg-secondary">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 opacity-40 scale-105">
-            <Image src={getOptimizedImageUrl(banners[0].image_url)} alt="Hero" fill priority className="object-cover" />
+            <Image src={banners[0].image_url} alt="Hero" fill priority className="object-cover" />
           </div>
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
@@ -117,7 +106,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       {/* Background Banner */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-100 scale-100">
-          <Image src={getOptimizedImageUrl(displayBanner.image_url)} alt="Hero" fill priority className="object-cover" />
+          <Image src={displayBanner.image_url} alt="Hero" fill priority className="object-cover" />
           {/* Slightly darker overlay on mobile to ensure button accessibility */}
           <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
         </div>
