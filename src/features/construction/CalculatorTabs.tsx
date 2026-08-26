@@ -89,8 +89,8 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden">
-            {CALCULATORS.map((calc) => (
+          <div className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden max-h-[60vh] overflow-y-auto">
+            {CALCULATORS.filter((c: any) => c.category !== 'Luxury Upgrades').map((calc) => (
               <button
                 key={calc.id}
                 onClick={() => handleTabClick(calc.id as CalculatorType, calc.reqTier)}
@@ -104,13 +104,36 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                 {tierValue < calc.reqTier && <i className="fas fa-lock text-xs text-gray-300 dark:text-zinc-600"></i>}
               </button>
             ))}
+
+            {CALCULATORS.some((c: any) => c.category === 'Luxury Upgrades') && (
+              <div className="bg-gray-50 dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 pb-2">
+                <div className="px-5 py-3 flex items-center gap-2">
+                  <span className="text-sm">💎</span>
+                  <span className="text-xs font-black text-gray-800 dark:text-zinc-200 uppercase tracking-widest">Luxury Upgrades</span>
+                </div>
+                {CALCULATORS.filter((c: any) => c.category === 'Luxury Upgrades').map((calc) => (
+                  <button
+                    key={calc.id}
+                    onClick={() => handleTabClick(calc.id as CalculatorType, calc.reqTier)}
+                    className={`w-full flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-zinc-800 last:border-none hover:bg-white dark:hover:bg-zinc-800 transition-colors
+                      ${activeCalculator === calc.id ? "bg-white border-l-4 border-l-primary" : ""}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400 dark:text-zinc-500'}`}></i>
+                      <span className={`text-sm ${activeCalculator === calc.id ? 'font-bold text-secondary dark:text-zinc-100' : 'text-gray-600 dark:text-zinc-400'}`}>{calc.name}</span>
+                    </div>
+                    {tierValue < calc.reqTier && <i className="fas fa-lock text-xs text-gray-300 dark:text-zinc-600"></i>}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* TABLET & DESKTOP GRID (Visible on >=768px - No sliding, all visible) */}
       <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {CALCULATORS.map(({ id, name, icon, reqTier }) => {
+        {CALCULATORS.filter((c: any) => c.category !== 'Luxury Upgrades').map(({ id, name, icon, reqTier }) => {
           const isActive = activeCalculator === id;
           const isLocked = tierValue < reqTier;
 
@@ -129,6 +152,36 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           );
         })}
       </div>
+
+      {/* LUXURY UPGRADES SECTION */}
+      {CALCULATORS.some((c: any) => c.category === 'Luxury Upgrades') && (
+        <div className="hidden md:block mt-6 mb-2">
+          <div className="flex items-center gap-2 mb-3 px-1">
+            <span className="text-xl">💎</span>
+            <h3 className="text-lg font-black text-gray-900 dark:text-zinc-100 tracking-tight">Luxury Upgrades</h3>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {CALCULATORS.filter((c: any) => c.category === 'Luxury Upgrades').map(({ id, name, icon, reqTier }) => {
+              const isActive = activeCalculator === id;
+              const isLocked = tierValue < reqTier;
+
+              return (
+                <button
+                  key={id}
+                  onClick={() => handleTabClick(id as CalculatorType, reqTier)}
+                  className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-200 border-2
+                    ${isActive ? "bg-white dark:bg-zinc-900 text-secondary dark:text-zinc-100 border-primary shadow-md scale-[1.02]" : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 border-gray-100 dark:border-zinc-800 hover:border-primary/30 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}
+                    ${isLocked ? "opacity-80" : ""}`}
+                >
+                  <i className={`${icon} ${isActive ? "text-primary text-base" : "text-gray-400 dark:text-zinc-500"}`}></i>
+                  <span className="whitespace-nowrap">{name}</span>
+                  {isLocked && <i className="fas fa-lock text-[10px] ml-1 opacity-40"></i>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
