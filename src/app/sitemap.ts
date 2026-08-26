@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
+import { permitGuides } from '@/data/permitGuides';
 
 const BASE_URL = 'https://www.homedesignenglish.com';
 
@@ -13,6 +14,13 @@ const USA_CITIES_FALLBACK = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const permitUrls: MetadataRoute.Sitemap = permitGuides.map((guide) => ({
+    url: `${BASE_URL}/permits/${guide.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -149,5 +157,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...cityRoutes, ...realEstateRoutes, ...blogRoutes];
+  return [
+    ...staticRoutes,
+    ...cityRoutes,
+    ...realEstateRoutes,
+    { url: `${BASE_URL}/permits`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    ...permitUrls,
+    ...blogRoutes
+  ];
 }
