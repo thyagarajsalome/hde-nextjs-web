@@ -102,6 +102,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority: 0.8,
       });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/pickleball-court-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/outdoor-kitchen-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
     });
   } else {
     // Fallback
@@ -133,6 +145,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
       realEstateRoutes.push({
         url: `${BASE_URL}/real-estate/remodel-roi-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/pickleball-court-cost-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/outdoor-kitchen-cost-in-${slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,

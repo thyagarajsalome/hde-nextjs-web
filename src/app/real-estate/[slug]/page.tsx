@@ -9,6 +9,8 @@ import USARemodelROICalculator from '@/features/construction/USARemodelROICalcul
 import USAKitchenRemodelCalculator from '@/features/construction/USAKitchenRemodelCalculator';
 import USAHomeAdditionCalculator from '@/features/construction/USAHomeAdditionCalculator';
 import USASwimmingPoolCalculator from '@/features/construction/USASwimmingPoolCalculator';
+import USAPickleballCalculator from '@/features/construction/USAPickleballCalculator';
+import USAOutdoorKitchenCalculator from '@/features/construction/USAOutdoorKitchenCalculator';
 
 interface PageProps {
   params: Promise<{
@@ -62,6 +64,8 @@ export async function generateStaticParams() {
     params.push({ slug: `kitchen-remodel-in-${loc.slug}` });
     params.push({ slug: `home-addition-in-${loc.slug}` });
     params.push({ slug: `swimming-pool-cost-in-${loc.slug}` });
+    params.push({ slug: `pickleball-court-cost-in-${loc.slug}` });
+    params.push({ slug: `outdoor-kitchen-cost-in-${loc.slug}` });
   }
 
   return params;
@@ -70,7 +74,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition|swimming-pool-cost)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -110,6 +114,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   else if (toolType === 'kitchen-remodel') titlePrefix = 'Kitchen Remodel Cost Estimator';
   else if (toolType === 'home-addition') titlePrefix = 'Home Addition Cost Estimator';
   else if (toolType === 'swimming-pool-cost') titlePrefix = 'Swimming Pool Cost Estimator';
+  else if (toolType === 'pickleball-court-cost') titlePrefix = 'Pickleball Court Cost Estimator';
+  else if (toolType === 'outdoor-kitchen-cost') titlePrefix = 'Outdoor Kitchen Cost Estimator';
 
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
@@ -165,6 +171,12 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'swimming-pool-cost') {
     toolName = 'Swimming Pool Cost Estimator';
     CalculatorComponent = USASwimmingPoolCalculator;
+  } else if (toolType === 'pickleball-court-cost') {
+    toolName = 'Pickleball Court Cost Estimator';
+    CalculatorComponent = USAPickleballCalculator;
+  } else if (toolType === 'outdoor-kitchen-cost') {
+    toolName = 'Outdoor Kitchen Cost Estimator';
+    CalculatorComponent = USAOutdoorKitchenCalculator;
   }
 
   const faqs = [];
@@ -218,6 +230,24 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `Who are the best pool builders in ${location.city_name}?`,
       answer: `When looking for pool contractors in ${location.city_name}, ${location.state_name}, always ensure they are fully licensed and bonded. Get at least 3 quotes and compare them against our cost estimator.`
+    });
+  } else if (toolType === 'pickleball-court-cost') {
+    faqs.push({
+      question: `What are the standard dimensions for a pickleball court in ${location.city_name}?`,
+      answer: `The standard size for a pickleball court is 20 feet wide by 44 feet long. However, it's recommended to have a total playing area of 30 feet by 60 feet in ${location.city_name} to allow room for out-of-bounds play.`
+    });
+    faqs.push({
+      question: `Will a pickleball court increase my property value in ${location.city_name}?`,
+      answer: `Yes, adding a pickleball court can increase your property value in ${location.city_name}, ${location.state_name}. It's a highly sought-after amenity that appeals to buyers of all ages.`
+    });
+  } else if (toolType === 'outdoor-kitchen-cost') {
+    faqs.push({
+      question: `Do I need a permit to build an outdoor kitchen in ${location.city_name}?`,
+      answer: `In ${location.city_name}, permits are typically required for outdoor kitchens, especially if you are running new electrical, gas, or plumbing lines.`
+    });
+    faqs.push({
+      question: `What is the ROI of an outdoor kitchen in ${location.city_name}?`,
+      answer: `An outdoor kitchen in ${location.city_name}, ${location.state_name} can offer an ROI of 55% to 200%, depending on the quality of materials and features.`
     });
   }
 
