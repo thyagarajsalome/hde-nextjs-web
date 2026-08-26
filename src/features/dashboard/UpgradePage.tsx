@@ -117,7 +117,7 @@ const usaPlans = {
     badge: "Best Value",
     features: [
       "Unlock Plumbing, Electrical & Framing Tools",
-      "Unlock Accent Walls & Woodwork",
+      "Unlock Technical Trades & Luxury Upgrades",
       "15 Consumable Project Credits",
       "Export Professional PDF Reports",
       "Priority Email Support"
