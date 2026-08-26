@@ -40,8 +40,8 @@ const USA_CALCULATORS = [
   { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 2 },
   { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 2 },
   { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 2 },
-  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 2, category: 'Luxury Upgrades' },
-  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 2, category: "Luxury Upgrades" },
+  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 2 },
+  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 2 },
 ] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
