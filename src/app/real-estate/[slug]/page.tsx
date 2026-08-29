@@ -123,6 +123,133 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+const ALL_TOOLS = [
+  { id: 'rent-vs-buy', name: 'Rent vs. Buy', icon: '🏠' },
+  { id: 'property-tax', name: 'Property Tax', icon: '📋' },
+  { id: 'salary-needed-to-buy', name: 'Salary Needed', icon: '💰' },
+  { id: 'remodel-roi', name: 'Remodel ROI', icon: '📈' },
+  { id: 'kitchen-remodel', name: 'Kitchen Remodel', icon: '🍳' },
+  { id: 'home-addition', name: 'Home Addition', icon: '🏗️' },
+  { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊' },
+  { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },
+  { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥' },
+];
+
+function getSampleCalculation(toolType: string, cityName: string, stateName: string) {
+  switch (toolType) {
+    case 'rent-vs-buy':
+      return {
+        description: `This sample compares buying a $400,000 home versus renting in ${cityName}, ${stateName} over a 5-year period.`,
+        data: [
+          { label: 'Home Price', value: '$400,000' },
+          { label: 'Down Payment (20%)', value: '$80,000' },
+          { label: 'Mortgage Rate', value: '6.5%' },
+          { label: 'Monthly PITI', value: '~$2,500' },
+          { label: 'Monthly Rent', value: '~$2,100' },
+          { label: '5-year equity built', value: '~$38,000' },
+        ],
+        verdict: 'In this scenario, buying builds $38,000 in equity over 5 years, offsetting the higher monthly cost.'
+      };
+    case 'property-tax':
+      return {
+        description: `Estimated annual property taxes for a sample home in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Assessed Home Value', value: '$350,000' },
+          { label: 'Estimated Tax Rate', value: '1.8%' },
+          { label: 'Annual Property Tax', value: '~$6,300' },
+          { label: 'Monthly Tax Escrow', value: '~$525' },
+          { label: 'Annual Home Insurance', value: '~$1,200' },
+        ],
+        verdict: 'Expect to add approximately $525 to your monthly mortgage payment for property tax escrow.'
+      };
+    case 'salary-needed-to-buy':
+      return {
+        description: `Income required to afford a $450,000 home using the standard 28/36 debt-to-income (DTI) rule in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Home Price', value: '$450,000' },
+          { label: 'Monthly PITI', value: '~$2,200' },
+          { label: 'DTI Target', value: '28%' },
+          { label: 'Required Annual Salary', value: '~$95,000' },
+        ],
+        verdict: 'A household income of ~$95,000 is recommended to comfortably afford a $450,000 home.'
+      };
+    case 'remodel-roi':
+      return {
+        description: `Estimated Return on Investment for a mid-range kitchen remodel in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Project Type', value: 'Mid-Range Kitchen' },
+          { label: 'Remodel Cost', value: '$35,000' },
+          { label: 'Added Home Value', value: '$28,000' },
+          { label: 'Estimated ROI', value: '80%' },
+        ],
+        verdict: 'Kitchen remodels typically recover about 80% of their cost when selling the home.'
+      };
+    case 'kitchen-remodel':
+      return {
+        description: `Cost breakdown for remodeling a sample 10x12 kitchen in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Cabinets', value: '$8,000' },
+          { label: 'Countertops', value: '$4,500' },
+          { label: 'Appliances', value: '$6,000' },
+          { label: 'Labor', value: '$12,000' },
+          { label: 'Total Estimated Cost', value: '~$30,500' },
+        ],
+        verdict: 'A standard 10x12 kitchen remodel typically costs around $30,500 depending on materials and labor rates.'
+      };
+    case 'home-addition':
+      return {
+        description: `Estimated cost for a standard 400 square foot home addition in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Size', value: '400 sq. ft.' },
+          { label: 'Cost per sq. ft.', value: '$200 - $350' },
+          { label: 'Low-End Total', value: '$80,000' },
+          { label: 'High-End Total', value: '$140,000' },
+        ],
+        verdict: 'Adding 400 square feet usually ranges from $80,000 to $140,000 depending on finishes and structural requirements.'
+      };
+    case 'swimming-pool-cost':
+      return {
+        description: `Estimated cost for a sample 15x30 gunite swimming pool in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Pool Type', value: '15x30 Gunite' },
+          { label: 'Excavation', value: '$5,000' },
+          { label: 'Pool Shell', value: '$25,000' },
+          { label: 'Decking', value: '$8,000' },
+          { label: 'Total Estimated Cost', value: '~$55,000' },
+        ],
+        verdict: 'A standard 15x30 gunite pool installation typically costs around $55,000.'
+      };
+    case 'pickleball-court-cost':
+      return {
+        description: `Estimated cost for a 30x60 post-tension concrete pickleball court in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Size', value: '30x60 feet' },
+          { label: 'Concrete Base', value: '$16,000' },
+          { label: 'Surface & Lines', value: '$5,000' },
+          { label: 'Fencing', value: '$6,000' },
+          { label: 'Lighting', value: '$7,000' },
+          { label: 'Total Estimated Cost', value: '~$34,000' },
+        ],
+        verdict: 'Expect to spend approximately $34,000 for a fully equipped residential pickleball court.'
+      };
+    case 'outdoor-kitchen-cost':
+      return {
+        description: `Estimated cost for a mid-range outdoor kitchen setup in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Project Type', value: 'Mid-Range Outdoor Kitchen' },
+          { label: 'Masonry & Framework', value: '$8,000' },
+          { label: 'Appliances (Grill, Fridge)', value: '$12,000' },
+          { label: 'Countertops', value: '$4,000' },
+          { label: 'Utilities (Gas, Electric)', value: '$4,000' },
+          { label: 'Total Estimated Cost', value: '~$28,000' },
+        ],
+        verdict: 'A complete mid-range outdoor kitchen typically costs around $28,000 to construct.'
+      };
+    default:
+      return null;
+  }
+}
+
 export default async function RealEstateToolPage({ params }: PageProps) {
   const resolvedParams = await params;
   const parsed = parseSlug(resolvedParams.slug);
@@ -300,6 +427,56 @@ export default async function RealEstateToolPage({ params }: PageProps) {
       {/* Calculator Container */}
       <div className="max-w-4xl mx-auto py-12 px-4">
         {CalculatorComponent && <CalculatorComponent />}
+      </div>
+
+      {/* Static Sample Calculation Section for SEO */}
+      {(() => {
+        const sample = getSampleCalculation(toolType, location.city_name, location.state_name);
+        if (!sample) return null;
+        return (
+          <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Sample {toolName} for {location.city_name}, {location.state_name}
+            </h2>
+            <p className="text-gray-700 mb-8 leading-relaxed text-lg">
+              {sample.description}
+            </p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                {sample.data.map((item, idx) => (
+                  <div key={idx} className="p-4 flex justify-between items-center">
+                    <span className="text-gray-600 font-medium">{item.label}</span>
+                    <span className="text-gray-900 font-bold">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-primary-700 font-semibold text-lg">
+              {sample.verdict}
+            </p>
+          </div>
+        );
+      })()}
+
+      {/* Related Tools Cross-Linking Section */}
+      <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200 bg-gray-50">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          More Real Estate Tools for {location.city_name}, {location.state_name}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {ALL_TOOLS.filter(t => t.id !== toolType).map(tool => (
+            <a 
+              key={tool.id} 
+              href={`/real-estate/${tool.id}-in-${citySlug}`}
+              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-200 transition-all flex items-center gap-4 group"
+            >
+              <span className="text-3xl group-hover:scale-110 transition-transform">{tool.icon}</span>
+              <span className="font-semibold text-gray-800 group-hover:text-primary-600 transition-colors">
+                {tool.name}
+              </span>
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Dynamic FAQ Section */}
