@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
+type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -14,6 +14,7 @@ interface CalculatorTabsProps {
 
 const INDIA_CALCULATORS = [
   { id: "construction",  name: "Construction",   icon: "fas fa-home",        reqTier: 0 },
+  { id: "india-emi",     name: "Home Loan EMI",  icon: "fas fa-university",  reqTier: 0 },
   { id: "interior",      name: "Interiors",      icon: "fas fa-couch",       reqTier: 1 },
   { id: "flooring",      name: "Flooring",       icon: "fas fa-layer-group", reqTier: 1 },
   { id: "painting",      name: "Painting",       icon: "fas fa-paint-roller",reqTier: 1 },

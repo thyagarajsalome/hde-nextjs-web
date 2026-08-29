@@ -27,6 +27,50 @@ const USA_CITIES_FALLBACK = [
   { slug: 'san-diego-california', city_name: 'San Diego', state_name: 'California', country: 'USA' }
 ];
 
+const INDIA_CITIES = [
+  { slug: 'mumbai', name: 'Mumbai' },
+  { slug: 'bengaluru', name: 'Bengaluru' },
+  { slug: 'delhi-ncr', name: 'Delhi NCR' },
+  { slug: 'chennai', name: 'Chennai' },
+  { slug: 'hyderabad', name: 'Hyderabad' },
+  { slug: 'pune', name: 'Pune' },
+  { slug: 'ahmedabad', name: 'Ahmedabad' },
+  { slug: 'kolkata', name: 'Kolkata' },
+  { slug: 'jaipur', name: 'Jaipur' },
+  { slug: 'lucknow', name: 'Lucknow' },
+  { slug: 'surat', name: 'Surat' },
+  { slug: 'nagpur', name: 'Nagpur' },
+];
+
+function getIndiaSampleEstimate(cityData: CityData) {
+  const parseRate = (rateStr: string) => {
+    const num = rateStr.replace(/[^0-9.]/g, '');
+    return num ? parseFloat(num) : 0;
+  };
+  
+  const basic = parseRate(cityData.basicRate);
+  const standard = parseRate(cityData.standardRate);
+  const premium = parseRate(cityData.premiumRate);
+  
+  const sqft = 1200;
+  
+  return {
+    sqft,
+    basicTotal: basic * sqft,
+    standardTotal: standard * sqft,
+    premiumTotal: premium * sqft,
+    breakdown: [
+      { name: 'Foundation', percent: 12 },
+      { name: 'Structure', percent: 30 },
+      { name: 'Masonry', percent: 12 },
+      { name: 'Roofing', percent: 10 },
+      { name: 'Finishing', percent: 20 },
+      { name: 'Electrical & Plumbing', percent: 10 },
+      { name: 'Miscellaneous', percent: 6 },
+    ]
+  };
+}
+
 export async function generateStaticParams() {
   // Try to fetch slugs from Supabase
   const { data: dbLocations } = await supabase.from('pseo_locations').select('slug');
@@ -160,6 +204,9 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
 
+  const sampleEstimate = forceRegion === 'IN' ? getIndiaSampleEstimate(cityData) : null;
+  const formatLakhs = (amount: number) => `₹${(amount / 100000).toFixed(2)} Lakhs`;
+
   // 1. Generate Dynamic FAQs based on City Data
   const dynamicFaqs = [
     {
@@ -225,6 +272,96 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
           <AppPromoSection />
           <Testimonials />
         </>
+      )}
+
+      {forceRegion === 'IN' && sampleEstimate && (
+        <section className="py-16 bg-gray-50 border-t border-gray-200">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <h2 className="text-3xl font-bold text-secondary mb-6 text-center">
+              Sample Construction Cost Estimate for {cityData.cityName}, {cityData.stateName}
+            </h2>
+            <p className="text-gray-600 mb-8 text-center text-lg">
+              Based on a standard 1,200 sqft residential home in {cityData.cityName}, here is an approximate cost breakdown:
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Basic Finish</h3>
+                <p className="text-3xl font-bold text-primary">{formatLakhs(sampleEstimate.basicTotal)}</p>
+                <p className="text-sm text-gray-500 mt-2">({cityData.basicRate})</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md border-2 border-primary text-center relative transform md:-translate-y-2">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">
+                  MOST POPULAR
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Standard Finish</h3>
+                <p className="text-3xl font-bold text-primary">{formatLakhs(sampleEstimate.standardTotal)}</p>
+                <p className="text-sm text-gray-500 mt-2">({cityData.standardRate})</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Premium Finish</h3>
+                <p className="text-3xl font-bold text-primary">{formatLakhs(sampleEstimate.premiumTotal)}</p>
+                <p className="text-sm text-gray-500 mt-2">({cityData.premiumRate})</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Standard Material Breakdown</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50">
+                      <th className="py-3 px-4 font-semibold text-gray-700 border-b">Construction Stage</th>
+                      <th className="py-3 px-4 font-semibold text-gray-700 border-b text-right">% of Total Cost</th>
+                      <th className="py-3 px-4 font-semibold text-gray-700 border-b text-right">Approx. Cost</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sampleEstimate.breakdown.map((item, i) => (
+                      <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4 font-medium text-gray-800">{item.name}</td>
+                        <td className="py-3 px-4 text-gray-600 text-right">{item.percent}%</td>
+                        <td className="py-3 px-4 text-gray-800 font-semibold text-right">
+                          {formatLakhs(sampleEstimate.standardTotal * (item.percent / 100))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr className="bg-gray-50 font-bold">
+                      <td className="py-3 px-4 text-gray-900">Total</td>
+                      <td className="py-3 px-4 text-gray-900 text-right">100%</td>
+                      <td className="py-3 px-4 text-primary text-right">{formatLakhs(sampleEstimate.standardTotal)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            <p className="text-gray-600 text-sm italic">
+              <strong>Note:</strong> The above costs are estimates based on average rates in {cityData.cityName}. Actual costs may vary depending on land conditions, specific material choices, architectural fees, and local labor availability in different parts of {cityData.stateName}.
+            </p>
+          </div>
+        </section>
+      )}
+
+      {forceRegion === 'IN' && (
+        <section className="py-12 bg-white border-t border-gray-100">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-center text-secondary mb-8">Construction Costs in Other Indian Cities</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {INDIA_CITIES.filter(c => c.slug !== cityData.slug).map((city) => (
+                <a
+                  key={city.slug}
+                  href={`/cost/construction-in-${city.slug}`}
+                  className="bg-gray-50 hover:bg-primary hover:text-white transition-colors duration-200 rounded-lg p-4 text-center border border-gray-100 shadow-sm flex items-center justify-center min-h-[80px]"
+                >
+                  <span className="font-medium">{city.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
       
       {/* Dynamic SEO FAQ Section */}
