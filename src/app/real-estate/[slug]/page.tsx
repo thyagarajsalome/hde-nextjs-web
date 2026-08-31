@@ -103,6 +103,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     location = USA_CITIES_FALLBACK.find(c => c.slug === citySlug);
   }
 
+  if (!location) {
+    // Dynamic fallback for missing cities in state hubs
+    const stateSuffixes = ['-texas', '-california', '-florida', '-georgia', '-washington', '-arizona', '-illinois', '-colorado', '-north-carolina', '-tennessee', '-nevada', '-utah'];
+    for (const suffix of stateSuffixes) {
+      if (citySlug.endsWith(suffix)) {
+        const rawCity = citySlug.slice(0, -suffix.length);
+        const formatWord = (str: string) => str.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        location = {
+          slug: citySlug,
+          city_name: formatWord(rawCity),
+          state_name: formatWord(suffix.replace('-', '')),
+          country: 'USA'
+        };
+        break;
+      }
+    }
+  }
 
   if (!location) return { title: 'Not Found' };
 
@@ -271,6 +288,23 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     location = USA_CITIES_FALLBACK.find(c => c.slug === citySlug);
   }
 
+  if (!location) {
+    // Dynamic fallback for missing cities in state hubs
+    const stateSuffixes = ['-texas', '-california', '-florida', '-georgia', '-washington', '-arizona', '-illinois', '-colorado', '-north-carolina', '-tennessee', '-nevada', '-utah'];
+    for (const suffix of stateSuffixes) {
+      if (citySlug.endsWith(suffix)) {
+        const rawCity = citySlug.slice(0, -suffix.length);
+        const formatWord = (str: string) => str.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        location = {
+          slug: citySlug,
+          city_name: formatWord(rawCity),
+          state_name: formatWord(suffix.replace('-', '')),
+          country: 'USA'
+        };
+        break;
+      }
+    }
+  }
 
   if (!location) notFound();
 
