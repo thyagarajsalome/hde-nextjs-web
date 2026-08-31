@@ -37,23 +37,31 @@ type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
+  forceCalculator?: CalculatorType;
 }
 
-export default function CalculatorFeature({ forceRegion }: CalculatorFeatureProps = {}) {
+export default function CalculatorFeature({ forceRegion, forceCalculator }: CalculatorFeatureProps = {}) {
   const { hasPaid } = useUser();
   const { region, setRegion } = useRegion();
-  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>("construction");
+  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(forceCalculator || "construction");
 
   // Force region switch based on props (e.g. from pSEO pages)
   React.useEffect(() => {
     if (forceRegion && region !== forceRegion) {
       setRegion(forceRegion);
       // Auto-switch default calculator tab if they entered a US page
-      if (forceRegion === 'US' && activeCalculator === 'construction') {
+      if (forceRegion === 'US' && activeCalculator === 'construction' && !forceCalculator) {
         setActiveCalculator('usa-framing');
       }
     }
-  }, [forceRegion, region, setRegion, activeCalculator]);
+  }, [forceRegion, region, setRegion, activeCalculator, forceCalculator]);
+
+  // Update active calculator if prop changes
+  React.useEffect(() => {
+    if (forceCalculator) {
+      setActiveCalculator(forceCalculator);
+    }
+  }, [forceCalculator]);
 
   const renderCalculator = () => {
     switch (activeCalculator) {

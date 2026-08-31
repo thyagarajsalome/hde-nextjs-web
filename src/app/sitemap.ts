@@ -77,12 +77,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let realEstateRoutes: MetadataRoute.Sitemap = [];
   
   if (locations && locations.length > 0) {
-    cityRoutes = locations.map((loc: any) => ({
-      url: `${BASE_URL}/cost/construction-in-${loc.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    }));
+    cityRoutes = locations.flatMap((loc: any) => [
+      {
+        url: `${BASE_URL}/cost/construction-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/interior-design-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/flooring-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/painting-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      }
+    ]);
 
     // USA Real Estate tools
     const usaLocations = locations.filter((loc: any) => loc.country === 'USA');
@@ -135,12 +155,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   } else {
     // Fallback
-    cityRoutes = Object.keys(CITIES_DATA).map((cityKey) => ({
-      url: `${BASE_URL}/cost/construction-in-${cityKey}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    }));
+    cityRoutes = Object.keys(CITIES_DATA).flatMap((cityKey) => [
+      {
+        url: `${BASE_URL}/cost/construction-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/interior-design-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/flooring-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/painting-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      }
+    ]);
 
     USA_CITIES_FALLBACK.forEach((slug) => {
       realEstateRoutes.push({

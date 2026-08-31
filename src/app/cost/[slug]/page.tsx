@@ -83,19 +83,30 @@ export async function generateStaticParams() {
   locations = [...locations, ...toAdd];
   
   if (locations.length > 0) {
-    return locations.map((loc: any) => ({
-      slug: `construction-in-${loc.slug}`,
-    }));
+    return locations.flatMap((loc: any) => [
+      { slug: `construction-in-${loc.slug}` },
+      { slug: `interior-design-in-${loc.slug}` },
+      { slug: `flooring-in-${loc.slug}` },
+      { slug: `painting-in-${loc.slug}` },
+    ]);
   }
   
   // Fallback to hardcoded if DB fails
-  return Object.keys(CITIES_DATA).map((city) => ({
-    slug: `construction-in-${city}`,
-  }));
+  return Object.keys(CITIES_DATA).flatMap((city) => [
+    { slug: `construction-in-${city}` },
+    { slug: `interior-design-in-${city}` },
+    { slug: `flooring-in-${city}` },
+    { slug: `painting-in-${city}` },
+  ]);
 }
 
 async function getCityData(slugStr: string): Promise<CityData | null> {
-  const cityKey = slugStr.replace('construction-in-', '').toLowerCase();
+  let cityKey = slugStr;
+  if (cityKey.startsWith('construction-in-')) cityKey = cityKey.replace('construction-in-', '');
+  else if (cityKey.startsWith('interior-design-in-')) cityKey = cityKey.replace('interior-design-in-', '');
+  else if (cityKey.startsWith('flooring-in-')) cityKey = cityKey.replace('flooring-in-', '');
+  else if (cityKey.startsWith('painting-in-')) cityKey = cityKey.replace('painting-in-', '');
+  cityKey = cityKey.toLowerCase();
   
   // Fetch from Supabase
   const { data: loc } = await supabase
@@ -164,7 +175,10 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   
-  if (!resolvedParams.slug.startsWith('construction-in-')) {
+  if (!resolvedParams.slug.startsWith('construction-in-') &&
+      !resolvedParams.slug.startsWith('interior-design-in-') &&
+      !resolvedParams.slug.startsWith('flooring-in-') &&
+      !resolvedParams.slug.startsWith('painting-in-')) {
     return { title: "Not Found" };
   }
   
@@ -176,11 +190,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
+  let title = `House Construction Cost in ${cityData.cityName} - Calculator & Rates`;
+  if (resolvedParams.slug.startsWith('interior-design-in-')) {
+    title = `Interior Design Cost in ${cityData.cityName} - Calculator & Rates`;
+  } else if (resolvedParams.slug.startsWith('flooring-in-')) {
+    title = `Flooring Cost in ${cityData.cityName} - Calculator & Rates`;
+  } else if (resolvedParams.slug.startsWith('painting-in-')) {
+    title = `House Painting Cost in ${cityData.cityName} - Calculator & Rates`;
+  }
+
   return {
-    title: `House Construction Cost in ${cityData.cityName} - Calculator & Rates`,
+    title,
     description: cityData.metaDesc,
     openGraph: {
-      title: `House Construction Cost in ${cityData.cityName} | HDE`,
+      title: `${title} | HDE`,
       description: cityData.metaDesc,
       type: "website",
     }
@@ -190,7 +213,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CityPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   
-  if (!resolvedParams.slug.startsWith('construction-in-')) {
+  if (!resolvedParams.slug.startsWith('construction-in-') &&
+      !resolvedParams.slug.startsWith('interior-design-in-') &&
+      !resolvedParams.slug.startsWith('flooring-in-') &&
+      !resolvedParams.slug.startsWith('painting-in-')) {
     notFound();
   }
   
@@ -200,7 +226,18 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
-
+  let toolType = 'construction';
+  let forceCalculator = 'construction';
+  if (resolvedParams.slug.startsWith('interior-design-in-')) {
+    toolType = 'interior-design';
+    forceCalculator = 'interior';
+  } else if (resolvedParams.slug.startsWith('flooring-in-')) {
+    toolType = 'flooring';
+    forceCalculator = 'flooring';
+  } else if (resolvedParams.slug.startsWith('painting-in-')) {
+    toolType = 'painting';
+    forceCalculator = 'painting';
+  }
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
 
@@ -208,20 +245,68 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   const formatLakhs = (amount: number) => `₹${(amount / 100000).toFixed(2)} Lakhs`;
 
   // 1. Generate Dynamic FAQs based on City Data
-  const dynamicFaqs = [
-    {
-      question: `How much does it cost to build a house in ${cityData.cityName}?`,
-      answer: `The average cost to build a house in ${cityData.cityName} starts at ${cityData.basicRate} for a basic finish, ${cityData.standardRate} for standard, and can go up to ${cityData.premiumRate} for a premium luxury finish. Prices vary based on ${cityData.neighborhoods} and local material costs.`
-    },
-    {
-      question: `What are the primary construction materials used in ${cityData.cityName}?`,
-      answer: `Due to the ${cityData.soilType} and ${cityData.country === 'USA' ? 'local building codes' : 'weather conditions'}, builders in ${cityData.cityName} primarily rely on materials that fit the region's climate. Prices fluctuate, but current estimates include these local rates.`
-    },
-    {
-      question: `Do I need to account for local labor rates in ${cityData.cityName}?`,
-      answer: `Yes, labor rates in ${cityData.cityName}, ${cityData.stateName} differ from national averages. Our calculator automatically adjusts estimates using real-time local multipliers for framing, plumbing, roofing, and electrical work.`
-    }
-  ];
+  let dynamicFaqs = [];
+  if (toolType === 'interior-design') {
+    dynamicFaqs = [
+      {
+        question: `How much does interior design cost in ${cityData.cityName}?`,
+        answer: `The average interior design cost in ${cityData.cityName} varies depending on the level of finish, materials, and size of the space. Local trends often influence material choices and pricing.`
+      },
+      {
+        question: `What are the popular interior design styles in ${cityData.cityName}?`,
+        answer: `Styles in ${cityData.cityName} range from modern contemporary to traditional aesthetics, influenced by local culture and architecture.`
+      },
+      {
+        question: `Do interior design rates in ${cityData.cityName} include materials?`,
+        answer: `Rates can be structured with or without materials depending on the designer or firm you choose in ${cityData.cityName}.`
+      }
+    ];
+  } else if (toolType === 'flooring') {
+    dynamicFaqs = [
+      {
+        question: `How much does flooring cost in ${cityData.cityName}?`,
+        answer: `Flooring costs in ${cityData.cityName} depend on the material chosen, such as tiles, wood, or marble, and local labor rates.`
+      },
+      {
+        question: `What is the most popular flooring material in ${cityData.cityName}?`,
+        answer: `The choice of flooring in ${cityData.cityName} often depends on the climate and ${cityData.soilType}, with durable materials being preferred.`
+      },
+      {
+        question: `How much does labor cost for flooring in ${cityData.cityName}?`,
+        answer: `Labor rates in ${cityData.cityName} are influenced by local market conditions and the complexity of the flooring installation.`
+      }
+    ];
+  } else if (toolType === 'painting') {
+    dynamicFaqs = [
+      {
+        question: `How much does house painting cost in ${cityData.cityName}?`,
+        answer: `The cost to paint a house in ${cityData.cityName} varies based on the type of paint, surface area, and local labor charges.`
+      },
+      {
+        question: `What type of paint is best for homes in ${cityData.cityName}?`,
+        answer: `Given the local weather conditions, weather-resistant and washable paints are highly recommended for homes in ${cityData.cityName}.`
+      },
+      {
+        question: `Are labor rates for painting higher in ${cityData.cityName}?`,
+        answer: `Labor rates vary by region, and ${cityData.cityName} has its own specific prevailing wages for professional painters.`
+      }
+    ];
+  } else {
+    dynamicFaqs = [
+      {
+        question: `How much does it cost to build a house in ${cityData.cityName}?`,
+        answer: `The average cost to build a house in ${cityData.cityName} starts at ${cityData.basicRate} for a basic finish, ${cityData.standardRate} for standard, and can go up to ${cityData.premiumRate} for a premium luxury finish. Prices vary based on ${cityData.neighborhoods} and local material costs.`
+      },
+      {
+        question: `What are the primary construction materials used in ${cityData.cityName}?`,
+        answer: `Due to the ${cityData.soilType} and ${cityData.country === 'USA' ? 'local building codes' : 'weather conditions'}, builders in ${cityData.cityName} primarily rely on materials that fit the region's climate. Prices fluctuate, but current estimates include these local rates.`
+      },
+      {
+        question: `Do I need to account for local labor rates in ${cityData.cityName}?`,
+        answer: `Yes, labor rates in ${cityData.cityName}, ${cityData.stateName} differ from national averages. Our calculator automatically adjusts estimates using real-time local multipliers for framing, plumbing, roofing, and electrical work.`
+      }
+    ];
+  }
 
   // 2. Build JSON-LD Schema (Software + FAQ)
   const jsonLd = [
@@ -264,7 +349,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <CityContent cityData={cityData} />
-      <CalculatorFeature forceRegion={forceRegion} />
+      <CalculatorFeature forceRegion={forceRegion} forceCalculator={forceCalculator as any} />
       
       {/* Hide specific sections for USA mode as requested previously */}
       {forceRegion !== 'US' && (
@@ -274,7 +359,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         </>
       )}
 
-      {forceRegion === 'IN' && sampleEstimate && (
+      {forceRegion === 'IN' && sampleEstimate && toolType === 'construction' && (
         <section className="py-16 bg-gray-50 border-t border-gray-200">
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="text-3xl font-bold text-secondary mb-6 text-center">
@@ -348,12 +433,14 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       {forceRegion === 'IN' && (
         <section className="py-12 bg-white border-t border-gray-100">
           <div className="container mx-auto px-4 max-w-5xl">
-            <h2 className="text-2xl font-bold text-center text-secondary mb-8">Construction Costs in Other Indian Cities</h2>
+            <h2 className="text-2xl font-bold text-center text-secondary mb-8">
+              {toolType === 'interior-design' ? 'Interior Design' : toolType === 'flooring' ? 'Flooring' : toolType === 'painting' ? 'Painting' : 'Construction'} Costs in Other Indian Cities
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {INDIA_CITIES.filter(c => c.slug !== cityData.slug).map((city) => (
                 <a
                   key={city.slug}
-                  href={`/cost/construction-in-${city.slug}`}
+                  href={`/cost/${toolType}-in-${city.slug}`}
                   className="bg-gray-50 hover:bg-primary hover:text-white transition-colors duration-200 rounded-lg p-4 text-center border border-gray-100 shadow-sm flex items-center justify-center min-h-[80px]"
                 >
                   <span className="font-medium">{city.name}</span>
