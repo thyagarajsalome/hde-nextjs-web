@@ -40,6 +40,9 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
     
     inCities.forEach(loc => {
       urls.push(`/cost/construction-in-${loc.slug}`);
+      urls.push(`/cost/interior-design-in-${loc.slug}`);
+      urls.push(`/cost/flooring-in-${loc.slug}`);
+      urls.push(`/cost/painting-in-${loc.slug}`);
     });
 
     setProgress({ current: 0, total: urls.length });
@@ -225,18 +228,40 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
         {/* INDIA SECTION */}
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <i className="fas fa-map-marker-alt text-orange-500"></i> India Generated URLs ({inCities.length})
+            <i className="fas fa-map-marker-alt text-orange-500"></i> India Generated URLs ({inCities.length * 4})
           </h2>
+          <p className="text-xs text-gray-500 mb-4">Showing 4 unique SEO routes per city ({inCities.length} cities total)</p>
           <ul className="space-y-4">
             {inCities.map((loc) => (
-              <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
-                <span className="text-xs font-bold text-gray-500 mb-1">{loc.city_name}, {loc.state_name}</span>
+              <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-orange-500 transition-colors">
+                <span className="text-xs font-bold text-gray-500 mb-1">{loc.city_name}, {loc.state_name || 'India'}</span>
                 
                 <div className="flex items-center py-1">
-                  <Link href={'/cost/construction-in-' + loc.slug} target="_blank" className="text-primary hover:underline font-medium text-sm">
+                  <Link href={'/cost/construction-in-' + loc.slug} target="_blank" className="text-orange-600 hover:underline font-medium text-sm">
                     /cost/construction-in-{loc.slug}
                   </Link>
                   {renderBadge('/cost/construction-in-' + loc.slug)}
+                </div>
+
+                <div className="flex items-center py-1">
+                  <Link href={'/cost/interior-design-in-' + loc.slug} target="_blank" className="text-orange-600 hover:underline font-medium text-sm">
+                    /cost/interior-design-in-{loc.slug}
+                  </Link>
+                  {renderBadge('/cost/interior-design-in-' + loc.slug)}
+                </div>
+
+                <div className="flex items-center py-1">
+                  <Link href={'/cost/flooring-in-' + loc.slug} target="_blank" className="text-orange-600 hover:underline font-medium text-sm">
+                    /cost/flooring-in-{loc.slug}
+                  </Link>
+                  {renderBadge('/cost/flooring-in-' + loc.slug)}
+                </div>
+
+                <div className="flex items-center py-1">
+                  <Link href={'/cost/painting-in-' + loc.slug} target="_blank" className="text-orange-600 hover:underline font-medium text-sm">
+                    /cost/painting-in-{loc.slug}
+                  </Link>
+                  {renderBadge('/cost/painting-in-' + loc.slug)}
                 </div>
               </li>
             ))}
