@@ -33,6 +33,11 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
       urls.push(`/real-estate/outdoor-kitchen-cost-in-${loc.slug}`);
     });
     
+    // Add State Hubs
+    urls.push(`/real-estate/texas`);
+    urls.push(`/real-estate/florida`);
+    urls.push(`/real-estate/california`);
+    
     inCities.forEach(loc => {
       urls.push(`/cost/construction-in-${loc.slug}`);
     });
@@ -122,10 +127,23 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
         {/* USA SECTION */}
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 10})
+            <i className="fas fa-globe-americas text-blue-600"></i> USA Generated URLs ({usCities.length * 10 + 3})
           </h2>
-          <p className="text-xs text-gray-500 mb-4">Showing 10 unique SEO routes per city ({usCities.length} cities total)</p>
+          <p className="text-xs text-gray-500 mb-4">Showing 3 State Hubs + 10 unique SEO routes per city ({usCities.length} cities total)</p>
           <ul className="space-y-4">
+            
+            <li className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
+              <span className="text-xs font-bold text-gray-500 mb-1">State Hub Pages</span>
+              {['texas', 'florida', 'california'].map(state => (
+                <div key={state} className="flex items-center py-1">
+                  <Link href={`/real-estate/${state}`} target="_blank" className="text-primary hover:underline font-medium text-sm">
+                    /real-estate/{state}
+                  </Link>
+                  {renderBadge(`/real-estate/${state}`)}
+                </div>
+              ))}
+            </li>
+
             {usCities.map((loc) => (
               <li key={loc.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors">
                 <span className="text-xs font-bold text-gray-500 mb-1">{loc.city_name}, {loc.state_name}</span>
