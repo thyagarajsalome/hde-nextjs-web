@@ -14,8 +14,8 @@ export default function ContactPage() {
       
       <div className="bg-gray-50 p-6 rounded-xl border border-gray-100 mt-8">
         <h3>Email Support</h3>
-        <p><strong>General Inquiries:</strong> info@homedesignenglish.com</p>
-        <p><strong>Technical Support:</strong> support@homedesignenglish.com</p>
+        <p><strong>General Inquiries:</strong> hdeadmin@gmail.com</p>
+        <p><strong>Technical Support:</strong> hdeadmin@gmail.com</p>
       </div>
 
       <p className="mt-8 text-gray-500 text-sm">Please allow 24-48 hours for a response from our team. We appreciate your feedback!</p>

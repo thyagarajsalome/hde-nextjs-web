@@ -69,7 +69,7 @@ const TermsOfService = () => {
       <h2>6. Contact Us</h2>
       <p>
         If you have any questions about these Terms, please contact us at:{" "}
-        <a href="mailto:thyagaraja1983@gmail.com">thyagaraja1983@gmail.com</a>
+        <a href="mailto:hdeadmin@gmail.com">hdeadmin@gmail.com</a>
       </p>
     </div>
   );

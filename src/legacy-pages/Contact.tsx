@@ -12,10 +12,10 @@ const Contact = () => {
         You can email us at:
         <br />
         <a
-          href="mailto:thyagaraja1983@gmail.com"
-          style={{ fontWeight: "400", display: "block", marginTop: "0.2rem" }}
+          href="mailto:hdeadmin@gmail.com"
+          className="text-primary underline"
         >
-          thyagaraja1983@gmail.com
+          hdeadmin@gmail.com
         </a>
         
       </p>

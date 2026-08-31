@@ -209,7 +209,7 @@ export const useProjectActions = (projectType: string) => {
       
       doc.setFontSize(9);
       doc.text("www.homedesignenglish.com", 14, 30);
-      doc.text("Email: support@homedesignenglish.com", 14, 35);
+      doc.text("Email: hdeadmin@gmail.com", 14, 35);
       
       const categoryLabel = `ESTIMATE REPORT`;
       doc.setFont("helvetica", "bold");
