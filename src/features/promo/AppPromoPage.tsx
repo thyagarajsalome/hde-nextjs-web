@@ -315,15 +315,15 @@ const AppPromoPage = () => {
                 </p>
               </div>
 
-              {/* Link Directory Button */}
-              <div className="pt-2">
+              {/* Link Directory Button - Hidden for now */}
+              {/* <div className="pt-2">
                 <a
                   href="/directory"
                   className="inline-flex items-center gap-2 bg-secondary hover:bg-black dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all no-underline shadow hover:scale-[1.02]"
                 >
                   Get Listed / Find Local Pros Today <i className="fas fa-chevron-right text-xs"></i>
                 </a>
-              </div>
+              </div> */}
 
               {/* Specific Disclaimer */}
               <div className="p-4 bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200/50 dark:border-amber-900/30 rounded-2xl text-xs flex gap-3 text-amber-850 dark:text-amber-400">
