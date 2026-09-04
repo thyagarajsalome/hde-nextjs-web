@@ -12,6 +12,23 @@ const PROPERTY_TYPES = [
   { id: 'off-plan-properties', label: 'Off-Plan Properties' },
 ];
 
+function getUniquePropertyContent(typeId: string, areaName: string) {
+  switch (typeId) {
+    case 'apartments':
+      return `Apartments in ${areaName} are highly sought after by professionals and expatriates looking for a modern lifestyle. They typically offer the highest rental yields in the community and give residents direct access to premium tower amenities like shared pools, fitness centers, and concierge services.`;
+    case 'villas':
+      return `Villas in ${areaName} provide the ultimate luxury living experience. Perfect for families, these spacious properties offer private gardens, multi-car garages, and significantly more privacy. The long-term capital appreciation on villa properties in this community is exceptionally strong.`;
+    case 'townhouses':
+      return `Townhouses in ${areaName} strike the perfect balance between apartment affordability and villa spaciousness. They are incredibly popular with growing families who want private outdoor space and multiple bedrooms, often clustered around excellent community parks.`;
+    case 'penthouses':
+      return `Penthouses in ${areaName} represent the pinnacle of Dubai real estate. Located at the top of the area's most prestigious towers, these ultra-luxury units offer panoramic skyline views, sprawling terraces, and bespoke designer interiors tailored for high-net-worth buyers.`;
+    case 'off-plan-properties':
+      return `Investing in off-plan properties in ${areaName} is one of the smartest ways to maximize ROI. Buyers can secure units at launch prices, benefit from flexible developer payment plans, and enjoy significant capital appreciation by the time the project reaches completion.`;
+    default:
+      return `Properties in ${areaName} represent a solid investment in Dubai's thriving real estate market.`;
+  }
+}
+
 export function generateStaticParams() {
   const params: { slug: string }[] = [];
   
@@ -124,8 +141,14 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
             </div>
             
             <p className="text-gray-700 dark:text-zinc-300 mt-4 text-sm leading-relaxed">
-              Investing in {currentType.label.toLowerCase()} within {currentArea.name} offers distinct advantages. {currentArea.description}
+              {currentArea.description}
             </p>
+            <div className="mt-4 p-4 bg-primary/5 dark:bg-primary/10 rounded-lg border border-primary/10">
+              <p className="text-gray-800 dark:text-zinc-200 text-sm leading-relaxed font-medium">
+                <i className="fas fa-chart-line text-primary mr-2"></i>
+                {getUniquePropertyContent(currentType.id, currentArea.name)}
+              </p>
+            </div>
           </div>
 
           <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
