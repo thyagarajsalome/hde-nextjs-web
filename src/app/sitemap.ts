@@ -254,6 +254,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     } as const))
   ];
 
+  const PROPERTY_TYPES = ['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'];
+  
+  DUBAI_AREAS.forEach(areaSlug => {
+    PROPERTY_TYPES.forEach(pt => {
+      dubaiRoutes.push({
+        url: `${BASE_URL}/dubai-property/buy/${pt}-for-sale-in-${areaSlug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+    });
+  });
+
   return [
     ...staticRoutes,
     ...cityRoutes,
