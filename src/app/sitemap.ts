@@ -231,10 +231,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Dubai Property Routes
+  const DUBAI_AREAS = [
+    'dubai-marina', 'downtown-dubai', 'business-bay', 'jvc',
+    'dubai-hills', 'palm-jumeirah', 'jlt', 'dubai-creek-harbour',
+    'mbr-city', 'arabian-ranches', 'dubai-south', 'jbr',
+    'dubai-silicon-oasis', 'al-barsha', 'dubai-sports-city'
+  ];
+
+  const dubaiRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/dubai-property`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/dubai-property/calculator`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    ...DUBAI_AREAS.map(slug => ({
+      url: `${BASE_URL}/dubai-property/areas/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    } as const))
+  ];
+
   return [
     ...staticRoutes,
     ...cityRoutes,
     ...realEstateRoutes,
-    ...blogRoutes
+    ...blogRoutes,
+    ...dubaiRoutes
   ];
 }

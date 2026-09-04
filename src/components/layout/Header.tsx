@@ -86,6 +86,13 @@ const Header = () => {
                 <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="16" alt="USA" className="mr-1.5 rounded-sm" />
                 USA
               </button>
+              <button 
+                onClick={() => navigate.push('/dubai-property')}
+                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700 dark:text-zinc-400`}
+              >
+                <img src="https://flagcdn.com/w20/ae.png" srcSet="https://flagcdn.com/w40/ae.png 2x" width="16" alt="UAE" className="mr-1.5 rounded-sm" />
+                UAE
+              </button>
             </div>
           </nav>
 
@@ -116,6 +123,13 @@ const Header = () => {
               >
                 <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="18" alt="USA" className="mr-2 rounded-sm" />
                 USA
+              </button>
+              <button 
+                onClick={() => { navigate.push('/dubai-property'); setMenuOpen(false); }}
+                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all text-gray-500 hover:text-gray-700 dark:text-zinc-400`}
+              >
+                <img src="https://flagcdn.com/w20/ae.png" srcSet="https://flagcdn.com/w40/ae.png 2x" width="18" alt="UAE" className="mr-2 rounded-sm" />
+                UAE
               </button>
             </div>
 

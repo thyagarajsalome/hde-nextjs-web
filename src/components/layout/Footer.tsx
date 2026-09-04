@@ -9,6 +9,7 @@ export default function Footer() {
   const { region } = useRegion();
   const pathname = usePathname() || "";
   const isUSRoute = region === 'US' || pathname.includes('/real-estate/') || ['texas', 'california', 'new-york', 'florida', 'illinois', 'arizona', 'washington', 'pennsylvania', 'north-carolina'].some(state => pathname.includes(state));
+  const isDubaiRoute = pathname.includes('/dubai-property');
 
   return (
     <footer className="footer bg-white border-t border-gray-100 pt-8 pb-4">
@@ -42,8 +43,25 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* City links - compact (India Only) */}
-        {!isUSRoute ? (
+        {/* City/Area links - dynamic based on route */}
+        {isDubaiRoute ? (
+          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
+            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Dubai Property Guides By Area</h4>
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
+              <Link href="/dubai-property/areas/dubai-marina" className="text-gray-500 hover:text-primary transition-colors no-underline">Dubai Marina</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/dubai-property/areas/downtown-dubai" className="text-gray-500 hover:text-primary transition-colors no-underline">Downtown Dubai</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/dubai-property/areas/business-bay" className="text-gray-500 hover:text-primary transition-colors no-underline">Business Bay</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/dubai-property/areas/jvc" className="text-gray-500 hover:text-primary transition-colors no-underline">JVC</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/dubai-property/areas/dubai-hills" className="text-gray-500 hover:text-primary transition-colors no-underline">Dubai Hills</Link>
+              <span className="hidden md:inline text-gray-300">|</span>
+              <Link href="/dubai-property/areas/palm-jumeirah" className="text-gray-500 hover:text-primary transition-colors no-underline">Palm Jumeirah</Link>
+            </div>
+          </div>
+        ) : !isUSRoute ? (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
             <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
