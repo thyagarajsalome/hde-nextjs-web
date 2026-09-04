@@ -18,6 +18,8 @@ interface DubaiArea {
   };
   rentalYield: string;
   nearbyLandmarks: string[];
+  malls: string[];
+  airports: string[];
   transport: string[];
   lifestyle: string[];
   bestFor: string[];
@@ -36,6 +38,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 550K', oneBed: 'AED 850K', twoBed: 'AED 1.3M', threeBed: 'AED 2.5M' },
     rentalYield: '5-7%',
     nearbyLandmarks: ['Marina Mall', 'JBR Beach', 'Ain Dubai'],
+    malls: ['Dubai Marina Mall', 'Ibn Battuta Mall (10 mins)', 'Mall of the Emirates (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 30 mins', 'Al Maktoum Airport (DWC) - 30 mins'],
     transport: ['DMCC Metro Station', 'JLT Metro Station', 'Dubai Tram'],
     lifestyle: ['Beach access', 'Marina Walk', 'Fine dining', 'Nightlife'],
     bestFor: ['Young professionals', 'Investors', 'Expats'],
@@ -57,6 +61,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 800K', oneBed: 'AED 1.2M', twoBed: 'AED 2M', threeBed: 'AED 3.5M' },
     rentalYield: '4-6%',
     nearbyLandmarks: ['Burj Khalifa', 'Dubai Mall', 'Dubai Opera', 'The Dubai Fountain'],
+    malls: ['The Dubai Mall (0 mins)', 'City Walk (10 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 15 mins', 'Al Maktoum Airport (DWC) - 40 mins'],
     transport: ['Burj Khalifa/Dubai Mall Metro Station'],
     lifestyle: ['Luxury shopping', 'Fine dining', 'Arts & Culture'],
     bestFor: ['Luxury buyers', 'Short-term rental investors', 'High-net-worth individuals'],
@@ -78,6 +84,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 500K', oneBed: 'AED 750K', twoBed: 'AED 1.2M', threeBed: 'AED 2M' },
     rentalYield: '6-8%',
     nearbyLandmarks: ['Dubai Water Canal', 'Downtown Dubai (walkable)'],
+    malls: ['The Dubai Mall (5 mins)', 'Oasis Mall (10 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 15 mins', 'Al Maktoum Airport (DWC) - 40 mins'],
     transport: ['Business Bay Metro Station'],
     lifestyle: ['Urban living', 'Waterfront walks', 'Cafes and lounges'],
     bestFor: ['Investors', 'Professionals', 'Young couples'],
@@ -99,6 +107,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 380K', oneBed: 'AED 550K', twoBed: 'AED 800K', threeBed: 'AED 1.2M', villa: 'AED 2M+' },
     rentalYield: '7-9%',
     nearbyLandmarks: ['Circle Mall', 'Multiple community parks'],
+    malls: ['Circle Mall (0 mins)', 'Mall of the Emirates (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 25 mins', 'Al Maktoum Airport (DWC) - 30 mins'],
     transport: ['Bus routes (No direct metro)'],
     lifestyle: ['Suburban peace', 'Family-centric', 'Community living'],
     bestFor: ['First-time buyers', 'Families', 'Budget investors'],
@@ -120,6 +130,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 1M', twoBed: 'AED 1.5M', threeBed: 'AED 2.2M', villa: 'AED 4M' },
     rentalYield: '5-7%',
     nearbyLandmarks: ['Dubai Hills Mall', 'Dubai Hills Golf Club', 'Dubai Hills Park'],
+    malls: ['Dubai Hills Mall (0 mins)', 'Mall of the Emirates (10 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 20 mins', 'Al Maktoum Airport (DWC) - 35 mins'],
     transport: ['Future Metro line (planned 2026)', 'Al Khail Road access'],
     lifestyle: ['Golf course living', 'Extensive parks', 'Luxury retail'],
     bestFor: ['Families', 'Premium lifestyle seekers', 'Long-term residents'],
@@ -141,6 +153,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 1.8M', twoBed: 'AED 3M', threeBed: 'AED 5M', villa: 'AED 15M' },
     rentalYield: '4-6%',
     nearbyLandmarks: ['Atlantis The Palm', 'Nakheel Mall', 'The Pointe'],
+    malls: ['Nakheel Mall (0 mins)', 'The Pointe', 'Dubai Marina Mall (10 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 35 mins', 'Al Maktoum Airport (DWC) - 40 mins'],
     transport: ['Palm Monorail', 'Road access via trunk'],
     lifestyle: ['Beachfront living', 'Resort luxury', 'Exclusive dining'],
     bestFor: ['Ultra-luxury buyers', 'Holiday homes', 'High-net-worth investors'],
@@ -162,6 +176,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 400K', oneBed: 'AED 600K', twoBed: 'AED 900K', threeBed: 'AED 1.5M' },
     rentalYield: '6-8%',
     nearbyLandmarks: ['JLT Lakes', 'JLT Park'],
+    malls: ['Dubai Marina Mall (5 mins)', 'Ibn Battuta Mall (10 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 30 mins', 'Al Maktoum Airport (DWC) - 30 mins'],
     transport: ['DMCC Metro Station', 'Sobha Realty Metro Station'],
     lifestyle: ['Lakeside walks', 'Cafes & Dining', 'Pet-friendly parks'],
     bestFor: ['Budget-conscious professionals', 'Investors', 'Expats'],
@@ -183,6 +199,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 1M', twoBed: 'AED 1.6M', threeBed: 'AED 2.5M' },
     rentalYield: '5-7%',
     nearbyLandmarks: ['Creek Marina', 'Dubai Creek Tower (under construction)', 'Ras Al Khor Wildlife Sanctuary'],
+    malls: ['Dubai Square (Upcoming)', 'Dubai Festival City Mall (10 mins)', 'The Dubai Mall (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 10 mins', 'Al Maktoum Airport (DWC) - 45 mins'],
     transport: ['No metro yet', 'Water taxis'],
     lifestyle: ['Modern waterfront', 'Nature views', 'Pedestrian promenades'],
     bestFor: ['Long-term investors', 'Modern lifestyle seekers', 'Young professionals'],
@@ -204,6 +222,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 900K', twoBed: 'AED 1.4M', threeBed: 'N/A', villa: 'AED 3M' },
     rentalYield: '5-6%',
     nearbyLandmarks: ['Meydan Racecourse', 'District One Crystal Lagoon'],
+    malls: ['Meydan One Mall (Upcoming)', 'The Dubai Mall (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 20 mins', 'Al Maktoum Airport (DWC) - 40 mins'],
     transport: ['Car access only (No direct metro)'],
     lifestyle: ['Ultra-luxury', 'Lagoon beaches', 'Equestrian living'],
     bestFor: ['Villa buyers', 'Families', 'Premium investors'],
@@ -225,6 +245,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'N/A', twoBed: 'N/A', threeBed: 'AED 1.8M', villa: 'AED 2.5M' },
     rentalYield: '4-5%',
     nearbyLandmarks: ['Arabian Ranches Golf Club', 'Dubai Polo & Equestrian Club', 'Community Center'],
+    malls: ['Arabian Ranches Retail Centre', 'Dubai Hills Mall (15 mins)', 'Mall of the Emirates (20 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 30 mins', 'Al Maktoum Airport (DWC) - 30 mins'],
     transport: ['Car access via Sheikh Mohammed Bin Zayed Road'],
     lifestyle: ['Suburban golf living', 'Family community', 'Quiet & peaceful'],
     bestFor: ['Families seeking suburban lifestyle', 'End-users'],
@@ -246,6 +268,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 350K', oneBed: 'AED 500K', twoBed: 'AED 700K', threeBed: 'N/A' },
     rentalYield: '6-8%',
     nearbyLandmarks: ['Expo City Dubai', 'Al Maktoum International Airport (DWC)'],
+    malls: ['Expo City Mall (Upcoming)', 'Ibn Battuta Mall (25 mins)'],
+    airports: ['Al Maktoum Airport (DWC) - 5 mins', 'Dubai Intl Airport (DXB) - 45 mins'],
     transport: ['Route 2020 Metro Station (Expo City)'],
     lifestyle: ['Emerging city', 'Budget living', 'Future-focused'],
     bestFor: ['Budget investors', 'Long-term appreciation play', 'Aviation professionals'],
@@ -267,6 +291,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 1.2M', twoBed: 'AED 2M', threeBed: 'AED 3.5M' },
     rentalYield: '5-7%',
     nearbyLandmarks: ['The Walk JBR', 'The Beach', 'Ain Dubai'],
+    malls: ['The Beach JBR', 'Dubai Marina Mall (5 mins)', 'Ibn Battuta Mall (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 35 mins', 'Al Maktoum Airport (DWC) - 35 mins'],
     transport: ['Dubai Tram', 'DMCC Metro (via Tram)'],
     lifestyle: ['Beachfront active', 'Tourist hub', 'Dining and retail'],
     bestFor: ['Beach lifestyle seekers', 'Short-term rental investors', 'Expats'],
@@ -288,6 +314,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 300K', oneBed: 'AED 450K', twoBed: 'AED 650K', threeBed: 'N/A' },
     rentalYield: '7-9%',
     nearbyLandmarks: ['DSO Tech Park', 'Silicon Central Mall'],
+    malls: ['Silicon Central Mall (0 mins)', 'Dubai Outlet Mall (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 20 mins', 'Al Maktoum Airport (DWC) - 35 mins'],
     transport: ['Bus routes (No metro)'],
     lifestyle: ['Tech community', 'Student & professional', 'Affordable'],
     bestFor: ['Tech professionals', 'Budget buyers', 'Yield investors'],
@@ -309,6 +337,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'N/A', oneBed: 'AED 700K', twoBed: 'AED 1.1M', threeBed: 'N/A', villa: 'AED 3M' },
     rentalYield: '5-7%',
     nearbyLandmarks: ['Mall of the Emirates', 'Ski Dubai', 'Al Barsha Pond Park'],
+    malls: ['Mall of the Emirates (0 mins)', 'Al Barsha Mall'],
+    airports: ['Dubai Intl Airport (DXB) - 25 mins', 'Al Maktoum Airport (DWC) - 35 mins'],
     transport: ['Mall of the Emirates Metro', 'Mashreq Metro Station'],
     lifestyle: ['Urban convenience', 'Retail & dining', 'Central location'],
     bestFor: ['Families', 'Well-connected location seekers', 'Professionals'],
@@ -330,6 +360,8 @@ const DUBAI_AREAS: DubaiArea[] = [
     priceRange: { studio: 'AED 320K', oneBed: 'AED 480K', twoBed: 'AED 700K', threeBed: 'N/A' },
     rentalYield: '7-9%',
     nearbyLandmarks: ['ICC Academy', 'Dubai International Stadium', 'The Els Club'],
+    malls: ['City Centre Meaisem (10 mins)', 'Dubai Hills Mall (15 mins)'],
+    airports: ['Dubai Intl Airport (DXB) - 30 mins', 'Al Maktoum Airport (DWC) - 30 mins'],
     transport: ['Bus access (No metro)'],
     lifestyle: ['Active & sporty', 'Golf course living', 'Affordable'],
     bestFor: ['Sports enthusiasts', 'Budget investors', 'First-time buyers'],
@@ -393,7 +425,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 pb-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 pb-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -404,9 +436,9 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
       />
 
       {/* Hero Section */}
-      <div className="bg-white dark:bg-zinc-950 border-b dark:border-zinc-800 pt-12 pb-16 px-4">
+      <div className="bg-white dark:bg-zinc-950 border-b dark:border-zinc-800 py-6 px-4">
         <div className="max-w-4xl mx-auto">
-          <nav className="text-sm text-gray-500 dark:text-zinc-400 mb-6 flex items-center space-x-2">
+          <nav className="text-xs text-gray-500 dark:text-zinc-400 mb-2 flex items-center space-x-2">
             <Link href="/" className="hover:text-primary dark:hover:text-primary">Home</Link>
             <span>&gt;</span>
             <Link href="/dubai-property" className="hover:text-primary dark:hover:text-primary">Dubai Property</Link>
@@ -414,38 +446,38 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             <span className="text-gray-900 dark:text-zinc-100">{area.name}</span>
           </nav>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-zinc-100 mb-4">
-            <span className="mr-3 text-gray-400 dark:text-zinc-500"><i className={area.icon}></i></span>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-zinc-100 mb-1">
+            <span className="mr-2 text-gray-400 dark:text-zinc-500"><i className={area.icon}></i></span>
             {area.name}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-zinc-400">{area.tagline}</p>
+          <p className="text-base text-gray-600 dark:text-zinc-400">{area.tagline}</p>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-12 space-y-16">
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         
         {/* Overview Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">Overview</h2>
-          <p className="text-lg text-gray-700 dark:text-zinc-300 leading-relaxed">{area.description}</p>
+        <section className="space-y-3">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-zinc-100">Overview</h2>
+          <p className="text-sm text-gray-700 dark:text-zinc-300 leading-relaxed">{area.description}</p>
           
-          <div className="flex flex-wrap gap-4 pt-4">
+          <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2">
             <div>
-              <h3 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 uppercase mb-2">Best For</h3>
-              <div className="flex flex-wrap gap-2">
+              <h3 className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase mb-1.5">Best For</h3>
+              <div className="flex flex-wrap gap-1.5">
                 {area.bestFor.map((item) => (
-                  <span key={item} className="px-3 py-1 bg-primary/20 dark:bg-primary/40 text-primary dark:text-blue-200 rounded-full text-sm font-medium">
+                  <span key={item} className="px-2.5 py-0.5 bg-primary/10 dark:bg-primary/20 text-primary dark:text-blue-300 rounded-md text-xs font-medium">
                     {item}
                   </span>
                 ))}
               </div>
             </div>
             
-            <div className="ml-0 md:ml-8 mt-4 md:mt-0">
-              <h3 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 uppercase mb-2">Property Types</h3>
-              <div className="flex flex-wrap gap-2">
+            <div>
+              <h3 className="text-xs font-semibold text-gray-500 dark:text-zinc-400 uppercase mb-1.5">Property Types</h3>
+              <div className="flex flex-wrap gap-1.5">
                 {area.propertyTypes.map((item) => (
-                  <span key={item} className="px-3 py-1 bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-zinc-200 rounded-full text-sm font-medium">
+                  <span key={item} className="px-2.5 py-0.5 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 rounded-md text-xs font-medium border border-gray-200 dark:border-zinc-700">
                     {item}
                   </span>
                 ))}
@@ -455,59 +487,59 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
         </section>
 
         {/* Price Guide Table */}
-        <section className="space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900">Estimated Property Prices</h2>
+        <section className="space-y-4 bg-white dark:bg-zinc-950 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Estimated Property Prices</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="py-3 px-4 text-gray-500 font-semibold">Property Type</th>
-                  <th className="py-3 px-4 text-gray-500 font-semibold">Starting Price</th>
+                <tr className="border-b border-gray-200 dark:border-zinc-800">
+                  <th className="py-2 px-4 text-gray-500 dark:text-zinc-400 font-semibold">Property Type</th>
+                  <th className="py-2 px-4 text-gray-500 dark:text-zinc-400 font-semibold">Starting Price</th>
                 </tr>
               </thead>
               <tbody>
                 {area.priceRange.studio !== 'N/A' && (
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 px-4 font-medium">Studio</td>
-                    <td className="py-3 px-4 text-primary font-semibold">{area.priceRange.studio}</td>
+                  <tr className="border-b border-gray-50 dark:border-zinc-800/50">
+                    <td className="py-2 px-4 font-medium text-gray-800 dark:text-zinc-200">Studio</td>
+                    <td className="py-2 px-4 text-primary dark:text-blue-400 font-semibold">{area.priceRange.studio}</td>
                   </tr>
                 )}
                 {area.priceRange.oneBed !== 'N/A' && (
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 px-4 font-medium">1 Bedroom</td>
-                    <td className="py-3 px-4 text-primary font-semibold">{area.priceRange.oneBed}</td>
+                  <tr className="border-b border-gray-50 dark:border-zinc-800/50">
+                    <td className="py-2 px-4 font-medium text-gray-800 dark:text-zinc-200">1 Bedroom</td>
+                    <td className="py-2 px-4 text-primary dark:text-blue-400 font-semibold">{area.priceRange.oneBed}</td>
                   </tr>
                 )}
                 {area.priceRange.twoBed !== 'N/A' && (
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 px-4 font-medium">2 Bedroom</td>
-                    <td className="py-3 px-4 text-primary font-semibold">{area.priceRange.twoBed}</td>
+                  <tr className="border-b border-gray-50 dark:border-zinc-800/50">
+                    <td className="py-2 px-4 font-medium text-gray-800 dark:text-zinc-200">2 Bedroom</td>
+                    <td className="py-2 px-4 text-primary dark:text-blue-400 font-semibold">{area.priceRange.twoBed}</td>
                   </tr>
                 )}
                 {area.priceRange.threeBed && area.priceRange.threeBed !== 'N/A' && (
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 px-4 font-medium">3 Bedroom</td>
-                    <td className="py-3 px-4 text-primary font-semibold">{area.priceRange.threeBed}</td>
+                  <tr className="border-b border-gray-50 dark:border-zinc-800/50">
+                    <td className="py-2 px-4 font-medium text-gray-800 dark:text-zinc-200">3 Bedroom</td>
+                    <td className="py-2 px-4 text-primary dark:text-blue-400 font-semibold">{area.priceRange.threeBed}</td>
                   </tr>
                 )}
                 {area.priceRange.villa && area.priceRange.villa !== 'N/A' && (
-                  <tr className="border-b border-gray-100">
-                    <td className="py-3 px-4 font-medium">Villas / Townhouses</td>
-                    <td className="py-3 px-4 text-primary font-semibold">{area.priceRange.villa}</td>
+                  <tr className="border-b border-gray-50 dark:border-zinc-800/50">
+                    <td className="py-2 px-4 font-medium text-gray-800 dark:text-zinc-200">Villas / Townhouses</td>
+                    <td className="py-2 px-4 text-primary dark:text-blue-400 font-semibold">{area.priceRange.villa}</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
           
-          <div className="flex flex-col sm:flex-row justify-between items-center bg-primary/5 p-4 rounded-xl mt-6">
-            <div className="mb-4 sm:mb-0">
-              <span className="block text-sm text-primary font-semibold">Estimated Rental Yield</span>
-              <span className="text-2xl font-bold text-blue-900">{area.rentalYield}</span>
+          <div className="flex flex-col sm:flex-row justify-between items-center bg-primary/5 dark:bg-primary/10 p-3 rounded-lg mt-4">
+            <div className="mb-3 sm:mb-0">
+              <span className="block text-xs text-primary dark:text-blue-400 font-semibold uppercase tracking-wide">Estimated Rental Yield</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-zinc-100">{area.rentalYield}</span>
             </div>
             <Link 
               href="/dubai-property/calculator" 
-              className="bg-primary hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors w-full sm:w-auto text-center"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-colors w-full sm:w-auto text-center"
             >
               Calculate your buying costs &rarr;
             </Link>
@@ -515,78 +547,108 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
         </section>
 
         {/* Location & Lifestyle Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-6">
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">Location & Transport</h2>
-            <ul className="space-y-3">
-              {area.transport.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="text-gray-400 mr-2">🚆</span>
-                  <span className="text-gray-700">{item}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="pt-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Nearby Landmarks:</h3>
-              <ul className="list-disc pl-5 text-gray-700 space-y-1">
-                {area.nearbyLandmarks.map((landmark, idx) => (
-                  <li key={idx}>{landmark}</li>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Location & Transport</h2>
+            
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-zinc-300 mb-2">Nearby Landmarks</h3>
+              <ul className="space-y-1">
+                {area.nearbyLandmarks.map((item) => (
+                  <li key={item} className="flex items-center text-sm text-gray-600 dark:text-zinc-400">
+                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-2"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-zinc-300 mb-2 mt-4">Transport Options</h3>
+              <ul className="space-y-1">
+                {area.transport.map((item) => (
+                  <li key={item} className="flex items-center text-sm text-gray-600 dark:text-zinc-400">
+                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-2"></span>
+                    {item}
+                  </li>
                 ))}
               </ul>
             </div>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">Lifestyle</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {area.lifestyle.map((item, idx) => (
-                <div key={idx} className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-700 text-sm font-medium">{item}</span>
-                </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Shopping & Malls</h2>
+            <ul className="space-y-1">
+              {area.malls.map((item) => (
+                <li key={item} className="flex items-center text-sm text-gray-600 dark:text-zinc-400">
+                  <span className="w-1.5 h-1.5 bg-primary/60 rounded-full mr-2"></span>
+                  {item}
+                </li>
               ))}
-            </div>
+            </ul>
+
+            <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100 mt-6">Airport Access</h2>
+            <ul className="space-y-1">
+              {area.airports.map((item) => (
+                <li key={item} className="flex items-center text-sm text-gray-600 dark:text-zinc-400">
+                  <i className="fas fa-plane text-primary/60 mr-2 text-xs"></i>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Lifestyle & Amenities</h2>
+            <ul className="space-y-1">
+              {area.lifestyle.map((item) => (
+                <li key={item} className="flex items-center text-sm text-gray-600 dark:text-zinc-400">
+                  <i className="fas fa-check text-primary/80 mr-2 text-xs"></i>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </section>
         </div>
 
         {/* Investment Considerations */}
-        <section className="space-y-4 bg-orange-50 p-6 rounded-2xl">
-          <h2 className="text-2xl font-bold text-gray-900">Investment Considerations</h2>
-          <ul className="space-y-3">
+        <section className="space-y-4 bg-primary/5 dark:bg-primary/10 p-5 rounded-xl border border-primary/20 dark:border-primary/30">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Investment Considerations</h2>
+          <ul className="space-y-2">
             {area.considerations.map((item, idx) => (
               <li key={idx} className="flex items-start">
-                <span className="text-orange-500 mr-3 mt-1">⚠️</span>
-                <span className="text-gray-800">{item}</span>
+                <i className="fas fa-exclamation-circle text-primary mr-2 mt-0.5 text-sm"></i>
+                <span className="text-gray-800 dark:text-zinc-300 text-sm">{item}</span>
               </li>
             ))}
           </ul>
         </section>
 
         {/* FAQ Section */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Frequently Asked Questions</h2>
-          <div className="space-y-4">
+        <section className="space-y-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Frequently Asked Questions</h2>
+          <div className="space-y-3">
             {area.faqs.map((faq, idx) => (
-              <div key={idx} className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{faq.question}</h3>
-                <p className="text-gray-700">{faq.answer}</p>
+              <div key={idx} className="bg-white dark:bg-zinc-950 p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+                <h3 className="text-base font-bold text-gray-900 dark:text-zinc-100 mb-1">{faq.question}</h3>
+                <p className="text-sm text-gray-700 dark:text-zinc-400">{faq.answer}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Cross-Linking Section */}
-        <section className="space-y-6 pt-8 border-t">
-          <h2 className="text-2xl font-bold text-gray-900">Explore More Dubai Areas</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <section className="space-y-4 pt-6 border-t dark:border-zinc-800">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-zinc-100">Explore More Dubai Areas</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {DUBAI_AREAS.filter(a => a.slug !== area.slug).map((otherArea) => (
               <Link 
                 key={otherArea.slug} 
                 href={`/dubai-property/areas/${otherArea.slug}`}
-                className="bg-white p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-center flex flex-col items-center justify-center space-y-2"
+                className="bg-white dark:bg-zinc-950 p-3 rounded-xl border border-gray-200 dark:border-zinc-800 hover:border-primary dark:hover:border-primary hover:shadow-sm transition-all text-center flex flex-col items-center justify-center space-y-2"
               >
-                <span className="text-2xl text-gray-400 dark:text-zinc-500"><i className={otherArea.icon}></i></span>
-                <span className="text-sm font-medium text-gray-900">{otherArea.name}</span>
+                <span className="text-xl text-gray-400 dark:text-zinc-500"><i className={otherArea.icon}></i></span>
+                <span className="text-xs font-semibold text-gray-900 dark:text-zinc-300">{otherArea.name}</span>
               </Link>
             ))}
           </div>
