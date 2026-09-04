@@ -417,10 +417,10 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yourwebsite.com' },
-      { '@type': 'ListItem', position: 2, name: 'Dubai Property', item: 'https://yourwebsite.com/dubai-property' },
-      { '@type': 'ListItem', position: 3, name: 'Areas', item: 'https://yourwebsite.com/dubai-property/areas' },
-      { '@type': 'ListItem', position: 4, name: area.name, item: `https://yourwebsite.com/dubai-property/areas/${area.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://homedesignenglish.com' },
+      { '@type': 'ListItem', position: 2, name: 'Dubai Property', item: 'https://homedesignenglish.com/dubai-property' },
+      { '@type': 'ListItem', position: 3, name: 'Areas', item: 'https://homedesignenglish.com/dubai-property/areas' },
+      { '@type': 'ListItem', position: 4, name: area.name, item: `https://homedesignenglish.com/dubai-property/areas/${area.slug}` },
     ],
   };
 

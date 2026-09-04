@@ -66,13 +66,13 @@ export default function DubaiPropertyPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://hdedubai.com/"
+        "item": "https://homedesignenglish.com/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Dubai Property",
-        "item": "https://hdedubai.com/dubai-property"
+        "item": "https://homedesignenglish.com/dubai-property"
       }
     ]
   };
@@ -104,7 +104,6 @@ export default function DubaiPropertyPage() {
             fill 
             className="object-cover"
             priority
-            quality={85}
           />
           <div className="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/80"></div>
         </div>
@@ -228,15 +227,15 @@ export default function DubaiPropertyPage() {
             </p>
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-green-500 mt-1 text-xl"></i>
+                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
                 <span className="text-gray-700 dark:text-zinc-300">Access to exclusive off-plan launches</span>
               </li>
               <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-green-500 mt-1 text-xl"></i>
+                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
                 <span className="text-gray-700 dark:text-zinc-300">Unbiased advice across all major developers</span>
               </li>
               <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-green-500 mt-1 text-xl"></i>
+                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
                 <span className="text-gray-700 dark:text-zinc-300">End-to-end support including mortgage and handover</span>
               </li>
             </ul>
