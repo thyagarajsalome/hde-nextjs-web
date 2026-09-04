@@ -1,3 +1,5 @@
+import { DUBAI_AREAS } from '@/data/dubaiAreas';
+
 import React from 'react';
 import DevLinksClient from '@/components/dev/DevLinksClient';
 import { supabase } from '@/config/supabaseClient';
@@ -52,7 +54,7 @@ export default async function DevLinksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <DevLinksClient usCities={usCities} inCities={inCities} />
+      <DevLinksClient usCities={usCities} inCities={inCities} dubaiAreas={DUBAI_AREAS} />
     </div>
   );
 }

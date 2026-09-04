@@ -6,9 +6,10 @@ import Link from 'next/link';
 interface DevLinksClientProps {
   usCities: any[];
   inCities: any[];
+  dubaiAreas: any[];
 }
 
-export default function DevLinksClient({ usCities, inCities }: DevLinksClientProps) {
+export default function DevLinksClient({ usCities, inCities, dubaiAreas }: DevLinksClientProps) {
   const [checking, setChecking] = useState(false);
   const [results, setResults] = useState<Record<string, number>>({});
   const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -43,6 +44,16 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
       urls.push(`/cost/interior-design-in-${loc.slug}`);
       urls.push(`/cost/flooring-in-${loc.slug}`);
       urls.push(`/cost/painting-in-${loc.slug}`);
+    });
+    
+    // Add UAE (Dubai) Routes
+    urls.push(`/dubai-property`);
+    urls.push(`/dubai-property/calculator`);
+    dubaiAreas.forEach(area => {
+      urls.push(`/dubai-property/areas/${area.slug}`);
+      ['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'].forEach(pt => {
+        urls.push(`/dubai-property/buy/${pt}-for-sale-in-${area.slug}`);
+      });
     });
 
     setProgress({ current: 0, total: urls.length });
@@ -266,6 +277,50 @@ export default function DevLinksClient({ usCities, inCities }: DevLinksClientPro
               </li>
             ))}
           </ul>
+        </div>
+        
+        {/* UAE SECTION */}
+        <div className="md:col-span-2 mt-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <i className="fas fa-building text-primary"></i> UAE / Dubai Programmatic SEO ({dubaiAreas.length * 6 + 2})
+          </h2>
+          <p className="text-xs text-gray-500 mb-4">Showing 1 area guide + 5 property-type SEO matrix pages per area ({dubaiAreas.length} areas total)</p>
+          
+          <div className="mb-6 flex flex-col border-l-2 border-primary pl-3">
+             <span className="text-xs font-bold text-gray-500 mb-1">Main Hubs</span>
+             <div className="flex items-center py-1">
+               <Link href="/dubai-property" target="_blank" className="text-primary hover:underline font-medium text-sm">/dubai-property</Link>
+               {renderBadge('/dubai-property')}
+             </div>
+             <div className="flex items-center py-1">
+               <Link href="/dubai-property/calculator" target="_blank" className="text-primary hover:underline font-medium text-sm">/dubai-property/calculator</Link>
+               {renderBadge('/dubai-property/calculator')}
+             </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {dubaiAreas.map((area) => (
+              <li key={area.slug} className="flex flex-col border-l-2 border-gray-200 pl-3 hover:border-primary transition-colors list-none">
+                <span className="text-xs font-bold text-gray-500 mb-1">{area.name}</span>
+                
+                <div className="flex items-center py-1">
+                  <Link href={'/dubai-property/areas/' + area.slug} target="_blank" className="text-slate-800 font-bold hover:underline text-sm">
+                    Main Area Guide
+                  </Link>
+                  {renderBadge('/dubai-property/areas/' + area.slug)}
+                </div>
+
+                {['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'].map(pt => (
+                  <div key={pt} className="flex items-center py-1">
+                    <Link href={`/dubai-property/buy/${pt}-for-sale-in-${area.slug}`} target="_blank" className="text-primary hover:underline text-xs">
+                      {pt}-for-sale-in-{area.slug}
+                    </Link>
+                    {renderBadge(`/dubai-property/buy/${pt}-for-sale-in-${area.slug}`)}
+                  </div>
+                ))}
+              </li>
+            ))}
+          </div>
         </div>
       </div>
     </div>
