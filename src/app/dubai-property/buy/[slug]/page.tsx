@@ -85,8 +85,8 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
       />
       
       {/* Hero Section */}
-      <div className="bg-white dark:bg-zinc-950 border-b dark:border-zinc-800 py-6 px-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="bg-white dark:bg-zinc-950 border-b dark:border-zinc-800 py-8 px-4">
+        <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-gray-500 dark:text-zinc-400 mb-2 flex items-center space-x-2">
             <Link href="/" className="hover:text-primary dark:hover:text-primary">Home</Link>
             <span>&gt;</span>
@@ -106,8 +106,8 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
+      <div className="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="lg:col-span-7 space-y-6">
           <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
             <h2 className="text-lg font-bold text-slate-900 dark:text-zinc-100 mb-4">Investment Overview</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -140,8 +140,8 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
           </div>
         </div>
 
-        <div className="md:col-span-1">
-          <div className="sticky top-20">
+        <div className="lg:col-span-5">
+          <div className="sticky top-24">
             <DubaiLeadForm />
           </div>
         </div>
