@@ -206,13 +206,13 @@ export default function DubaiPropertyPage() {
       </section>
 
       {/* Property Cost Calculator CTA Banner */}
-      <section className="bg-gradient-to-r from-amber-500 to-yellow-600 py-16 px-6 text-slate-900 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4">Know Your True Buying Costs</h2>
-          <p className="text-lg mb-8 font-medium">
+      <section className="bg-white dark:bg-zinc-950 py-16 px-6 text-center border-t border-gray-100 dark:border-zinc-800">
+        <div className="max-w-3xl mx-auto bg-gray-50 dark:bg-zinc-900 p-8 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
+          <h2 className="text-3xl font-bold mb-4 text-slate-900 dark:text-zinc-100">Know Your True Buying Costs</h2>
+          <p className="text-lg mb-8 text-gray-700 dark:text-zinc-300">
             DLD fees, agent commission, mortgage registration, service charges — our free calculator breaks it all down.
           </p>
-          <Link href="/dubai-property/calculator" className="inline-block bg-slate-900 text-white hover:bg-slate-800 font-bold py-3 px-8 rounded-lg transition-colors shadow-lg">
+          <Link href="/dubai-property/calculator" className="inline-block bg-primary text-white hover:bg-primary-hover font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
             Open Calculator
           </Link>
         </div>
