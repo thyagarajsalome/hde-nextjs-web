@@ -66,13 +66,13 @@ export default function DubaiPropertyPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://homedesignenglish.com/"
+        "item": "https://www.homedesignenglish.com/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Dubai Property",
-        "item": "https://homedesignenglish.com/dubai-property"
+        "item": "https://www.homedesignenglish.com/dubai-property"
       }
     ]
   };
