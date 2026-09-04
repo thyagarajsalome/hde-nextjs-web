@@ -1,22 +1,61 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "../../context/UserContext";
-import { supabase } from "../../config/supabaseClient";
 import { useRegion } from "../../context/RegionContext";
+
+const REGIONS = [
+  { code: 'IN', label: 'India', flag: 'in', short: 'IND' },
+  { code: 'US', label: 'United States', flag: 'us', short: 'USA' },
+  { code: 'AE', label: 'UAE / Dubai', flag: 'ae', short: 'UAE' },
+] as const;
 
 const Header = () => {
   const { user, hasPaid, signOut } = useUser();
   const { region, setRegion } = useRegion();
   const navigate = useRouter();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const currentRegion = REGIONS.find(r => r.code === region) || REGIONS[0];
+  const isDubaiRoute = pathname.includes('/dubai-property');
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setRegionDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleRegionSelect = (code: 'IN' | 'US' | 'AE') => {
+    setRegionDropdownOpen(false);
+    setMenuOpen(false);
+    if (code === 'AE') {
+      setRegion('AE');
+      navigate.push('/dubai-property');
+    } else {
+      setRegion(code);
+      if (isDubaiRoute) {
+        navigate.push('/');
+      }
+    }
+  };
 
   const handleLogout = async () => {
     await signOut();
     navigate.push("/signin");
     setMenuOpen(false);
   };
+
+  // Determine active region for display
+  const activeRegion = isDubaiRoute ? REGIONS[2] : currentRegion;
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800 shadow-sm transition-colors duration-200">
@@ -33,23 +72,26 @@ const Header = () => {
           <nav className="hidden lg:flex items-center space-x-3 xl:space-x-6 text-sm">
             <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap">Home</Link>
             
-            {/* Professional Directory Link (India Only) - Hidden for now */}
-            {/* {region !== 'US' && (
-              <Link href="/directory" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Find Professionals</Link>
-            )} */}
-            
-            {region !== 'US' && (
-              <Link href="/plans" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">House Plans</Link>
+            {/* India-only links */}
+            {activeRegion.code === 'IN' && (
+              <>
+                <Link href="/plans" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">House Plans</Link>
+                <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
+              </>
             )}
 
-            {region !== 'US' && (
-              <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
+            {/* UAE-only links */}
+            {activeRegion.code === 'AE' && (
+              <>
+                <Link href="/dubai-property" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Dubai Property</Link>
+                <Link href="/dubai-property/calculator" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Cost Calculator</Link>
+              </>
             )}
-            
+
+            {/* Shared links */}
             <Link href="/visualizer" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">
               Paint Visualizer
             </Link>
-
             <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
 
             {user ? (
@@ -70,33 +112,74 @@ const Header = () => {
               </Link>
             )}
             
-            {/* Region Selector */}
-            <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 ml-4 shadow-inner">
+            {/* Region Selector — Amazon-style dropdown */}
+            <div className="relative ml-4" ref={dropdownRef}>
               <button 
-                onClick={() => setRegion('IN')}
-                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
+                onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 hover:border-primary dark:hover:border-primary transition-all cursor-pointer"
               >
-                <img src="https://flagcdn.com/w20/in.png" srcSet="https://flagcdn.com/w40/in.png 2x" width="16" alt="India" className="mr-1.5 rounded-sm" />
-                IND
+                <img 
+                  src={`https://flagcdn.com/w20/${activeRegion.flag}.png`} 
+                  srcSet={`https://flagcdn.com/w40/${activeRegion.flag}.png 2x`} 
+                  width="18" 
+                  alt={activeRegion.label} 
+                  className="rounded-sm" 
+                />
+                <span className="text-xs font-bold text-gray-800 dark:text-zinc-200">{activeRegion.short}</span>
+                <i className={`fas fa-chevron-down text-[10px] text-gray-400 transition-transform ${regionDropdownOpen ? 'rotate-180' : ''}`}></i>
               </button>
-              <button 
-                onClick={() => setRegion('US')}
-                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
-              >
-                <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="16" alt="USA" className="mr-1.5 rounded-sm" />
-                USA
-              </button>
-              <button 
-                onClick={() => navigate.push('/dubai-property')}
-                className={`flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700 dark:text-zinc-400`}
-              >
-                <img src="https://flagcdn.com/w20/ae.png" srcSet="https://flagcdn.com/w40/ae.png 2x" width="16" alt="UAE" className="mr-1.5 rounded-sm" />
-                UAE
-              </button>
+
+              {regionDropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
+                  <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800">
+                    <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">Select Region</p>
+                  </div>
+                  {REGIONS.map((r) => (
+                    <button
+                      key={r.code}
+                      onClick={() => handleRegionSelect(r.code)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${
+                        activeRegion.code === r.code 
+                          ? 'bg-primary/5 dark:bg-primary/10 border-l-2 border-primary' 
+                          : 'hover:bg-gray-50 dark:hover:bg-zinc-800 border-l-2 border-transparent'
+                      }`}
+                    >
+                      <img 
+                        src={`https://flagcdn.com/w20/${r.flag}.png`} 
+                        srcSet={`https://flagcdn.com/w40/${r.flag}.png 2x`} 
+                        width="20" 
+                        alt={r.label} 
+                        className="rounded-sm shadow-sm" 
+                      />
+                      <div>
+                        <p className={`text-sm font-semibold ${activeRegion.code === r.code ? 'text-primary' : 'text-gray-800 dark:text-zinc-200'}`}>
+                          {r.label}
+                        </p>
+                      </div>
+                      {activeRegion.code === r.code && (
+                        <i className="fas fa-check text-primary ml-auto text-xs"></i>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </nav>
 
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center gap-3">
+            {/* Mobile region button */}
+            <button 
+              onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 cursor-pointer"
+            >
+              <img 
+                src={`https://flagcdn.com/w20/${activeRegion.flag}.png`} 
+                width="16" alt={activeRegion.label} className="rounded-sm" 
+              />
+              <span className="text-xs font-bold text-gray-800 dark:text-zinc-200">{activeRegion.short}</span>
+              <i className={`fas fa-chevron-down text-[9px] text-gray-400 transition-transform ${regionDropdownOpen ? 'rotate-180' : ''}`}></i>
+            </button>
+
             <button aria-label="Toggle navigation menu" onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 dark:text-zinc-400 hover:text-primary focus:outline-none p-2 cursor-pointer">
               <i className={`fas ${menuOpen ? "fa-times" : "fa-bars"} text-xl`} aria-hidden="true"></i>
             </button>
@@ -104,57 +187,75 @@ const Header = () => {
         </div>
       </div>
 
+      {/* Mobile Region Dropdown (shared for mobile) */}
+      {regionDropdownOpen && (
+        <div className="lg:hidden absolute right-4 top-14 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
+          <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800">
+            <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">Select Region</p>
+          </div>
+          {REGIONS.map((r) => (
+            <button
+              key={r.code}
+              onClick={() => handleRegionSelect(r.code)}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${
+                activeRegion.code === r.code 
+                  ? 'bg-primary/5 dark:bg-primary/10 border-l-2 border-primary' 
+                  : 'hover:bg-gray-50 dark:hover:bg-zinc-800 border-l-2 border-transparent'
+              }`}
+            >
+              <img 
+                src={`https://flagcdn.com/w20/${r.flag}.png`} 
+                srcSet={`https://flagcdn.com/w40/${r.flag}.png 2x`} 
+                width="20" alt={r.label} className="rounded-sm shadow-sm" 
+              />
+              <p className={`text-sm font-semibold ${activeRegion.code === r.code ? 'text-primary' : 'text-gray-800 dark:text-zinc-200'}`}>
+                {r.label}
+              </p>
+              {activeRegion.code === r.code && (
+                <i className="fas fa-check text-primary ml-auto text-xs"></i>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Mobile Navigation */}
       {menuOpen && (
         <div className="lg:hidden bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 absolute w-full left-0 shadow-lg">
           <div className="px-4 pt-2 pb-4 space-y-2 flex flex-col">
-            {/* Mobile Region Selector */}
-            <div className="flex bg-gray-100 dark:bg-zinc-900 rounded-full p-1 mb-4 shadow-inner">
-              <button 
-                onClick={() => { setRegion('IN'); setMenuOpen(false); }}
-                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'IN' || !region ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
-              >
-                <img src="https://flagcdn.com/w20/in.png" srcSet="https://flagcdn.com/w40/in.png 2x" width="18" alt="India" className="mr-2 rounded-sm" />
-                India
-              </button>
-              <button 
-                onClick={() => { setRegion('US'); setMenuOpen(false); }}
-                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all ${region === 'US' ? 'bg-white dark:bg-zinc-700 shadow text-primary' : 'text-gray-500 hover:text-gray-700 dark:text-zinc-400'}`}
-              >
-                <img src="https://flagcdn.com/w20/us.png" srcSet="https://flagcdn.com/w40/us.png 2x" width="18" alt="USA" className="mr-2 rounded-sm" />
-                USA
-              </button>
-              <button 
-                onClick={() => { navigate.push('/dubai-property'); setMenuOpen(false); }}
-                className={`flex-1 flex items-center justify-center px-3 py-2 rounded-full text-sm font-bold transition-all text-gray-500 hover:text-gray-700 dark:text-zinc-400`}
-              >
-                <img src="https://flagcdn.com/w20/ae.png" srcSet="https://flagcdn.com/w40/ae.png 2x" width="18" alt="UAE" className="mr-2 rounded-sm" />
-                UAE
-              </button>
-            </div>
-
             <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
-            {/* {region !== 'US' && (
-              <Link href="/directory" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
-                Find Professionals
-              </Link>
-            )} */}
-            {region !== 'US' && (
-              <Link href="/plans" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
-                House Plans
-              </Link>
+
+            {/* India-only mobile links */}
+            {activeRegion.code === 'IN' && (
+              <>
+                <Link href="/plans" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                  House Plans
+                </Link>
+                <Link href="/app" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                  HDE App
+                </Link>
+              </>
             )}
-            {region !== 'US' && (
-              <Link href="/app" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
-                HDE App
-              </Link>
+
+            {/* UAE-only mobile links */}
+            {activeRegion.code === 'AE' && (
+              <>
+                <Link href="/dubai-property" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                  Dubai Property
+                </Link>
+                <Link href="/dubai-property/calculator" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                  Cost Calculator
+                </Link>
+              </>
             )}
+
+            {/* Shared mobile links */}
             <Link href="/visualizer" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Paint Visualizer
             </Link>
-            <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800" onClick={() => setMenuOpen(false)}>Guides</Link>
+            <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800 no-underline" onClick={() => setMenuOpen(false)}>Guides</Link>
             {user ? (
               <>
                 <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>

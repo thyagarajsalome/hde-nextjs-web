@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Region = 'IN' | 'US' | null;
+type Region = 'IN' | 'US' | 'AE' | null;
 
 interface RegionContextType {
   region: Region;
@@ -23,7 +23,7 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initRegion = async () => {
       const saved = localStorage.getItem('hde_region') as Region;
-      if (saved === 'IN' || saved === 'US') {
+      if (saved === 'IN' || saved === 'US' || saved === 'AE') {
         setRegionState(saved);
         setIsReady(true);
         return;
@@ -37,6 +37,9 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
         if (data.country === 'US') {
           setRegionState('US');
           localStorage.setItem('hde_region', 'US');
+        } else if (data.country === 'AE') {
+          setRegionState('AE');
+          localStorage.setItem('hde_region', 'AE');
         } else {
           // Default all other traffic (including India) to IN
           setRegionState('IN');
@@ -55,7 +58,12 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setRegion = (r: Region) => {
     if (isReady && r && r !== region) {
-      setToastMsg(r === 'US' ? "Switched to USA Mode 🇺🇸" : "Switched to India Mode 🇮🇳");
+      const msgs: Record<string, string> = {
+        'US': "Switched to USA Mode 🇺🇸",
+        'IN': "Switched to India Mode 🇮🇳",
+        'AE': "Switched to UAE Mode 🇦🇪",
+      };
+      setToastMsg(msgs[r] || "Region changed");
       setTimeout(() => setToastMsg(null), 3000);
     }
 
