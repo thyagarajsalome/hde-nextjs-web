@@ -170,22 +170,33 @@ export default function DubaiPropertyPage() {
       <section className="bg-white dark:bg-zinc-950 py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 text-slate-900 dark:text-zinc-100">Why Invest in Dubai Property?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
               <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">Zero Income Tax</h3>
-              <p className="text-gray-700 dark:text-zinc-300">No tax on rental income or capital gains for individuals, maximizing your investment returns.</p>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">No tax on rental income or capital gains for individuals, maximizing your investment returns.</p>
             </div>
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
               <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">Golden Visa</h3>
-              <p className="text-gray-700 dark:text-zinc-300">Property investment of AED 2M+ qualifies for a 10-year renewable residency visa for you and your family.</p>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">Property investment of AED 2M+ qualifies for a 10-year renewable residency visa for you and your family.</p>
             </div>
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
               <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">High Rental Yields</h3>
-              <p className="text-gray-700 dark:text-zinc-300">Dubai consistently offers 5-9% gross yields, significantly outperforming the 2-4% average in most global cities.</p>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">Dubai consistently offers 5-9% gross yields, significantly outperforming the 2-4% average in most global cities.</p>
+            </div>
+            <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
+              <div className="flex items-center gap-2 mb-2">
+                <i className="fas fa-shield-alt text-primary"></i>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-zinc-100">Regulated by RERA</h3>
+              </div>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">The Real Estate Regulatory Agency (RERA) ensures a highly transparent market. Buyer funds for off-plan properties are strictly held in secure Escrow accounts.</p>
             </div>
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
               <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">World-Class Infrastructure</h3>
-              <p className="text-gray-700 dark:text-zinc-300">State-of-the-art metro, international airports, premium healthcare, and top-tier international schools.</p>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">State-of-the-art metro, international airports, premium healthcare, and top-tier international schools.</p>
+            </div>
+            <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
+              <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">Global Connectivity</h3>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">Strategically located between East and West, with a third of the world's population within a 4-hour flight.</p>
             </div>
           </div>
           <p className="text-xs text-gray-500 dark:text-zinc-500 text-center max-w-3xl mx-auto">

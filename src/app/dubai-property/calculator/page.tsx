@@ -232,6 +232,13 @@ export default function DubaiPropertyCalculatorPage() {
                 onChange={(e) => setServiceChargeRate(Number(e.target.value))}
                 icon="fas fa-tools"
               />
+
+              <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 p-3 rounded-lg flex gap-3 mt-4">
+                <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                <p className="text-xs text-blue-800 dark:text-blue-300">
+                  <strong className="font-bold">Did you know?</strong> Service charges and property maintenance fees in Dubai are strictly regulated by the <strong>RERA Service Charge and Maintenance Index</strong>.
+                </p>
+              </div>
             </div>
           </Card>
         </div>

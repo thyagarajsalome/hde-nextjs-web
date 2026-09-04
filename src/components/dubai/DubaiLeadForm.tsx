@@ -164,9 +164,18 @@ export default function DubaiLeadForm() {
           )}
         </button>
         
-        <p className="text-xs text-center text-gray-500 dark:text-zinc-500 mt-4">
-          By submitting this form, you agree to our privacy policy. Your information is secure.
-        </p>
+        <div className="flex flex-col items-center mt-6 space-y-3">
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/30 rounded-full">
+            <i className="fas fa-shield-alt text-green-600 dark:text-green-500"></i>
+            <span className="text-xs font-semibold text-green-800 dark:text-green-400">
+              We connect you exclusively with RERA-Certified Professionals
+            </span>
+          </div>
+          
+          <p className="text-xs text-center text-gray-500 dark:text-zinc-500 max-w-sm">
+            By submitting this form, you agree to our privacy policy. Your information is 100% secure and never shared with unauthorized third parties.
+          </p>
+        </div>
       </form>
     </div>
   );
