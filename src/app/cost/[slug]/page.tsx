@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import Hero from "@/components/layout/Hero";
 import AppPromoSection from "@/components/layout/AppPromoSection";
 import FAQ from "@/components/layout/FAQ";
-import Testimonials from "@/components/layout/Testimonials";
 import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import CityContent, { CITIES_DATA, CityData } from "@/components/layout/CityContent";
 import { supabase } from "@/config/supabaseClient";
@@ -353,10 +352,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       
       {/* Hide specific sections for USA mode as requested previously */}
       {forceRegion !== 'US' && (
-        <>
-          <AppPromoSection />
-          <Testimonials />
-        </>
+        <AppPromoSection />
       )}
 
       {forceRegion === 'IN' && sampleEstimate && toolType === 'construction' && (
