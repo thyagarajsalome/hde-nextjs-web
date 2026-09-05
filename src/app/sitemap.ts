@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
+import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
 
 const BASE_URL = 'https://www.homedesignenglish.com';
 
@@ -92,6 +93,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/land-converter`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     }
   ];
 
@@ -300,11 +307,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
+  const landConverterRoutes: MetadataRoute.Sitemap = TOP_CONVERSION_PAIRS.map(pair => ({
+    url: `${BASE_URL}/land-converter/${pair.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   return [
     ...staticRoutes,
     ...cityRoutes,
     ...realEstateRoutes,
     ...blogRoutes,
-    ...dubaiRoutes
+    ...dubaiRoutes,
+    ...landConverterRoutes
   ];
 }
