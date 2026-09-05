@@ -29,6 +29,7 @@ import USAPickleballCalculator from "@/features/construction/USAPickleballCalcul
 import USAOutdoorKitchenCalculator from "@/features/construction/USAOutdoorKitchenCalculator";
 import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import IndiaEMICalculator from "@/features/construction/IndiaEMICalculator";
+import DubaiPropertyCalculatorPage from "@/app/dubai-property/calculator/page";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
@@ -98,31 +99,11 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
 
   const { panelRef } = useGSAPTabSwitch(activeCalculator);
 
-  // If UAE is selected, intercept and show a dedicated Dubai CTA
+  // If UAE is selected, render the actual Dubai Property Buying Cost Calculator directly!
   if (region === 'AE') {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-7xl" id="tools">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 dark:text-zinc-100">
-            Dubai Property <span className="text-primary">Calculator</span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-zinc-400">
-            Planning to invest in Dubai? Calculate exact DLD fees, agent commissions, mortgage costs, and ROI.
-          </p>
-        </div>
-        <div className="bg-white dark:bg-zinc-950 p-10 rounded-3xl shadow-xl text-center border border-gray-100 dark:border-zinc-800">
-          <div className="text-6xl mb-6">🇦🇪</div>
-          <h3 className="text-2xl font-bold mb-4 dark:text-zinc-100">Dedicated Dubai Investment Calculator</h3>
-          <p className="text-gray-600 dark:text-zinc-400 mb-8 max-w-xl mx-auto">
-            Our UAE suite is tailored specifically for real estate buyers and investors in Dubai, providing accurate breakdowns of government fees, Oqood registration, and mortgage charges.
-          </p>
-          <a 
-            href="/dubai-property/calculator" 
-            className="inline-block bg-primary hover:bg-primary-hover text-white font-bold py-4 px-10 rounded-xl shadow-lg transition-transform hover:-translate-y-1"
-          >
-            Open Dubai Calculator
-          </a>
-        </div>
+      <div className="container mx-auto px-4 py-6 max-w-7xl" id="tools">
+        <DubaiPropertyCalculatorPage />
       </div>
     );
   }

@@ -125,17 +125,17 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
         {region === 'AE' ? (
           <>
-            <a
-              href="/dubai-property/calculator"
+            <button
+              onClick={scrollToTools}
               className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white font-bold 
                          py-3 px-8 text-base w-full sm:w-auto
                          md:py-4 md:px-10 md:text-lg 
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 no-underline"
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               <span>🇦🇪</span>
               Calculate Buying Cost
-              <i className="fas fa-arrow-right text-sm"></i>
-            </a>
+              <i className="fas fa-arrow-down text-sm"></i>
+            </button>
             
             <a
               href="/dubai-property#areas"
