@@ -19,6 +19,8 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileButtonRef = useRef<HTMLButtonElement>(null);
 
   const currentRegion = REGIONS.find(r => r.code === region) || REGIONS[0];
   const isDubaiRoute = pathname.includes('/dubai-property');
@@ -26,7 +28,12 @@ const Header = () => {
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const clickedOutsideDesktop = dropdownRef.current && !dropdownRef.current.contains(target);
+      const clickedOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(target);
+      const clickedOutsideMobileBtn = mobileButtonRef.current && !mobileButtonRef.current.contains(target);
+      
+      if (clickedOutsideDesktop && clickedOutsideMobile && clickedOutsideMobileBtn) {
         setRegionDropdownOpen(false);
       }
     };
@@ -169,6 +176,7 @@ const Header = () => {
           <div className="lg:hidden flex items-center gap-3">
             {/* Mobile region button */}
             <button 
+              ref={mobileButtonRef}
               onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 cursor-pointer"
             >
@@ -189,7 +197,7 @@ const Header = () => {
 
       {/* Mobile Region Dropdown (shared for mobile) */}
       {regionDropdownOpen && (
-        <div className="lg:hidden absolute right-4 top-14 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
+        <div ref={mobileDropdownRef} className="lg:hidden absolute right-4 top-14 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
           <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800">
             <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">Select Region</p>
           </div>
