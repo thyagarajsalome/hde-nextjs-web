@@ -33,7 +33,6 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
   const [bedrooms, setBedrooms] = useState("3");
   const [bathrooms, setBathrooms] = useState("3");
   const [parking, setParking] = useState("1 Car");
-  const [isVastuCompliant, setIsVastuCompliant] = useState(true);
   const [description, setDescription] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
 
@@ -68,7 +67,7 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
   };
 
   const insertSpecTemplate = () => {
-    const template = `• Living Hall: 16' × 14' with double height ceiling\n• Master Bedroom: 14' × 12' with attached bath & walk-in wardrobe\n• Kitchen: 10' × 10' modular layout in South-East (Agni corner)\n• Pooja Room: Dedicated in North-East (Ishanya)\n• Balcony & Sitout: Spacious road-facing terrace\n• Structural: RCC framed structure designed for Zone II earthquake compliance\n• Vastu: 100% Vastu Shastra compliant orientation`;
+    const template = `• Living Hall: 16' × 14' with double height ceiling\n• Master Bedroom: 14' × 12' with attached bath & walk-in wardrobe\n• Kitchen: 10' × 10' modular layout with utility access\n• Study / Guest Room: Dedicated multi-purpose room\n• Balcony & Sitout: Spacious road-facing terrace\n• Structural: RCC framed structure designed for Zone II earthquake compliance\n• Ventilation: Cross-ventilation layout with abundant natural lighting`;
     setDescription(prev => prev ? `${prev}\n\n${template}` : template);
   };
 
@@ -102,8 +101,7 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
       setUploadProgress(90);
 
       // Final formatted description
-      const vastuTag = isVastuCompliant ? "[Vastu Compliant] " : "";
-      const finalDescription = `${vastuTag}${description}`.trim();
+      const finalDescription = description.trim();
 
       // 2. Insert record into house_plans table
       const { error: dbError } = await supabase.from('house_plans').insert({
@@ -264,12 +262,14 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
                 disabled={isUploading}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-800 text-sm font-semibold text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
               >
-                <option value="East">East (Auspicious 🌅)</option>
-                <option value="North">North (Kuber 🧭)</option>
-                <option value="West">West 🌇</option>
-                <option value="South">South ☀️</option>
-                <option value="North-East">North-East (Ishanya)</option>
+                <option value="East">East</option>
+                <option value="North">North</option>
+                <option value="West">West</option>
+                <option value="South">South</option>
+                <option value="North-East">North-East</option>
                 <option value="North-West">North-West</option>
+                <option value="South-East">South-East</option>
+                <option value="South-West">South-West</option>
               </select>
             </div>
 
@@ -344,45 +344,21 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
             </div>
           </div>
 
-          {/* Vastu & YouTube Links */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-            {/* Vastu Compliance Toggle */}
-            <div className="p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 block">
-                  Vastu Shastra Compliance
-                </span>
-                <span className="text-[10px] text-gray-400">
-                  {isVastuCompliant ? "100% Vastu Certified" : "Custom Layout"}
-                </span>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isVastuCompliant}
-                  onChange={(e) => setIsVastuCompliant(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-              </label>
-            </div>
-
-            {/* YouTube Shorts / Video Link */}
-            <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                YouTube Shorts / 3D Walkthrough Link
-              </label>
-              <div className="relative">
-                <i className="fab fa-youtube absolute left-3.5 top-1/2 -translate-y-1/2 text-red-600 text-sm"></i>
-                <input
-                  type="text"
-                  placeholder="https://youtube.com/shorts/... or https://youtu.be/..."
-                  value={youtubeUrl}
-                  onChange={(e) => setYoutubeUrl(e.target.value)}
-                  disabled={isUploading}
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-800 text-xs font-semibold text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white"
-                />
-              </div>
+          {/* YouTube Shorts / Video Link */}
+          <div>
+            <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
+              YouTube Shorts / 3D Walkthrough Link
+            </label>
+            <div className="relative">
+              <i className="fab fa-youtube absolute left-3.5 top-1/2 -translate-y-1/2 text-red-600 text-sm"></i>
+              <input
+                type="text"
+                placeholder="https://youtube.com/shorts/... or https://youtu.be/..."
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                disabled={isUploading}
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-800 text-xs font-semibold text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white"
+              />
             </div>
           </div>
 
