@@ -1,7 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
 import Hero from "@/components/layout/Hero";
-import AppPromoSection from "@/components/layout/AppPromoSection";
 import FAQ from "@/components/layout/FAQ";
 import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import { supabase } from "@/config/supabaseClient";
@@ -18,7 +17,6 @@ export default async function HomePage() {
     <>
       <Hero initialBanners={banners || []} />
       <CalculatorFeature />
-      <AppPromoSection />
       <FAQ />
     </>
   );

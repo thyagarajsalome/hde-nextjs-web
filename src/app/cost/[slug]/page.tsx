@@ -2,7 +2,6 @@ import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Hero from "@/components/layout/Hero";
-import AppPromoSection from "@/components/layout/AppPromoSection";
 import FAQ from "@/components/layout/FAQ";
 import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import CityContent, { CITIES_DATA, CityData } from "@/components/layout/CityContent";
@@ -349,11 +348,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       />
       <CityContent cityData={cityData} />
       <CalculatorFeature forceRegion={forceRegion} forceCalculator={forceCalculator as any} />
-      
       {/* Hide specific sections for USA mode as requested previously */}
-      {forceRegion !== 'US' && (
-        <AppPromoSection />
-      )}
 
       {forceRegion === 'IN' && sampleEstimate && toolType === 'construction' && (
         <section className="py-16 bg-gray-50 border-t border-gray-200">
