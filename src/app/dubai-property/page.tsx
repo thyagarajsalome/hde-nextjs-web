@@ -50,27 +50,35 @@ const areas = [
 const faqs = [
   {
     question: "Can foreigners buy property in Dubai?",
-    answer: "Yes, in designated freehold areas, foreign nationals can buy, sell, and lease property with full ownership rights."
+    answer: "Yes. In designated freehold areas (such as Dubai Marina, Downtown Dubai, Business Bay, JVC, and Palm Jumeirah), foreign nationals and expatriates of any nationality can purchase property with 100% freehold ownership rights, without requiring a local UAE partner."
   },
   {
-    question: "What are the buying costs in Dubai?",
-    answer: "Typical buying costs include a 4% DLD registration fee, approximately 2% agent commission, and various administrative fees. The total usually comes to around 6-7% of the property value."
+    question: "What are the total buying costs and government fees in Dubai?",
+    answer: "In addition to the property purchase price, expect approximately 6% to 7% in one-time upfront costs: Dubai Land Department (DLD) transfer fee of 4% (+ AED 580 admin fee), real estate agent commission (~2% + 5% VAT), and property registration trustee fees (AED 2,000 - AED 4,000 + VAT). For mortgages, add bank arrangement fees (~1%) and mortgage registration (0.25%). Use our free Dubai Property Calculator for an exact breakdown."
+  },
+  {
+    question: "How are off-plan investments protected in Dubai?",
+    answer: "Dubai has some of the world's strictest buyer protection laws regulated by RERA (Real Estate Regulatory Agency). Developers cannot access buyer funds directly; all payments must be deposited into a government-supervised project Escrow Account and are only released in stages as construction milestones are verified by independent engineering inspectors."
+  },
+  {
+    question: "Can Indian or foreign buyers invest in AED, INR, or USD?",
+    answer: "While sales contracts and Dubai Land Department registrations are officially denominated in UAE Dirhams (AED), international funds can be remitted from overseas via bank transfer in USD, EUR, GBP, or INR under regulatory frameworks like the Reserve Bank of India's Liberalised Remittance Scheme (LRS). Our calculator provides live indicative conversions in INR and USD."
   },
   {
     question: "What is the minimum budget to buy property in Dubai?",
-    answer: "Studio apartments in affordable areas like JVC start from around AED 400,000, but minimums vary widely by location and property type."
+    answer: "Affordable studio and 1-bedroom apartments in emerging suburban communities like Jumeirah Village Circle (JVC), Dubai South, and Dubai Silicon Oasis start from around AED 450,000 to AED 650,000 (~₹1.15 Cr - ₹1.65 Cr). Prime waterfront and downtown residences typically start from AED 1.2M - AED 2M+."
   },
   {
-    question: "Is Dubai property a good investment?",
-    answer: "Dubai offers relatively high rental yields (often 5-9%) and zero income tax. However, investment involves risk. Past performance is not indicative of future results. Always verify current regulations and seek professional advice."
+    question: "Is Dubai property subject to income or capital gains tax?",
+    answer: "The UAE does not levy personal income tax, capital gains tax, or property wealth tax on residential real estate owned by individuals. Rental income and capital appreciation earned by private individual owners are 100% tax-free in Dubai (foreign investors should consult their home country tax laws regarding global income reporting)."
   },
   {
-    question: "What is the Golden Visa for property buyers?",
-    answer: "Properties worth AED 2,000,000 or more may qualify the buyer for a 10-year UAE Golden Visa, subject to current immigration rules."
+    question: "How does the 10-Year UAE Golden Visa for property owners work?",
+    answer: "Investors purchasing residential property valued at AED 2,000,000 (~₹5.15 Cr / ~$544,000 USD) or above can qualify for a renewable 10-Year UAE Golden Visa for themselves and their immediate family (spouse and children). This applies to both ready properties and eligible off-plan properties from approved developers, even if financed through a local UAE bank mortgage."
   },
   {
-    question: "Off-plan vs ready property — which is better?",
-    answer: "Off-plan offers lower entry prices and attractive payment plans but carries construction and delay risks. Ready properties offer immediate rental income or occupancy but require larger upfront payments."
+    question: "What is the role of Home Design English (HDE) in Dubai property?",
+    answer: "Home Design English (HDE) is an independent technology, financial estimation, and property research platform. We provide free buying cost calculators, community guides, and educational resources. When you request a consultation, we connect you with verified, RERA-certified property brokerages and developer representatives at zero fee to you."
   }
 ];
 
