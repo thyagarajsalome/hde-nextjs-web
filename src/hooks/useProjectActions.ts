@@ -1,9 +1,6 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from "next/navigation";
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { supabase } from '../config/supabaseClient';
 import { useUser } from '../context/UserContext';
 import { ProjectService } from '../services/projectService';

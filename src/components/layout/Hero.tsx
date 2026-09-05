@@ -71,11 +71,11 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-6">
             <button
               onClick={() => setRegion('IN')}
               className="flex items-center justify-center gap-4 bg-white/10 hover:bg-white text-white hover:text-secondary border-2 border-white/30 hover:border-white font-bold 
-                         py-5 px-10 text-xl w-full sm:w-80 rounded-2xl shadow-2xl transform hover:-translate-y-2 transition-all duration-300 backdrop-blur-md group"
+                         py-5 px-8 text-xl w-full sm:w-64 rounded-2xl shadow-2xl transform hover:-translate-y-2 transition-all duration-300 backdrop-blur-md group"
             >
               <span className="text-4xl">🇮🇳</span>
               <span className="group-hover:scale-105 transition-transform">India (INR)</span>
@@ -84,10 +84,19 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             <button
               onClick={() => setRegion('US')}
               className="flex items-center justify-center gap-4 bg-white/10 hover:bg-white text-white hover:text-secondary border-2 border-white/30 hover:border-white font-bold 
-                         py-5 px-10 text-xl w-full sm:w-80 rounded-2xl shadow-2xl transform hover:-translate-y-2 transition-all duration-300 backdrop-blur-md group"
+                         py-5 px-8 text-xl w-full sm:w-64 rounded-2xl shadow-2xl transform hover:-translate-y-2 transition-all duration-300 backdrop-blur-md group"
             >
               <span className="text-4xl">🇺🇸</span>
               <span className="group-hover:scale-105 transition-transform">USA (USD)</span>
+            </button>
+
+            <button
+              onClick={() => setRegion('AE')}
+              className="flex items-center justify-center gap-4 bg-white/10 hover:bg-white text-white hover:text-secondary border-2 border-white/30 hover:border-white font-bold 
+                         py-5 px-8 text-xl w-full sm:w-64 rounded-2xl shadow-2xl transform hover:-translate-y-2 transition-all duration-300 backdrop-blur-md group"
+            >
+              <span className="text-4xl">🇦🇪</span>
+              <span className="group-hover:scale-105 transition-transform">UAE (AED)</span>
             </button>
           </div>
         </div>
@@ -96,7 +105,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
   }
 
   // STANDARD HERO (If region is selected)
-  const displayBanner = region === 'US' && banners.length > 1 ? banners[1] : banners[0];
+  const displayBanner = region === 'AE' ? '/images/dubai-skyline.jpg' : (region === 'US' && banners.length > 1 ? banners[1] : banners[0]);
 
   return (
     <section 
