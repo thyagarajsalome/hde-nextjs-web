@@ -416,8 +416,9 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                     value={area}
                     onChange={e => setArea(e.target.value)}
                     placeholder="e.g. 1500"
+                    autoComplete="off"
+                    suppressHydrationWarning
                     className="w-full mt-1.5 px-4 py-3 rounded-xl border border-gray-200 gold-focus-glow font-bold text-gray-800 bg-gray-50/50"
-                    autoFocus
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -428,6 +429,8 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                       value={parkingArea}
                       onChange={e => setParkingArea(e.target.value)}
                       placeholder="e.g. 200"
+                      autoComplete="off"
+                      suppressHydrationWarning
                       className="w-full mt-1.5 px-4 py-3 rounded-xl border border-gray-200 gold-focus-glow text-gray-700 bg-gray-50/50"
                     />
                   </div>
@@ -438,6 +441,8 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                       value={compoundWallLength}
                       onChange={e => setCompoundWallLength(e.target.value)}
                       placeholder="e.g. 120"
+                      autoComplete="off"
+                      suppressHydrationWarning
                       className="w-full mt-1.5 px-4 py-3 rounded-xl border border-gray-200 gold-focus-glow text-gray-700 bg-gray-50/50"
                     />
                   </div>
@@ -530,6 +535,8 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                     <input type="number" value={customRate}
                       onChange={e => { setCustomRate(parseFloat(e.target.value)); setIsEditingRate(true); }}
                       disabled={!isEditingRate}
+                      autoComplete="off"
+                      suppressHydrationWarning
                       className={`w-full p-2.5 text-right font-bold border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary ${isEditingRate ? "border-primary bg-white" : "border-transparent bg-transparent"}`} />
                     <span className="absolute right-8 top-3 text-[10px] text-gray-400 font-bold pointer-events-none">Rs./sqft</span>
                   </div>

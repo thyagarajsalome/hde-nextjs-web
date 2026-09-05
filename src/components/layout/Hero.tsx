@@ -46,6 +46,14 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
     if (toolsSection) toolsSection.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToAreas = (e: React.MouseEvent) => {
+    const areasSection = document.getElementById("areas");
+    if (areasSection) {
+      e.preventDefault();
+      areasSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   if (!isReady || banners.length === 0) {
     return null;
   }
@@ -139,10 +147,11 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             
             <a
               href="/dubai-property#areas"
+              onClick={scrollToAreas}
               className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
                          py-2.5 px-8 text-base w-full sm:w-auto
                          md:py-3.5 md:px-10 md:text-lg no-underline
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md"
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md cursor-pointer"
             >
               Explore Dubai Areas
               <i className="fas fa-compass text-sm"></i>

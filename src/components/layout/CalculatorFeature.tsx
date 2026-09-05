@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import CalculatorTabs from "@/features/construction/CalculatorTabs";
+import DubaiAreaList from "@/components/dubai/DubaiAreaList";
+import { DUBAI_AREAS } from "@/data/dubaiAreas";
 import ConstructionCalculator from "@/features/construction/ConstructionCalculator";
 import FlooringCalculator from "@/features/construction/FlooringCalculator";
 import PaintingCalculator from "@/features/construction/PaintingCalculator";
@@ -99,11 +102,37 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
 
   const { panelRef } = useGSAPTabSwitch(activeCalculator);
 
-  // If UAE is selected, render the actual Dubai Property Buying Cost Calculator directly!
+  // If UAE is selected, render the actual Dubai Property Buying Cost Calculator and Dubai Areas directly!
   if (region === 'AE') {
     return (
       <div className="container mx-auto px-4 py-6 max-w-7xl" id="tools">
         <DubaiPropertyCalculatorPage />
+
+        {/* Popular Dubai Areas Section with id="areas" */}
+        <section id="areas" className="mt-16 pt-12 border-t border-gray-200 dark:border-zinc-800">
+          <div className="text-center mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+              🇦🇪 Neighborhood Intelligence
+            </span>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-zinc-100 mt-3 mb-2">
+              Explore Dubai Property Areas
+            </h2>
+            <p className="text-gray-500 dark:text-zinc-400 text-sm max-w-2xl mx-auto">
+              Compare average property prices, rental yields, and lifestyle across 15+ top freehold investment districts.
+            </p>
+          </div>
+          <DubaiAreaList areas={DUBAI_AREAS} />
+
+          <div className="mt-8 text-center">
+            <Link 
+              href="/dubai-property" 
+              className="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-bold text-sm hover:underline"
+            >
+              <span>View Full Dubai Property Investment Guide & Market Reports</span>
+              <i className="fas fa-arrow-right text-xs"></i>
+            </Link>
+          </div>
+        </section>
       </div>
     );
   }

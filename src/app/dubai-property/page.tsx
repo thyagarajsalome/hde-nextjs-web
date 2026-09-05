@@ -138,9 +138,9 @@ export default function DubaiPropertyPage() {
             Compare areas, understand costs, and make informed decisions — whether you're investing from India, UK, or anywhere in the world.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-            <Link href="#areas" className="bg-primary hover:bg-primary-hover text-slate-900 font-bold py-3 px-8 rounded-lg transition-colors">
+            <a href="#areas" className="bg-primary hover:bg-primary-hover text-slate-900 font-bold py-3 px-8 rounded-lg transition-colors inline-block text-center">
               Explore Dubai Areas
-            </Link>
+            </a>
             <Link href="/dubai-property/calculator" className="bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors">
               Property Cost Calculator
             </Link>
