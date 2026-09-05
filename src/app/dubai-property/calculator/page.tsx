@@ -152,28 +152,41 @@ export default function DubaiPropertyCalculatorPage() {
           )}
         </div>
         
-        {/* Currency Switcher Pill Buttons */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-          <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Currency:</span>
-          <div className="inline-flex p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-sm">
+        {/* Currency Switcher: Clean modern segmented pill control */}
+        <div className="flex items-center gap-2.5">
+          <span className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Currency</span>
+          <div className="inline-flex items-center p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-inner">
             {[
-              { code: 'AED', label: 'AED (د.إ)', flag: '🇦🇪' },
-              { code: 'INR', label: 'INR (₹ Crores)', flag: '🇮🇳' },
-              { code: 'USD', label: 'USD ($)', flag: '🇺🇸' },
-            ].map((c) => (
-              <button
-                key={c.code}
-                onClick={() => handleCurrencyChange(c.code)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  currency === c.code
-                    ? 'bg-white dark:bg-zinc-900 text-primary shadow-sm'
-                    : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
-                }`}
-              >
-                <span>{c.flag}</span>
-                <span>{c.label}</span>
-              </button>
-            ))}
+              { code: 'AED', label: 'AED', sub: 'Dirham', flag: 'ae' },
+              { code: 'INR', label: 'INR', sub: '₹ Cr', flag: 'in' },
+              { code: 'USD', label: 'USD', sub: '$', flag: 'us' },
+            ].map((c) => {
+              const active = currency === c.code;
+              return (
+                <button
+                  key={c.code}
+                  type="button"
+                  onClick={() => handleCurrencyChange(c.code)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    active
+                      ? 'bg-white dark:bg-zinc-900 text-gray-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10 font-bold'
+                      : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200 hover:bg-white/50'
+                  }`}
+                >
+                  <img
+                    src={`https://flagcdn.com/w20/${c.flag}.png`}
+                    width="16"
+                    height="12"
+                    alt={c.code}
+                    className="rounded-xs shadow-xs shrink-0 object-cover"
+                  />
+                  <span className="tracking-tight">{c.label}</span>
+                  <span className={`text-[10px] font-normal px-1 rounded ${active ? 'text-primary dark:text-primary' : 'text-gray-400 dark:text-zinc-500'}`}>
+                    {c.sub}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
