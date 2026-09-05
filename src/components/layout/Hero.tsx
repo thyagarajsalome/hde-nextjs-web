@@ -123,27 +123,56 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
 
       {/* Button Content - Centered and visible on all devices */}
       <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <button
-          onClick={scrollToTools}
-          className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold 
-                     py-3 px-8 text-base w-full sm:w-auto
-                     md:py-4 md:px-10 md:text-lg 
-                     rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
-        >
-          Start Calculating
-          <i className="fas fa-arrow-down text-sm"></i>
-        </button>
-        
-        <Link
-          href="/visualizer"
-          className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
-                     py-2.5 px-8 text-base w-full sm:w-auto
-                     md:py-3.5 md:px-10 md:text-lg no-underline
-                     rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md"
-        >
-          Try Paint Visualizer
-          <i className="fas fa-paint-roller text-sm"></i>
-        </Link>
+        {region === 'AE' ? (
+          <>
+            <a
+              href="/dubai-property/calculator"
+              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white font-bold 
+                         py-3 px-8 text-base w-full sm:w-auto
+                         md:py-4 md:px-10 md:text-lg 
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 no-underline"
+            >
+              <span>🇦🇪</span>
+              Calculate Buying Cost
+              <i className="fas fa-arrow-right text-sm"></i>
+            </a>
+            
+            <a
+              href="/dubai-property#areas"
+              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
+                         py-2.5 px-8 text-base w-full sm:w-auto
+                         md:py-3.5 md:px-10 md:text-lg no-underline
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md"
+            >
+              Explore Dubai Areas
+              <i className="fas fa-compass text-sm"></i>
+            </a>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={scrollToTools}
+              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold 
+                         py-3 px-8 text-base w-full sm:w-auto
+                         md:py-4 md:px-10 md:text-lg 
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
+            >
+              Start Calculating
+              <i className="fas fa-arrow-down text-sm"></i>
+            </button>
+            
+            <Link
+              href="/visualizer"
+              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
+                         py-2.5 px-8 text-base w-full sm:w-auto
+                         md:py-3.5 md:px-10 md:text-lg no-underline
+                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md"
+            >
+              Try Paint Visualizer
+              <i className="fas fa-paint-roller text-sm"></i>
+            </Link>
+          </>
+        )}
       </div>
     </section>
   );

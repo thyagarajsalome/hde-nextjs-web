@@ -31,6 +31,47 @@ function getUniquePropertyContent(typeId: string, areaName: string) {
   }
 }
 
+function formatPriceInMultiCurrency(aedPrice: string) {
+  if (!aedPrice || aedPrice === 'Contact Us' || aedPrice === 'N/A') return aedPrice;
+  
+  // Extract number and scale (e.g. 'AED 850K' -> 850000, 'AED 1.3M' -> 1300000)
+  let numericAed = 0;
+  const clean = aedPrice.replace('AED', '').trim();
+  if (clean.endsWith('M')) {
+    numericAed = parseFloat(clean.replace('M', '')) * 1000000;
+  } else if (clean.endsWith('K')) {
+    numericAed = parseFloat(clean.replace('K', '')) * 1000;
+  } else {
+    numericAed = parseFloat(clean.replace(/,/g, '')) || 0;
+  }
+
+  if (!numericAed) return aedPrice;
+
+  // Conversion: 1 AED ≈ 22.85 INR, 1 AED ≈ 0.272 USD
+  const inrValue = numericAed * 22.85;
+  const usdValue = numericAed * 0.272;
+
+  let inrText = '';
+  if (inrValue >= 10000000) {
+    inrText = `₹${(inrValue / 10000000).toFixed(2)} Cr`;
+  } else {
+    inrText = `₹${(inrValue / 100000).toFixed(1)} Lakhs`;
+  }
+
+  let usdText = '';
+  if (usdValue >= 1000000) {
+    usdText = `$${(usdValue / 1000000).toFixed(2)}M`;
+  } else {
+    usdText = `$${Math.round(usdValue / 1000)}K`;
+  }
+
+  return {
+    aed: aedPrice,
+    inr: inrText,
+    usd: usdText,
+  };
+}
+
 function getStartingPrice(typeId: string, area: typeof DUBAI_AREAS[0]) {
   switch (typeId) {
     case 'apartments':
@@ -48,11 +89,15 @@ function getStartingPrice(typeId: string, area: typeof DUBAI_AREAS[0]) {
   }
 }
 
-function generateFAQs(typeId: string, areaName: string, rentalYield: string) {
+function generateFAQs(typeId: string, areaName: string, rentalYield: string, priceInfo: any) {
+  const priceDetail = typeof priceInfo === 'object' && priceInfo.inr 
+    ? `Starting prices for ${typeId.replace(/-/g, ' ')} in ${areaName} are approximately ${priceInfo.aed} (around ${priceInfo.inr} / ${priceInfo.usd}).` 
+    : `Prices vary based on size, floor, and view.`;
+
   const faqs = [
     {
-      question: `What is the average price of ${typeId.replace(/-/g, ' ')} in ${areaName}?`,
-      answer: `Prices vary based on size, floor, and view. Use our free Dubai Property Cost Calculator for a detailed breakdown of all buying costs including DLD fees, agent commission, and mortgage charges.`
+      question: `What is the average price of ${typeId.replace(/-/g, ' ')} in ${areaName} (in AED and INR)?`,
+      answer: `${priceDetail} For full transparency on government registration, DLD fees (4%), and financing, use our free Dubai Property Cost Calculator.`
     },
     {
       question: `Is ${areaName} a good area to buy ${typeId.replace(/-/g, ' ')}?`,
@@ -95,13 +140,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!currentArea || !currentType) return { title: 'Not Found' };
 
-  const title = `${currentType.label} for Sale in ${currentArea.name} | ROI & Prices`;
-  const description = `Looking for ${currentType.label.toLowerCase()} in ${currentArea.name}? Compare prices, rental yields (${currentArea.rentalYield}), and find the best investment properties in Dubai.`;
+  const rawStartingPrice = getStartingPrice(currentType.id, currentArea);
+  const multiCurrencyPrice = formatPriceInMultiCurrency(rawStartingPrice);
+  const priceSnippet = typeof multiCurrencyPrice === 'object' && multiCurrencyPrice.inr 
+    ? `From ${multiCurrencyPrice.aed} (~${multiCurrencyPrice.inr})` 
+    : '';
+
+  const title = `${currentType.label} for Sale in ${currentArea.name} | Prices in AED & INR`;
+  const description = `Looking for ${currentType.label.toLowerCase()} in ${currentArea.name}? ${priceSnippet}. Compare rental yields (${currentArea.rentalYield}), government DLD fees, and prices in AED, INR & USD.`;
   const pageUrl = `${BASE_URL}/dubai-property/buy/${slug}`;
 
   return {
     title,
     description,
+    keywords: [
+      `${currentType.label.toLowerCase()} in ${currentArea.name}`,
+      `buy ${currentType.label.toLowerCase()} dubai`,
+      `dubai property prices in inr`,
+      `${currentArea.name} property cost in rupees`,
+      `dubai real estate investment`,
+    ],
     alternates: {
       canonical: pageUrl,
     },
@@ -141,7 +199,9 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
     notFound();
   }
 
-  const faqs = generateFAQs(currentType.id, currentArea.name, currentArea.rentalYield);
+  const rawStartingPrice = getStartingPrice(currentType.id, currentArea);
+  const multiCurrencyPrice = formatPriceInMultiCurrency(rawStartingPrice);
+  const faqs = generateFAQs(currentType.id, currentArea.name, currentArea.rentalYield, multiCurrencyPrice);
   const siblingTypes = PROPERTY_TYPES.filter(pt => pt.id !== currentType.id);
 
   const breadcrumbJsonLd = {
@@ -193,7 +253,7 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
             {currentType.label} for Sale in {currentArea.name}
           </h1>
           <p className="text-gray-600 dark:text-zinc-400 mt-2 text-sm md:text-base">
-            Discover premium {currentType.label.toLowerCase()} in {currentArea.name}. Analyze average prices, rental yields, and investment potential.
+            Discover premium {currentType.label.toLowerCase()} in {currentArea.name}. Analyze average prices in AED, INR, and USD, rental yields, and investment potential.
           </p>
         </div>
       </div>
@@ -203,7 +263,7 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
           {/* Investment Overview */}
           <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
             <h2 className="text-lg font-bold text-slate-900 dark:text-zinc-100 mb-4">Investment Overview</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <div className="bg-gray-50 dark:bg-zinc-900 p-4 rounded-lg">
                   <p className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Average Rental Yield</p>
                   <p className="text-xl font-bold text-primary">{currentArea.rentalYield}</p>
@@ -211,8 +271,13 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
                <div className="bg-gray-50 dark:bg-zinc-900 p-4 rounded-lg">
                   <p className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Starting Price</p>
                   <p className="text-xl font-bold text-slate-900 dark:text-zinc-100">
-                    {getStartingPrice(currentType.id, currentArea)}
+                    {typeof multiCurrencyPrice === 'object' ? multiCurrencyPrice.aed : rawStartingPrice}
                   </p>
+                  {typeof multiCurrencyPrice === 'object' && multiCurrencyPrice.inr && (
+                    <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-1">
+                      ≈ {multiCurrencyPrice.inr} / {multiCurrencyPrice.usd}
+                    </p>
+                  )}
                </div>
             </div>
             

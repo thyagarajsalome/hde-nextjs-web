@@ -18,13 +18,31 @@ export default function DubaiPropertyCalculatorPage() {
   const [serviceChargeRate, setServiceChargeRate] = useState(15);
   const [propertySize, setPropertySize] = useState(800);
   const [currency, setCurrency] = useState("AED");
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({ AED: 1, USD: 0.272, INR: 22.85 });
+  const [rateUpdated, setRateUpdated] = useState<string | null>(null);
 
-  const exchangeRates: Record<string, number> = { AED: 1, USD: 0.272, INR: 22.8 };
+  // Fetch daily cached live exchange rates from our Edge API
+  React.useEffect(() => {
+    fetch('/api/currency')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.rates) {
+          setExchangeRates((prev) => ({
+            ...prev,
+            ...data.rates,
+          }));
+          if (data.updatedAt) {
+            setRateUpdated(data.source === 'live' ? 'Live market rates (updated daily)' : 'Indicative market rates');
+          }
+        }
+      })
+      .catch((err) => console.warn('Using local exchange rates fallback:', err));
+  }, []);
 
-  const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCurrency = e.target.value;
-    const oldRate = exchangeRates[currency];
-    const newRate = exchangeRates[newCurrency];
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (newCurrency === currency) return;
+    const oldRate = exchangeRates[currency] || 1;
+    const newRate = exchangeRates[newCurrency] || 1;
     const multiplier = newRate / oldRate;
 
     setPropertyPrice(Math.round(propertyPrice * multiplier));
@@ -37,7 +55,7 @@ export default function DubaiPropertyCalculatorPage() {
   const isReady = purchaseType === "Ready Property";
 
   // Fixed fees are defined in AED, so we must multiply them by the current exchange rate
-  const rate = exchangeRates[currency];
+  const rate = exchangeRates[currency] || 1;
 
   const dldRegistrationFee = propertyPrice * 0.04;
   const dldAdminFee = 580 * rate;
@@ -78,11 +96,27 @@ export default function DubaiPropertyCalculatorPage() {
         (Math.pow(1 + monthlyInterestRate, totalPayments) - 1));
   }
 
-  // Format helper
-  const formatCurrency = (val: number) => {
+  // Format helper with Indian Crores/Lakhs support
+  const formatCurrency = (val: number, showWords = false) => {
     if (currency === "INR") {
-      return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
+      const standardINR = new Intl.NumberFormat("en-IN", { 
+        style: "currency", 
+        currency: "INR", 
+        maximumFractionDigits: 0 
+      }).format(val);
+
+      if (showWords) {
+        if (val >= 10000000) {
+          const cr = (val / 10000000).toFixed(2);
+          return `${standardINR} (~₹${cr} Cr)`;
+        } else if (val >= 100000) {
+          const lk = (val / 100000).toFixed(2);
+          return `${standardINR} (~₹${lk} Lakhs)`;
+        }
+      }
+      return standardINR;
     }
+
     return new Intl.NumberFormat(currency === "USD" ? "en-US" : "en-AE", { 
       style: "currency", 
       currency: currency, 
@@ -108,20 +142,39 @@ export default function DubaiPropertyCalculatorPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900">Dubai Property Buying Cost Calculator</h1>
-          <p className="mt-2 text-gray-600">Calculate the true cost of buying property in Dubai, including all fees and charges.</p>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-zinc-100">Dubai Property Buying Cost Calculator</h1>
+          <p className="mt-2 text-gray-600 dark:text-zinc-400">Calculate the true cost of buying property in Dubai, including all government fees, mortgage, and maintenance charges.</p>
+          {rateUpdated && (
+            <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1.5 font-medium">
+              <i className="fas fa-check-circle"></i>
+              {rateUpdated} (1 AED ≈ ₹{exchangeRates.INR} INR / ${exchangeRates.USD} USD)
+            </p>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-600">Currency:</span>
-          <select 
-            value={currency} 
-            onChange={handleCurrencyChange}
-            className="bg-white border-2 border-gray-200 rounded-lg py-2 px-4 outline-none focus:border-primary font-bold text-gray-800"
-          >
-            <option value="AED">AED (Dirham)</option>
-            <option value="USD">USD (Dollar)</option>
-            <option value="INR">INR (Rupee)</option>
-          </select>
+        
+        {/* Currency Switcher Pill Buttons */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Currency:</span>
+          <div className="inline-flex p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-sm">
+            {[
+              { code: 'AED', label: 'AED (د.إ)', flag: '🇦🇪' },
+              { code: 'INR', label: 'INR (₹ Crores)', flag: '🇮🇳' },
+              { code: 'USD', label: 'USD ($)', flag: '🇺🇸' },
+            ].map((c) => (
+              <button
+                key={c.code}
+                onClick={() => handleCurrencyChange(c.code)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  currency === c.code
+                    ? 'bg-white dark:bg-zinc-900 text-primary shadow-sm'
+                    : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                <span>{c.flag}</span>
+                <span>{c.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -247,7 +300,7 @@ export default function DubaiPropertyCalculatorPage() {
         <div className="lg:col-span-7 space-y-6">
           <Card className="!p-6 bg-primary/5 border-primary/20">
             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Total Upfront Cash Required</h3>
-            <div className="text-4xl font-black text-primary">{formatCurrency(totalUpfrontCash)}</div>
+            <div className="text-3xl sm:text-4xl font-black text-primary">{formatCurrency(totalUpfrontCash, true)}</div>
             <p className="text-sm text-gray-500 mt-2">
               Includes {isMortgage ? "Down Payment" : "Property Price"} and all one-time fees.
             </p>

@@ -95,6 +95,18 @@ const Header = () => {
               </>
             )}
 
+            {/* Prominent Dubai Property Link (visible across all modes for cross-selling & NRI traffic) */}
+            {activeRegion.code !== 'AE' && (
+              <Link 
+                href="/dubai-property" 
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all no-underline"
+              >
+                <span>🇦🇪</span>
+                <span>Dubai Property</span>
+                <span className="text-[9px] bg-primary text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">New</span>
+              </Link>
+            )}
+
             {/* Shared links */}
             <Link href="/visualizer" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">
               Paint Visualizer
@@ -257,6 +269,21 @@ const Header = () => {
                   Cost Calculator
                 </Link>
               </>
+            )}
+
+            {/* Cross-selling Dubai Property on Mobile */}
+            {activeRegion.code !== 'AE' && (
+              <Link 
+                href="/dubai-property" 
+                className="flex items-center justify-between px-3 py-2 rounded-md text-base font-semibold text-amber-700 dark:text-amber-300 bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100 no-underline" 
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="flex items-center gap-2">
+                  <span>🇦🇪</span>
+                  Dubai Property
+                </span>
+                <span className="text-[10px] bg-primary text-white font-extrabold px-2 py-0.5 rounded-full uppercase">New</span>
+              </Link>
             )}
 
             {/* Shared mobile links */}
