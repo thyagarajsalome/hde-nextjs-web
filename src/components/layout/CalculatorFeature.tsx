@@ -67,6 +67,20 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
     }
   }, [forceCalculator]);
 
+  // Check URL params or localStorage for target calculator (e.g. redirected from Dashboard)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlCalc = params.get('calc') as CalculatorType;
+      const storedCalc = localStorage.getItem('hde_active_calc') as CalculatorType;
+      const target = urlCalc || storedCalc;
+      if (target && !forceCalculator) {
+        setActiveCalculator(target);
+        localStorage.removeItem('hde_active_calc');
+      }
+    }
+  }, [forceCalculator]);
+
   const renderCalculator = () => {
     switch (activeCalculator) {
       case "construction":  return <ConstructionCalculator />;
