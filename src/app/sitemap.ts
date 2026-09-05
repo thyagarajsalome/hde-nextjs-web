@@ -62,6 +62,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/disclaimer`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/directory`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
     }
   ];
 
@@ -218,12 +248,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic Blog Routes
   const blogPosts = getAllPosts();
-  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.meta.date),
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }));
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => {
+    const isValidDate = post.meta.date && !isNaN(Date.parse(post.meta.date));
+    return {
+      url: `${BASE_URL}/blog/${post.slug}`,
+      lastModified: isValidDate ? new Date(post.meta.date) : new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    };
+  });
 
   // Dubai Property Routes
   const DUBAI_AREAS = [
