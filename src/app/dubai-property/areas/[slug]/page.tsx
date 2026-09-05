@@ -1,10 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import DubaiLeadForm from '@/components/dubai/DubaiLeadForm';
-
 import { DUBAI_AREAS } from '@/data/dubaiAreas';
-
 
 export function generateStaticParams() {
   return DUBAI_AREAS.map((area) => ({

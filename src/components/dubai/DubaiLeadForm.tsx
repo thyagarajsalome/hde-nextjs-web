@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/config/supabaseClient";
 
-export default function DubaiLeadForm() {
+interface DubaiLeadFormProps {
+  source?: string;
+}
+
+export default function DubaiLeadForm({ source = "Dubai Property Landing Page" }: DubaiLeadFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,24 +38,17 @@ export default function DubaiLeadForm() {
           phone: formData.phone,
           interest: formData.interest,
           budget: formData.budget,
-          source: "Dubai Property Landing Page"
+          source: source
         }]);
 
       if (error) {
-        console.error("Supabase Error:", error);
         throw new Error(error.message);
       }
 
       setIsSuccess(true);
       setFormData({ name: "", email: "", phone: "", interest: "Investment", budget: "" });
-    } catch (err: any) {
-      // If the table doesn't exist yet, we can simulate success for now
-      if (err.message?.includes("relation") || err.message?.includes("does not exist")) {
-        console.warn("Table 'dubai_leads' does not exist yet. Simulating success.");
-        setIsSuccess(true);
-      } else {
-        setErrorMsg("Something went wrong. Please try again.");
-      }
+    } catch {
+      setErrorMsg("Something went wrong. Please try again or email us at hdeadmin@gmail.com.");
     } finally {
       setIsSubmitting(false);
     }
@@ -117,7 +115,7 @@ export default function DubaiLeadForm() {
               value={formData.phone}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-              placeholder="+1 (555) 000-0000"
+              placeholder="+971 50 000 0000"
             />
           </div>
         </div>
@@ -130,7 +128,7 @@ export default function DubaiLeadForm() {
             onChange={handleChange}
             className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
           >
-            <option value="Investment">Investment & High ROI</option>
+            <option value="Investment">Investment &amp; High ROI</option>
             <option value="Golden Visa">Golden Visa Property</option>
             <option value="Off-Plan">Off-Plan / New Projects</option>
             <option value="Ready to Move">Ready to Move-in</option>
@@ -173,7 +171,7 @@ export default function DubaiLeadForm() {
           </div>
           
           <p className="text-xs text-center text-gray-500 dark:text-zinc-500 max-w-sm">
-            By submitting this form, you agree to our privacy policy. Your information is 100% secure and never shared with unauthorized third parties.
+            By submitting this form, you agree to our <Link href="/privacy" className="text-primary hover:underline">privacy policy</Link>. Your information is 100% secure and never shared with unauthorized third parties.
           </p>
         </div>
       </form>

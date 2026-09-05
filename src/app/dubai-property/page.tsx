@@ -9,6 +9,23 @@ export const metadata: Metadata = {
   title: 'Dubai Property Advisor | Find the Right Property for You | HDE',
   description: 'Free Dubai property buying cost calculator, area guides, and personalized property recommendations. Compare areas like Dubai Marina, Business Bay, JVC, Downtown Dubai, and more.',
   keywords: 'dubai property, buy property in dubai, dubai real estate, dubai apartments, dubai property investment, dubai property calculator',
+  alternates: {
+    canonical: 'https://www.homedesignenglish.com/dubai-property',
+  },
+  openGraph: {
+    title: 'Dubai Property Advisor | Find the Right Property for You',
+    description: 'Free Dubai property buying cost calculator, area guides, and personalized property recommendations.',
+    url: 'https://www.homedesignenglish.com/dubai-property',
+    siteName: 'Home Design English',
+    type: 'website',
+    images: [{ url: '/images/dubai-skyline.jpg', width: 1200, height: 630, alt: 'Dubai Property Investment Guide' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dubai Property Advisor | HDE',
+    description: 'Free Dubai property buying cost calculator and area guides.',
+    images: ['/images/dubai-skyline.jpg'],
+  },
 };
 
 
