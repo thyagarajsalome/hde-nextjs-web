@@ -105,7 +105,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
   }
 
   // STANDARD HERO (If region is selected)
-  const displayBanner = region === 'AE' ? '/images/dubai-skyline.jpg' : (region === 'US' && banners.length > 1 ? banners[1] : banners[0]);
+  const displayBanner = region === 'AE' ? { image_url: '/images/dubai-skyline.jpg' } : (region === 'US' && banners.length > 1 ? banners[1] : banners[0]);
 
   return (
     <section 
