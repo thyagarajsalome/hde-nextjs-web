@@ -7,8 +7,8 @@ import { useRegion } from "../../context/RegionContext";
 
 const REGIONS = [
   { code: 'IN', label: 'India', flag: 'in', short: 'IND' },
-  { code: 'US', label: 'United States', flag: 'us', short: 'USA' },
-  { code: 'AE', label: 'UAE / Dubai', flag: 'ae', short: 'UAE' },
+  { code: 'US', label: 'USA', flag: 'us', short: 'USA' },
+  { code: 'AE', label: 'UAE', flag: 'ae', short: 'UAE' },
 ] as const;
 
 const Header = () => {
