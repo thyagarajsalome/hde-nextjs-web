@@ -152,16 +152,474 @@ const usaPlans = {
   },
 };
 
+const uaePlans = {
+  basic: {
+    id: "usa_basic",
+    name: "Starter",
+    tier: "basic",
+    price: 39,
+    originalPrice: 55,
+    description: "Ideal for individual buyers and overseas investors evaluating single property purchases in Dubai.",
+    credits: "5 Project Credits",
+    useCase: "Best for: Saving off-plan vs ready property cost comparisons.",
+    badge: undefined,
+    features: [
+      "5 Permanent Cloud Project Save Credits",
+      "Itemized DLD & Land Department Fee PDFs",
+      "Mortgage & Trustee Fee Breakdown Sheets",
+      "Side-by-side Unit Comparison in Dashboard",
+      "Credits never expire"
+    ],
+    color: "blue",
+    icon: "fa-building"
+  },
+  standard: {
+    id: "usa_standard",
+    name: "Investor",
+    tier: "standard",
+    price: 99,
+    originalPrice: 149,
+    description: "Perfect for multi-unit property portfolio investors and relocation planners across UAE freehold areas.",
+    credits: "15 Project Credits",
+    useCase: "Best for: Portfolio planning, rental yield ROI, and Golden Visa threshold evaluations.",
+    badge: "Most Popular",
+    features: [
+      "15 Permanent Cloud Project Save Credits",
+      "Comprehensive DLD, Trustee & Broker Fee Takeoffs",
+      "Service Charge & Gross Yield ROI Spreadsheets",
+      "Golden Visa (AED 2M+) Threshold Validation",
+      "Priority Support",
+      "Everything in Starter"
+    ],
+    color: "amber",
+    icon: "fa-city"
+  },
+  pro: {
+    id: "usa_pro",
+    name: "Developer & Broker",
+    tier: "pro",
+    price: 220,
+    originalPrice: 330,
+    description: "Built for real estate brokers, developers, and wealth managers managing multiple client portfolios.",
+    credits: "100 Project Credits",
+    useCase: "Best for: Professional advisors and agencies handling client transactions.",
+    badge: undefined,
+    features: [
+      "100 Project Credits (Store up to 100 properties)",
+      "Client-Ready Investor Presentation PDF Reports",
+      "Complete Freehold Community Fee Schedules",
+      "10 Daily Save Limit (Anti-Bot Protection)",
+      "White-Glove VIP Support"
+    ],
+    color: "gray",
+    icon: "fa-briefcase"
+  },
+};
+
+const BENEFITS_BY_REGION: Record<string, { tag: string; heading: string; cards: { icon: string; color: string; title: string; desc: string }[] }> = {
+  US: {
+    tag: "⭐ What You Unlock With Pro",
+    heading: "Why US Homeowners, Flippers & Remodelers Upgrade",
+    cards: [
+      {
+        icon: "fa-file-invoice-dollar",
+        color: "amber",
+        title: "Rehab Loans & Contractor Bids",
+        desc: "Generate professional line-item estimates formatted for Fannie Mae HomeStyle, FHA 203(k) renovation loans, and GC bidding."
+      },
+      {
+        icon: "fa-hammer",
+        color: "emerald",
+        title: "Accurate Trade Takeoffs",
+        desc: "Get exact lumber board feet, drywall sheet counts, roofing squares, and luxury specs to verify subcontractor and tradesman quotes."
+      },
+      {
+        icon: "fa-cloud-upload-alt",
+        color: "blue",
+        title: "Multi-Property Cloud Vault",
+        desc: "Save kitchen remodels, room additions, pool quotes, and rent vs buy analyses across US markets. Re-open and tweak specs anytime."
+      },
+      {
+        icon: "fa-infinity",
+        color: "purple",
+        title: "100% Lifetime Ownership",
+        desc: "One-time payment starting at $9.99. No recurring monthly SaaS subscriptions, no auto-charges, and credits never expire."
+      }
+    ]
+  },
+  IN: {
+    tag: "⭐ What You Unlock With Pro",
+    heading: "Why Indian Home Builders & Contractors Upgrade",
+    cards: [
+      {
+        icon: "fa-file-invoice-dollar",
+        color: "amber",
+        title: "Bank Loan & Sanction Ready",
+        desc: "Export formal, itemized cost sheets & BOQ reports accepted by major banks (SBI, HDFC, ICICI) and local authorities for loan approvals."
+      },
+      {
+        icon: "fa-shield-alt",
+        color: "emerald",
+        title: "Anti-Overbilling 7-Phase BOQ",
+        desc: "Get exact quantities for cement bags, steel reinforcement tonnes, sand, and bricks so contractors cannot inflate material bills."
+      },
+      {
+        icon: "fa-cloud-upload-alt",
+        color: "blue",
+        title: "Permanent Cloud Workspace",
+        desc: "Save multiple house designs and finish levels to your private dashboard. Re-open, adjust specs, and track changes anytime."
+      },
+      {
+        icon: "fa-infinity",
+        color: "purple",
+        title: "100% Lifetime Ownership",
+        desc: "One-time payment starting at ₹199. Zero recurring monthly fees. Your project credits never expire and stay in your account forever."
+      }
+    ]
+  },
+  AE: {
+    tag: "⭐ What You Unlock With Pro",
+    heading: "Why Dubai Property Investors Upgrade",
+    cards: [
+      {
+        icon: "fa-file-invoice-dollar",
+        color: "amber",
+        title: "Mortgage & Trustee Ready Reports",
+        desc: "Export complete buying cost breakdowns with DLD fees, trustee charges, and mortgage registration for bank pre-approvals."
+      },
+      {
+        icon: "fa-chart-line",
+        color: "emerald",
+        title: "Yield & Service Charge Takeoffs",
+        desc: "Compare net rental yields, service charges per sq ft, and cash-on-cash ROI across 15+ Dubai freehold communities."
+      },
+      {
+        icon: "fa-cloud-upload-alt",
+        color: "blue",
+        title: "Investment Portfolio Vault",
+        desc: "Save off-plan vs ready property investment scenarios side-by-side to track your global real estate acquisitions."
+      },
+      {
+        icon: "fa-infinity",
+        color: "purple",
+        title: "100% Lifetime Access",
+        desc: "Pay once. No recurring fees, lifetime access to saved investment profiles and property calculators."
+      }
+    ]
+  }
+};
+
+const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: string; proHeader: string; rows: { title: string; desc: string; free: string; freeClass: string; pro: string; proClass: string }[] }> = {
+  US: {
+    heading: "Free Tools vs. US Pro Account",
+    subheading: "See exactly what makes a Pro account essential for American remodelers, flippers, and homeowners.",
+    proHeader: "👑 Pro Account ($9.99+)",
+    rows: [
+      {
+        title: "Live Remodeling & Trade Calculators",
+        desc: "Kitchen, framing, roofing, pool, addition, and rent vs buy calculators",
+        free: "100% Free & Unlimited",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "100% Free & Unlimited",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Real-Time Material & Labor Sliders",
+        desc: "Adjust local zip code rates and contractor margins dynamically",
+        free: "Included",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "Included",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Cloud Project Vault (Dashboard)",
+        desc: "Store kitchen remodel, framing, and property tax estimates safely",
+        free: "1 Free Starter Save",
+        freeClass: "text-gray-400",
+        pro: "Up to 100 Permanent Saves",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Client-Ready & Loan PDF Estimates",
+        desc: "Formatted for Fannie Mae HomeStyle, 203k loans, and GC bidding",
+        free: "❌ Not Included",
+        freeClass: "text-gray-400",
+        pro: "✅ Professional PDF Estimates",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Detailed Trade Schedules & Takeoffs",
+        desc: "Lumber board feet, drywall sheets, roofing squares, luxury pool specs",
+        free: "Basic totals only",
+        freeClass: "text-gray-400",
+        pro: "✅ Complete Trade Takeoffs",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Multi-Scenario Project Comparisons",
+        desc: "Compare Budget vs Luxury Kitchen, or compare multiple flip properties",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Side-by-Side Dashboard Comparison",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "1-Click Saved Estimate Re-Editing",
+        desc: "Re-open any remodel or trade takeoff to adjust contractor prices",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Unlimited Re-edits",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Ownership & Subscription Terms",
+        desc: "Billing model and credit duration",
+        free: "Free forever",
+        freeClass: "text-gray-400",
+        pro: "♾️ One-Time Payment (Never Expires)",
+        proClass: "text-emerald-600 font-black"
+      },
+      {
+        title: "Customer & Technical Support",
+        desc: "Speed of email and support ticket resolution",
+        free: "Standard",
+        freeClass: "text-gray-400",
+        pro: "👑 Priority VIP Support",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      }
+    ]
+  },
+  IN: {
+    heading: "Free Plan vs. Indian Pro Account",
+    subheading: "See exactly what makes a Pro account essential for Indian home builders, architects, and civil contractors.",
+    proHeader: "👑 Pro Account (₹199+)",
+    rows: [
+      {
+        title: "Live Construction & BOQ Calculations",
+        desc: "House construction, interiors, flooring, painting, EMI, and materials",
+        free: "100% Free & Unlimited",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "100% Free & Unlimited",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Real-Time Cost Sliders & Donut Charts",
+        desc: "Adjust labor rates, materials, and view charts live",
+        free: "Included",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "Included",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Cloud Project Saves (Dashboard)",
+        desc: "Store completed estimates safely in your cloud workspace",
+        free: "1 Free Starter Save",
+        freeClass: "text-gray-400",
+        pro: "Up to 100 Permanent Saves",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Official Bank & Contractor PDF Reports",
+        desc: "Formal cost sheets accepted for loans by SBI, HDFC, ICICI",
+        free: "❌ Not Included",
+        freeClass: "text-gray-400",
+        pro: "✅ Official Downloadable PDFs",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Complete 7-Phase Material BOQ",
+        desc: "Exact cement bags, steel tonnes, sand loads, and brick schedules",
+        free: "Basic totals only",
+        freeClass: "text-gray-400",
+        pro: "✅ Exact Quantities & Brand Schedules",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Multi-Scenario Budget Comparisons",
+        desc: "Compare Ground Floor vs Duplex or Basic vs Luxury finishes",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Side-by-Side Dashboard Comparison",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "1-Click Saved Estimate Re-Editing",
+        desc: "Re-open any previously saved project to update rates anytime",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Unlimited Re-edits",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Ownership & Subscription Terms",
+        desc: "Billing model and credit duration",
+        free: "Free forever",
+        freeClass: "text-gray-400",
+        pro: "♾️ One-Time Payment (Credits Never Expire)",
+        proClass: "text-emerald-600 font-black"
+      },
+      {
+        title: "Customer & Technical Support",
+        desc: "Speed of email and support ticket resolution",
+        free: "Standard",
+        freeClass: "text-gray-400",
+        pro: "👑 Priority VIP Support",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      }
+    ]
+  },
+  AE: {
+    heading: "Free Tools vs. UAE Pro Account",
+    subheading: "See exactly what makes a Pro account essential for Dubai property investors and expats.",
+    proHeader: "👑 Pro Account",
+    rows: [
+      {
+        title: "Live Property Buying Cost Calculators",
+        desc: "DLD fees, trustee fees, mortgage registration, and service charges",
+        free: "100% Free & Unlimited",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "100% Free & Unlimited",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Area Yield & Community Comparisons",
+        desc: "Compare rental yields across 15+ freehold investment zones",
+        free: "Included",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "Included",
+        proClass: "text-emerald-600 font-bold"
+      },
+      {
+        title: "Cloud Investment Portfolio (Dashboard)",
+        desc: "Store Dubai property evaluations and cost schedules",
+        free: "1 Free Starter Save",
+        freeClass: "text-gray-400",
+        pro: "Up to 100 Permanent Saves",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Trustee & Bank-Ready PDF Reports",
+        desc: "Complete acquisition cost summary formatted for banks & brokers",
+        free: "❌ Not Included",
+        freeClass: "text-gray-400",
+        pro: "✅ Official Investment Reports",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Cash vs Mortgage ROI Analysis",
+        desc: "Detailed amortization and net annual yield breakdown",
+        free: "Basic summary",
+        freeClass: "text-gray-400",
+        pro: "✅ Complete Financial Schedules",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Multi-Property Portfolio Tracking",
+        desc: "Compare Downtown vs Marina vs JVC investments side-by-side",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Side-by-Side Comparison",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "1-Click Saved Estimate Re-Editing",
+        desc: "Re-open saved properties to adjust purchase price or service charge",
+        free: "❌ Disabled",
+        freeClass: "text-gray-400",
+        pro: "✅ Unlimited Re-edits",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      },
+      {
+        title: "Ownership & Subscription Terms",
+        desc: "Billing model and credit duration",
+        free: "Free forever",
+        freeClass: "text-gray-400",
+        pro: "♾️ One-Time Payment (Credits Never Expire)",
+        proClass: "text-emerald-600 font-black"
+      },
+      {
+        title: "Customer & Technical Support",
+        desc: "Priority assistance for international investors",
+        free: "Standard",
+        freeClass: "text-gray-400",
+        pro: "👑 Priority VIP Support",
+        proClass: "text-amber-600 dark:text-amber-400 font-black"
+      }
+    ]
+  }
+};
+
+const FAQS_BY_REGION: Record<string, { question: string; answer: string }[]> = {
+  US: [
+    {
+      question: "Do all calculators require credits to use?",
+      answer: "No. Live calculations for kitchen remodels, framing, roofing, swimming pools, additions, and rent-vs-buy are 100% free anytime. Credits are only deducted when you permanently Save a Project to your cloud dashboard or export client-ready PDF estimates."
+    },
+    {
+      question: "How much credit is free for new users?",
+      answer: "Every newly registered account automatically receives 1 Free Project Credit upon signing up. This allows you to test saving a complete remodel, addition, or framing takeoff to your dashboard without paying anything."
+    },
+    {
+      question: "I am already a paid customer. Are my benefits safe?",
+      answer: "Yes, absolutely. Existing paid customers are permanently grandfathered with all account privileges and credit balances preserved. Topping up smaller bundles will never downgrade your membership tier."
+    },
+    {
+      question: "Do purchased project credits ever expire?",
+      answer: "No. Your purchased credits never expire. There are zero recurring monthly SaaS fees or auto-charges."
+    }
+  ],
+  IN: [
+    {
+      question: "Do all calculators require credits to use?",
+      answer: "No. Live calculations, changing specs, comparing materials, and viewing graphs are 100% free for everyone. Credits are only deducted when you permanently Save a Project to your cloud dashboard or export formal PDF reports."
+    },
+    {
+      question: "How much credit is free for new users?",
+      answer: "Every newly registered account automatically receives 1 Free Project Credit upon signing up. This allows you to test saving a complete construction, interior, or remodel estimate to your dashboard without paying anything."
+    },
+    {
+      question: "I am already a paid customer. Are my benefits safe?",
+      answer: "Yes, absolutely. Existing paid customers are permanently grandfathered. You keep all calculator unlocks, account privileges, and remaining credit balances. Topping up smaller bundles will never downgrade your membership tier."
+    },
+    {
+      question: "Do purchased project credits ever expire?",
+      answer: "No. Your purchased credits never expire. They stay in your account balance until you choose to save a project or generate an export."
+    }
+  ],
+  AE: [
+    {
+      question: "Do all calculators require credits to use?",
+      answer: "No. Calculating Dubai property buying costs, DLD registration, mortgage amortization, and service charges is 100% free anytime. Credits are only used to save property investment evaluations to your private cloud portfolio."
+    },
+    {
+      question: "How much credit is free for new users?",
+      answer: "Every newly registered account automatically receives 1 Free Project Credit upon signing up to test saving a property acquisition report."
+    },
+    {
+      question: "I am already a paid customer. Are my benefits safe?",
+      answer: "Yes, absolutely. Existing paid customers retain full account privileges, grandfathered benefits, and all credit balances."
+    },
+    {
+      question: "Do purchased project credits ever expire?",
+      answer: "No. Your credits never expire and there are zero recurring fees."
+    }
+  ]
+};
+
 const UpgradePage = () => {
   const { user, refreshProfile, planTier, hasPaid, credits } = useUser();
   const { showToast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
   const navigate = useRouter();
-  const { region } = useRegion();
+  const { region, setRegion } = useRegion();
+  const currentRegion = (region && ['US', 'IN', 'AE'].includes(region) ? region : 'IN') as 'US' | 'IN' | 'AE';
 
-  const activePlans = region === 'US' ? usaPlans : plans;
-  const currencySymbol = region === 'US' ? '$' : '₹';
+  const activePlans = currentRegion === 'US' ? usaPlans : currentRegion === 'AE' ? uaePlans : plans;
+  const currencySymbol = currentRegion === 'US' ? '$' : currentRegion === 'AE' ? 'AED ' : '₹';
+  const currentBenefits = BENEFITS_BY_REGION[currentRegion] || BENEFITS_BY_REGION['IN'];
+  const currentComparison = COMPARISON_ROWS_BY_REGION[currentRegion] || COMPARISON_ROWS_BY_REGION['IN'];
+  const currentFaqs = FAQS_BY_REGION[currentRegion] || FAQS_BY_REGION['IN'];
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -180,8 +638,10 @@ const UpgradePage = () => {
         return;
       }
 
+      const paymentCurrency = currentRegion === 'US' ? 'USD' : currentRegion === 'AE' ? 'USD' : 'INR';
+
       const { data: order, error: orderError } = await supabase.functions.invoke('create-order', {
-        body: { planId, currency: region === 'US' ? 'USD' : 'INR' } 
+        body: { planId, currency: paymentCurrency } 
       });
 
       if (orderError || !order || order.error) throw new Error(order?.error || "Failed to create order.");
@@ -195,7 +655,7 @@ const UpgradePage = () => {
         order_id: order.id,
         handler: async (response: any) => {
           const { data: result } = await supabase.functions.invoke('verify-payment', {
-            body: { ...response, planId, currency: region === 'US' ? 'USD' : 'INR' }
+            body: { ...response, planId, currency: paymentCurrency }
           });
           if (result?.status === "success") {
             await refreshProfile();
@@ -220,16 +680,53 @@ const UpgradePage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-12 px-4 transition-colors">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <span className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-            Transparent Credit Pricing
-          </span>
+          <div className="inline-flex items-center gap-1.5 p-1.5 bg-gray-200/70 dark:bg-zinc-800 rounded-2xl mb-6 shadow-inner">
+            <button
+              onClick={() => setRegion('IN')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                region === 'IN'
+                  ? 'bg-white dark:bg-zinc-900 text-amber-600 shadow-xs'
+                  : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <span>🇮🇳</span> India (INR ₹)
+            </button>
+            <button
+              onClick={() => setRegion('US')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                region === 'US'
+                  ? 'bg-white dark:bg-zinc-900 text-blue-600 shadow-xs'
+                  : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <span>🇺🇸</span> USA (USD $)
+            </button>
+            <button
+              onClick={() => setRegion('AE')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+                region === 'AE'
+                  ? 'bg-white dark:bg-zinc-900 text-emerald-600 shadow-xs'
+                  : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <span>🇦🇪</span> UAE (AED)
+            </button>
+          </div>
+
+          <div>
+            <span className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+              Transparent Credit Pricing
+            </span>
+          </div>
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-zinc-100 mt-3 mb-3 uppercase tracking-tight">
             Choose Your Project Credit Plan
           </h1>
           <p className="text-gray-600 dark:text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto">
             {region === 'US' 
-              ? "Calculating online is 100% free anytime. Upgrade to save estimates permanently to your cloud dashboard and generate client-ready PDF bills." 
-              : "Live calculations are 100% free anytime. Upgrade to save estimates to your cloud portfolio and download itemized PDF cost sheets."}
+              ? "All online calculators are 100% free with unlimited runs. Upgrade to save estimates permanently to your cloud dashboard and generate client-ready PDF contractor bids & rehab budgets." 
+              : region === 'AE'
+              ? "Live property and buying cost calculations are 100% free. Upgrade to save multi-unit investment portfolios and export client-ready DLD & ROI breakdown sheets."
+              : "Live calculations are 100% free anytime. Upgrade to save estimates to your cloud portfolio and download itemized PDF cost sheets & BOQs."}
           </p>
           
           {/* Existing Customer Protection Notice */}
@@ -246,53 +743,25 @@ const UpgradePage = () => {
           <div className="mt-8 text-left max-w-5xl mx-auto">
             <div className="text-center mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
-                ⭐ What You Unlock With Pro
+                {currentBenefits.tag}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 mt-2">
-                Why Homeowners &amp; Contractors Upgrade
+                {currentBenefits.heading}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center text-lg mb-3">
-                  <i className="fas fa-file-invoice-dollar"></i>
+              {currentBenefits.cards.map((card: any, idx: number) => (
+                <div key={idx} className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                  <div className={`w-10 h-10 rounded-xl bg-${card.color}-50 dark:bg-${card.color}-950/40 text-${card.color}-600 flex items-center justify-center text-lg mb-3`}>
+                    <i className={`fas ${card.icon}`}></i>
+                  </div>
+                  <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">{card.title}</p>
+                  <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                    {card.desc}
+                  </p>
                 </div>
-                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Bank Loan &amp; Sanction Ready</p>
-                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                  Export formal, itemized cost sheets &amp; BOQ reports accepted by major banks (SBI, HDFC, ICICI, US lenders) for loan approvals.
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center text-lg mb-3">
-                  <i className="fas fa-shield-alt"></i>
-                </div>
-                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Anti-Overbilling BOQ</p>
-                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                  Get exact quantities for cement bags, steel reinforcement tonnes, sand, and bricks so contractors cannot overcharge you.
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center text-lg mb-3">
-                  <i className="fas fa-cloud-upload-alt"></i>
-                </div>
-                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Permanent Cloud Saves</p>
-                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                  Save multiple house designs and finish levels to your private dashboard. Re-open, adjust specs, and edit anytime.
-                </p>
-              </div>
-
-              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 flex items-center justify-center text-lg mb-3">
-                  <i className="fas fa-infinity"></i>
-                </div>
-                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">100% Lifetime Ownership</p>
-                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                  One-time payment with zero recurring monthly fees. Your project credits never expire and stay in your account forever.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -396,10 +865,10 @@ const UpgradePage = () => {
               Full Feature Breakdown
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-zinc-100 mt-2.5">
-              Free Plan vs. Pro Account
+              {currentComparison.heading}
             </h2>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1.5">
-              See exactly what makes a Pro account essential for homeowners, architects, and civil contractors.
+              {currentComparison.subheading}
             </p>
           </div>
 
@@ -410,97 +879,23 @@ const UpgradePage = () => {
                   <th className="pb-4 font-bold text-gray-400 uppercase tracking-wider text-[11px] w-2/5">Capability</th>
                   <th className="pb-4 font-bold text-gray-600 dark:text-zinc-300 text-center w-1/5">Free Visitor</th>
                   <th className="pb-4 font-black text-amber-600 dark:text-amber-400 text-center w-2/5 bg-amber-50/50 dark:bg-amber-950/20 rounded-t-xl">
-                    👑 Pro Account ({region === 'US' ? '$9.99+' : '₹199+'})
+                    {currentComparison.proHeader}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-zinc-800 font-medium">
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Live Calculator Calculations</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Test room sizes, wall dimensions, roof pitches, and budgets</p>
-                  </td>
-                  <td className="py-4 text-center text-emerald-600 font-bold">100% Free &amp; Unlimited</td>
-                  <td className="py-4 text-center text-emerald-600 font-bold bg-amber-50/50 dark:bg-amber-950/20">100% Free &amp; Unlimited</td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Real-Time Cost Sliders &amp; Donut Charts</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Adjust labor rates, materials, and view charts live</p>
-                  </td>
-                  <td className="py-4 text-center text-emerald-600 font-bold">Included</td>
-                  <td className="py-4 text-center text-emerald-600 font-bold bg-amber-50/50 dark:bg-amber-950/20">Included</td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Cloud Project Saves (Dashboard)</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Store completed estimates safely in your cloud workspace</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">1 Free Starter Save</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    Up to 100 Permanent Saves
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Official Bank &amp; Contractor PDF Reports</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Formal cost sheets accepted for loans (SBI, HDFC, Wells Fargo)</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">❌ Not Included</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    ✅ Official Downloadable PDFs
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Complete 7-Phase Material BOQ</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Exact cement bags, steel tonnes, sand loads, and brick schedules</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">Basic totals only</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    ✅ Exact Quantities &amp; Brand Schedules
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Multi-Scenario Budget Comparisons</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Compare Ground Floor vs Duplex or Basic vs Luxury finishes</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">❌ Disabled</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    ✅ Side-by-Side Dashboard Comparison
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">1-Click Saved Estimate Re-Editing</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Re-open any previously saved project to update rates anytime</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">❌ Disabled</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    ✅ Unlimited Re-edits
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Ownership &amp; Subscription Terms</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Billing model and credit duration</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">Free forever</td>
-                  <td className="py-4 text-center text-emerald-600 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    ♾️ One-Time Payment (Credits Never Expire)
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 text-slate-900 dark:text-zinc-100">
-                    <span className="font-bold">Customer &amp; Technical Support</span>
-                    <p className="text-[11px] text-gray-400 font-normal">Speed of email and support ticket resolution</p>
-                  </td>
-                  <td className="py-4 text-center text-gray-400">Standard</td>
-                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
-                    👑 Priority VIP Support
-                  </td>
-                </tr>
+                {currentComparison.rows.map((row: any, idx: number) => (
+                  <tr key={idx}>
+                    <td className="py-4 text-slate-900 dark:text-zinc-100">
+                      <span className="font-bold">{row.title}</span>
+                      <p className="text-[11px] text-gray-400 font-normal">{row.desc}</p>
+                    </td>
+                    <td className={`py-4 text-center ${row.freeClass || 'text-gray-400'}`}>{row.free}</td>
+                    <td className={`py-4 text-center ${row.proClass || 'text-amber-600 dark:text-amber-400 font-black'} bg-amber-50/50 dark:bg-amber-950/20`}>
+                      {row.pro}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -513,50 +908,22 @@ const UpgradePage = () => {
               Frequently Asked Questions
             </h2>
             <p className="text-xs text-gray-400 mt-1">
-              Everything you need to know about our free tools, credits, and existing customer benefits.
+              Everything you need to know about our free tools, credits, and existing customer benefits in {region === 'US' ? 'the United States' : region === 'AE' ? 'the UAE' : 'India'}.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
-              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-                <i className="fas fa-question-circle text-primary"></i>
-                <span>Do all calculators require credits to use?</span>
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
-                <strong>No.</strong> Live calculations, changing specs, comparing materials, and viewing graphs are 100% free for everyone. Credits are only deducted when you permanently <strong>Save a Project</strong> to your cloud dashboard or export formal PDF reports.
-              </p>
-            </div>
-
-            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
-              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-                <i className="fas fa-gift text-primary"></i>
-                <span>How much credit is free for new users?</span>
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
-                Every newly registered account automatically receives <strong>1 Free Project Credit</strong> upon signing up. This allows you to test saving a complete construction, interior, or remodel estimate to your dashboard without paying anything.
-              </p>
-            </div>
-
-            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
-              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-                <i className="fas fa-shield-alt text-primary"></i>
-                <span>I am already a paid customer. Are my benefits safe?</span>
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
-                <strong>Yes, absolutely.</strong> Existing paid customers are permanently grandfathered. You keep all calculator unlocks, account privileges, and remaining credit balances. Topping up smaller bundles will never downgrade your membership tier.
-              </p>
-            </div>
-
-            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
-              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
-                <i className="fas fa-clock text-primary"></i>
-                <span>Do purchased project credits ever expire?</span>
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
-                <strong>No.</strong> Your purchased credits never expire. They stay in your account balance until you choose to save a project or generate an export.
-              </p>
-            </div>
+            {currentFaqs.map((faq: any, idx: number) => (
+              <div key={idx} className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
+                <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                  <i className="fas fa-question-circle text-primary"></i>
+                  <span>{faq.question}</span>
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
