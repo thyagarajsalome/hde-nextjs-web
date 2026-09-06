@@ -7,6 +7,7 @@ import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
 import { formatCurrency } from "../../utils/currency";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 interface InteriorCalculatorProps {
   hasPaid: boolean;
@@ -193,26 +194,54 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
                 <Chart data={INTERIOR_BREAKDOWN} colors={CHART_COLORS} />
               </div>
 
-              {hasPaid && (
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                  <button
-                    onClick={handleDownloadPDF}
-                    disabled={isDownloading}
-                    className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all duration-300"
-                  >
-                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                    <span>{isDownloading ? "Processing..." : "Download PDF"}</span>
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all duration-300 shadow-float transform active:scale-95"
-                  >
-                    <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                    <span>{isSaving ? "Save" : "Save Project"}</span>
-                  </button>
-                </div>
-              )}
+              <div className="space-y-3 mt-6">
+                <WhatsAppShareButton
+                  title="Interior Design Cost Estimate"
+                  total={formatCurrency(totalCost)}
+                  details={[
+                    { label: "Built-up Area", value: `${area} sq.ft` },
+                    { label: "Quality Package", value: `${ratePreset.name} (₹${ratePreset.rate}/sq.ft)` },
+                    { label: "Modular Kitchen", value: formatCurrency((totalCost * 30) / 100) },
+                    { label: "Wardrobes", value: formatCurrency((totalCost * 25) / 100) },
+                    { label: "False Ceiling & Lighting", value: formatCurrency((totalCost * 15) / 100) },
+                  ]}
+                  className="w-full"
+                  buttonText="Share Interior Estimate on WhatsApp"
+                />
+
+                {hasPaid ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      onClick={handleDownloadPDF}
+                      disabled={isDownloading}
+                      className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all duration-300 cursor-pointer"
+                    >
+                      <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                      <span>{isDownloading ? "Processing..." : "Download PDF"}</span>
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all duration-300 shadow-float transform active:scale-95 cursor-pointer"
+                    >
+                      <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                      <span>{isSaving ? "Save" : "Save Project"}</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div>
+                      <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
+                        🔒 Unlock Technical Specs &amp; PDF Report
+                      </span>
+                      <span className="text-[11px] text-gray-500 dark:text-zinc-400">Save projects to your dashboard and download professional client quotes.</span>
+                    </div>
+                    <a href="/upgrade" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap no-underline cursor-pointer">
+                      Upgrade — ₹199
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </Card>
         ) : (

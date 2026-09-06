@@ -69,10 +69,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (error) console.error("Error fetching profile:", error);
         
-        setHasPaid(data?.has_paid || false);
-        setPlanTier(data?.plan_tier || (data?.has_paid ? 'pro' : 'free'));
+        const isPaid = Boolean(data?.has_paid);
+        const resolvedTier = data?.plan_tier || (isPaid ? 'pro' : 'free');
+        
+        setHasPaid(isPaid);
+        setPlanTier(resolvedTier);
         setRole(data?.role || 'user');
-        setCredits(data?.credits || 0); // Set the credit count from DB
+
+        // Credit allocation:
+        // - If credits exist in DB, respect the exact balance.
+        // - If null/undefined in DB:
+        //   - Existing paid users get 100 credits (Pro default) so they are never blocked.
+        //   - New free users get 1 Free Welcome Credit to test saving their first project.
+        let userCredits = data?.credits;
+        if (userCredits === null || userCredits === undefined) {
+          userCredits = isPaid ? 100 : 1;
+        }
+        setCredits(userCredits);
         fetchedUserIdRef.current = userId;
       } catch (err) {
         console.error("Unexpected error fetching profile:", err);

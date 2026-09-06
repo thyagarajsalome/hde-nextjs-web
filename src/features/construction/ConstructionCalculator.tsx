@@ -8,6 +8,7 @@ import { useUser } from "../../context/UserContext";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 import { formatCurrency } from "../../utils/currency";
 import { useGSAPCounter, useGSAPReveal, useGSAPPulse } from "../../hooks/useGSAP";
 
@@ -901,19 +902,36 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
               <strong>Indicative Report Disclaimer:</strong> Covers standard masonry structural grey stage and typical finishes. Land registrations, municipal approvals, architectural consultancy, elevations design, main service line tap-ins, and furniture items are excluded. We advise maintaining a 10% cash liquidity contingency buffer.
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              {hasPaid && (
-                <button onClick={handleDownloadPDF} disabled={isDownloading}
-                  className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-black rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all duration-300 shadow-sm">
-                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                  <span>Export PDF</span>
+            <div className="space-y-3">
+              <WhatsAppShareButton
+                title={`House Construction Estimate (${detectedCityName || 'India'})`}
+                total={formatCurrency(finalTotalCost)}
+                details={[
+                  { label: "Built-up Area", value: `${area} sq.ft` },
+                  { label: "Quality Grade", value: `${quality.toUpperCase()} (₹${customRate}/sq.ft)` },
+                  { label: "Structure Base", value: formatCurrency(costs.main) },
+                  ...(costs.parking > 0 ? [{ label: "Parking", value: `${parkingArea} sq.ft` }] : []),
+                  ...(costs.wall > 0 ? [{ label: "Compound Wall", value: `${compoundWallLength} ft` }] : []),
+                  ...(costs.sump > 0 ? [{ label: "Sump Tank", value: "Included" }] : []),
+                ]}
+                className="w-full"
+                buttonText="Share Estimate via WhatsApp"
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                {hasPaid && (
+                  <button onClick={handleDownloadPDF} disabled={isDownloading}
+                    className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-black rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all duration-300 shadow-sm cursor-pointer">
+                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                    <span>Export PDF</span>
+                  </button>
+                )}
+                <button onClick={handleSave} disabled={isSaving}
+                  className={`flex items-center justify-center gap-2 py-3.5 px-4 bg-primary text-white dark:text-zinc-950 font-black rounded-xl hover:bg-primary-hover transition-all duration-300 shadow-md transform active:scale-95 cursor-pointer ${!hasPaid ? "col-span-2" : ""}`}>
+                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                  <span>{isSaving ? "Saving details..." : "Save Project"}</span>
                 </button>
-              )}
-              <button onClick={handleSave} disabled={isSaving}
-                className={`flex items-center justify-center gap-2 py-3.5 px-4 bg-primary text-white dark:text-zinc-950 font-black rounded-xl hover:bg-primary-hover transition-all duration-300 shadow-md transform active:scale-95 ${!hasPaid ? "col-span-2" : ""}`}>
-                <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                <span>{isSaving ? "Saving details..." : "Save Project"}</span>
-              </button>
+              </div>
             </div>
           </>
         ) : (

@@ -148,7 +148,7 @@ const usaPlans = {
 };
 
 const UpgradePage = () => {
-  const { user, refreshProfile, planTier } = useUser();
+  const { user, refreshProfile, planTier, hasPaid, credits } = useUser();
   const { showToast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -214,23 +214,65 @@ const UpgradePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-12 px-4 transition-colors">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-black text-gray-900 dark:text-zinc-100 mb-4 uppercase tracking-tight">
-            Choose Your Plan
+        <div className="text-center mb-10">
+          <span className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+            Transparent Credit Pricing
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-zinc-100 mt-3 mb-3 uppercase tracking-tight">
+            Choose Your Project Credit Plan
           </h1>
-          <p className="text-gray-600 dark:text-zinc-400 text-lg max-w-2xl mx-auto">
-            {region === 'US' ? "Get the precision tools you need to make smarter real estate decisions." : "Get the precision tools you need to build with confidence and save on material costs."}
+          <p className="text-gray-600 dark:text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto">
+            {region === 'US' 
+              ? "Calculating online is 100% free anytime. Upgrade to save estimates permanently to your cloud dashboard and generate client-ready PDF bills." 
+              : "Live calculations are 100% free anytime. Upgrade to save estimates to your cloud portfolio and download itemized PDF cost sheets."}
           </p>
           
-          <div className="mt-8 inline-flex items-center gap-4 bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
-            <div className="bg-primary/10 p-3 rounded-xl">
-              <i className="fas fa-info-circle text-primary text-xl"></i>
+          {/* Existing Customer Protection Notice */}
+          {(hasPaid || planTier === 'pro') && (
+            <div className="mt-6 max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-300 text-xs flex items-center gap-3 text-left">
+              <i className="fas fa-crown text-amber-500 text-lg shrink-0"></i>
+              <div>
+                <strong>You are an active paid member ({planTier.toUpperCase()}):</strong> Your account has permanent access to your unlocked calculators. You can top up additional project credits below anytime if you need more cloud save slots.
+              </div>
             </div>
-            <div className="text-left">
-              <p className="font-bold text-gray-800 dark:text-zinc-200">What is a credit?</p>
-              <p className="text-sm text-gray-500 dark:text-zinc-400">
-                {region === 'US' ? "1 Credit = 1 Saved Project. Use it to save estimates, download professional PDF reports, and compare scenarios." : "1 Credit = 1 Unique Project. Use it to design, calculate, and save a full building plan."}
-              </p>
+          )}
+
+          {/* 3 Core Value Pillars */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-4xl mx-auto">
+            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
+                <i className="fas fa-calculator"></i>
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">100% Free Live Calculating</p>
+                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
+                  Use all calculators to test dimensions and compare prices freely without spending credits.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 text-sm">
+                <i className="fas fa-gift"></i>
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">1 Free Starter Save</p>
+                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
+                  Every registered account includes 1 Free Welcome Credit to save your first project to dashboard.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 flex items-center justify-center shrink-0 text-sm">
+                <i className="fas fa-infinity"></i>
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">Credits Never Expire</p>
+                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
+                  1 Credit = 1 Project Saved to cloud with PDF report. Top-up credits stay in your account forever.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -245,7 +287,6 @@ const UpgradePage = () => {
           {Object.entries(activePlans).map(([key, plan]) => {
             const isBestValue = plan.badge;
             const isActiveTier = planTier === plan.tier;
-            const isCurrentPlan = plan.tier === "pro" && planTier === "pro";
 
             return (
               <div 
@@ -266,7 +307,7 @@ const UpgradePage = () => {
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">{plan.name}</h3>
                       {isActiveTier && (
                         <span className="bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                          Active
+                          Current Tier
                         </span>
                       )}
                     </div>
@@ -286,7 +327,7 @@ const UpgradePage = () => {
                   </div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black text-gray-900 dark:text-zinc-100">{currencySymbol}{plan.price}</span>
-                    <span className="text-gray-500 dark:text-zinc-400 font-medium">/once</span>
+                    <span className="text-gray-500 dark:text-zinc-400 font-medium">/one-time</span>
                   </div>
                 </div>
 
@@ -306,11 +347,9 @@ const UpgradePage = () => {
 
                 <button
                   onClick={() => handlePayment(plan.id)}
-                  disabled={loadingPlan !== null || isCurrentPlan}
-                  className={`w-full py-4 rounded-2xl font-black text-lg transition-all transform active:scale-95 disabled:opacity-50 ${
-                    isCurrentPlan 
-                    ? 'bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 cursor-default border border-green-100 dark:border-green-900/30'
-                    : isBestValue 
+                  disabled={loadingPlan !== null}
+                  className={`w-full py-4 rounded-2xl font-black text-lg transition-all transform active:scale-95 disabled:opacity-50 cursor-pointer ${
+                    isBestValue 
                       ? 'bg-primary text-white dark:text-zinc-950 hover:bg-primary-hover shadow-lg' 
                       : 'bg-zinc-900 dark:bg-zinc-800 text-white hover:bg-black dark:hover:bg-zinc-700'
                   }`}
@@ -319,10 +358,8 @@ const UpgradePage = () => {
                     <span className="flex items-center justify-center gap-2">
                       <i className="fas fa-spinner fa-spin"></i> Processing
                     </span>
-                  ) : isCurrentPlan ? (
-                    'Current Plan'
                   ) : isActiveTier ? (
-                    'Buy More Credits'
+                    'Top-up Credits'
                   ) : (
                     'Buy Credits Now'
                   )}
@@ -330,6 +367,60 @@ const UpgradePage = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* --- FREQUENTLY ASKED QUESTIONS ABOUT CREDITS & ACCESS --- */}
+        <div className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl p-8 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-6">
+          <div className="text-center max-w-lg mx-auto mb-8">
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-zinc-100">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xs text-gray-400 mt-1">
+              Everything you need to know about our free tools, credits, and existing customer benefits.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
+              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                <i className="fas fa-question-circle text-primary"></i>
+                <span>Do all calculators require credits to use?</span>
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
+                <strong>No.</strong> Live calculations, changing specs, comparing materials, and viewing graphs are 100% free for everyone. Credits are only deducted when you permanently <strong>Save a Project</strong> to your cloud dashboard or export formal PDF reports.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
+              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                <i className="fas fa-gift text-primary"></i>
+                <span>How much credit is free for new users?</span>
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
+                Every newly registered account automatically receives <strong>1 Free Project Credit</strong> upon signing up. This allows you to test saving a complete construction, interior, or remodel estimate to your dashboard without paying anything.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
+              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                <i className="fas fa-shield-alt text-primary"></i>
+                <span>I am already a paid customer. Are my benefits safe?</span>
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
+                <strong>Yes, absolutely.</strong> Existing paid customers are permanently grandfathered. You keep all calculator unlocks, account privileges, and remaining credit balances. Topping up smaller bundles will never downgrade your membership tier.
+              </p>
+            </div>
+
+            <div className="space-y-1.5 p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40">
+              <h3 className="font-extrabold text-slate-800 dark:text-zinc-100 flex items-center gap-2">
+                <i className="fas fa-clock text-primary"></i>
+                <span>Do purchased project credits ever expire?</span>
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 leading-relaxed">
+                <strong>No.</strong> Your purchased credits never expire. They stay in your account balance until you choose to save a project or generate an export.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

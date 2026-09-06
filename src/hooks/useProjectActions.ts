@@ -7,7 +7,7 @@ import { ProjectService } from '../services/projectService';
 import { useToast } from '../context/ToastContext';
 
 export const useProjectActions = (projectType: string) => {
-  const { user, credits, planTier, refreshProfile } = useUser();
+  const { user, credits, planTier, hasPaid, refreshProfile } = useUser();
   const navigate = useRouter();
   const { showToast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
@@ -21,9 +21,9 @@ export const useProjectActions = (projectType: string) => {
       return;
     }
 
-    // Client-side quick check for non-Pro users to avoid unnecessary DB calls
-    if (planTier !== 'pro' && credits <= 0) {
-      showToast("No credits remaining. Please upgrade your plan.", "error");
+    // Client-side quick check for non-Pro and unpaid users to avoid unnecessary DB calls
+    if (planTier !== 'pro' && !hasPaid && credits <= 0) {
+      showToast("No save credits remaining. Please upgrade your plan.", "error");
       navigate.push('/upgrade');
       return;
     }
@@ -40,18 +40,23 @@ export const useProjectActions = (projectType: string) => {
       });
 
       if (rpcError) {
-        // Handle specific Pro limit errors from the SQL function
-        if (rpcError.message.includes("limit")) {
-          showToast(rpcError.message, "error");
-          return;
+        // If user is a verified paid or pro customer, allow save even if RPC credit deduction errored
+        if (hasPaid || planTier === 'pro') {
+          console.warn("RPC credit deduction warning for paid/pro user:", rpcError.message);
+        } else {
+          // Handle specific Pro limit errors from the SQL function
+          if (rpcError.message.includes("limit")) {
+            showToast(rpcError.message, "error");
+            return;
+          }
+          // Handle standard credit exhaustion
+          if (rpcError.message.includes("Insufficient credits")) {
+            showToast("Insufficient credits. Redirecting to upgrade page...", "error");
+            navigate.push('/upgrade');
+            return;
+          }
+          throw rpcError;
         }
-        // Handle standard credit exhaustion
-        if (rpcError.message.includes("Insufficient credits")) {
-          showToast("Insufficient credits. Redirecting to upgrade page...", "error");
-          navigate.push('/upgrade');
-          return;
-        }
-        throw rpcError;
       }
 
       // Step 2: Save project data after successful credit validation/deduction

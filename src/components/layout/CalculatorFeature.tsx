@@ -76,10 +76,17 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
       const target = urlCalc || storedCalc;
       if (target && !forceCalculator) {
         setActiveCalculator(target);
+        if (target.startsWith('usa-')) {
+          setRegion('US');
+          localStorage.setItem('hde_region', 'US');
+        } else {
+          setRegion('IN');
+          localStorage.setItem('hde_region', 'IN');
+        }
         localStorage.removeItem('hde_active_calc');
       }
     }
-  }, [forceCalculator]);
+  }, [forceCalculator, setRegion]);
 
   const renderCalculator = () => {
     switch (activeCalculator) {
@@ -116,8 +123,17 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
 
   const { panelRef } = useGSAPTabSwitch(activeCalculator);
 
-  // If UAE is selected, render the actual Dubai Property Buying Cost Calculator and Dubai Areas directly!
-  if (region === 'AE') {
+  // Check if a specific India or USA calculator is pending to avoid accidental Dubai redirect
+  let pendingCalc: string | null = null;
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    pendingCalc = params.get('calc') || localStorage.getItem('hde_active_calc');
+  }
+  const isIndiaCalc = pendingCalc && !pendingCalc.startsWith('usa-');
+  const isUsaCalc = pendingCalc && pendingCalc.startsWith('usa-');
+
+  // If UAE is selected and no India or USA calculator was explicitly requested, render Dubai Property
+  if (region === 'AE' && !isIndiaCalc && !isUsaCalc) {
     return (
       <div className="container mx-auto px-4 py-6 max-w-7xl" id="tools">
         <DubaiPropertyCalculatorPage />

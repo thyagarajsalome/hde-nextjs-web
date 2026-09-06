@@ -8,6 +8,7 @@ import { ProjectService } from "../../services/projectService";
 import { useToast } from "../../context/ToastContext";
 import { useRegion } from "../../context/RegionContext";
 import { HeroManager } from "./HeroManager";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 interface CalculatorMeta {
   label: string;
@@ -17,28 +18,53 @@ interface CalculatorMeta {
 }
 
 const CALCULATOR_META: Record<string, CalculatorMeta> = {
-  construction:  { label: "House Construction",   icon: "fas fa-home",         color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200", category: "structure" },
-  "india-emi":   { label: "Home Loan EMI",        icon: "fas fa-university",   color: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200", category: "finance" },
-  materials:     { label: "Materials BOQ",        icon: "fas fa-cubes",        color: "bg-stone-50 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400 border-stone-200", category: "structure" },
-  interior:      { label: "Interior Design",      icon: "fas fa-couch",        color: "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-rose-200", category: "interiors" },
+  // India Calculators
+  construction:   { label: "House Construction",   icon: "fas fa-home",         color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200", category: "structure" },
+  "india-emi":    { label: "Home Loan EMI",        icon: "fas fa-university",   color: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200", category: "finance" },
+  materials:      { label: "Materials BOQ",        icon: "fas fa-cubes",        color: "bg-stone-50 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400 border-stone-200", category: "structure" },
+  interior:       { label: "Interior Design",      icon: "fas fa-couch",        color: "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-rose-200", category: "interiors" },
   "doors-windows":{ label: "Doors & Windows",     icon: "fas fa-door-open",    color: "bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 border-sky-200", category: "finishes" },
-  flooring:      { label: "Flooring",             icon: "fas fa-layer-group",  color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 border-teal-200", category: "finishes" },
-  painting:      { label: "House Painting",       icon: "fas fa-paint-roller", color: "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border-purple-200", category: "finishes" },
-  plumbing:      { label: "Plumbing",             icon: "fas fa-bath",         color: "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 border-cyan-200", category: "systems" },
-  electrical:    { label: "Electrical",           icon: "fas fa-bolt",         color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 border-yellow-200", category: "systems" },
-  "usa-framing": { label: "Framing & Lumber",     icon: "fas fa-ruler-combined",color: "bg-amber-50 text-amber-600 border-amber-200", category: "structure" },
-  "usa-roofing": { label: "Roofing",              icon: "fas fa-warehouse",   color: "bg-blue-50 text-blue-600 border-blue-200", category: "structure" },
-  "usa-accent-wall": { label: "Accent Wall",      icon: "fas fa-border-all",  color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "interiors" },
-  "usa-rent-vs-buy": { label: "Rent vs Buy",      icon: "fas fa-balance-scale",color: "bg-green-50 text-green-600 border-green-200", category: "finance" },
-  "usa-property-tax": { label: "Property Tax",    icon: "fas fa-file-invoice-dollar", color: "bg-red-50 text-red-600 border-red-200", category: "finance" },
-  "usa-salary-calculator": { label: "Salary Needed", icon: "fas fa-money-bill-wave", color: "bg-emerald-50 text-emerald-600 border-emerald-200", category: "finance" },
-  "usa-remodel-roi": { label: "Remodel ROI",      icon: "fas fa-chart-line",   color: "bg-violet-50 text-violet-600 border-violet-200", category: "finance" },
-  "usa-swimming-pool": { label: "Swimming Pool",  icon: "fas fa-swimming-pool",color: "bg-sky-50 text-sky-600 border-sky-200", category: "luxury" },
-  "usa-pickleball-court": { label: "Pickleball Court", icon: "fas fa-table-tennis", color: "bg-orange-50 text-orange-600 border-orange-200", category: "luxury" },
-  "usa-outdoor-kitchen": { label: "Outdoor Kitchen", icon: "fas fa-fire-burner", color: "bg-rose-50 text-rose-600 border-rose-200", category: "luxury" },
+  flooring:       { label: "Flooring",             icon: "fas fa-layer-group",  color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 border-teal-200", category: "finishes" },
+  painting:       { label: "House Painting",       icon: "fas fa-paint-roller", color: "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border-purple-200", category: "finishes" },
+  plumbing:       { label: "Plumbing",             icon: "fas fa-bath",         color: "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 border-cyan-200", category: "systems" },
+  electrical:     { label: "Electrical",           icon: "fas fa-bolt",         color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 border-yellow-200", category: "systems" },
+  
+  // USA Calculators
+  "usa-framing":  { label: "Framing & Lumber",     icon: "fas fa-ruler-combined",color: "bg-amber-50 text-amber-600 border-amber-200", category: "structure" },
+  "usa-roofing":  { label: "Roofing & Shingles",   icon: "fas fa-warehouse",   color: "bg-blue-50 text-blue-600 border-blue-200", category: "structure" },
+  "usa-accent-wall":{ label: "Accent Wall",        icon: "fas fa-border-all",  color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "interiors" },
+  "usa-rent-vs-buy":{ label: "Rent vs Buy",        icon: "fas fa-balance-scale",color: "bg-green-50 text-green-600 border-green-200", category: "finance" },
+  "usa-property-tax":{ label: "Property Tax",      icon: "fas fa-file-invoice-dollar", color: "bg-red-50 text-red-600 border-red-200", category: "finance" },
+  "usa-salary-calculator":{ label: "Salary Needed", icon: "fas fa-money-bill-wave", color: "bg-emerald-50 text-emerald-600 border-emerald-200", category: "finance" },
+  "usa-remodel-roi":{ label: "Remodel ROI",        icon: "fas fa-chart-line",   color: "bg-violet-50 text-violet-600 border-violet-200", category: "finance" },
+  "usa-swimming-pool":{ label: "Swimming Pool",    icon: "fas fa-swimming-pool",color: "bg-sky-50 text-sky-600 border-sky-200", category: "luxury" },
+  "usa-pickleball-court":{ label: "Pickleball Court", icon: "fas fa-table-tennis", color: "bg-orange-50 text-orange-600 border-orange-200", category: "luxury" },
+  "usa-outdoor-kitchen":{ label: "Outdoor Kitchen", icon: "fas fa-fire-burner", color: "bg-rose-50 text-rose-600 border-rose-200", category: "luxury" },
+  "usa-kitchen-remodel":{ label: "Kitchen Remodel", icon: "fas fa-utensils", color: "bg-amber-50 text-amber-600 border-amber-200", category: "interiors" },
+  "usa-home-addition":{ label: "Home Addition",    icon: "fas fa-house-user", color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "structure" },
+  "usa-garden-bed":{ label: "Garden Bed",          icon: "fas fa-leaf", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
+  "usa-flooring": { label: "USA Flooring",         icon: "fas fa-layer-group", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
+  "usa-plumbing": { label: "USA Plumbing",         icon: "fas fa-bath", color: "bg-cyan-50 text-cyan-600 border-cyan-200", category: "systems" },
+  "usa-electrical":{ label: "USA Electrical",      icon: "fas fa-bolt", color: "bg-yellow-50 text-yellow-600 border-yellow-200", category: "systems" },
+  "usa-interior-design":{ label: "USA Interiors",  icon: "fas fa-couch", color: "bg-rose-50 text-rose-600 border-rose-200", category: "interiors" },
+
+  // UAE / Dubai
+  "dubai-property": { label: "Dubai Property",     icon: "fas fa-city", color: "bg-amber-50 text-amber-600 border-amber-200", category: "finance" },
 };
 
-const INDIA_QUICK_TOOLS = [
+interface QuickTool {
+  id: string;
+  name: string;
+  subtitle: string;
+  icon: string;
+  badge?: string | null;
+  route?: string;
+  color: string;
+  textColor: string;
+  bgColor: string;
+}
+
+const INDIA_QUICK_TOOLS: QuickTool[] = [
   {
     id: "construction",
     name: "House Construction",
@@ -80,18 +106,6 @@ const INDIA_QUICK_TOOLS = [
     bgColor: "bg-rose-50 dark:bg-rose-950/20 border-rose-200",
   },
   {
-    id: "land-converter",
-    name: "Land Unit Converter",
-    subtitle: "Gunta, Cent, Bigha to SqFt",
-    icon: "fas fa-vector-square",
-    badge: "New",
-    isExternalRoute: true,
-    route: "/land-converter",
-    color: "from-indigo-500 to-indigo-600",
-    textColor: "text-indigo-600",
-    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
-  },
-  {
     id: "flooring",
     name: "Flooring Cost",
     subtitle: "Vitrified tiles & marble",
@@ -112,14 +126,271 @@ const INDIA_QUICK_TOOLS = [
     bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
   },
   {
+    id: "doors-windows",
+    name: "Doors & Windows",
+    subtitle: "Teak, UPVC, aluminum",
+    icon: "fas fa-door-open",
+    badge: "Pro",
+    color: "from-sky-500 to-sky-600",
+    textColor: "text-sky-600",
+    bgColor: "bg-sky-50 dark:bg-sky-950/20 border-sky-200",
+  },
+  {
     id: "plumbing",
     name: "Plumbing & Piping",
-    subtitle: "Bathrooms, fixtures, motor",
+    subtitle: "Bathrooms, CPVC fixtures",
     icon: "fas fa-bath",
     badge: "Pro",
     color: "from-cyan-500 to-cyan-600",
     textColor: "text-cyan-600",
     bgColor: "bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200",
+  },
+  {
+    id: "electrical",
+    name: "Electrical Wiring",
+    subtitle: "Switches, DB, points",
+    icon: "fas fa-bolt",
+    badge: "Pro",
+    color: "from-yellow-500 to-yellow-600",
+    textColor: "text-yellow-600",
+    bgColor: "bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200",
+  },
+  {
+    id: "land-converter",
+    name: "Land Unit Converter",
+    subtitle: "Gunta, Cent, Bigha to SqFt",
+    icon: "fas fa-vector-square",
+    badge: "New",
+    route: "/land-converter",
+    color: "from-indigo-500 to-indigo-600",
+    textColor: "text-indigo-600",
+    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
+  },
+  {
+    id: "plans",
+    name: "House Plans & CAD",
+    subtitle: "Vetted 2D/3D elevations",
+    icon: "fas fa-drafting-compass",
+    badge: "Popular",
+    route: "/plans",
+    color: "from-blue-500 to-blue-600",
+    textColor: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
+];
+
+const USA_QUICK_TOOLS: QuickTool[] = [
+  {
+    id: "usa-rent-vs-buy",
+    name: "Rent vs. Buy",
+    subtitle: "5-year equity vs PITI costs",
+    icon: "fas fa-balance-scale",
+    badge: "Essential",
+    color: "from-green-500 to-green-600",
+    textColor: "text-green-600",
+    bgColor: "bg-green-50 dark:bg-green-950/20 border-green-200",
+  },
+  {
+    id: "usa-property-tax",
+    name: "Property Tax",
+    subtitle: "County tax & escrow rates",
+    icon: "fas fa-file-invoice-dollar",
+    badge: "Popular",
+    color: "from-red-500 to-red-600",
+    textColor: "text-red-600",
+    bgColor: "bg-red-50 dark:bg-red-950/20 border-red-200",
+  },
+  {
+    id: "usa-salary-calculator",
+    name: "Salary Needed to Buy",
+    subtitle: "28/36 DTI income math",
+    icon: "fas fa-money-bill-wave",
+    badge: "Finance",
+    color: "from-emerald-500 to-emerald-600",
+    textColor: "text-emerald-600",
+    bgColor: "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200",
+  },
+  {
+    id: "usa-kitchen-remodel",
+    name: "Kitchen Remodel",
+    subtitle: "Cabinets, counters, labor",
+    icon: "fas fa-utensils",
+    badge: "Top ROI",
+    color: "from-amber-500 to-amber-600",
+    textColor: "text-amber-600",
+    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+  },
+  {
+    id: "usa-home-addition",
+    name: "Home Addition",
+    subtitle: "Master suite & bump-outs",
+    icon: "fas fa-house-user",
+    badge: null,
+    color: "from-indigo-500 to-indigo-600",
+    textColor: "text-indigo-600",
+    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
+  },
+  {
+    id: "usa-framing",
+    name: "Framing & Lumber",
+    subtitle: "Studs, joists, drywall",
+    icon: "fas fa-ruler-combined",
+    badge: "Trade",
+    color: "from-stone-500 to-stone-600",
+    textColor: "text-stone-600",
+    bgColor: "bg-stone-50 dark:bg-stone-900/30 border-stone-200",
+  },
+  {
+    id: "usa-roofing",
+    name: "Roofing & Shingles",
+    subtitle: "Asphalt, metal & tile",
+    icon: "fas fa-warehouse",
+    badge: null,
+    color: "from-blue-500 to-blue-600",
+    textColor: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
+  {
+    id: "usa-swimming-pool",
+    name: "Swimming Pool",
+    subtitle: "Gunite, fiberglass, coping",
+    icon: "fas fa-swimming-pool",
+    badge: "Luxury",
+    color: "from-sky-500 to-sky-600",
+    textColor: "text-sky-600",
+    bgColor: "bg-sky-50 dark:bg-sky-950/20 border-sky-200",
+  },
+  {
+    id: "usa-pickleball-court",
+    name: "Pickleball Court",
+    subtitle: "Post-tension concrete & mesh",
+    icon: "fas fa-table-tennis",
+    badge: "Trending",
+    color: "from-orange-500 to-orange-600",
+    textColor: "text-orange-600",
+    bgColor: "bg-orange-50 dark:bg-orange-950/20 border-orange-200",
+  },
+  {
+    id: "usa-outdoor-kitchen",
+    name: "Outdoor Kitchen",
+    subtitle: "Masonry, grill & appliances",
+    icon: "fas fa-fire-burner",
+    badge: "Luxury",
+    color: "from-rose-500 to-rose-600",
+    textColor: "text-rose-600",
+    bgColor: "bg-rose-50 dark:bg-rose-950/20 border-rose-200",
+  },
+  {
+    id: "permits",
+    name: "Permit & Code Portals",
+    subtitle: "City zoning regulations",
+    icon: "fas fa-clipboard-check",
+    badge: "Guides",
+    route: "/permits",
+    color: "from-purple-500 to-purple-600",
+    textColor: "text-purple-600",
+    bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
+  },
+  {
+    id: "usa-garden-bed",
+    name: "Raised Garden Bed",
+    subtitle: "Cedar & soil cubic yards",
+    icon: "fas fa-leaf",
+    badge: null,
+    color: "from-teal-500 to-teal-600",
+    textColor: "text-teal-600",
+    bgColor: "bg-teal-50 dark:bg-teal-950/20 border-teal-200",
+  },
+];
+
+const UAE_QUICK_TOOLS: QuickTool[] = [
+  {
+    id: "dubai-calc",
+    name: "Dubai Buying Cost Calc",
+    subtitle: "DLD 4%, Trustee, Mortgage fee",
+    icon: "fas fa-calculator",
+    badge: "Essential",
+    route: "/dubai-property/calculator",
+    color: "from-amber-500 to-amber-600",
+    textColor: "text-amber-600",
+    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+  },
+  {
+    id: "dubai-hub",
+    name: "Investment Advisor",
+    subtitle: "Zero tax & Golden Visa rules",
+    icon: "fas fa-city",
+    badge: "Advisor",
+    route: "/dubai-property",
+    color: "from-blue-500 to-blue-600",
+    textColor: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
+  {
+    id: "dubai-areas",
+    name: "15+ Freehold Area Guides",
+    subtitle: "Prices, ROI & lifestyle",
+    icon: "fas fa-map-marked-alt",
+    badge: "Intelligence",
+    route: "/dubai-property#areas",
+    color: "from-emerald-500 to-emerald-600",
+    textColor: "text-emerald-600",
+    bgColor: "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200",
+  },
+  {
+    id: "dubai-marina",
+    name: "Dubai Marina Guide",
+    subtitle: "Waterfront luxury & rental yields",
+    icon: "fas fa-water",
+    badge: "Top Yield",
+    route: "/dubai-property/areas/dubai-marina",
+    color: "from-cyan-500 to-cyan-600",
+    textColor: "text-cyan-600",
+    bgColor: "bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200",
+  },
+  {
+    id: "dubai-downtown",
+    name: "Downtown Dubai",
+    subtitle: "Burj Khalifa prime district",
+    icon: "fas fa-gem",
+    badge: "Prime",
+    route: "/dubai-property/areas/downtown-dubai",
+    color: "from-purple-500 to-purple-600",
+    textColor: "text-purple-600",
+    bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
+  },
+  {
+    id: "dubai-jvc",
+    name: "JVC Community",
+    subtitle: "Affordable high rental yield",
+    icon: "fas fa-home",
+    badge: "Best Value",
+    route: "/dubai-property/areas/jumeirah-village-circle",
+    color: "from-teal-500 to-teal-600",
+    textColor: "text-teal-600",
+    bgColor: "bg-teal-50 dark:bg-teal-950/20 border-teal-200",
+  },
+  {
+    id: "dubai-business-bay",
+    name: "Business Bay",
+    subtitle: "Commercial & corporate living",
+    icon: "fas fa-briefcase",
+    badge: "Hot Hub",
+    route: "/dubai-property/areas/business-bay",
+    color: "from-indigo-500 to-indigo-600",
+    textColor: "text-indigo-600",
+    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
+  },
+  {
+    id: "dubai-hills",
+    name: "Dubai Hills Estate",
+    subtitle: "Golf course & family luxury",
+    icon: "fas fa-tree",
+    badge: "Green",
+    route: "/dubai-property/areas/dubai-hills-estate",
+    color: "from-stone-500 to-stone-600",
+    textColor: "text-stone-600",
+    bgColor: "bg-stone-50 dark:bg-stone-900/30 border-stone-200",
   },
 ];
 
@@ -171,8 +442,32 @@ export default function Dashboard() {
     return formatted;
   };
 
-  // Launch a calculator directly and smooth scroll to #tools
-  const launchCalculator = (calcId: string, route?: string) => {
+  // Active country mode (defaults to IN if null)
+  const activeCountryMode: "IN" | "US" | "AE" = region === "US" ? "US" : region === "AE" ? "AE" : "IN";
+
+  // Format currency based on region or project type
+  const formatCurrencyByRegion = (amount: number, targetCountry?: "IN" | "US" | "AE") => {
+    const c = targetCountry || activeCountryMode;
+    if (!amount || isNaN(amount)) return "—";
+    if (c === "US") {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(amount);
+    }
+    if (c === "AE") {
+      return `AED ${amount.toLocaleString("en-AE", { maximumFractionDigits: 0 })}`;
+    }
+    return formatIndianCurrency(amount);
+  };
+
+  // Launch a calculator directly and enforce country mode
+  const launchCalculator = (calcId: string, targetCountry: "IN" | "US" | "AE" = "IN", route?: string) => {
+    setRegion(targetCountry);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("hde_region", targetCountry);
+    }
     if (route) {
       router.push(route);
       return;
@@ -183,9 +478,13 @@ export default function Dashboard() {
     router.push(`/#tools`);
   };
 
-  // Open a saved project in its live calculator
+  // Open a saved project in its live calculator with strict regional isolation
   const handleOpenProjectInCalculator = (project: any) => {
+    const isUsa = project.type?.startsWith("usa-");
+    const targetRegion: "IN" | "US" = isUsa ? "US" : "IN";
+    setRegion(targetRegion);
     if (typeof window !== "undefined") {
+      window.localStorage.setItem("hde_region", targetRegion);
       window.localStorage.setItem("hde_active_calc", project.type);
       window.localStorage.setItem("hde_load_project", JSON.stringify(project));
     }
@@ -371,11 +670,13 @@ export default function Dashboard() {
                 <i className="fas fa-chart-pie text-emerald-500"></i>
               </div>
               <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 truncate">
-                {isIndiaMode
-                  ? (portfolioStats.totalCostSum >= 100000
-                      ? `₹${(portfolioStats.totalCostSum / 100000).toFixed(1)} L`
-                      : `₹${portfolioStats.totalCostSum.toLocaleString("en-IN")}`)
-                  : `$${portfolioStats.totalCostSum.toLocaleString()}`}
+                {activeCountryMode === "US"
+                  ? `$${portfolioStats.totalCostSum.toLocaleString()}`
+                  : activeCountryMode === "AE"
+                  ? `AED ${portfolioStats.totalCostSum.toLocaleString()}`
+                  : portfolioStats.totalCostSum >= 100000
+                  ? `₹${(portfolioStats.totalCostSum / 100000).toFixed(1)} L`
+                  : `₹${portfolioStats.totalCostSum.toLocaleString("en-IN")}`}
               </div>
               <div className="text-[10px] text-gray-400 mt-1 truncate">
                 Across {portfolioStats.totalCount} calculations
@@ -416,33 +717,90 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* --- INDIA REGIONAL QUICK LAUNCHPAD --- */}
+        {/* --- REGIONAL QUICK LAUNCHPAD --- */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
-                <i className="fas fa-bolt text-primary"></i>
-                <span>Launch New Estimate (India Calculators)</span>
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
-                Select an Indian construction, financial, or land measurement tool to begin.
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                  {activeCountryMode === "IN" ? "🇮🇳 India Mode" : activeCountryMode === "US" ? "🇺🇸 USA Mode" : "🇦🇪 UAE Mode"}
+                </span>
+                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+                  <i className="fas fa-bolt text-primary"></i>
+                  <span>
+                    {activeCountryMode === "IN"
+                      ? "India Construction & Property Calculators"
+                      : activeCountryMode === "US"
+                      ? "USA Home & Real Estate Calculators"
+                      : "UAE & Dubai Property Intelligence"}
+                  </span>
+                </h2>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+                {activeCountryMode === "IN"
+                  ? "Select an Indian construction BOQ, home loan EMI, interior, or land measurement tool."
+                  : activeCountryMode === "US"
+                  ? "Select a US framing, roofing, rent vs buy, property tax, or luxury remodel tool."
+                  : "Calculate true Dubai property buying costs, browse 15+ freehold area guides, and evaluate ROI."}
               </p>
             </div>
-            <Link
-              href="/#tools"
-              className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
-            >
-              <span>View All Tabs</span>
-              <i className="fas fa-arrow-right text-[10px]"></i>
-            </Link>
+
+            {/* Country Selector Pills */}
+            <div className="flex items-center gap-1.5 p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setRegion("IN");
+                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "IN");
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeCountryMode === "IN"
+                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🇮🇳</span>
+                <span>India</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRegion("US");
+                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "US");
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeCountryMode === "US"
+                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🇺🇸</span>
+                <span>USA</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRegion("AE");
+                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "AE");
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeCountryMode === "AE"
+                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
+                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🇦🇪</span>
+                <span>UAE / Dubai</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {INDIA_QUICK_TOOLS.map((tool) => (
+            {(activeCountryMode === "US" ? USA_QUICK_TOOLS : activeCountryMode === "AE" ? UAE_QUICK_TOOLS : INDIA_QUICK_TOOLS).map((tool) => (
               <button
                 key={tool.id}
                 type="button"
-                onClick={() => launchCalculator(tool.id, tool.route)}
+                onClick={() => launchCalculator(tool.id, activeCountryMode, tool.route)}
                 className={`p-4 rounded-2xl border text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-white dark:bg-zinc-900 ${tool.bgColor} flex flex-col justify-between cursor-pointer group`}
               >
                 <div>
@@ -465,7 +823,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="mt-4 pt-2 border-t border-gray-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-bold text-primary">
-                  <span>Open Tool</span>
+                  <span>{tool.route ? "Open Tool" : "Launch Calculator"}</span>
                   <i className="fas fa-arrow-right text-[10px] transform group-hover:translate-x-1 transition-transform"></i>
                 </div>
               </button>
@@ -586,7 +944,11 @@ export default function Dashboard() {
                       <div>
                         <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider block">Estimated Total</span>
                         <span className="text-base font-extrabold text-slate-900 dark:text-zinc-100">
-                          {isIndiaMode ? formatIndianCurrency(costNum) : `$${costNum.toLocaleString()}`}
+                          {project.type?.startsWith("usa-")
+                            ? `$${costNum.toLocaleString()}`
+                            : project.type === "dubai-property"
+                            ? `AED ${costNum.toLocaleString()}`
+                            : formatIndianCurrency(costNum)}
                         </span>
                       </div>
 
@@ -612,10 +974,10 @@ export default function Dashboard() {
               </p>
               <button
                 type="button"
-                onClick={() => launchCalculator("construction")}
+                onClick={() => launchCalculator(activeCountryMode === "US" ? "usa-framing" : "construction", activeCountryMode)}
                 className="mt-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
               >
-                Calculate House Construction Now
+                {activeCountryMode === "US" ? "Calculate US Framing Now" : activeCountryMode === "AE" ? "Open Dubai Cost Calculator" : "Calculate House Construction Now"}
               </button>
             </div>
           )}
@@ -650,9 +1012,11 @@ export default function Dashboard() {
                 <div>
                   <div className="text-[11px] text-gray-300 font-medium">Estimated Project Budget</div>
                   <div className="text-2xl font-black text-primary mt-0.5">
-                    {isIndiaMode
-                      ? formatIndianCurrency(selectedProject.data?.totalCost)
-                      : `$${(selectedProject.data?.totalCost || 0).toLocaleString()}`}
+                    {selectedProject.type?.startsWith("usa-")
+                      ? `$${(selectedProject.data?.totalCost || 0).toLocaleString()}`
+                      : selectedProject.type === "dubai-property"
+                      ? `AED ${(selectedProject.data?.totalCost || 0).toLocaleString()}`
+                      : formatIndianCurrency(selectedProject.data?.totalCost)}
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-lg text-primary">
@@ -688,14 +1052,32 @@ export default function Dashboard() {
                   <i className="fas fa-trash-alt mr-1.5"></i> Delete
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleOpenProjectInCalculator(selectedProject)}
-                  className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-md transition flex items-center gap-2 cursor-pointer"
-                >
-                  <i className="fas fa-external-link-alt"></i>
-                  <span>Open in Live Calculator</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <WhatsAppShareButton
+                    title={`Project Estimate: ${selectedProject.name}`}
+                    total={
+                      selectedProject.type?.startsWith("usa-")
+                        ? `$${(selectedProject.data?.totalCost || 0).toLocaleString()}`
+                        : selectedProject.type === "dubai-property"
+                        ? `AED ${(selectedProject.data?.totalCost || 0).toLocaleString()}`
+                        : formatIndianCurrency(selectedProject.data?.totalCost)
+                    }
+                    details={Object.entries(selectedProject.data || {})
+                      .filter(([k, v]) => k !== "totalCost" && typeof v !== "object")
+                      .slice(0, 4)
+                      .map(([k, v]) => ({ label: k.replace(/([A-Z])/g, " $1"), value: String(v) }))}
+                    variant="compact"
+                    buttonText="Share"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleOpenProjectInCalculator(selectedProject)}
+                    className="px-4 sm:px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-md transition flex items-center gap-2 cursor-pointer"
+                  >
+                    <i className="fas fa-external-link-alt"></i>
+                    <span>Open in Calculator</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

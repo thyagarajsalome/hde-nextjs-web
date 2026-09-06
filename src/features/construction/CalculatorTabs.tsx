@@ -66,12 +66,8 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
 
   const handleTabClick = (id: CalculatorType, reqTier: number) => {
-    if (tierValue < reqTier) {
-      navigate.push("/upgrade");
-    } else {
-      setActiveCalculator(id);
-      setIsDropdownOpen(false);
-    }
+    setActiveCalculator(id);
+    setIsDropdownOpen(false);
   };
 
   return (

@@ -7,6 +7,7 @@ import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
 import { formatCurrency } from "../../utils/currency";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 // ── Types & Constants ─────────────────────────────────────────────────────────
 const FLOORING_TYPES = {
@@ -108,14 +109,8 @@ const FlooringCalculator: React.FC = () => {
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="Flooring Details">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro for detailed flooring estimates.
-            </div>
-          )}
-
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
-            <Input label="Carpet Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 800" value={area} onChange={e => setArea(e.target.value)} disabled={isLocked} />
+            <Input label="Carpet Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 800" value={area} onChange={e => setArea(e.target.value)} />
 
             {/* Flooring type grid */}
             <div>
@@ -124,7 +119,7 @@ const FlooringCalculator: React.FC = () => {
                 {Object.entries(FLOORING_TYPES).map(([key, val]) => (
                   <label key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${flooringType === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="flooring" value={key} checked={flooringType === key} onChange={() => setFlooringType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="flooring" value={key} checked={flooringType === key} onChange={() => setFlooringType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-800">{val.name}</span>
@@ -291,20 +286,48 @@ const FlooringCalculator: React.FC = () => {
               }
             </div>
 
-            {hasPaid && (
-              <div className="grid grid-cols-2 gap-4">
-                <button onClick={handleDownloadPDF} disabled={isDownloading}
-                  className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all">
-                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                  <span>Download PDF</span>
-                </button>
-                <button onClick={handleSave} disabled={isSaving}
-                  className="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all shadow-float active:scale-95">
-                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                  <span>{isSaving ? "Saving..." : "Save Project"}</span>
-                </button>
-              </div>
-            )}
+            <div className="space-y-3 mt-4">
+              <WhatsAppShareButton
+                title="Flooring Cost Estimate"
+                total={formatCurrency(breakdown.totalCost)}
+                details={[
+                  { label: "Carpet Area", value: `${parsedArea} sq.ft` },
+                  { label: "Material", value: ft.name },
+                  { label: "Tiles & Material", value: formatCurrency(breakdown.material) },
+                  { label: "Labor & Laying", value: formatCurrency(breakdown.labor) },
+                  { label: "Supplies (Cement & Grout)", value: formatCurrency(breakdown.supplies) },
+                ]}
+                className="w-full"
+                buttonText="Share Flooring Quote via WhatsApp"
+              />
+
+              {hasPaid ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <button onClick={handleDownloadPDF} disabled={isDownloading}
+                    className="flex items-center justify-center gap-2 py-3 px-4 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all cursor-pointer">
+                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                    <span>Download PDF</span>
+                  </button>
+                  <button onClick={handleSave} disabled={isSaving}
+                    className="flex items-center justify-center gap-2 py-3 px-4 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all shadow-float active:scale-95 cursor-pointer">
+                    <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                    <span>{isSaving ? "Saving..." : "Save Project"}</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div>
+                    <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
+                      🔒 Unlock Material Specs &amp; PDF Report
+                    </span>
+                    <span className="text-[11px] text-gray-500 dark:text-zinc-400">Save flooring projects to your dashboard and download client PDF estimates.</span>
+                  </div>
+                  <a href="/upgrade" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap no-underline cursor-pointer">
+                    Upgrade — ₹199
+                  </a>
+                </div>
+              )}
+            </div>
           </Card>
         ) : (
           <div className="flex flex-col items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-12 text-center text-gray-400 min-h-[400px]">

@@ -6,6 +6,7 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import { formatCurrency } from "../../utils/currency";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface MaterialRow {
@@ -310,19 +311,28 @@ const MaterialQuantityCalculator: React.FC = () => {
       {/* ── Input Card ── */}
       <Card title="📐 Material BOQ Estimator">
         {isLocked && (
-          <div className="mb-5 flex items-center gap-3 p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-            <i className="fas fa-lock text-zinc-500 dark:text-zinc-400 text-lg"></i>
-            <div>
-              <p className="font-bold text-zinc-800 dark:text-zinc-200 text-sm">Pro Feature — Upgrade to unlock</p>
-              <p className="text-zinc-600 dark:text-zinc-400 text-xs">Get a detailed phase-wise Bill of Quantities with brand recommendations</p>
+          <div className="mb-5 flex items-center justify-between p-4 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
+            <div className="flex items-center gap-3">
+              <i className="fas fa-eye text-amber-600 dark:text-amber-400 text-lg"></i>
+              <div>
+                <p className="font-bold text-slate-800 dark:text-zinc-200 text-sm">Interactive Freemium Preview</p>
+                <p className="text-gray-500 dark:text-zinc-400 text-xs">Enter your plot area to generate live material totals, key quantities, and sample phase BOQ.</p>
+              </div>
             </div>
+            <a
+              href="/upgrade"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-primary hover:bg-primary-hover text-white transition shadow-sm whitespace-nowrap"
+            >
+              <i className="fas fa-crown text-[10px]"></i>
+              <span>Upgrade to Pro</span>
+            </a>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Area */}
           <div>
-            <Input label="Built-up Area (sq.ft)" icon="fas fa-ruler-combined" type="number" placeholder="e.g. 1200" value={area} onChange={e => setArea(e.target.value)} disabled={isLocked} />
+            <Input label="Built-up Area (sq.ft)" icon="fas fa-ruler-combined" type="number" placeholder="e.g. 1200" value={area} onChange={e => setArea(e.target.value)} />
             <p className="text-xs text-gray-400 mt-1.5 ml-1">Total super built-up area</p>
           </div>
 
@@ -331,7 +341,7 @@ const MaterialQuantityCalculator: React.FC = () => {
             <label className="block text-sm font-bold text-gray-700 dark:text-zinc-300 mb-2">Number of Floors</label>
             <div className="flex gap-2">
               {FLOORS.map(n => (
-                <button key={n} onClick={() => setFloors(n)} disabled={isLocked}
+                <button key={n} onClick={() => setFloors(n)}
                   className={`flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all ${floors === n ? "border-primary bg-primary/10 text-primary dark:text-primary-hover" : "border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 bg-white dark:bg-zinc-950 hover:border-gray-300 dark:hover:border-zinc-700"}`}>
                   {n}G{n > 1 ? `+${n-1}` : ""}
                 </button>
@@ -342,7 +352,7 @@ const MaterialQuantityCalculator: React.FC = () => {
           {/* Wall Type */}
           <div>
             <label className="block text-sm font-bold text-gray-700 dark:text-zinc-300 mb-2">Wall Material</label>
-            <select value={wallType} onChange={e => setWallType(e.target.value as any)} disabled={isLocked}
+            <select value={wallType} onChange={e => setWallType(e.target.value as any)}
               className="w-full p-3 border-2 border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-950 text-gray-800 dark:text-zinc-100 text-sm focus:border-primary outline-none">
               {Object.entries(WALL_TYPES).map(([k, v]) => <option key={k} value={k} className="dark:bg-zinc-950">{v.name}</option>)}
             </select>
@@ -355,7 +365,7 @@ const MaterialQuantityCalculator: React.FC = () => {
             <div className="space-y-1.5">
               {Object.entries(QUALITY_PRESETS).map(([k, v]) => (
                 <label key={k} className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${quality === k ? "border-primary bg-primary/5 dark:bg-zinc-900" : "border-gray-200 dark:border-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700"}`}>
-                  <input type="radio" name="quality" value={k} checked={quality === k} onChange={() => setQuality(k as any)} disabled={isLocked} className="text-primary" />
+                  <input type="radio" name="quality" value={k} checked={quality === k} onChange={() => setQuality(k as any)} className="text-primary" />
                   <div>
                     <span className="text-sm font-bold text-gray-800 dark:text-zinc-100">{v.label}</span>
                     <span className="text-xs text-gray-400 dark:text-zinc-500 block">{v.desc}</span>
@@ -366,8 +376,8 @@ const MaterialQuantityCalculator: React.FC = () => {
           </div>
         </div>
 
-        <button onClick={handleCalculate} disabled={isLocked || !area}
-          className="mt-6 w-full py-4 bg-primary text-white dark:text-zinc-950 font-bold text-base rounded-xl shadow-md hover:bg-primary-hover transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+        <button onClick={handleCalculate} disabled={!area}
+          className="mt-6 w-full py-4 bg-primary text-white dark:text-zinc-950 font-bold text-base rounded-xl shadow-md hover:bg-primary-hover transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
           <i className="fas fa-calculator"></i> Generate Full BOQ
         </button>
       </Card>
@@ -460,6 +470,42 @@ const MaterialQuantityCalculator: React.FC = () => {
             ))}
           </div>
 
+          {/* Freemium Teaser Card for Free / Non-Pro Users */}
+          {!hasPaid && (
+            <div className="relative mt-4 rounded-2xl overflow-hidden border border-amber-200 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/50 dark:from-zinc-900 dark:via-zinc-900 dark:to-amber-950/20 p-6 md:p-8 text-center shadow-lg">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl border border-amber-500/20 shadow-inner">
+                <i className="fas fa-lock"></i>
+              </div>
+              <h3 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-zinc-100">
+                Unlock Complete Phase-wise BOQ &amp; Brand Specifications
+              </h3>
+              <p className="text-gray-600 dark:text-zinc-400 text-xs md:text-sm max-w-xl mx-auto mt-2 mb-6 leading-relaxed">
+                You are viewing the initial foundation phase. Upgrade to access all {phases.length} construction phases including Columns &amp; Slabs, Brickwork, Plastering, Flooring, Electrical &amp; Plumbing, contractor brand recommendations, and exportable PDF spreadsheets.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a
+                  href="/upgrade"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-extrabold rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                >
+                  <i className="fas fa-crown"></i>
+                  <span>Upgrade to Pro — ₹999 (100 Credits)</span>
+                </a>
+                <WhatsAppShareButton
+                  title="Material BOQ Estimate"
+                  total={formatCurrency(grandTotal)}
+                  details={[
+                    { label: "Built-up Area", value: `${area} sq.ft (${floors} Floor${floors > 1 ? 's' : ''})` },
+                    { label: "Cement Required", value: `${totalBags} Bags (50kg)` },
+                    { label: "Steel Required", value: `${totalSteel.toLocaleString()} kg` },
+                    { label: "Wall Material", value: WALL_TYPES[wallType].name },
+                  ]}
+                  variant="outline"
+                  buttonText="Share Summary on WhatsApp"
+                />
+              </div>
+            </div>
+          )}
+
           {/* ── Grand Total Card ── */}
           <div className="bg-secondary dark:bg-zinc-900 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg border dark:border-zinc-800">
             <div>
@@ -467,20 +513,42 @@ const MaterialQuantityCalculator: React.FC = () => {
               <p className="text-4xl font-extrabold text-primary">{formatCurrency(grandTotal)}</p>
               <p className="text-gray-400 dark:text-zinc-500 text-xs mt-1">* Excludes labour. Add 35–45% for complete construction cost.</p>
             </div>
-            {hasPaid && (
-              <div className="flex gap-3 flex-wrap">
-                <button onClick={handleDownloadPDF} disabled={isDownloading}
-                  className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-zinc-850 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-sm">
-                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                  Download BOQ PDF
-                </button>
-                <button onClick={handleSave} disabled={isSaving}
-                  className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-float">
-                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                  Save Project
-                </button>
-              </div>
-            )}
+            <div className="flex gap-3 flex-wrap items-center">
+              <WhatsAppShareButton
+                title="Material BOQ Estimate"
+                total={formatCurrency(grandTotal)}
+                details={[
+                  { label: "Built-up Area", value: `${area} sq.ft (${floors} Floor${floors > 1 ? 's' : ''})` },
+                  { label: "Cement Required", value: `${totalBags} Bags (50kg)` },
+                  { label: "Steel Required", value: `${totalSteel.toLocaleString()} kg` },
+                  { label: "Wall Material", value: WALL_TYPES[wallType].name },
+                ]}
+                variant="primary"
+                buttonText="Share on WhatsApp"
+              />
+              {hasPaid ? (
+                <>
+                  <button onClick={handleDownloadPDF} disabled={isDownloading}
+                    className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-zinc-850 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-sm cursor-pointer">
+                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                    Download BOQ PDF
+                  </button>
+                  <button onClick={handleSave} disabled={isSaving}
+                    className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-float cursor-pointer">
+                    <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                    Save Project
+                  </button>
+                </>
+              ) : (
+                <a
+                  href="/upgrade"
+                  className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md cursor-pointer no-underline"
+                >
+                  <i className="fas fa-crown"></i>
+                  <span>Unlock Full Report</span>
+                </a>
+              )}
+            </div>
           </div>
 
           {/* ── Procurement Tips ── */}

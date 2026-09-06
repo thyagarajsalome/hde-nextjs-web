@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import Chart from '@/components/ui/Chart';
 import { formatCurrency } from '@/utils/currency';
 import { useProjectActions } from '@/hooks/useProjectActions';
+import WhatsAppShareButton from '@/components/ui/WhatsAppShareButton';
 
 export default function IndiaEMICalculator() {
   const { isSaving, saveProject } = useProjectActions('india-emi');
@@ -80,23 +81,38 @@ export default function IndiaEMICalculator() {
             Calculate your monthly EMI, total interest, and amortization schedule for Indian home loans.
           </p>
         </div>
-        <button
-          onClick={() =>
-            saveProject({
-              loanAmount,
-              interestRate,
-              tenureYears,
-              processingFeePercent,
-              emi,
-              totalInterest,
-            }, 0)
-          }
-          disabled={isSaving}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
-        >
-          <i className={`fas ${isSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i>
-          {isSaving ? 'Saving...' : 'Save Result'}
-        </button>
+        <div className="flex items-center gap-2">
+          <WhatsAppShareButton
+            title="Home Loan EMI Calculation"
+            total={`${formatCurrency(emi, 'IN')} / month`}
+            details={[
+              { label: "Loan Principal", value: formatCurrency(loanAmount, 'IN') },
+              { label: "Interest Rate", value: `${interestRate}% p.a.` },
+              { label: "Tenure", value: `${tenureYears} Years` },
+              { label: "Total Interest", value: formatCurrency(totalInterest, 'IN') },
+              { label: "Total Payment", value: formatCurrency(totalCost, 'IN') },
+            ]}
+            variant="compact"
+            buttonText="Share on WhatsApp"
+          />
+          <button
+            onClick={() =>
+              saveProject({
+                loanAmount,
+                interestRate,
+                tenureYears,
+                processingFeePercent,
+                emi,
+                totalInterest,
+              }, 0)
+            }
+            disabled={isSaving}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer text-xs sm:text-sm font-semibold"
+          >
+            <i className={`fas ${isSaving ? 'fa-spinner fa-spin' : 'fa-save'}`}></i>
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
