@@ -30,15 +30,16 @@ const plans = {
     tier: "basic",
     price: 199,
     originalPrice: 249,
-    description: "Ideal for individuals starting a single home renovation or a small DIY project.",
+    description: "Ideal for homeowners planning a single room remodel or personal home project.",
     credits: "5 Project Credits",
-    useCase: "Best for: Quick room makeovers and interior planning.",
-    badge: undefined, // Add this line
+    useCase: "Best for: Saving personal renovation budgets and exporting quotes.",
+    badge: undefined,
     features: [
-      "Unlock Interiors, Flooring & Painting",
-      "House Plan Access",
-      "Save up to 5 unique projects",
-      "Standard PDF Cost Reports"
+      "5 Permanent Cloud Project Save Credits",
+      "Itemized PDF Quotes (Bank & Contractor Ready)",
+      "Full House Plan & CAD Gallery Access",
+      "Material & Room Cost Breakdown Spreadsheets",
+      "Credits never expire"
     ],
     color: "blue",
     icon: "fa-paint-roller"
@@ -49,16 +50,17 @@ const plans = {
     tier: "standard",
     price: 349,
     originalPrice: 499,
-    description: "Perfect for homeowners or independent designers managing multiple layouts simultaneously.",
+    description: "Perfect for self-builders and interior designers managing full-house construction.",
     credits: "10 Project Credits",
-    useCase: "Best for: Self-builders planning a full home construction.",
+    useCase: "Best for: Complete multi-room home builds and client presentations.",
     badge: "Most Popular",
     features: [
-      "Everything in Basic",
-      "Unlock Plumbing & Electrical Layouts",
-      "Doors & Windows Schedule Tools",
-      "Save up to 10 unique projects",
-      "Detailed Technical PDF Exports"
+      "10 Permanent Cloud Project Save Credits",
+      "Detailed Multi-Trade PDF Reports (Plumbing, Electrical, Flooring)",
+      "Doors & Windows Schedule PDF Exports",
+      "Side-by-side Project Scenario Tracking",
+      "Priority Customer Support",
+      "Everything in Basic"
     ],
     color: "amber",
     icon: "fa-drafting-compass"
@@ -69,16 +71,17 @@ const plans = {
     tier: "pro",
     price: 999,
     originalPrice: 1427,
-    description: "Built for professional contractors and builders who need high-volume access.",
+    description: "Built for civil contractors, builders, and architects needing high-volume client management.",
     credits: "100 Project Credits",
-    useCase: "Best for: Professional builders, contractors, and heavy users.",
+    useCase: "Best for: Professional builders, commercial contractors, and developers.",
     badge: undefined,
     features: [
-      "100 Project Credits",
+      "100 Project Credits (Store up to 100 sites)",
+      "Complete 7-Phase Material BOQ (Bill of Quantities)",
+      "Exact Cement, Steel & Masonry Brand Schedules",
+      "Contractor-grade Client PDF & Excel Exports",
       "10 Daily Save Limit (Anti-Bot Protection)",
-      "Everything in Standard",
-      "Material BOQ (Bill of Quantities)",
-      "Priority Support"
+      "Priority VIP Support"
     ],
     color: "gray",
     icon: "fa-hard-hat"
@@ -92,15 +95,16 @@ const usaPlans = {
     tier: "basic",
     price: 9.99,
     originalPrice: 14.99,
-    description: "Perfect for homeowners looking to estimate ROI and material costs for home renovations.",
+    description: "Perfect for homeowners looking to save remodeling estimates and generate contractor quotes.",
     credits: "5 Project Credits",
     useCase: "Best for: Quick renovations and aesthetic projects.",
     badge: undefined,
     features: [
-      "Unlock ROI, Roofing & Flooring Calculators",
-      "5 Consumable Project Credits",
-      "Export Professional PDF Reports",
-      "Side-by-side scenario tracking"
+      "5 Permanent Cloud Project Save Credits",
+      "Client-Ready Professional PDF Estimates",
+      "Cost-per-sqft & Material Comparisons",
+      "Side-by-side Scenario Tracking in Dashboard",
+      "Credits never expire"
     ],
     color: "blue",
     icon: "fa-home"
@@ -111,16 +115,17 @@ const usaPlans = {
     tier: "standard",
     price: 24.99,
     originalPrice: 39.99,
-    description: "Ideal for advanced DIYers or buyers needing technical estimates for plumbing, framing, and electrical.",
+    description: "Ideal for advanced DIYers or flippers needing technical estimates for framing, plumbing, and additions.",
     credits: "15 Project Credits",
     useCase: "Best for: Full property rehabs and structural estimates.",
     badge: "Best Value",
     features: [
-      "Unlock Plumbing, Electrical & Framing Tools",
-      "Unlock Technical Trades & Luxury Upgrades",
-      "15 Consumable Project Credits",
-      "Export Professional PDF Reports",
-      "Priority Email Support"
+      "15 Permanent Cloud Project Save Credits",
+      "Technical Trade & Luxury Project PDF Exports",
+      "Permit & Contractor Cost Breakdown Sheets",
+      "Side-by-side Multi-Property Comparisons",
+      "Priority Email Support",
+      "Everything in Basic"
     ],
     color: "amber",
     icon: "fa-building"
@@ -136,11 +141,11 @@ const usaPlans = {
     useCase: "Best for: Professionals managing multiple client projects.",
     badge: undefined,
     features: [
-      "100 Consumable Project Credits",
-      "Save up to 100 unique property estimates",
-      "Client-ready Professional PDF Reports",
+      "100 Project Credits (Store up to 100 projects)",
+      "Client-Ready Professional PDF Reports",
+      "Complete Trade-by-Trade Cost Schedules",
       "10 Daily Save Limit (Anti-Bot Protection)",
-      "White-glove technical support"
+      "White-Glove Technical Support"
     ],
     color: "gray",
     icon: "fa-hard-hat"
