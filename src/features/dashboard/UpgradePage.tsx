@@ -242,40 +242,55 @@ const UpgradePage = () => {
             </div>
           )}
 
-          {/* 3 Core Value Pillars */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
-                <i className="fas fa-calculator"></i>
-              </div>
-              <div>
-                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">100% Free Live Calculating</p>
-                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
-                  Use all calculators to test dimensions and compare prices freely without spending credits.
-                </p>
-              </div>
+          {/* Pro Benefits Highlights */}
+          <div className="mt-8 text-left max-w-5xl mx-auto">
+            <div className="text-center mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
+                ⭐ What You Unlock With Pro
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 mt-2">
+                Why Homeowners &amp; Contractors Upgrade
+              </h2>
             </div>
 
-            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 text-sm">
-                <i className="fas fa-gift"></i>
-              </div>
-              <div>
-                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">1 Free Starter Save</p>
-                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
-                  Every registered account includes 1 Free Welcome Credit to save your first project to dashboard.
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center text-lg mb-3">
+                  <i className="fas fa-file-invoice-dollar"></i>
+                </div>
+                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Bank Loan &amp; Sanction Ready</p>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                  Export formal, itemized cost sheets &amp; BOQ reports accepted by major banks (SBI, HDFC, ICICI, US lenders) for loan approvals.
                 </p>
               </div>
-            </div>
 
-            <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 flex items-center justify-center shrink-0 text-sm">
-                <i className="fas fa-infinity"></i>
+              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center text-lg mb-3">
+                  <i className="fas fa-shield-alt"></i>
+                </div>
+                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Anti-Overbilling BOQ</p>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                  Get exact quantities for cement bags, steel reinforcement tonnes, sand, and bricks so contractors cannot overcharge you.
+                </p>
               </div>
-              <div>
-                <p className="font-extrabold text-xs text-slate-800 dark:text-zinc-200">Credits Never Expire</p>
-                <p className="text-[11px] text-gray-400 dark:text-zinc-400 mt-0.5 leading-snug">
-                  1 Credit = 1 Project Saved to cloud with PDF report. Top-up credits stay in your account forever.
+
+              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center text-lg mb-3">
+                  <i className="fas fa-cloud-upload-alt"></i>
+                </div>
+                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">Permanent Cloud Saves</p>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                  Save multiple house designs and finish levels to your private dashboard. Re-open, adjust specs, and edit anytime.
+                </p>
+              </div>
+
+              <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 flex items-center justify-center text-lg mb-3">
+                  <i className="fas fa-infinity"></i>
+                </div>
+                <p className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">100% Lifetime Ownership</p>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                  One-time payment with zero recurring monthly fees. Your project credits never expire and stay in your account forever.
                 </p>
               </div>
             </div>
@@ -372,6 +387,123 @@ const UpgradePage = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* --- FREE VS PRO DETAILED COMPARISON TABLE --- */}
+        <div id="compare" className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm scroll-mt-24">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
+              Full Feature Breakdown
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-zinc-100 mt-2.5">
+              Free Plan vs. Pro Account
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1.5">
+              See exactly what makes a Pro account essential for homeowners, architects, and civil contractors.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead>
+                <tr className="border-b-2 border-gray-100 dark:border-zinc-800">
+                  <th className="pb-4 font-bold text-gray-400 uppercase tracking-wider text-[11px] w-2/5">Capability</th>
+                  <th className="pb-4 font-bold text-gray-600 dark:text-zinc-300 text-center w-1/5">Free Visitor</th>
+                  <th className="pb-4 font-black text-amber-600 dark:text-amber-400 text-center w-2/5 bg-amber-50/50 dark:bg-amber-950/20 rounded-t-xl">
+                    👑 Pro Account ({region === 'US' ? '$9.99+' : '₹199+'})
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-zinc-800 font-medium">
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Live Calculator Calculations</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Test room sizes, wall dimensions, roof pitches, and budgets</p>
+                  </td>
+                  <td className="py-4 text-center text-emerald-600 font-bold">100% Free &amp; Unlimited</td>
+                  <td className="py-4 text-center text-emerald-600 font-bold bg-amber-50/50 dark:bg-amber-950/20">100% Free &amp; Unlimited</td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Real-Time Cost Sliders &amp; Donut Charts</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Adjust labor rates, materials, and view charts live</p>
+                  </td>
+                  <td className="py-4 text-center text-emerald-600 font-bold">Included</td>
+                  <td className="py-4 text-center text-emerald-600 font-bold bg-amber-50/50 dark:bg-amber-950/20">Included</td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Cloud Project Saves (Dashboard)</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Store completed estimates safely in your cloud workspace</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">1 Free Starter Save</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    Up to 100 Permanent Saves
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Official Bank &amp; Contractor PDF Reports</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Formal cost sheets accepted for loans (SBI, HDFC, Wells Fargo)</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">❌ Not Included</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    ✅ Official Downloadable PDFs
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Complete 7-Phase Material BOQ</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Exact cement bags, steel tonnes, sand loads, and brick schedules</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">Basic totals only</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    ✅ Exact Quantities &amp; Brand Schedules
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Multi-Scenario Budget Comparisons</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Compare Ground Floor vs Duplex or Basic vs Luxury finishes</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">❌ Disabled</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    ✅ Side-by-Side Dashboard Comparison
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">1-Click Saved Estimate Re-Editing</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Re-open any previously saved project to update rates anytime</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">❌ Disabled</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    ✅ Unlimited Re-edits
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Ownership &amp; Subscription Terms</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Billing model and credit duration</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">Free forever</td>
+                  <td className="py-4 text-center text-emerald-600 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    ♾️ One-Time Payment (Credits Never Expire)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-4 text-slate-900 dark:text-zinc-100">
+                    <span className="font-bold">Customer &amp; Technical Support</span>
+                    <p className="text-[11px] text-gray-400 font-normal">Speed of email and support ticket resolution</p>
+                  </td>
+                  <td className="py-4 text-center text-gray-400">Standard</td>
+                  <td className="py-4 text-center text-amber-600 dark:text-amber-400 font-black bg-amber-50/50 dark:bg-amber-950/20">
+                    👑 Priority VIP Support
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* --- FREQUENTLY ASKED QUESTIONS ABOUT CREDITS & ACCESS --- */}

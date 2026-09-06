@@ -74,31 +74,43 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   return (
     <div className="w-full pt-2 pb-4">
       {/* PRO / ACCOUNT STATUS BAR */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 px-4 py-2.5 bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-400/20 dark:border-amber-500/20 rounded-2xl shadow-xs">
-        <div className="flex items-center gap-2.5 text-xs text-gray-700 dark:text-zinc-300">
-          <span className="flex h-2 w-2 relative shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span className="font-bold text-gray-900 dark:text-zinc-100">All Calculators 100% Free &amp; Unlocked</span>
-          <span className="hidden md:inline text-gray-300 dark:text-zinc-600">•</span>
-          <span className="hidden md:inline text-gray-500 dark:text-zinc-400 font-medium">
-            {hasPaid 
-              ? "Pro Account Active — Unlimited Cloud Saves & Bank/Contractor PDF Reports" 
-              : "Upgrade to Pro for Unlimited Cloud Saves & Official Bank/Contractor PDF Reports"}
-          </span>
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-4 px-4 py-3 bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-400/25 dark:border-amber-500/25 rounded-2xl shadow-xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-xs text-gray-700 dark:text-zinc-300">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 relative shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-extrabold text-gray-900 dark:text-zinc-100">Calculators 100% Free</span>
+          </div>
+          <span className="hidden sm:inline text-gray-300 dark:text-zinc-600">•</span>
+          <div className="flex items-center gap-1.5 flex-wrap text-gray-600 dark:text-zinc-400 font-medium">
+            <span className="font-bold text-amber-700 dark:text-amber-400">Pro Benefits:</span>
+            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">💾 Cloud Saves</span>
+            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">📄 Bank &amp; Contractor PDFs</span>
+            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">🧱 7-Phase BOQ</span>
+            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">♾️ Lifetime Access</span>
+          </div>
         </div>
-        <Link
-          href="/upgrade"
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer"
-        >
-          <i className="fas fa-crown text-[10px] text-amber-100"></i>
-          <span>
-            {hasPaid 
-              ? "Pro Account Active" 
-              : (region === 'US' ? "Get Pro Account ($9.99)" : region === 'IN' ? "Get Pro Account (₹199)" : "Get Pro Account")}
-          </span>
-        </Link>
+        <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
+          <Link
+            href="/upgrade#compare"
+            className="text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-200 underline whitespace-nowrap"
+          >
+            Compare Plans
+          </Link>
+          <Link
+            href="/upgrade"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer"
+          >
+            <i className="fas fa-crown text-[10px] text-amber-100"></i>
+            <span>
+              {hasPaid 
+                ? "Pro Account Active" 
+                : (region === 'US' ? "Get Pro Account ($9.99)" : region === 'IN' ? "Get Pro Account (₹199)" : "Get Pro Account")}
+            </span>
+          </Link>
+        </div>
       </div>
 
       {/* MOBILE DROPDOWN (Visible only on <768px) */}
