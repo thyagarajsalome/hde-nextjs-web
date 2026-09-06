@@ -73,14 +73,12 @@ const USASwimmingPoolCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`SwimmingPool-${area}sqft`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = false;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-5">
         <Card title="Swimming Pool Details (USA)">
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
-            <Input label="Pool Size (sq. ft.)" icon="fas fa-water" type="number" placeholder="e.g., 400" value={area} onChange={e => setArea(e.target.value)} disabled={isLocked} />
+            <Input label="Pool Size (sq. ft.)" icon="fas fa-water" type="number" placeholder="e.g., 400" value={area} onChange={e => setArea(e.target.value)} />
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Pool Type</label>
@@ -88,7 +86,7 @@ const USASwimmingPoolCalculator: React.FC = () => {
                 {Object.entries(POOL_TYPES).map(([key, val]) => (
                   <label key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${type === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="type" value={key} checked={type === key} onChange={() => setType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="type" value={key} checked={type === key} onChange={() => setType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-800">{val.name}</span>
@@ -104,15 +102,15 @@ const USASwimmingPoolCalculator: React.FC = () => {
               <label className="block text-sm font-bold text-gray-700 mb-2">Extras</label>
               <div className="grid grid-cols-1 gap-2">
                 <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${hasHeater ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="checkbox" checked={hasHeater} onChange={e => setHasHeater(e.target.checked)} disabled={isLocked} className="text-primary w-4 h-4" />
+                  <input type="checkbox" checked={hasHeater} onChange={e => setHasHeater(e.target.checked)} className="text-primary w-4 h-4 cursor-pointer" />
                   <span className="text-sm font-bold text-gray-800">Pool Heater</span>
                 </label>
                 <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${hasDecking ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="checkbox" checked={hasDecking} onChange={e => setHasDecking(e.target.checked)} disabled={isLocked} className="text-primary w-4 h-4" />
+                  <input type="checkbox" checked={hasDecking} onChange={e => setHasDecking(e.target.checked)} className="text-primary w-4 h-4 cursor-pointer" />
                   <span className="text-sm font-bold text-gray-800">Surrounding Decking/Patio</span>
                 </label>
                 <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${hasHotTub ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="checkbox" checked={hasHotTub} onChange={e => setHasHotTub(e.target.checked)} disabled={isLocked} className="text-primary w-4 h-4" />
+                  <input type="checkbox" checked={hasHotTub} onChange={e => setHasHotTub(e.target.checked)} className="text-primary w-4 h-4 cursor-pointer" />
                   <span className="text-sm font-bold text-gray-800">Attached Hot Tub / Spa</span>
                 </label>
               </div>

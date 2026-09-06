@@ -88,22 +88,14 @@ const USAFlooringCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`Flooring-Estimate-${area}sqft`, ["Component","Details","Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = false;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="Flooring Details (USA)">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro for detailed flooring estimates.
-            </div>
-          )}
-
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
-            <Input label="Floor Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 800" value={area} onChange={e => setArea(e.target.value)} disabled={isLocked} />
+            <Input label="Floor Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 800" value={area} onChange={e => setArea(e.target.value)} />
 
             {/* Flooring type grid */}
             <div>
@@ -112,7 +104,7 @@ const USAFlooringCalculator: React.FC = () => {
                 {Object.entries(FLOORING_TYPES).map(([key, val]) => (
                   <label key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${flooringType === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="flooring" value={key} checked={flooringType === key} onChange={() => setFlooringType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="flooring" value={key} checked={flooringType === key} onChange={() => setFlooringType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-800">{val.name}</span>
@@ -127,8 +119,8 @@ const USAFlooringCalculator: React.FC = () => {
 
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
               <label className="flex items-center cursor-pointer select-none">
-                <input type="checkbox" checked={includeBaseboards} onChange={e => setIncludeBaseboards(e.target.checked)} disabled={isLocked}
-                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary" />
+                <input type="checkbox" checked={includeBaseboards} onChange={e => setIncludeBaseboards(e.target.checked)}
+                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer" />
                 <span className="ml-3 text-gray-700 font-medium text-sm">Include Baseboards (Shoe molding / quarter round)</span>
               </label>
               <p className="text-xs text-gray-400 mt-1 ml-8">Adds ~$3.50/L.ft for material + install</p>

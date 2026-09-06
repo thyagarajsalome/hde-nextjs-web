@@ -100,8 +100,6 @@ const PaintingCalculator: React.FC = () => {
     );
   };
 
-  const isLocked = !hasPaid;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <section>

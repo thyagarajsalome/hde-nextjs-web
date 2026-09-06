@@ -78,16 +78,14 @@ const USAPickleballCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`PickleballCourt-${length}x${width}`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = false;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-5">
         <Card title="Pickleball Court Details (USA)">
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
-              <Input label="Length (ft)" icon="fas fa-arrows-alt-v" type="number" placeholder="e.g., 60" value={length} onChange={e => setLength(e.target.value)} disabled={isLocked} />
-              <Input label="Width (ft)" icon="fas fa-arrows-alt-h" type="number" placeholder="e.g., 30" value={width} onChange={e => setWidth(e.target.value)} disabled={isLocked} />
+              <Input label="Length (ft)" icon="fas fa-arrows-alt-v" type="number" placeholder="e.g., 60" value={length} onChange={e => setLength(e.target.value)} />
+              <Input label="Width (ft)" icon="fas fa-arrows-alt-h" type="number" placeholder="e.g., 30" value={width} onChange={e => setWidth(e.target.value)} />
             </div>
 
             <div>
@@ -95,7 +93,7 @@ const USAPickleballCalculator: React.FC = () => {
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(SURFACE_TYPES).map(([key, val]) => (
                   <label key={key} className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${surfaceType === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="surfaceType" value={key} checked={surfaceType === key} onChange={() => setSurfaceType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="surfaceType" value={key} checked={surfaceType === key} onChange={() => setSurfaceType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="text-sm font-bold text-gray-800">{val.name}</div>
                       <p className="text-xs text-gray-500 mt-0.5">{val.desc}</p>
@@ -110,7 +108,7 @@ const USAPickleballCalculator: React.FC = () => {
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(ACRYLIC_LAYERS).map(([key, val]) => (
                   <label key={key} className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${acrylicType === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="acrylicType" value={key} checked={acrylicType === key} onChange={() => setAcrylicType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="acrylicType" value={key} checked={acrylicType === key} onChange={() => setAcrylicType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="text-sm font-bold text-gray-800">{val.name}</div>
                       <p className="text-xs text-gray-500 mt-0.5">{val.desc}</p>
@@ -125,7 +123,7 @@ const USAPickleballCalculator: React.FC = () => {
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(FENCING_TYPES).map(([key, val]) => (
                   <label key={key} className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${fencingType === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="fencingType" value={key} checked={fencingType === key} onChange={() => setFencingType(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="fencingType" value={key} checked={fencingType === key} onChange={() => setFencingType(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="text-sm font-bold text-gray-800">{val.name}</div>
                       <p className="text-xs text-gray-500 mt-0.5">{val.desc}</p>
@@ -139,7 +137,7 @@ const USAPickleballCalculator: React.FC = () => {
               <label className="block text-sm font-bold text-gray-700 mb-2">Extras</label>
               <div className="grid grid-cols-1 gap-2">
                 <label className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${hasLighting ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="checkbox" checked={hasLighting} onChange={e => setHasLighting(e.target.checked)} disabled={isLocked} className="text-primary w-4 h-4" />
+                  <input type="checkbox" checked={hasLighting} onChange={e => setHasLighting(e.target.checked)} className="text-primary w-4 h-4 cursor-pointer" />
                   <span className="text-sm font-bold text-gray-800">Court Lighting</span>
                 </label>
               </div>

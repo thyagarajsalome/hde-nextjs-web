@@ -63,20 +63,12 @@ const USAKitchenRemodelCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`Kitchen-Remodel-${area}sqft`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = false;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-5">
         <Card title="Kitchen Remodel Details (USA)">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro for detailed estimates.
-            </div>
-          )}
-
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
-            <Input label="Kitchen Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 150" value={area} onChange={e => setArea(e.target.value)} disabled={isLocked} />
+            <Input label="Kitchen Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 150" value={area} onChange={e => setArea(e.target.value)} />
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">Quality Level</label>
@@ -84,7 +76,7 @@ const USAKitchenRemodelCalculator: React.FC = () => {
                 {Object.entries(QUALITY_LEVELS).map(([key, val]) => (
                   <label key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${quality === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="quality" value={key} checked={quality === key} onChange={() => setQuality(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="quality" value={key} checked={quality === key} onChange={() => setQuality(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-800">{val.name}</span>
@@ -102,7 +94,7 @@ const USAKitchenRemodelCalculator: React.FC = () => {
                 {Object.entries(LAYOUTS).map(([key, val]) => (
                   <label key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${layout === key ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="layout" value={key} checked={layout === key} onChange={() => setLayout(key as any)} disabled={isLocked} className="mt-1 text-primary" />
+                    <input type="radio" name="layout" value={key} checked={layout === key} onChange={() => setLayout(key as any)} className="mt-1 text-primary" />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-800">{val.name}</span>

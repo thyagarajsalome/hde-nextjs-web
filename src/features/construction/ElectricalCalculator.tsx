@@ -6,6 +6,7 @@ import Chart from "../../components/ui/Chart";
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { formatCurrency } from "../../utils/currency";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const POINT_RATES = { light: 700, fan: 800, power: 1300, mcb: 28000 };
@@ -117,8 +118,6 @@ const ElectricalCalculator: React.FC = () => {
     return { lightCost, fanCost, powerCost, acCost, geyserCost, boardCost, total, lCount, fCount, pCount, aCount, gCount };
   }, [lightPoints, fanPoints, powerPoints, acPoints, geyserPoints, quality]);
 
-  const isLocked = !hasPaid;
-
   const handleSave = () => {
     if (calc.total > 0) saveProject({ lightPoints, fanPoints, powerPoints, acPoints, geyserPoints, quality, breakdown: calc }, calc.total);
   };
@@ -149,12 +148,6 @@ const ElectricalCalculator: React.FC = () => {
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="⚡ Electrical Point Estimator">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro for the full electrical estimator.
-            </div>
-          )}
-
           <div className="grid grid-cols-1 gap-4">
             {fields.map((f, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -163,7 +156,7 @@ const ElectricalCalculator: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-bold text-gray-700 mb-1">{f.label} <span className="text-gray-400 font-normal">({f.hint})</span></label>
-                  <input type="number" value={f.val} onChange={e => f.set(e.target.value)} min="0" disabled={isLocked}
+                  <input type="number" value={f.val} onChange={e => f.set(e.target.value)} min="0"
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm focus:border-primary outline-none bg-white disabled:bg-gray-50" />
                 </div>
               </div>
@@ -176,7 +169,7 @@ const ElectricalCalculator: React.FC = () => {
             <div className="space-y-2">
               {Object.entries(QUALITY_OPTIONS).map(([k, v]) => (
                 <label key={k} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${quality === k ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="radio" name="eq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} disabled={isLocked} className="text-primary" />
+                  <input type="radio" name="eq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} className="text-primary" />
                   <span className="text-sm font-semibold text-gray-800">{v.name}</span>
                   <span className="ml-auto text-xs text-gray-400">×{v.factor.toFixed(1)}</span>
                 </label>
@@ -251,16 +244,44 @@ const ElectricalCalculator: React.FC = () => {
                 <div className="p-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-600 dark:text-zinc-400 mb-4">
                   <i className="fas fa-info-circle mr-1 text-primary"></i> Estimate covers wiring, conduits, switches, sockets, MCBs and labor. Does not include light fixtures, fans, ACs or heavy appliances.
                 </div>
-                {hasPaid && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all">
-                      <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> PDF
-                    </button>
-                    <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all">
-                      <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save
-                    </button>
-                  </div>
-                )}
+                <div className="space-y-3 mt-4">
+                  <WhatsAppShareButton
+                    title="Electrical Point Estimate"
+                    total={formatCurrency(calc.total)}
+                    details={[
+                      { label: "Light/Plug Points", value: `${calc.lCount} pts` },
+                      { label: "Fan Points", value: `${calc.fCount} pts` },
+                      { label: "Power Sockets", value: `${calc.pCount} pts` },
+                      { label: "AC Circuits", value: `${calc.aCount} pts` },
+                      { label: "Geyser Circuits", value: `${calc.gCount} pts` },
+                    ]}
+                    className="w-full"
+                    buttonText="Share Electrical Quote via WhatsApp"
+                  />
+
+                  {hasPaid ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all cursor-pointer">
+                        <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> PDF
+                      </button>
+                      <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all cursor-pointer">
+                        <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div>
+                        <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
+                          🔒 Unlock Detailed Specs &amp; PDF Report
+                        </span>
+                        <span className="text-[11px] text-gray-500 dark:text-zinc-400">Save electrical estimates to your dashboard and export client PDF quotes.</span>
+                      </div>
+                      <a href="/upgrade" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap no-underline cursor-pointer">
+                        Upgrade — ₹199
+                      </a>
+                    </div>
+                  )}
+                </div>
               </Card>
             )}
 

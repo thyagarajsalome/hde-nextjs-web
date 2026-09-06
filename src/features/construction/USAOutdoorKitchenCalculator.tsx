@@ -84,14 +84,12 @@ const USAOutdoorKitchenCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`OutdoorKitchen-${linearFeet}LF`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = false;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="space-y-5">
         <Card title="Outdoor Kitchen Details (USA)">
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
-            <Input label="Linear Feet of Kitchen Island" icon="fas fa-ruler-horizontal" type="number" placeholder="e.g., 12" value={linearFeet} onChange={e => setLinearFeet(e.target.value)} disabled={isLocked} />
+            <Input label="Linear Feet of Kitchen Island" icon="fas fa-ruler-horizontal" type="number" placeholder="e.g., 12" value={linearFeet} onChange={e => setLinearFeet(e.target.value)} />
 
             <div className="relative mb-0 group">
               <select className="peer w-full py-3.5 px-4 border-2 border-gray-200 rounded-xl outline-none text-gray-700 bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200 appearance-none" value={masonry} onChange={e => setMasonry(e.target.value as any)}>

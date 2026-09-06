@@ -101,8 +101,6 @@ const FlooringCalculator: React.FC = () => {
     downloadSpreadsheetPDF(`Flooring-Estimate-${area}sqft`, ["Component","Details","Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
 
-  const isLocked = !hasPaid;
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
@@ -134,8 +132,8 @@ const FlooringCalculator: React.FC = () => {
 
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
               <label className="flex items-center cursor-pointer select-none">
-                <input type="checkbox" checked={includeSkirting} onChange={e => setIncludeSkirting(e.target.checked)} disabled={isLocked}
-                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary" />
+                <input type="checkbox" checked={includeSkirting} onChange={e => setIncludeSkirting(e.target.checked)}
+                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer" />
                 <span className="ml-3 text-gray-700 font-medium text-sm">Include Skirting (4" wall border)</span>
               </label>
               <p className="text-xs text-gray-400 mt-1 ml-8">Adds ~₹50–80/R.ft for material + fixing</p>

@@ -96,8 +96,6 @@ const USAPlumbingCalculator: React.FC = () => {
     return { kitchenCost, commonBathCost, masterBathCost, heaterCost, total, kCount, cCount, mCount };
   }, [kitchens, commonBaths, masterBaths, includeHeater, quality]);
 
-  const isLocked = false;
-
   const handleSave = () => {
     if (calc.total > 0) saveProject({ kitchens, commonBaths, masterBaths, includeHeater, quality, breakdown: calc }, calc.total);
   };
@@ -118,12 +116,6 @@ const USAPlumbingCalculator: React.FC = () => {
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="🚿 Plumbing Cost Calculator (USA)">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro to use the room-wise plumbing estimator.
-            </div>
-          )}
-
           <div className="space-y-4">
             {[
               { label: "Kitchens / Utility", icon: "fas fa-utensils", val: kitchens,    set: setKitchens,    info: `~$${UNIT_RATES.kitchen.rate}/unit — Sink, faucet, disposal` },
@@ -137,8 +129,8 @@ const USAPlumbingCalculator: React.FC = () => {
                 <div className="flex-1">
                   <label className="block text-xs font-bold text-gray-700 mb-0.5">{f.label}</label>
                   <p className="text-xs text-gray-400 mb-1">{f.info}</p>
-                  <input type="number" min="0" value={f.val} onChange={e => f.set(e.target.value)} disabled={isLocked}
-                    className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm focus:border-primary outline-none bg-white disabled:bg-gray-50" />
+                  <input type="number" min="0" value={f.val} onChange={e => f.set(e.target.value)}
+                    className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm focus:border-primary outline-none bg-white" />
                 </div>
               </div>
             ))}
@@ -146,8 +138,8 @@ const USAPlumbingCalculator: React.FC = () => {
             {/* Water Heater */}
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
               <label className="flex items-center cursor-pointer gap-3 select-none">
-                <input type="checkbox" checked={includeHeater} onChange={e => setIncludeHeater(e.target.checked)} disabled={isLocked}
-                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary accent-primary" />
+                <input type="checkbox" checked={includeHeater} onChange={e => setIncludeHeater(e.target.checked)}
+                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary accent-primary cursor-pointer" />
                 <div>
                   <span className="text-sm font-bold text-gray-700">Include Water Heater</span>
                   <p className="text-xs text-gray-400">50-gal tank or standard tankless + installation</p>
@@ -162,7 +154,7 @@ const USAPlumbingCalculator: React.FC = () => {
               <div className="space-y-2">
                 {Object.entries(QUALITY_OPTIONS).map(([k, v]) => (
                   <label key={k} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${quality === k ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="pq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} disabled={isLocked} className="text-primary" />
+                    <input type="radio" name="pq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} className="text-primary" />
                     <span className="text-sm font-semibold text-gray-800">{v.name}</span>
                     <span className="ml-auto text-xs text-gray-400">×{v.factor.toFixed(1)}</span>
                   </label>

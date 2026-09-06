@@ -92,8 +92,6 @@ const USAElectricalCalculator: React.FC = () => {
     return { lightCost, fanCost, powerCost, dedCost, gfciCost, panelCost, total, lCount, fCount, pCount, dCount, gCount };
   }, [lightPoints, fanPoints, powerPoints, dedicated240, gfciPoints, quality]);
 
-  const isLocked = false;
-
   const handleSave = () => {
     if (calc.total > 0) saveProject({ lightPoints, fanPoints, powerPoints, dedicated240, gfciPoints, quality, breakdown: calc }, calc.total);
   };
@@ -124,12 +122,6 @@ const USAElectricalCalculator: React.FC = () => {
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="⚡ Electrical Estimator (USA)">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro for the full electrical estimator.
-            </div>
-          )}
-
           <div className="grid grid-cols-1 gap-4">
             {fields.map((f, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -138,7 +130,7 @@ const USAElectricalCalculator: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-bold text-gray-700 mb-1">{f.label} <span className="text-gray-400 font-normal">({f.hint})</span></label>
-                  <input type="number" value={f.val} onChange={e => f.set(e.target.value)} min="0" disabled={isLocked}
+                  <input type="number" value={f.val} onChange={e => f.set(e.target.value)} min="0"
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm focus:border-primary outline-none bg-white disabled:bg-gray-50" />
                 </div>
               </div>
@@ -151,7 +143,7 @@ const USAElectricalCalculator: React.FC = () => {
             <div className="space-y-2">
               {Object.entries(QUALITY_OPTIONS).map(([k, v]) => (
                 <label key={k} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${quality === k ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                  <input type="radio" name="eq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} disabled={isLocked} className="text-primary" />
+                  <input type="radio" name="eq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} className="text-primary" />
                   <span className="text-sm font-semibold text-gray-800">{v.name}</span>
                   <span className="ml-auto text-xs text-gray-400">×{v.factor.toFixed(1)}</span>
                 </label>

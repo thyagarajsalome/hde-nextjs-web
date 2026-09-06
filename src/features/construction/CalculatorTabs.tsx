@@ -15,13 +15,13 @@ interface CalculatorTabsProps {
 const INDIA_CALCULATORS = [
   { id: "construction",  name: "Construction",   icon: "fas fa-home",        reqTier: 0 },
   { id: "india-emi",     name: "Home Loan EMI",  icon: "fas fa-university",  reqTier: 0 },
-  { id: "interior",      name: "Interiors",      icon: "fas fa-couch",       reqTier: 1 },
-  { id: "flooring",      name: "Flooring",       icon: "fas fa-layer-group", reqTier: 1 },
-  { id: "painting",      name: "Painting",       icon: "fas fa-paint-roller",reqTier: 1 },
-  { id: "doors-windows", name: "Doors/Windows",  icon: "fas fa-door-open",   reqTier: 2 },
-  { id: "plumbing",      name: "Plumbing",       icon: "fas fa-bath",        reqTier: 2 },
-  { id: "electrical",    name: "Electrical",     icon: "fas fa-bolt",        reqTier: 2 },
-  { id: "materials",     name: "Materials BOQ",  icon: "fas fa-cubes",       reqTier: 3 },
+  { id: "interior",      name: "Interiors",      icon: "fas fa-couch",       reqTier: 0 },
+  { id: "flooring",      name: "Flooring",       icon: "fas fa-layer-group", reqTier: 0 },
+  { id: "painting",      name: "Painting",       icon: "fas fa-paint-roller",reqTier: 0 },
+  { id: "doors-windows", name: "Doors/Windows",  icon: "fas fa-door-open",   reqTier: 0 },
+  { id: "plumbing",      name: "Plumbing",       icon: "fas fa-bath",        reqTier: 0 },
+  { id: "electrical",    name: "Electrical",     icon: "fas fa-bolt",        reqTier: 0 },
+  { id: "materials",     name: "Materials BOQ",  icon: "fas fa-cubes",       reqTier: 0 },
 ] as const;
 
 const USA_CALCULATORS = [
@@ -34,15 +34,15 @@ const USA_CALCULATORS = [
   { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 0 },
   { id: "usa-swimming-pool", name: "Swimming Pool", icon: "fas fa-swimming-pool", reqTier: 0 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
-  { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 1 },
-  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 1 },
-  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 1 },
-  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 2 },
-  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 2 },
-  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 2 },
-  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 2 },
-  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 2 },
-  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 2 },
+  { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0 },
+  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 0 },
+  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0 },
+  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0 },
+  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 0 },
+  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 0 },
+  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 0 },
+  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 0 },
 ] as const;
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
@@ -65,7 +65,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
 
-  const handleTabClick = (id: CalculatorType, reqTier: number) => {
+  const handleTabClick = (id: CalculatorType) => {
     setActiveCalculator(id);
     setIsDropdownOpen(false);
   };
@@ -90,7 +90,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
             {CALCULATORS.map((calc) => (
               <button
                 key={calc.id}
-                onClick={() => handleTabClick(calc.id as CalculatorType, calc.reqTier)}
+                onClick={() => handleTabClick(calc.id as CalculatorType)}
                 className={`w-full flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-zinc-800 last:border-none hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors
                   ${activeCalculator === calc.id ? "bg-primary/10" : ""}`}
               >
@@ -98,7 +98,6 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                   <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400 dark:text-zinc-500'}`}></i>
                   <span className={`text-sm ${activeCalculator === calc.id ? 'font-bold text-secondary dark:text-zinc-100' : 'text-gray-600 dark:text-zinc-400'}`}>{calc.name}</span>
                 </div>
-                {tierValue < calc.reqTier && <i className="fas fa-lock text-xs text-gray-300 dark:text-zinc-600"></i>}
               </button>
             ))}
           </div>
@@ -107,21 +106,18 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
       {/* TABLET & DESKTOP GRID (Visible on >=768px - No sliding, all visible) */}
       <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {CALCULATORS.map(({ id, name, icon, reqTier }) => {
+        {CALCULATORS.map(({ id, name, icon }) => {
           const isActive = activeCalculator === id;
-          const isLocked = tierValue < reqTier;
 
           return (
             <button
               key={id}
-              onClick={() => handleTabClick(id as CalculatorType, reqTier)}
+              onClick={() => handleTabClick(id as CalculatorType)}
               className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-200 border-2
-                ${isActive ? "bg-white dark:bg-zinc-900 text-secondary dark:text-zinc-100 border-primary shadow-md scale-[1.02]" : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 border-gray-100 dark:border-zinc-800 hover:border-primary/30 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}
-                ${isLocked ? "opacity-80" : ""}`}
+                ${isActive ? "bg-white dark:bg-zinc-900 text-secondary dark:text-zinc-100 border-primary shadow-md scale-[1.02]" : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 border-gray-100 dark:border-zinc-800 hover:border-primary/30 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}`}
             >
               <i className={`${icon} ${isActive ? "text-primary text-base" : "text-gray-400 dark:text-zinc-500"}`}></i>
               <span className="whitespace-nowrap">{name}</span>
-              {isLocked && <i className="fas fa-lock text-[10px] ml-1 opacity-40"></i>}
             </button>
           );
         })}

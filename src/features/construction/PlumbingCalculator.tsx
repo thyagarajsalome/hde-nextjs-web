@@ -6,6 +6,7 @@ import { useUser } from "../../context/UserContext";
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { formatCurrency } from "../../utils/currency";
+import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const UNIT_RATES = {
@@ -107,8 +108,6 @@ const PlumbingCalculator: React.FC = () => {
     return { kitchenCost, commonBathCost, masterBathCost, motorCost, total, kCount, cCount, mCount };
   }, [kitchens, commonBaths, masterBaths, includeMotor, quality]);
 
-  const isLocked = !hasPaid;
-
   const handleSave = () => {
     if (calc.total > 0) saveProject({ kitchens, commonBaths, masterBaths, includeMotor, quality, breakdown: calc }, calc.total);
   };
@@ -129,12 +128,6 @@ const PlumbingCalculator: React.FC = () => {
       {/* ── Left ── */}
       <div className="space-y-5">
         <Card title="🚿 Plumbing Cost Calculator">
-          {isLocked && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm font-semibold text-center">
-              <i className="fas fa-lock mr-2"></i> Upgrade to Pro to use the room-wise plumbing estimator.
-            </div>
-          )}
-
           <div className="space-y-4">
             {[
               { label: "Kitchens / Utility Rooms", icon: "fas fa-utensils", val: kitchens,    set: setKitchens,    info: `₹${(UNIT_RATES.kitchen.rate/1000).toFixed(0)}k/unit — Sink, mixer tap, drain` },
@@ -148,7 +141,7 @@ const PlumbingCalculator: React.FC = () => {
                 <div className="flex-1">
                   <label className="block text-xs font-bold text-gray-700 mb-0.5">{f.label}</label>
                   <p className="text-xs text-gray-400 mb-1">{f.info}</p>
-                  <input type="number" min="0" value={f.val} onChange={e => f.set(e.target.value)} disabled={isLocked}
+                  <input type="number" min="0" value={f.val} onChange={e => f.set(e.target.value)}
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm focus:border-primary outline-none bg-white disabled:bg-gray-50" />
                 </div>
               </div>
@@ -157,8 +150,8 @@ const PlumbingCalculator: React.FC = () => {
             {/* Motor & Tank */}
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
               <label className="flex items-center cursor-pointer gap-3 select-none">
-                <input type="checkbox" checked={includeMotor} onChange={e => setIncludeMotor(e.target.checked)} disabled={isLocked}
-                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary accent-primary" />
+                <input type="checkbox" checked={includeMotor} onChange={e => setIncludeMotor(e.target.checked)}
+                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary accent-primary cursor-pointer" />
                 <div>
                   <span className="text-sm font-bold text-gray-700">Include Overhead Tank & Motor Pump</span>
                   <p className="text-xs text-gray-400">0.5HP pump + 500L HDPE tank + plumbing connections</p>
@@ -173,7 +166,7 @@ const PlumbingCalculator: React.FC = () => {
               <div className="space-y-2">
                 {Object.entries(QUALITY_OPTIONS).map(([k, v]) => (
                   <label key={k} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${quality === k ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}>
-                    <input type="radio" name="pq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} disabled={isLocked} className="text-primary" />
+                    <input type="radio" name="pq" value={k} checked={quality === k} onChange={() => setQuality(k as any)} className="text-primary" />
                     <span className="text-sm font-semibold text-gray-800">{v.name}</span>
                     <span className="ml-auto text-xs text-gray-400">×{v.factor.toFixed(1)}</span>
                   </label>
@@ -249,16 +242,44 @@ const PlumbingCalculator: React.FC = () => {
                 <div className="p-3 bg-cyan-50 dark:bg-cyan-950/20 border border-cyan-100 dark:border-cyan-900/50 rounded-xl text-xs text-cyan-700 dark:text-cyan-400 mb-4">
                   <i className="fas fa-info-circle mr-1 text-primary"></i> Estimate includes fixtures, CPVC supply pipes, drainage SWR pipes and labor. Excludes water softener, RO systems and overhead water tank if not selected above.
                 </div>
-                {hasPaid && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all">
-                      <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> PDF
-                    </button>
-                    <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all">
-                      <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save
-                    </button>
-                  </div>
-                )}
+                <div className="space-y-3 mt-4">
+                  <WhatsAppShareButton
+                    title="Plumbing Cost Estimate"
+                    total={formatCurrency(calc.total)}
+                    details={[
+                      { label: "Master Bathrooms", value: `${calc.mCount} unit(s)` },
+                      { label: "Common Bathrooms", value: `${calc.cCount} unit(s)` },
+                      { label: "Kitchens", value: `${calc.kCount} unit(s)` },
+                      { label: "Motor & Tank", value: calc.motorCost > 0 ? "Included" : "None" },
+                      { label: "Quality Level", value: QUALITY_OPTIONS[quality].name },
+                    ]}
+                    className="w-full"
+                    buttonText="Share Plumbing Quote via WhatsApp"
+                  />
+
+                  {hasPaid ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all cursor-pointer">
+                        <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> PDF
+                      </button>
+                      <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all cursor-pointer">
+                        <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div>
+                        <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
+                          🔒 Unlock Room-wise Specs &amp; PDF Report
+                        </span>
+                        <span className="text-[11px] text-gray-500 dark:text-zinc-400">Save plumbing estimates to your dashboard and export client PDF quotes.</span>
+                      </div>
+                      <a href="/upgrade" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap no-underline cursor-pointer">
+                        Upgrade — ₹199
+                      </a>
+                    </div>
+                  )}
+                </div>
               </Card>
             )}
 
