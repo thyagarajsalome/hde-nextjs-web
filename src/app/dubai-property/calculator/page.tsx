@@ -4,8 +4,13 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import Chart from "@/components/ui/Chart";
+import { useUser } from "@/context/UserContext";
+import { useProjectActions } from "@/hooks/useProjectActions";
 
 export default function DubaiPropertyCalculatorPage() {
+  const { user, credits, hasPaid } = useUser();
+  const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("dubai-property");
+
   const [propertyPrice, setPropertyPrice] = useState(1500000);
   const [propertyType, setPropertyType] = useState("Apartment");
   const [purchaseType, setPurchaseType] = useState("Ready Property");
@@ -136,6 +141,82 @@ export default function DubaiPropertyCalculatorPage() {
       "Mortgage Arrangement": mortgageArrangementFee,
       "Valuation Fee": propertyValuationFee,
     })
+  };
+
+  const handleSave = () => {
+    saveProject({
+      propertyPrice,
+      propertyType,
+      purchaseType,
+      paymentMethod,
+      downPaymentPct: isMortgage ? downPaymentPct : 100,
+      mortgageTerm: isMortgage ? mortgageTerm : 0,
+      interestRate: isMortgage ? interestRate : 0,
+      propertySize,
+      serviceChargeRate,
+      currency,
+      dldRegistrationFee,
+      dldAdminFee,
+      agentCommission,
+      mortgageRegistrationFee,
+      mortgageArrangementFee,
+      propertyValuationFee,
+      conveyancingFee,
+      nocFee,
+      totalOneTimeCosts,
+      totalUpfrontCash,
+      effectivePurchaseCost,
+      annualServiceCharge,
+      monthlyMortgagePayment,
+    }, effectivePurchaseCost);
+  };
+
+  const handleDownloadPDF = () => {
+    const rows: (string | number)[][] = [
+      ["Base Property Price", `${propertyType} (${purchaseType})`, formatCurrency(propertyPrice)],
+      ["DLD Registration Fee", "4% Dubai Land Department Fee", formatCurrency(dldRegistrationFee)],
+      ["DLD Admin / Knowledge Fee", "Fixed Government Administrative Fee", formatCurrency(dldAdminFee)],
+      ["Property Registration Trustee", "Conveyancing & Trustee Office Fee", formatCurrency(conveyancingFee)],
+    ];
+
+    if (agentCommission > 0) {
+      rows.push(["Real Estate Broker Commission", "2% Agency Commission + 5% VAT", formatCurrency(agentCommission)]);
+    }
+
+    if (nocFee > 0) {
+      rows.push(["Developer NOC Fee", "No Objection Certificate for title transfer", formatCurrency(nocFee)]);
+    }
+
+    if (isMortgage) {
+      rows.push(["Mortgage Down Payment", `${downPaymentPct}% upfront equity requirement`, formatCurrency(downPayment)]);
+      rows.push(["Mortgage Registration Fee", "0.25% of loan + AED 290 Land Dept", formatCurrency(mortgageRegistrationFee)]);
+      rows.push(["Bank Loan Arrangement Fee", "1% Bank processing fee", formatCurrency(mortgageArrangementFee)]);
+      rows.push(["Property Valuation Fee", "Bank-approved surveyor valuation", formatCurrency(propertyValuationFee)]);
+    }
+
+    rows.push(["Total Upfront Cash Required", "Down payment + all acquisition closing fees", formatCurrency(totalUpfrontCash)]);
+    rows.push(["Estimated Annual Service Charge", `${propertySize} sq.ft @ ${serviceChargeRate} ${currency}/sqft/year`, formatCurrency(annualServiceCharge)]);
+
+    if (isMortgage && monthlyMortgagePayment > 0) {
+      rows.push(["Est. Monthly Mortgage Payment", `${mortgageTerm} yrs @ ${interestRate}% p.a. (P&I)`, formatCurrency(monthlyMortgagePayment)]);
+    }
+
+    const isGoldenVisaEligible = currency === 'AED' ? propertyPrice >= 2000000 : propertyPrice >= (2000000 * rate);
+
+    const specs = [
+      `Property Type: ${propertyType} | Status: ${purchaseType}`,
+      `Payment Method: ${paymentMethod} | Unit Area: ${propertySize} sq.ft`,
+      `Currency: ${currency} | Golden Visa (AED 2M+): ${isGoldenVisaEligible ? 'QUALIFIED (10-Year Residency)' : 'Standard Ownership'}`,
+    ];
+
+    downloadSpreadsheetPDF(
+      `Dubai-Property-${propertyType}-${propertyPrice}`,
+      ["Cost Component", "Details & Government Regulations", `Amount (${currency})`],
+      rows,
+      "TOTAL EFFECTIVE PURCHASE COST",
+      formatCurrency(effectivePurchaseCost),
+      specs
+    );
   };
 
   return (
@@ -332,6 +413,49 @@ export default function DubaiPropertyCalculatorPage() {
               <div className="text-2xl font-black text-green-600">{formatCurrency(annualServiceCharge)}</div>
               <p className="text-xs text-gray-500 mt-1">Estimated Annual Fee</p>
             </Card>
+          </div>
+
+          {/* Action Card: Save & Export PDF */}
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-400/40 dark:border-amber-500/30 p-5 rounded-2xl shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="bg-amber-500 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+                    Official UAE Report
+                  </span>
+                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">
+                    Save Unit &amp; Export Bank-Ready PDF
+                  </h4>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+                  Save this unit to your private portfolio dashboard or download an itemized DLD, trustee &amp; mortgage fee statement.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={handleDownloadPDF}
+                  disabled={isDownloading}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-900 border-2 border-primary text-primary font-black text-xs rounded-xl hover:bg-primary hover:text-white dark:hover:text-zinc-950 transition shadow-xs cursor-pointer disabled:opacity-50"
+                  title="Download Official Itemized PDF"
+                >
+                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                  <span>{isDownloading ? "Generating..." : "Download PDF"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white dark:text-zinc-950 font-black text-xs rounded-xl hover:bg-primary-hover transition shadow-md cursor-pointer disabled:opacity-50 active:scale-95"
+                  title="Save to My Projects Dashboard"
+                >
+                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-cloud-upload-alt"}`}></i>
+                  <span>{isSaving ? "Saving..." : "Save Project"}</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <Card title="Fee Breakdown">

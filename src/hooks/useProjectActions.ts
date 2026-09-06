@@ -118,6 +118,7 @@ export const useProjectActions = (projectType: string) => {
 
   // --- Helper: Convert Number to Words (Region-aware) ---
   const isUSProject = projectType.startsWith('usa-');
+  const isDubaiProject = projectType.startsWith('dubai-');
 
   const convertNumberToWords = (amount: number | string): string => {
     let num = 0;
@@ -128,7 +129,7 @@ export const useProjectActions = (projectType: string) => {
       num = parseInt(cleanStr, 10) || 0;
     }
 
-    const currencyWord = isUSProject ? "Dollars" : "Rupees";
+    const currencyWord = isDubaiProject ? "Dirhams" : isUSProject ? "Dollars" : "Rupees";
     if (num === 0) return `${currencyWord} Zero Only`;
 
     const a = [
@@ -165,7 +166,7 @@ export const useProjectActions = (projectType: string) => {
       return numToWordsUS(Math.floor(n / 1000000000)) + " Billion" + (n % 1000000000 !== 0 ? " " + numToWordsUS(n % 1000000000) : "");
     }
 
-    const words = isUSProject ? numToWordsUS(num) : numToWordsIndian(num);
+    const words = (isUSProject || isDubaiProject) ? numToWordsUS(num) : numToWordsIndian(num);
     return `${currencyWord} ${words} Only`;
   };
 
@@ -235,7 +236,7 @@ export const useProjectActions = (projectType: string) => {
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(80, 80, 80);
-      doc.text(`Date: ${new Date().toLocaleDateString(isUSProject ? "en-US" : "en-IN")}`, 14, 54);
+      doc.text(`Date: ${new Date().toLocaleDateString(isUSProject || isDubaiProject ? "en-US" : "en-IN")}`, 14, 54);
       
       let specY = 59;
       if (projectSpecs.length > 0) {
