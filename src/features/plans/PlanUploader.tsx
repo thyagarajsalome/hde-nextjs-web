@@ -10,9 +10,12 @@ interface PlanUploaderProps {
 
 const PLOT_PRESETS = [
   { label: "30×40 (1200 sqft)", dim: "30x40", area: 1200, title: "Modern 30x40 Duplex House Plan" },
+  { label: "20×30 (600 sqft)", dim: "20x30", area: 600, title: "Compact 20x30 2BHK House Plan" },
   { label: "30×50 (1500 sqft)", dim: "30x50", area: 1500, title: "Spacious 30x50 3BHK House Plan" },
   { label: "40×60 (2400 sqft)", dim: "40x60", area: 2400, title: "Luxury 40x60 4BHK Villa Plan" },
-  { label: "20×30 (600 sqft)", dim: "20x30", area: 600, title: "Compact 20x30 2BHK House Plan" },
+  { label: "20×40 (800 sqft)", dim: "20x40", area: 800, title: "Modern 20x40 House Plan" },
+  { label: "20×50 (1000 sqft)", dim: "20x50", area: 1000, title: "Townhouse 20x50 House Plan" },
+  { label: "25×40 (1000 sqft)", dim: "25x40", area: 1000, title: "Contemporary 25x40 Duplex Plan" },
   { label: "30×60 (1800 sqft)", dim: "30x60", area: 1800, title: "Contemporary 30x60 3BHK Home Plan" },
   { label: "50×80 (4000 sqft)", dim: "50x80", area: 4000, title: "Grand 50x80 Luxury Mansion Plan" },
 ];
