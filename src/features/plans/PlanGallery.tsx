@@ -256,23 +256,6 @@ export const PlanGallery: React.FC = () => {
 
       {role === 'admin' && <PlanUploader onUploadSuccess={() => fetchPlans(0)} />}
 
-      <div className="relative bg-gradient-to-br from-secondary to-gray-900 rounded-3xl p-8 md:p-12 mb-10 overflow-hidden shadow-2xl">
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="text-center md:text-left">
-            <span className="bg-primary/20 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block border border-primary/50 shadow-sm">
-              <i className="fas fa-star text-primary mr-1"></i> Premium Collection
-            </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Architectural House Plans</h1>
-            <p className="text-gray-300 text-base md:text-lg max-w-2xl leading-relaxed">
-              Explore modern, compliant designs with full video tours and locked high-res blueprints.
-            </p>
-          </div>
-          <div className="hidden md:flex flex-shrink-0 w-32 h-32 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 items-center justify-center transform rotate-3 hover:rotate-0 transition-transform duration-500 shadow-xl">
-             <i className="fas fa-drafting-compass text-6xl text-primary drop-shadow-lg"></i>
-          </div>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {plans.map((plan) => {
           const videoId = getYouTubeID(plan.youtube_url || "");

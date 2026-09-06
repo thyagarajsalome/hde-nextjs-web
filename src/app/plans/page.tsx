@@ -5,15 +5,15 @@ import PlanGallery from '@/features/plans/PlanGallery';
 import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
 
 export const metadata: Metadata = {
-  title: '100+ House Plans & Floor Designs in India | Vastu Compliant 20x30, 30x40, 30x50, 40x60 | HDE',
-  description: 'Download 100+ architectural house plans and 2D floor designs for India. 1 BHK, 2 BHK, 3 BHK duplex plans with car parking, 100% Vastu compliance, and estimated construction budgets.',
-  keywords: 'house plans india, 30x40 house plans, 20x30 house plans, vastu floor plans, 2 bhk house design, duplex house plan, 3 bhk floor plan with parking, small house design',
+  title: '100+ Modern House Plans & Floor Designs in India | 20x30, 30x40, 30x50, 40x60 | HDE',
+  description: 'Download 100+ architectural house plans and 2D floor designs for India. 1 BHK, 2 BHK, 3 BHK duplex plans with car parking, optimal airflow & lighting, and estimated construction budgets.',
+  keywords: 'house plans india, 30x40 house plans, 20x30 house plans, architectural floor plans, 2 bhk house design, duplex house plan, 3 bhk floor plan with parking, small house design',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/plans',
   },
   openGraph: {
-    title: '100+ House Plans & Floor Designs in India | Vastu Compliant | HDE',
-    description: 'Browse modern, Vastu-compliant Indian house plans for 20x30, 30x40, 30x50, 40x60 plots. Download high-resolution blueprints and calculate building costs.',
+    title: '100+ Modern House Plans & Floor Designs in India | HDE',
+    description: 'Browse modern Indian house plans for 20x30, 30x40, 30x50, 40x60 plots. Download high-resolution blueprints and calculate building costs.',
     url: 'https://www.homedesignenglish.com/plans',
     siteName: 'Home Design English (HDE)',
     locale: 'en_IN',
@@ -40,7 +40,7 @@ export default function PlanGalleryRoute() {
               House Plans &amp; 2D Floor Designs
             </h1>
             <p className="text-sm sm:text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
-              Explore 100% Vastu-compliant architectural floor plans tailored for Indian plot sizes, municipal setback bylaws, and family living requirements.
+              Explore modern architectural floor plans tailored for Indian plot sizes, municipal setback bylaws, and family living requirements.
             </p>
           </div>
 
@@ -64,11 +64,11 @@ export default function PlanGalleryRoute() {
               </div>
             </div>
 
-            {/* By Vastu Facing & BHK */}
+            {/* By Entrance Facing & BHK */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div>
                 <span className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-2">
-                  By Vastu Direction:
+                  By Plot Orientation:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {facingPlans.map((item) => (

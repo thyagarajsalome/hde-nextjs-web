@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: data.metaTitle,
     description: data.metaDesc,
-    keywords: `${data.shortTitle}, house design india, floor plans with vastu, ${data.dimensions} house plans, duplex house plan, small house design, ${data.bhkConfig}`,
+    keywords: `${data.shortTitle}, house design india, modern architectural floor plans, ${data.dimensions} house plans, duplex house plan, small house design, ${data.bhkConfig}`,
     alternates: {
       canonical: canonicalUrl,
     },
@@ -52,7 +52,7 @@ const FALLBACK_BLUEPRINTS = [
   },
   {
     id: "fb-2",
-    title: "1500 Sqft 3 BHK Vastu Floor Layout",
+    title: "1500 Sqft 3 BHK Architectural Floor Layout",
     dimensions: "30x50",
     area_sqft: 1500,
     facing: "South",
@@ -214,7 +214,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
         <header className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-6">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-200/60">
-              🇮🇳 Vastu Compliant Architecture
+              🇮🇳 Modern Architectural Design
             </span>
             <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
               Plot: {data.dimensions}
@@ -266,7 +266,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
                 {data.idealFacing.split(' ')[0]} Facing
               </p>
               <span className="text-[11px] text-gray-500 font-medium">
-                100% Vastu Compatible
+                Optimal Solar & Airflow Design
               </span>
             </div>
 
@@ -346,7 +346,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
               Floor Plan Blueprint Specs
             </span>
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-zinc-100 mt-2">
-              Recommended Room Dimensions &amp; Vastu Placements
+              Recommended Room Dimensions &amp; Space Orientation
             </h2>
             <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
               Standard room proportions designed for comfort, furniture clearance, and maximum natural airflow.
@@ -359,7 +359,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
                 <tr className="border-b border-gray-200 dark:border-zinc-800 text-gray-400 uppercase text-[11px]">
                   <th className="pb-3 font-bold">Room / Zone</th>
                   <th className="pb-3 font-bold">Recommended Size</th>
-                  <th className="pb-3 font-bold">Vastu Shastra Direction</th>
+                  <th className="pb-3 font-bold">Recommended Orientation</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-zinc-800 font-medium">
@@ -373,7 +373,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
                       {room.size}
                     </td>
                     <td className="py-3.5 text-primary font-semibold">
-                      {room.vastuDirection}
+                      {room.orientation}
                     </td>
                   </tr>
                 ))}
@@ -382,20 +382,20 @@ export default async function HousePlanSeoPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Vastu Rules & Setback Guidelines Grid */}
+        {/* Architectural Rules & Setback Guidelines Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Vastu Shastra Guidelines */}
+          {/* Architectural & Ventilation Guidelines */}
           <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-4">
             <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
               <i className="fas fa-compass text-amber-500"></i>
-              <span>Vastu Shastra Rules for {data.shortTitle}</span>
+              <span>Architectural &amp; Ventilation Rules for {data.shortTitle}</span>
             </h3>
             <p className="text-xs text-gray-500 dark:text-zinc-400">
-              Essential directional alignments to attract peace, prosperity, and positive prana energy.
+              Optimal directional alignments for sunlight exposure, cross-ventilation, and privacy.
             </p>
 
             <ul className="space-y-3 pt-2">
-              {data.vastuGuidelines.map((item, idx) => (
+              {data.designGuidelines.map((item, idx) => (
                 <li key={idx} className="p-3.5 rounded-2xl bg-gray-50 dark:bg-zinc-800/40 text-xs">
                   <p className="font-extrabold text-slate-800 dark:text-zinc-200">{item.rule}</p>
                   <p className="text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">{item.explanation}</p>
