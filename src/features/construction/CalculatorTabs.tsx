@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
@@ -72,6 +73,34 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   return (
     <div className="w-full pt-2 pb-4">
+      {/* PRO / ACCOUNT STATUS BAR */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 px-4 py-2.5 bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-400/20 dark:border-amber-500/20 rounded-2xl shadow-xs">
+        <div className="flex items-center gap-2.5 text-xs text-gray-700 dark:text-zinc-300">
+          <span className="flex h-2 w-2 relative shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="font-bold text-gray-900 dark:text-zinc-100">All Calculators 100% Free &amp; Unlocked</span>
+          <span className="hidden md:inline text-gray-300 dark:text-zinc-600">•</span>
+          <span className="hidden md:inline text-gray-500 dark:text-zinc-400 font-medium">
+            {hasPaid 
+              ? "Pro Account Active — Unlimited Cloud Saves & Bank/Contractor PDF Reports" 
+              : "Upgrade to Pro for Unlimited Cloud Saves & Official Bank/Contractor PDF Reports"}
+          </span>
+        </div>
+        <Link
+          href="/upgrade"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer"
+        >
+          <i className="fas fa-crown text-[10px] text-amber-100"></i>
+          <span>
+            {hasPaid 
+              ? "Pro Account Active" 
+              : (region === 'US' ? "Get Pro Account ($9.99)" : region === 'IN' ? "Get Pro Account (₹199)" : "Get Pro Account")}
+          </span>
+        </Link>
+      </div>
+
       {/* MOBILE DROPDOWN (Visible only on <768px) */}
       <div className="md:hidden relative">
         <button

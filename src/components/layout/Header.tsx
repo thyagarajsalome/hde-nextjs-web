@@ -103,14 +103,22 @@ const Header = () => {
             )}
             <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
 
+            {/* Pro Account Button - Always visible, region-aware */}
+            <Link
+              href="/upgrade"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer"
+            >
+              <i className="fas fa-crown text-[11px] text-amber-100"></i>
+              <span>
+                {hasPaid 
+                  ? "Pro Member" 
+                  : (activeRegion.code === 'US' ? "Go Pro $9.99" : activeRegion.code === 'IN' ? "Go Pro ₹199" : "Go Pro")}
+              </span>
+            </Link>
+
             {user ? (
                <>
                 <Link href="/dashboard" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Dashboard</Link>
-                {hasPaid && (
-                  <span className="px-2 py-1 text-xs font-bold text-white dark:text-black bg-primary rounded-full">
-                    PRO
-                  </span>
-                )}
                 <button onClick={handleLogout} className="px-4 py-2 text-sm font-medium text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer">
                   Sign Out
                 </button>
@@ -175,7 +183,20 @@ const Header = () => {
             </div>
           </nav>
 
-          <div className="lg:hidden flex items-center gap-3">
+          <div className="lg:hidden flex items-center gap-2 sm:gap-3">
+            {/* Mobile Pro button */}
+            <Link 
+              href="/upgrade" 
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-black bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-xs no-underline whitespace-nowrap cursor-pointer"
+            >
+              <i className="fas fa-crown text-[10px] text-amber-100"></i>
+              <span>
+                {hasPaid 
+                  ? "Pro" 
+                  : (activeRegion.code === 'US' ? "Pro $9.99" : activeRegion.code === 'IN' ? "Pro ₹199" : "Pro")}
+              </span>
+            </Link>
+
             {/* Mobile region button */}
             <button 
               ref={mobileButtonRef}
@@ -232,7 +253,33 @@ const Header = () => {
       {/* Mobile Navigation */}
       {menuOpen && (
         <div className="lg:hidden bg-white dark:bg-zinc-950 border-t border-gray-100 dark:border-zinc-800 absolute w-full left-0 shadow-lg">
-          <div className="px-4 pt-2 pb-4 space-y-2 flex flex-col">
+          <div className="px-4 pt-3 pb-5 space-y-2 flex flex-col">
+            {/* Pro Card Banner */}
+            <Link
+              href="/upgrade"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between p-3.5 mb-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-sm font-bold no-underline cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                  <i className="fas fa-crown text-amber-100 text-sm"></i>
+                </div>
+                <div>
+                  <div className="text-sm font-black leading-tight">
+                    {hasPaid ? "Pro Account Active" : "Upgrade to Pro"}
+                  </div>
+                  <div className="text-[11px] text-amber-100 font-medium">
+                    {hasPaid 
+                      ? "Unlimited Cloud Saves & PDF Exports" 
+                      : (activeRegion.code === 'US' ? "Only $9.99 Lifetime Access" : activeRegion.code === 'IN' ? "Only ₹199 Lifetime Access" : "Full Access & Cloud Saves")}
+                  </div>
+                </div>
+              </div>
+              <span className="text-xs bg-white text-amber-700 px-2.5 py-1 rounded-full font-black shrink-0">
+                {hasPaid ? "Active" : (activeRegion.code === 'US' ? "$9.99" : activeRegion.code === 'IN' ? "₹199" : "Go Pro")}
+              </span>
+            </Link>
+
             <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
