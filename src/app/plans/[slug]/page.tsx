@@ -41,6 +41,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const FALLBACK_BLUEPRINTS = [
+  {
+    id: "fb-1",
+    title: "1200 Sqft Modern Residential Blueprint",
+    dimensions: "30x40",
+    area_sqft: 1200,
+    facing: "East",
+    file_url: "full-plans/1775572207976-plan.webp",
+  },
+  {
+    id: "fb-2",
+    title: "1500 Sqft 3 BHK Vastu Floor Layout",
+    dimensions: "30x50",
+    area_sqft: 1500,
+    facing: "South",
+    file_url: "full-plans/1775658424321-plan.webp",
+  },
+  {
+    id: "fb-3",
+    title: "1000 Sqft Compact Townhouse Floor Plan",
+    dimensions: "25x40",
+    area_sqft: 1000,
+    facing: "East",
+    file_url: "full-plans/1775625468250-plan.webp",
+  },
+  {
+    id: "fb-4",
+    title: "800 Sqft 2 BHK Linear Plot Design",
+    dimensions: "20x40",
+    area_sqft: 800,
+    facing: "East",
+    file_url: "full-plans/1775623303178-plan.webp",
+  },
+];
+
+function getPlanImageUrl(path: string): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const cleanPath = path.replace(/^\/+/, '');
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ncontvjtfhsabphxfuhb.supabase.co';
+  return `${supabaseUrl}/storage/v1/object/public/house-plans/${cleanPath}`;
+}
+
 export default async function HousePlanSeoPage({ params }: Props) {
   const { slug } = await params;
   const data = HOUSE_PLAN_SEO_DATA[slug];
@@ -49,16 +92,43 @@ export default async function HousePlanSeoPage({ params }: Props) {
     notFound();
   }
 
-  // Fetch a sample of uploaded house plans from Supabase to show relevant real blueprints
+  // Fetch sample blueprints from Supabase, matching plot dimensions if possible
   let samplePlans: any[] = [];
   try {
-    const { data: dbPlans } = await supabase
+    const dimSearch = data.dimensions.replace(/[^0-9xX]/g, '');
+    const { data: matchedPlans } = await supabase
       .from("house_plans")
       .select("*")
+      .ilike("dimensions", `%${dimSearch}%`)
       .limit(4);
-    if (dbPlans) samplePlans = dbPlans;
+
+    if (matchedPlans && matchedPlans.length > 0) {
+      samplePlans = matchedPlans;
+    }
+
+    if (samplePlans.length < 4) {
+      const existingIds = samplePlans.map((p) => p.id);
+      const { data: fallbackDbPlans } = await supabase
+        .from("house_plans")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(8);
+
+      if (fallbackDbPlans) {
+        const extra = fallbackDbPlans.filter((p) => !existingIds.includes(p.id));
+        samplePlans = [...samplePlans, ...extra].slice(0, 4);
+      }
+    }
   } catch (err) {
-    console.warn("Could not fetch sample house plans:", err);
+    console.warn("Could not fetch sample house plans from DB:", err);
+  }
+
+  // Ensure there are always 4 real blueprints
+  if (samplePlans.length < 4) {
+    const existingIds = samplePlans.map((p) => p.id);
+    const needed = 4 - samplePlans.length;
+    const fillers = FALLBACK_BLUEPRINTS.filter((fb) => !existingIds.includes(fb.id)).slice(0, needed);
+    samplePlans = [...samplePlans, ...fillers];
   }
 
   // Other categories for cross-linking
@@ -384,24 +454,37 @@ export default async function HousePlanSeoPage({ params }: Props) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {samplePlans.map((p) => (
-                <div key={p.id} className="bg-gray-50 dark:bg-zinc-800/40 rounded-2xl p-3 border border-gray-100 dark:border-zinc-800 group hover:shadow-md transition">
-                  <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gray-200 relative mb-3">
-                    <img
-                      src={p.file_url}
-                      alt={p.title || data.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    />
-                  </div>
-                  <h3 className="font-extrabold text-xs text-slate-900 dark:text-zinc-100 line-clamp-1">
-                    {p.title}
-                  </h3>
-                  <div className="flex items-center justify-between text-[11px] text-gray-500 dark:text-zinc-400 mt-1">
-                    <span>{p.area_sqft || data.plotAreaSqft} sqft</span>
-                    <span className="font-semibold text-emerald-600">{p.facing || data.idealFacing.split(' ')[0]}</span>
-                  </div>
-                </div>
-              ))}
+              {samplePlans.map((p) => {
+                const imgUrl = getPlanImageUrl(p.file_url);
+                return (
+                  <Link
+                    key={p.id}
+                    href="/plans"
+                    className="bg-gray-50 dark:bg-zinc-800/40 rounded-2xl p-3 border border-gray-100 dark:border-zinc-800 group hover:shadow-lg hover:border-primary/50 transition block no-underline"
+                  >
+                    <div className="aspect-[3/4] rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-800 relative mb-3">
+                      <img
+                        src={imgUrl}
+                        alt={p.title || `${data.shortTitle} Floor Plan Blueprint`}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition flex items-center justify-center pointer-events-none">
+                        <span className="opacity-0 group-hover:opacity-100 transition bg-black/80 text-white text-[10px] font-bold px-3 py-1.5 rounded-full backdrop-blur-xs flex items-center gap-1.5 shadow-md">
+                          <i className="fas fa-eye text-primary"></i> View Blueprint
+                        </span>
+                      </div>
+                    </div>
+                    <h3 className="font-extrabold text-xs text-slate-900 dark:text-zinc-100 line-clamp-1 group-hover:text-primary transition">
+                      {p.title || `${p.dimensions || data.dimensions} Floor Plan`}
+                    </h3>
+                    <div className="flex items-center justify-between text-[11px] text-gray-500 dark:text-zinc-400 mt-1">
+                      <span>{p.area_sqft || data.plotAreaSqft} sqft</span>
+                      <span className="font-semibold text-emerald-600">{p.facing || data.idealFacing.split(' ')[0]} Facing</span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="text-center pt-2">
