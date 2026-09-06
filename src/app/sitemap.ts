@@ -3,6 +3,7 @@ import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
 import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
+import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
 
 const BASE_URL = 'https://www.homedesignenglish.com';
 
@@ -129,6 +130,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       {
         url: `${BASE_URL}/cost/painting-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/home-loan-emi-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/building-material-cost-in-${loc.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
@@ -314,12 +327,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const housePlanRoutes: MetadataRoute.Sitemap = Object.keys(HOUSE_PLAN_SEO_DATA).map((slug) => ({
+    url: `${BASE_URL}/plans/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.85,
+  }));
+
   return [
     ...staticRoutes,
     ...cityRoutes,
     ...realEstateRoutes,
     ...blogRoutes,
     ...dubaiRoutes,
-    ...landConverterRoutes
+    ...landConverterRoutes,
+    ...housePlanRoutes
   ];
 }

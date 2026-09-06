@@ -86,6 +86,8 @@ export async function generateStaticParams() {
       { slug: `interior-design-in-${loc.slug}` },
       { slug: `flooring-in-${loc.slug}` },
       { slug: `painting-in-${loc.slug}` },
+      { slug: `home-loan-emi-in-${loc.slug}` },
+      { slug: `building-material-cost-in-${loc.slug}` },
     ]);
   }
   
@@ -95,6 +97,8 @@ export async function generateStaticParams() {
     { slug: `interior-design-in-${city}` },
     { slug: `flooring-in-${city}` },
     { slug: `painting-in-${city}` },
+    { slug: `home-loan-emi-in-${city}` },
+    { slug: `building-material-cost-in-${city}` },
   ]);
 }
 
@@ -104,6 +108,8 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
   else if (cityKey.startsWith('interior-design-in-')) cityKey = cityKey.replace('interior-design-in-', '');
   else if (cityKey.startsWith('flooring-in-')) cityKey = cityKey.replace('flooring-in-', '');
   else if (cityKey.startsWith('painting-in-')) cityKey = cityKey.replace('painting-in-', '');
+  else if (cityKey.startsWith('home-loan-emi-in-')) cityKey = cityKey.replace('home-loan-emi-in-', '');
+  else if (cityKey.startsWith('building-material-cost-in-')) cityKey = cityKey.replace('building-material-cost-in-', '');
   cityKey = cityKey.toLowerCase();
   
   // Fetch from Supabase
@@ -176,7 +182,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!resolvedParams.slug.startsWith('construction-in-') &&
       !resolvedParams.slug.startsWith('interior-design-in-') &&
       !resolvedParams.slug.startsWith('flooring-in-') &&
-      !resolvedParams.slug.startsWith('painting-in-')) {
+      !resolvedParams.slug.startsWith('painting-in-') &&
+      !resolvedParams.slug.startsWith('home-loan-emi-in-') &&
+      !resolvedParams.slug.startsWith('building-material-cost-in-')) {
     return { title: "Not Found" };
   }
   
@@ -189,20 +197,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   let title = `House Construction Cost in ${cityData.cityName} - Calculator & Rates`;
+  let description = cityData.metaDesc;
   if (resolvedParams.slug.startsWith('interior-design-in-')) {
     title = `Interior Design Cost in ${cityData.cityName} - Calculator & Rates`;
   } else if (resolvedParams.slug.startsWith('flooring-in-')) {
     title = `Flooring Cost in ${cityData.cityName} - Calculator & Rates`;
   } else if (resolvedParams.slug.startsWith('painting-in-')) {
     title = `House Painting Cost in ${cityData.cityName} - Calculator & Rates`;
+  } else if (resolvedParams.slug.startsWith('home-loan-emi-in-')) {
+    title = `Home Loan EMI Calculator for ${cityData.cityName} - Compare SBI, HDFC Rates`;
+    description = `Calculate monthly home loan EMI for residential property in ${cityData.cityName}. Compare current SBI, HDFC, ICICI interest rates, loan tenure, and amortization schedules.`;
+  } else if (resolvedParams.slug.startsWith('building-material-cost-in-')) {
+    title = `Building Material Cost in ${cityData.cityName} - Cement, Steel & Bricks Price`;
+    description = `Get latest construction building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
   }
 
   return {
     title,
-    description: cityData.metaDesc,
+    description,
     openGraph: {
       title: `${title} | HDE`,
-      description: cityData.metaDesc,
+      description,
       type: "website",
     }
   };
@@ -214,7 +229,9 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   if (!resolvedParams.slug.startsWith('construction-in-') &&
       !resolvedParams.slug.startsWith('interior-design-in-') &&
       !resolvedParams.slug.startsWith('flooring-in-') &&
-      !resolvedParams.slug.startsWith('painting-in-')) {
+      !resolvedParams.slug.startsWith('painting-in-') &&
+      !resolvedParams.slug.startsWith('home-loan-emi-in-') &&
+      !resolvedParams.slug.startsWith('building-material-cost-in-')) {
     notFound();
   }
   
@@ -235,6 +252,12 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   } else if (resolvedParams.slug.startsWith('painting-in-')) {
     toolType = 'painting';
     forceCalculator = 'painting';
+  } else if (resolvedParams.slug.startsWith('home-loan-emi-in-')) {
+    toolType = 'home-loan-emi';
+    forceCalculator = 'india-emi';
+  } else if (resolvedParams.slug.startsWith('building-material-cost-in-')) {
+    toolType = 'building-material-cost';
+    forceCalculator = 'materials';
   }
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
@@ -287,6 +310,36 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       {
         question: `Are labor rates for painting higher in ${cityData.cityName}?`,
         answer: `Labor rates vary by region, and ${cityData.cityName} has its own specific prevailing wages for professional painters.`
+      }
+    ];
+  } else if (toolType === 'home-loan-emi') {
+    dynamicFaqs = [
+      {
+        question: `What are the current home loan interest rates in ${cityData.cityName}?`,
+        answer: `Home loan interest rates in ${cityData.cityName} currently range from 8.35% to 9.25% across leading banks like State Bank of India (SBI), HDFC Bank, ICICI Bank, and Bank of Baroda for salaried individuals.`
+      },
+      {
+        question: `How much home loan can I get for property in ${cityData.cityName}?`,
+        answer: `Most banks finance up to 75% to 80% of the agreement value of properties in ${cityData.cityName}. Eligibility is calculated based on your net monthly income and existing monthly EMI obligations (typically up to 50% to 60% of take-home salary).`
+      },
+      {
+        question: `What are the stamp duty and registration charges in ${cityData.stateName}?`,
+        answer: `Stamp duty and registration charges in ${cityData.stateName} typically add 5% to 7% of property guidance value. Make sure to account for this one-time cost in your overall borrowing budget.`
+      }
+    ];
+  } else if (toolType === 'building-material-cost') {
+    dynamicFaqs = [
+      {
+        question: `What is the current cement bag price in ${cityData.cityName}?`,
+        answer: `In ${cityData.cityName}, a 50kg bag of OPC/PPC 53 grade cement (UltraTech, ACC, Ambuja, Dalmia) averages between ₹360 and ₹420 depending on wholesale dealer volumes and delivery location.`
+      },
+      {
+        question: `What is the steel TMT rebar price per kg in ${cityData.cityName}?`,
+        answer: `Primary brand Fe-550D TMT steel bars (TATA Tiscon, JSW NeoSteel, SAIL) in ${cityData.cityName} typically range from ₹62 to ₹74 per kg including local transport and unloading charges.`
+      },
+      {
+        question: `Are red bricks or AAC blocks cheaper in ${cityData.cityName}?`,
+        answer: `AAC (Autoclaved Aerated Concrete) blocks typically reduce wall construction and joint mortar costs by 15% to 25% in ${cityData.cityName} compared to traditional red wire-cut clay bricks, while offering superior thermal insulation.`
       }
     ];
   } else {
@@ -425,7 +478,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         <section className="py-12 bg-white border-t border-gray-100">
           <div className="container mx-auto px-4 max-w-5xl">
             <h2 className="text-2xl font-bold text-center text-secondary mb-8">
-              {toolType === 'interior-design' ? 'Interior Design' : toolType === 'flooring' ? 'Flooring' : toolType === 'painting' ? 'Painting' : 'Construction'} Costs in Other Indian Cities
+              {toolType === 'interior-design' ? 'Interior Design' : toolType === 'flooring' ? 'Flooring' : toolType === 'painting' ? 'Painting' : toolType === 'home-loan-emi' ? 'Home Loan EMI Rates' : toolType === 'building-material-cost' ? 'Building Material' : 'Construction'} in Other Indian Cities
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {INDIA_CITIES.filter(c => c.slug !== cityData.slug).map((city) => (

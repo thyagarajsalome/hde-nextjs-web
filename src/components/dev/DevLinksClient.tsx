@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
+import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
 
 interface CityItem {
   slug: string;
@@ -74,6 +75,14 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
       list.push({ url: `/cost/interior-design-in-${loc.slug}`, label: 'Interior Design', region: 'india', group: g });
       list.push({ url: `/cost/flooring-in-${loc.slug}`, label: 'Flooring Cost', region: 'india', group: g });
       list.push({ url: `/cost/painting-in-${loc.slug}`, label: 'Painting Cost', region: 'india', group: g });
+      list.push({ url: `/cost/home-loan-emi-in-${loc.slug}`, label: 'Home Loan EMI', region: 'india', group: g });
+      list.push({ url: `/cost/building-material-cost-in-${loc.slug}`, label: 'Building Materials', region: 'india', group: g });
+    });
+
+    // Indian House Plans & Blueprints
+    list.push({ url: '/plans', label: 'Main House Plans Library', region: 'india', group: '🏡 Indian House Plans & Floor Designs' });
+    Object.values(HOUSE_PLAN_SEO_DATA).forEach(plan => {
+      list.push({ url: `/plans/${plan.slug}`, label: plan.shortTitle, region: 'india', group: '🏡 Indian House Plans & Floor Designs' });
     });
 
     // Indian Land Measurement Converters
