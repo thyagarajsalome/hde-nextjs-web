@@ -716,6 +716,21 @@ export const PlanGallery: React.FC = () => {
         </div>
       </div>
 
+      {/* Architectural Concept Disclaimer Banner */}
+      <div className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-2xl p-4 sm:p-5 mb-8 flex items-start gap-3.5 shadow-xs">
+        <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+          <i className="fas fa-compass-drafting text-sm"></i>
+        </div>
+        <div className="space-y-1 text-xs leading-relaxed text-amber-900/90 dark:text-amber-200/90">
+          <p className="font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+            <span>Architectural Concept &amp; Sanction Disclaimer</span>
+          </p>
+          <p className="text-gray-600 dark:text-zinc-300">
+            All floor plans and architectural designs provided on this platform serve as <strong>conceptual design ideas</strong>. Users must consult licensed professional architects, structural engineers, and local authorities for official structural drawings and statutory building sanction approvals. You may start using these plans as an initial concept and feel free to modify them; however, try to incorporate the recommended room dimensions, structural setbacks, and ventilation guidelines as much as possible where practical for your site.
+          </p>
+        </div>
+      </div>
+
       {/* Grid of Filtered Plans */}
       {filteredPlans.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -958,11 +973,11 @@ export const PlanGallery: React.FC = () => {
                 </>
               )}
 
-              <div className="bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 mb-6">
-                <div className="flex gap-2">
-                  <i className="fas fa-info-circle text-zinc-500 dark:text-zinc-400 text-xs mt-0.5"></i>
-                  <p className="text-[10px] leading-relaxed text-zinc-600 dark:text-zinc-400">
-                    <strong className="uppercase">Note:</strong> These plans serve as conceptual architectural designs to help you customize your layout. For site execution, consult a <strong>licensed professional architect</strong>.
+              <div className="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-xl p-3.5 mb-6">
+                <div className="flex gap-2.5">
+                  <i className="fas fa-info-circle text-amber-600 dark:text-amber-400 text-xs mt-0.5 shrink-0"></i>
+                  <p className="text-[10px] leading-relaxed text-amber-900 dark:text-amber-200">
+                    <strong className="uppercase">Architectural Concept Disclaimer:</strong> All floor plans serve as <strong>conceptual design ideas</strong>. Users must consult licensed professional architects, structural engineers, and local authorities for official structural drawings and statutory sanction approvals. You may start using this plan as an initial concept and feel free to modify it; however, try to incorporate the recommended dimensions and ventilation standards as much as possible where practical for your site.
                   </p>
                 </div>
               </div>

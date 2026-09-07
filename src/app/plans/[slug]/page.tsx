@@ -499,6 +499,21 @@ export default async function HousePlanSeoPage({ params }: Props) {
           </section>
         )}
 
+        {/* Architectural Concept & Sanction Disclaimer */}
+        <div className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-start gap-4 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+            <i className="fas fa-compass-drafting text-base"></i>
+          </div>
+          <div className="space-y-1.5 text-xs sm:text-sm leading-relaxed text-amber-950/90 dark:text-amber-200/90">
+            <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-sm sm:text-base">
+              Architectural Concept &amp; Sanction Disclaimer
+            </h4>
+            <p className="text-gray-600 dark:text-zinc-300 text-xs sm:text-sm">
+              All floor plans, layouts, and architectural designs on this platform serve as <strong>conceptual design ideas</strong>. Users must consult licensed professional architects, structural engineers, and local municipal authorities for official structural drawings and statutory building sanction approvals. You may start using these plans as an inspirational concept and feel free to modify them; however, try to incorporate the recommended dimensions, structural setbacks, and ventilation guidelines as much as possible where practical for your site.
+            </p>
+          </div>
+        </div>
+
         {/* Frequently Asked Questions */}
         <section className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-6">
           <div className="text-center max-w-xl mx-auto">
