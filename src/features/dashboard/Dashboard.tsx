@@ -620,6 +620,15 @@ export default function Dashboard() {
               </div>
 
               <Link
+                href="/admin/health"
+                className="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs"
+                title="View Real-Time Platform Health & Diagnostics"
+              >
+                <i className="fas fa-heartbeat text-emerald-500 animate-pulse"></i>
+                <span className="hidden sm:inline">Platform Health</span>
+              </Link>
+
+              <Link
                 href="/upgrade"
                 className="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-md transition flex items-center gap-2 cursor-pointer"
               >
@@ -715,6 +724,157 @@ export default function Dashboard() {
               </Link>
             </div>
           )}
+        </div>
+
+        {/* --- USEFUL PLATFORM & ADMIN HUBS --- */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-gray-100 dark:border-zinc-800">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center text-sm">
+                <i className="fas fa-toolbox"></i>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base">
+                  Platform Hubs &amp; Management Utilities
+                </h3>
+                <p className="text-gray-500 dark:text-zinc-400 text-xs">
+                  Direct access to system monitoring, developer tools, and regional content hubs.
+                </p>
+              </div>
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/50 self-start sm:self-auto flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Admin &amp; Dev Tools
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {/* 1. Platform Health & Diagnostics */}
+            <Link
+              href="/admin/health"
+              className="group p-3.5 rounded-xl border border-emerald-200/70 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/10 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-heartbeat text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
+                    Platform Health &amp; Diagnostics
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-emerald-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Live Supabase status, calculation math smoke-tests, and server health.
+                </p>
+              </div>
+            </Link>
+
+            {/* 2. Developer SEO URL Matrix */}
+            <Link
+              href="/dev-links"
+              className="group p-3.5 rounded-xl border border-blue-200/70 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/10 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-sitemap text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                    Developer SEO URL Matrix
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-blue-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Access 769+ programmatic city routes, state hubs, and bulk URL exporter.
+                </p>
+              </div>
+            </Link>
+
+            {/* 3. House Plans Architectural Gallery */}
+            <Link
+              href="/plans"
+              className="group p-3.5 rounded-xl border border-amber-200/70 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-compass-drafting text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
+                    House Plans Gallery
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-amber-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  30x40, 20x30, 30x50 architectural layouts, filters, and design ideas.
+                </p>
+              </div>
+            </Link>
+
+            {/* 4. Dubai Property Advisor */}
+            <Link
+              href="/dubai-property"
+              className="group p-3.5 rounded-xl border border-purple-200/70 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-950/10 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-city text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-purple-600 dark:group-hover:text-purple-400 transition">
+                    Dubai Property Advisor
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-purple-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  15+ Dubai area guides, buying cost calculator, and investment portal.
+                </p>
+              </div>
+            </Link>
+
+            {/* 5. Land Area Converter */}
+            <Link
+              href="/land-converter"
+              className="group p-3.5 rounded-xl border border-teal-200/70 dark:border-teal-900/40 bg-teal-50/40 dark:bg-teal-950/10 hover:bg-teal-50 dark:hover:bg-teal-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-vector-square text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">
+                    Land Unit Converter
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-teal-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Convert Gunta, Bigha, Cent, Acres, and Square Meters to Sq Ft.
+                </p>
+              </div>
+            </Link>
+
+            {/* 6. SEO Blog & Editorial Guides */}
+            <Link
+              href="/blog"
+              className="group p-3.5 rounded-xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/40 dark:bg-rose-950/10 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-newspaper text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
+                    SEO Blog &amp; Guides
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-rose-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Published 2026 home construction, interest rate, and remodeling pillar posts.
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* --- REGIONAL QUICK LAUNCHPAD --- */}
