@@ -424,8 +424,8 @@ export const PlanGallery: React.FC = () => {
         if (areaFilter === "1200" && (area < 1101 || area > 1350)) return false;
         if (areaFilter === "1500" && (area < 1351 || area > 1650)) return false;
         if (areaFilter === "1800" && (area < 1651 || area > 2000)) return false;
-        if (areaFilter === "2400" && (area < 2001 || area > 3000)) return false;
-        if (areaFilter === "4000+" && area <= 3000) return false;
+        if (areaFilter === "2400" && (area < 2001 || area > 2800)) return false;
+        if ((areaFilter === "3200+" || areaFilter === "3200" || areaFilter === "4000+") && area <= 2800) return false;
       }
 
       // 4. Dimension Filter
@@ -551,7 +551,7 @@ export const PlanGallery: React.FC = () => {
               <option value="1500">1,500 sq ft (30×50)</option>
               <option value="1800">1,800 sq ft (30×60)</option>
               <option value="2400">2,400 sq ft (40×60)</option>
-              <option value="4000+">4,000+ sq ft (50×80)</option>
+              <option value="3200+">3,200+ sq ft (40×80)</option>
             </select>
           </div>
 

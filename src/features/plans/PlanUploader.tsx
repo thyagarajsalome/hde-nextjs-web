@@ -17,7 +17,7 @@ const PLOT_PRESETS = [
   { label: "20×50 (1000 sqft)", dim: "20x50", area: 1000, title: "Townhouse 20x50 House Plan" },
   { label: "25×40 (1000 sqft)", dim: "25x40", area: 1000, title: "Contemporary 25x40 Duplex Plan" },
   { label: "30×60 (1800 sqft)", dim: "30x60", area: 1800, title: "Contemporary 30x60 3BHK Home Plan" },
-  { label: "50×80 (4000 sqft)", dim: "50x80", area: 4000, title: "Grand 50x80 Luxury Mansion Plan" },
+  { label: "40×80 (3200 sqft)", dim: "40x80", area: 3200, title: "Grand 40x80 Luxury Mansion Plan" },
 ];
 
 export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) => {
