@@ -137,13 +137,17 @@ export default function DubaiPropertyPage() {
           <p className="text-lg md:text-xl text-white mb-10 drop-shadow">
             Compare areas, understand costs, and make informed decisions — whether you're investing from India, UK, or anywhere in the world.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-            <a href="#areas" className="bg-primary hover:bg-primary-hover text-slate-900 font-bold py-3 px-8 rounded-lg transition-colors inline-block text-center">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+            <a href="#areas" className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors inline-block text-center shadow-md">
               Explore Dubai Areas
             </a>
-            <Link href="/dubai-property/calculator" className="bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+            <Link href="/dubai-property/calculator" className="w-full sm:w-auto bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white font-bold py-3 px-6 rounded-lg transition-colors inline-block text-center">
               Property Cost Calculator
             </Link>
+            <a href="#connect-expert" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 px-6 rounded-lg transition-colors inline-flex items-center justify-center gap-2 shadow-lg">
+              <i className="fas fa-user-shield"></i>
+              <span>Connect with a Verified Dubai Expert</span>
+            </a>
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-sm font-medium">
             <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">15+ Areas Covered</span>
@@ -236,14 +240,20 @@ export default function DubaiPropertyPage() {
           <p className="text-lg mb-8 text-gray-700 dark:text-zinc-300">
             DLD fees, agent commission, mortgage registration, service charges — our free calculator breaks it all down.
           </p>
-          <Link href="/dubai-property/calculator" className="inline-block bg-primary text-white hover:bg-primary-hover font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
-            Open Calculator
-          </Link>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <Link href="/dubai-property/calculator" className="w-full sm:w-auto inline-block bg-primary text-white hover:bg-primary-hover font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+              Property Cost Calculator
+            </Link>
+            <a href="#connect-expert" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 text-slate-950 hover:bg-amber-600 font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+              <i className="fas fa-user-shield"></i>
+              <span>Connect with a Verified Dubai Expert</span>
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Lead Generation Form Section */}
-      <section className="bg-primary/5 dark:bg-primary/10 py-16 px-6">
+      <section id="connect-expert" className="bg-primary/5 dark:bg-primary/10 py-16 px-6 scroll-mt-20">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-zinc-100">Ready to Take the Next Step?</h2>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import Chart from "@/components/ui/Chart";
+import DubaiLeadForm from "@/components/dubai/DubaiLeadForm";
 import { useUser } from "@/context/UserContext";
 import { useProjectActions } from "@/hooks/useProjectActions";
 
@@ -233,10 +234,19 @@ export default function DubaiPropertyCalculatorPage() {
           )}
         </div>
         
-        {/* Currency Switcher: Clean modern segmented pill control */}
-        <div className="flex items-center gap-2.5">
-          <span className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Currency</span>
-          <div className="inline-flex items-center p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-inner">
+        <div className="flex flex-wrap items-center gap-3">
+          <a
+            href="#connect-expert"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold shadow-md transition"
+          >
+            <i className="fas fa-user-shield"></i>
+            <span>Connect with a Verified Dubai Expert</span>
+          </a>
+
+          {/* Currency Switcher: Clean modern segmented pill control */}
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Currency</span>
+            <div className="inline-flex items-center p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-inner">
             {[
               { code: 'AED', label: 'AED', sub: 'Dirham', flag: 'ae' },
               { code: 'INR', label: 'INR', sub: '₹ Cr', flag: 'in' },
@@ -268,6 +278,7 @@ export default function DubaiPropertyCalculatorPage() {
                 </button>
               );
             })}
+            </div>
           </div>
         </div>
       </div>
@@ -494,6 +505,11 @@ export default function DubaiPropertyCalculatorPage() {
           
           <div className="text-xs text-gray-400 dark:text-zinc-500 text-center mt-6 bg-gray-50 dark:bg-zinc-900/50 p-4 rounded-lg border border-gray-100 dark:border-zinc-800">
             <strong>Disclaimer:</strong> The figures provided by this calculator are for illustrative purposes only to give you a clear perspective on property costs. Actual values, taxes, and developer fees may fluctuate based on current market updates and government regulations. Home Design English (HDE) is an informational platform; please verify all final costs with our network of verified real estate professionals before making any financial commitments.
+          </div>
+
+          {/* Connect with a Verified Dubai Expert Form */}
+          <div id="connect-expert" className="mt-12 scroll-mt-20">
+            <DubaiLeadForm source="Dubai Buying Cost Calculator Page" />
           </div>
         </div>
       </div>
