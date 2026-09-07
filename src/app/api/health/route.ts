@@ -153,17 +153,21 @@ export async function GET() {
   const hasDegraded = checks.some((c) => c.status === 'degraded');
 
   const overallStatus = hasFailure ? 'unhealthy' : hasDegraded ? 'degraded' : 'operational';
+  const httpStatusCode = hasFailure ? 503 : 200;
 
-  return NextResponse.json({
-    status: overallStatus,
-    timestamp: new Date().toISOString(),
-    totalDurationMs: totalDuration,
-    summary: {
-      total: checks.length,
-      operational: checks.filter((c) => c.status === 'operational').length,
-      degraded: checks.filter((c) => c.status === 'degraded').length,
-      failed: checks.filter((c) => c.status === 'failed').length,
+  return NextResponse.json(
+    {
+      status: overallStatus,
+      timestamp: new Date().toISOString(),
+      totalDurationMs: totalDuration,
+      summary: {
+        total: checks.length,
+        operational: checks.filter((c) => c.status === 'operational').length,
+        degraded: checks.filter((c) => c.status === 'degraded').length,
+        failed: checks.filter((c) => c.status === 'failed').length,
+      },
+      checks,
     },
-    checks,
-  });
+    { status: httpStatusCode }
+  );
 }
