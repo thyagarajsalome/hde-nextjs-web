@@ -226,6 +226,14 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
+            <a
+              href="/admin/health"
+              className="px-4 py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold shadow-sm transition flex items-center gap-2"
+            >
+              <i className="fas fa-heartbeat text-emerald-600"></i>
+              <span>Platform Health</span>
+            </a>
+
             <button
               onClick={copyUrlsToClipboard}
               className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold shadow-sm transition flex items-center gap-2 cursor-pointer"
