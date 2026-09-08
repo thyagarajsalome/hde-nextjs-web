@@ -4,6 +4,7 @@ import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
 import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
 import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
+import { PARTNER_SEO_SLUGS } from '@/data/dubaiPartnerSeoData';
 
 const BASE_URL = 'https://www.homedesignenglish.com';
 
@@ -340,12 +341,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
+  const dubaiPartnerRoutes: MetadataRoute.Sitemap = PARTNER_SEO_SLUGS.map(slug => ({
+    url: `${BASE_URL}/dubai-property/partners/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   return [
     ...staticRoutes,
     ...cityRoutes,
     ...realEstateRoutes,
     ...blogRoutes,
     ...dubaiRoutes,
+    ...dubaiPartnerRoutes,
     ...landConverterRoutes,
     ...housePlanRoutes
   ];

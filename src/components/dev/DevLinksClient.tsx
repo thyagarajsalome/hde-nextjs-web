@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
 import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
+import { ALL_PARTNER_SEO_PAGES } from '@/data/dubaiPartnerSeoData';
 
 interface CityItem {
   slug: string;
@@ -52,6 +53,7 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
     list.push({ url: '/real-estate/california', label: 'California Real Estate Hub', region: 'hubs', group: 'State Hubs' });
     list.push({ url: '/dubai-property', label: 'Dubai Property Hub', region: 'hubs', group: 'State Hubs' });
     list.push({ url: '/dubai-property/calculator', label: 'Dubai Buying Cost Calculator', region: 'hubs', group: 'State Hubs' });
+    list.push({ url: '/dubai-property/partners', label: 'Dubai Broker Partner Portal', region: 'hubs', group: 'State Hubs' });
 
     // USA City Tools
     usCities.forEach(loc => {
@@ -98,6 +100,17 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
       list.push({ url: `/dubai-property/areas/${area.slug}`, label: 'Main Area Guide', region: 'uae', group: g });
       propertyTypes.forEach(pt => {
         list.push({ url: `/dubai-property/buy/${pt}-for-sale-in-${area.slug}`, label: `${pt.replace('-', ' ')}`, region: 'uae', group: g });
+      });
+    });
+
+    // UAE Broker Partner Network & 19 Targeted SEO Landing Pages
+    list.push({ url: '/dubai-property/partners', label: 'Main RERA Broker Partner Portal', region: 'uae', group: '🤝 Dubai Broker Partner Pages' });
+    Object.values(ALL_PARTNER_SEO_PAGES).forEach(item => {
+      list.push({
+        url: `/dubai-property/partners/${item.slug}`,
+        label: item.type === 'area' ? `${item.areaName} Broker Desk` : item.headline,
+        region: 'uae',
+        group: '🤝 Dubai Broker Partner Pages'
       });
     });
 

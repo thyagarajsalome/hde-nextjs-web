@@ -283,7 +283,28 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
           </div>
         </section>
 
-        <p className="text-xs text-gray-500 text-center pt-12">
+        {/* RERA Partner Broker Desk Callout */}
+        <section className="p-6 rounded-2xl bg-gradient-to-r from-[#0f2042] to-[#1a3360] text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+          <div className="text-center sm:text-left">
+            <span className="text-[11px] font-semibold text-[#c5a059] uppercase tracking-wider block mb-1">
+              RERA Certified Broker Desk
+            </span>
+            <h3 className="text-lg font-bold text-white">
+              Brokers: Represent Buyers in {area.name}
+            </h3>
+            <p className="text-xs text-gray-300 mt-1 max-w-xl">
+              Receive pre-qualified buyer and investor leads from India, UK, and worldwide seeking property in {area.name}.
+            </p>
+          </div>
+          <Link
+            href={`/dubai-property/partners/${area.slug}`}
+            className="shrink-0 px-5 py-2.5 rounded-xl bg-[#c5a059] text-[#0f2042] hover:bg-[#d4b36b] font-bold text-xs transition-all shadow-sm"
+          >
+            Apply for {area.name} Desk →
+          </Link>
+        </section>
+
+        <p className="text-xs text-gray-500 text-center pt-8">
           Disclaimer: All prices and yields are estimates based on publicly available market data as of September 2026. Actual prices vary. Verify current pricing with a licensed real estate agent.
         </p>
 

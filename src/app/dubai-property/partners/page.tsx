@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import DubaiAgentRegisterForm from '@/components/dubai/DubaiAgentRegisterForm';
+import { ALL_PARTNER_SEO_PAGES, AREA_PARTNER_SLUGS, B2B_GUIDE_SLUGS } from '@/data/dubaiPartnerSeoData';
 
 export const metadata: Metadata = {
   title: 'RERA Broker Partner Network | HDE Dubai Real Estate Referral Program',
@@ -189,8 +190,66 @@ export default function DubaiPartnersPage() {
           </div>
         </div>
 
+        {/* Community Specialist Desks & Strategy Guides Directory (SEO Hub-and-Spoke Architecture) */}
+        <div className="mt-20 pt-12 border-t border-slate-200 dark:border-zinc-800">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-xs font-semibold text-[#c5a059] uppercase tracking-wider">Verified Broker Networks</span>
+            <h3 className="mt-2 text-2xl font-extrabold text-[#0f2042] dark:text-zinc-100">
+              Explore Community Specialist Desks
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-zinc-400">
+              Dedicated broker referral desks across all 15 premier freehold areas in Dubai.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {AREA_PARTNER_SLUGS.map((slug) => {
+              const item = ALL_PARTNER_SEO_PAGES[slug];
+              return (
+                <Link
+                  key={slug}
+                  href={`/dubai-property/partners/${slug}`}
+                  className="p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 hover:border-[#c5a059] dark:hover:border-[#c5a059] hover:shadow-xs transition-all group"
+                >
+                  <p className="text-xs font-bold text-[#0f2042] dark:text-zinc-100 group-hover:text-[#c5a059] transition-colors">
+                    {item.areaName} Desk
+                  </p>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">
+                    Yield: {item.stats[0]?.value}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-12">
+            <h4 className="text-base font-bold text-[#0f2042] dark:text-zinc-100 mb-4 text-center sm:text-left">
+              B2B Broker Strategy & Co-Brokerage Guides
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {B2B_GUIDE_SLUGS.map((slug) => {
+                const item = ALL_PARTNER_SEO_PAGES[slug];
+                return (
+                  <Link
+                    key={slug}
+                    href={`/dubai-property/partners/${slug}`}
+                    className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 hover:border-[#c5a059] dark:hover:border-[#c5a059] hover:shadow-xs transition-all group"
+                  >
+                    <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-wider block mb-1">
+                      Resource Guide
+                    </span>
+                    <p className="text-xs font-bold text-[#0f2042] dark:text-zinc-100 group-hover:text-[#c5a059] transition-colors line-clamp-2">
+                      {item.headline}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* Return link */}
-        <div className="mt-12 text-center">
+        <div className="mt-14 text-center">
           <Link 
             href="/dubai-property" 
             className="inline-flex items-center gap-2 text-primary hover:text-primary-hover font-semibold text-xs tracking-wide transition"

@@ -62,9 +62,19 @@ export function validateReraORN(raw: string): { isValid: boolean; cleaned: strin
   return { isValid: true, cleaned, message: "Valid 3–6 digit ORN format." };
 }
 
-export default function DubaiAgentRegisterForm() {
+export interface DubaiAgentRegisterFormProps {
+  initialTier?: "pro" | "standard";
+  defaultFocusArea?: string;
+  source?: string;
+}
+
+export default function DubaiAgentRegisterForm({
+  initialTier,
+  defaultFocusArea,
+  source,
+}: DubaiAgentRegisterFormProps = {}) {
   const [formData, setFormData] = useState({
-    tier: "pro" as "pro" | "standard",
+    tier: (initialTier || "pro") as "pro" | "standard",
     fullName: "",
     agencyName: "",
     reraBrn: "",
@@ -75,18 +85,18 @@ export default function DubaiAgentRegisterForm() {
     whatsapp: "",
     experienceYears: "3-5 years",
     specialties: ["Off-Plan & New Developer Launches", "Ready Residential Apartments"] as string[],
-    focusAreas: ["Dubai Marina", "Downtown Dubai", "Business Bay"] as string[],
+    focusAreas: defaultFocusArea ? [defaultFocusArea] : (["Dubai Marina", "Downtown Dubai", "Business Bay"] as string[]),
     agreedCommission: 25,
     termsAgreed: false,
     honeypot: "", // Bot trap: hidden from real users
   });
 
-  const [selectedTier, setSelectedTier] = useState<"pro" | "standard" | null>(null);
+  const [selectedTier, setSelectedTier] = useState<"pro" | "standard" | null>(initialTier || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [paymentInfo, setPaymentInfo] = useState<{ plan: "pro" | "standard"; paymentId?: string }>({ plan: "pro" });
+  const [paymentInfo, setPaymentInfo] = useState<{ plan: "pro" | "standard"; paymentId?: string }>({ plan: initialTier || "pro" });
 
   const handleChooseTier = (tier: "pro" | "standard") => {
     setSelectedTier(tier);
@@ -94,7 +104,9 @@ export default function DubaiAgentRegisterForm() {
     setFormData(prev => ({
       ...prev,
       tier,
-      focusAreas: tier === "standard" ? prev.focusAreas.slice(0, 3) : (prev.focusAreas.length === 0 ? ["Dubai Marina", "Downtown Dubai", "Business Bay"] : prev.focusAreas)
+      focusAreas: tier === "standard" 
+        ? prev.focusAreas.slice(0, 3) 
+        : (prev.focusAreas.length === 0 ? (defaultFocusArea ? [defaultFocusArea] : ["Dubai Marina", "Downtown Dubai", "Business Bay"]) : prev.focusAreas)
     }));
   };
 
@@ -346,6 +358,7 @@ export default function DubaiAgentRegisterForm() {
   ) => {
     try {
       const adminNoteItems = [
+        source ? `Source: ${source}` : null,
         verifiedData.permitNote ? `DLD Permit/URL: ${verifiedData.permitNote}` : null,
         `Plan: ${tier.toUpperCase()}`,
         amount > 0 ? `Paid: AED ${amount} via Razorpay` : "Plan: Standard Free",
