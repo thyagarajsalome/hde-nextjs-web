@@ -140,125 +140,105 @@ export default function DubaiLeadForm({
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Full Name */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-            Full Name <span className="text-red-500">*</span>
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+            <i className="fas fa-user text-primary text-xs"></i>
+            <span>Full Name <span className="text-red-500">*</span></span>
           </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-              <i className="fas fa-user text-sm"></i>
-            </span>
-            <input 
-              type="text" 
-              name="name" 
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
-              placeholder="e.g. Rahul Sharma / John Smith"
-            />
-          </div>
+          <input 
+            type="text" 
+            name="name" 
+            required
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
+            placeholder="e.g. Rahul Sharma / John Smith"
+          />
         </div>
         
         {/* Email & Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-              Email Address <span className="text-red-500">*</span>
+            <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+              <i className="fas fa-envelope text-primary text-xs"></i>
+              <span>Email Address <span className="text-red-500">*</span></span>
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                <i className="fas fa-envelope text-sm"></i>
-              </span>
-              <input 
-                type="email" 
-                name="email" 
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
-                placeholder="name@example.com"
-              />
-            </div>
+            <input 
+              type="email" 
+              name="email" 
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
+              placeholder="name@example.com"
+            />
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-              Phone / WhatsApp <span className="text-red-500">*</span>
+            <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+              <i className="fab fa-whatsapp text-emerald-500 text-sm"></i>
+              <span>Phone / WhatsApp <span className="text-red-500">*</span></span>
             </label>
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                <i className="fab fa-whatsapp text-emerald-500 text-base"></i>
-              </span>
-              <input 
-                type="tel" 
-                name="phone" 
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
-                placeholder="+971 50 000 0000"
-              />
-            </div>
+            <input 
+              type="tel" 
+              name="phone" 
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
+              placeholder="+971 50 000 0000"
+            />
           </div>
         </div>
 
         {/* What are you looking for? */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-            What are you looking for? <span className="text-red-500">*</span>
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+            <i className="fas fa-bullseye text-primary text-xs"></i>
+            <span>What are you looking for? <span className="text-red-500">*</span></span>
           </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-              <i className="fas fa-bullseye text-sm"></i>
-            </span>
-            <select 
-              name="interest"
-              value={formData.interest}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium cursor-pointer"
-            >
-              {INTEREST_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select 
+            name="interest"
+            value={formData.interest}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium cursor-pointer"
+          >
+            {INTEREST_OPTIONS.map(opt => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Preferred Location in Dubai (Connected with Explore Dubai Property Areas) */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
-              Preferred Dubai Area / Location
+            <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
+              <i className="fas fa-map-marker-alt text-amber-500 text-xs"></i>
+              <span>Preferred Dubai Area / Location</span>
             </label>
             <span className="text-[11px] text-gray-400 dark:text-zinc-500">
               15+ Areas Covered
             </span>
           </div>
           
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-              <i className="fas fa-map-marker-alt text-amber-500 text-sm"></i>
-            </span>
-            <select 
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium cursor-pointer"
-            >
-              <option value="All Dubai / Open to Recommendations">
-                All Dubai / Open to Recommendations
-              </option>
-              <optgroup label="Popular Dubai Property Areas">
-                {DUBAI_AREAS.map(area => (
-                  <option key={area.slug} value={area.name}>
-                    {area.name} ({area.tagline})
-                  </option>
-                ))}
-              </optgroup>
-              <option value="Other / Multiple Areas">Other / Multiple Areas</option>
-            </select>
-          </div>
+          <select 
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium cursor-pointer"
+          >
+            <option value="All Dubai / Open to Recommendations">
+              All Dubai / Open to Recommendations
+            </option>
+            <optgroup label="Popular Dubai Property Areas">
+              {DUBAI_AREAS.map(area => (
+                <option key={area.slug} value={area.name}>
+                  {area.name} ({area.tagline})
+                </option>
+              ))}
+            </optgroup>
+            <option value="Other / Multiple Areas">Other / Multiple Areas</option>
+          </select>
 
           {/* Smart Quick-Select Pills based on Selected Interest */}
           {recommendedAreas.length > 0 && (
@@ -289,22 +269,18 @@ export default function DubaiLeadForm({
 
         {/* Budget */}
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-            Estimated Budget (Optional)
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+            <i className="fas fa-coins text-amber-500 text-xs"></i>
+            <span>Estimated Budget (Optional)</span>
           </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-              <i className="fas fa-coins text-sm"></i>
-            </span>
-            <input 
-              type="text" 
-              name="budget" 
-              value={formData.budget}
-              onChange={handleChange}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
-              placeholder="e.g. AED 1.5M - 2M (or ₹3.5 Cr / $400K)"
-            />
-          </div>
+          <input 
+            type="text" 
+            name="budget" 
+            value={formData.budget}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50/50 dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition text-sm font-medium"
+            placeholder="e.g. AED 1.5M - 2M (or ₹3.5 Cr / $400K)"
+          />
         </div>
 
         {/* RERA Consent Checkbox */}
