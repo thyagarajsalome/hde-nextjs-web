@@ -352,7 +352,10 @@ export default async function BuyPropertyPage({ params }: { params: Promise<{ sl
         {/* Lead Form Sidebar */}
         <div className="lg:col-span-5">
           <div className="sticky top-24">
-            <DubaiLeadForm source={`${currentType.id}-for-sale-in-${currentArea.slug}`} />
+            <DubaiLeadForm 
+              source={`${currentType.id}-for-sale-in-${currentArea.slug}`} 
+              initialArea={currentArea.name}
+            />
           </div>
         </div>
       </div>

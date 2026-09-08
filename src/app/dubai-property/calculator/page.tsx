@@ -427,29 +427,29 @@ export default function DubaiPropertyCalculatorPage() {
           </div>
 
           {/* Action Card: Save & Export PDF */}
-          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-400/40 dark:border-amber-500/30 p-5 rounded-2xl shadow-sm">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="bg-amber-500 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
-                    Official UAE Report
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-400/40 dark:border-amber-500/30 p-6 sm:p-7 rounded-2xl shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-wider whitespace-nowrap shadow-xs">
+                    HDE Report
                   </span>
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-zinc-100">
+                  <h4 className="font-extrabold text-base text-slate-900 dark:text-zinc-100">
                     Save Unit &amp; Export Bank-Ready PDF
                   </h4>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+                <p className="text-xs text-gray-600 dark:text-zinc-400 max-w-xl leading-relaxed">
                   Save this unit to your private portfolio dashboard or download an itemized DLD, trustee &amp; mortgage fee statement.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+              <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
                 <button
                   type="button"
                   onClick={handleDownloadPDF}
                   disabled={isDownloading}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-900 border-2 border-primary text-primary font-black text-xs rounded-xl hover:bg-primary hover:text-white dark:hover:text-zinc-950 transition shadow-xs cursor-pointer disabled:opacity-50"
-                  title="Download Official Itemized PDF"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 border-2 border-primary text-primary font-black text-xs rounded-xl hover:bg-primary hover:text-white dark:hover:text-zinc-950 transition shadow-xs cursor-pointer disabled:opacity-50"
+                  title="Download Itemized PDF"
                 >
                   <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
                   <span>{isDownloading ? "Generating..." : "Download PDF"}</span>
@@ -459,7 +459,7 @@ export default function DubaiPropertyCalculatorPage() {
                   type="button"
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white dark:text-zinc-950 font-black text-xs rounded-xl hover:bg-primary-hover transition shadow-md cursor-pointer disabled:opacity-50 active:scale-95"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white dark:text-zinc-950 font-black text-xs rounded-xl hover:bg-primary-hover transition shadow-md cursor-pointer disabled:opacity-50 active:scale-95"
                   title="Save to My Projects Dashboard"
                 >
                   <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-cloud-upload-alt"}`}></i>
