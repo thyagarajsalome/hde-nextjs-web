@@ -58,9 +58,10 @@ export default function DubaiAreaList({ areas }: { areas: Area[] }) {
                   </div>
                   <Link 
                     href={`/dubai-property/areas/${area.slug}`}
-                    className="whitespace-nowrap px-5 py-2 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-lg transition-colors shadow-sm"
+                    className="whitespace-nowrap px-5 py-2.5 bg-[#0f2042] hover:bg-[#1a3360] text-white text-sm font-bold rounded-xl transition-all shadow-sm border border-[#c5a059]/40 hover:border-[#c5a059]"
                   >
-                    View Full Guide &rarr;
+                    <span>View Full Guide</span>
+                    <span className="text-[#c5a059] ml-1.5">&rarr;</span>
                   </Link>
                 </div>
               )}

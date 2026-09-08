@@ -167,9 +167,10 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             </div>
             <Link 
               href="/dubai-property/calculator" 
-              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-colors w-full sm:w-auto text-center"
+              className="bg-[#0f2042] hover:bg-[#1a3360] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all w-full sm:w-auto text-center border border-[#c5a059]/40 hover:border-[#c5a059] shadow-sm inline-flex items-center justify-center gap-2"
             >
-              Calculate your buying costs &rarr;
+              <span>Calculate your buying costs</span>
+              <span className="text-[#c5a059]">&rarr;</span>
             </Link>
           </div>
         </section>

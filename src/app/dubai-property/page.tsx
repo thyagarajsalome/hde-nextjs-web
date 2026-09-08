@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import Image from 'next/image';
-import DubaiLeadForm from '@/components/dubai/DubaiLeadForm';
 import DubaiAreaList from '@/components/dubai/DubaiAreaList';
+import DubaiBuyerSuite from '@/components/dubai/DubaiBuyerSuite';
 
 export const metadata: Metadata = {
   title: 'Dubai Property Advisor | Find the Right Property for You | HDE',
@@ -73,8 +73,8 @@ const faqs = [
     answer: "The UAE does not levy personal income tax, capital gains tax, or property wealth tax on residential real estate owned by individuals. Rental income and capital appreciation earned by private individual owners are 100% tax-free in Dubai (foreign investors should consult their home country tax laws regarding global income reporting)."
   },
   {
-    question: "How does the 10-Year UAE Golden Visa for property owners work?",
-    answer: "Investors purchasing residential property valued at AED 2,000,000 (~₹5.15 Cr / ~$544,000 USD) or above can qualify for a renewable 10-Year UAE Golden Visa for themselves and their immediate family (spouse and children). This applies to both ready properties and eligible off-plan properties from approved developers, even if financed through a local UAE bank mortgage."
+    question: "What are the capital appreciation trends in Dubai property?",
+    answer: "Dubai's residential market has experienced sustained capital appreciation driven by population growth, major infrastructure expansions, and international business migration. Prime communities such as Dubai Marina, Downtown Dubai, and Dubai Hills have historically delivered strong medium to long-term equity growth alongside high rental yields."
   },
   {
     question: "What is the role of Home Design English (HDE) in Dubai property?",
@@ -138,22 +138,52 @@ export default function DubaiPropertyPage() {
             Compare areas, understand costs, and make informed decisions — whether you're investing from India, UK, or anywhere in the world.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
-            <a href="#areas" className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors inline-block text-center shadow-md">
+            <a 
+              href="#tools" 
+              className="w-full sm:w-auto bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black py-3.5 px-6 rounded-xl transition-all inline-flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              <i className="fas fa-calculator text-[#0f2042]"></i>
+              <span>Open Buying Calculator</span>
+            </a>
+            <a 
+              href="#areas" 
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold py-3.5 px-6 rounded-xl transition-all inline-block text-center hover:-translate-y-0.5 shadow-sm"
+            >
               Explore Dubai Areas
             </a>
-            <Link href="/dubai-property/calculator" className="w-full sm:w-auto bg-transparent border-2 border-white hover:bg-white hover:text-slate-900 text-white font-bold py-3 px-6 rounded-lg transition-colors inline-block text-center">
-              Property Cost Calculator
-            </Link>
-            <a href="#connect-expert" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 px-6 rounded-lg transition-colors inline-flex items-center justify-center gap-2 shadow-lg">
-              <i className="fas fa-user-shield"></i>
-              <span>Connect with a Verified Dubai Expert</span>
+            <a 
+              href="#tools" 
+              className="w-full sm:w-auto bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold py-3.5 px-6 rounded-xl border border-[#c5a059]/60 transition-all inline-flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              <i className="fas fa-user-shield text-[#c5a059]"></i>
+              <span>Connect with Verified Expert</span>
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-sm font-medium">
             <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">15+ Areas Covered</span>
             <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">Free Cost Calculator</span>
-            <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">Expert Area Guides</span>
+            <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">Verified RERA Specialists</span>
           </div>
+        </div>
+      </section>
+
+      {/* Interactive Dubai Buyer Suite (Calculator & Expert Consultation Tabs) */}
+      <section className="bg-slate-50 dark:bg-zinc-950 py-16 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-zinc-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-black text-xs uppercase tracking-wider mb-3">
+              <i className="fas fa-layer-group"></i>
+              <span>Interactive Buyer Hub</span>
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-zinc-100 tracking-tight">
+              Dubai Property Intelligence &amp; Advisory Suite
+            </h2>
+            <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-zinc-400">
+              Calculate official government fees, simulate cash &amp; mortgage financing, or request a 1-on-1 consultation with licensed advisors — all in one place.
+            </p>
+          </div>
+
+          <DubaiBuyerSuite />
         </div>
       </section>
 
@@ -204,8 +234,8 @@ export default function DubaiPropertyPage() {
               <p className="text-sm text-gray-700 dark:text-zinc-300">No tax on rental income or capital gains for individuals, maximizing your investment returns.</p>
             </div>
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
-              <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">Golden Visa</h3>
-              <p className="text-sm text-gray-700 dark:text-zinc-300">Property investment of AED 2M+ qualifies for a 10-year renewable residency visa for you and your family.</p>
+              <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">100% Foreign Ownership</h3>
+              <p className="text-sm text-gray-700 dark:text-zinc-300">Foreign nationals and expatriates enjoy complete freehold ownership rights in all designated investment zones across Dubai.</p>
             </div>
             <div className="bg-primary/5 dark:bg-primary/20 p-6 rounded-xl border border-primary/20 dark:border-blue-900/50">
               <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-zinc-100">High Rental Yields</h3>
@@ -233,51 +263,28 @@ export default function DubaiPropertyPage() {
         </div>
       </section>
 
-      {/* Property Cost Calculator CTA Banner */}
-      <section className="bg-white dark:bg-zinc-950 py-16 px-6 text-center border-t border-gray-100 dark:border-zinc-800">
-        <div className="max-w-3xl mx-auto bg-gray-50 dark:bg-zinc-900 p-8 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
-          <h2 className="text-3xl font-bold mb-4 text-slate-900 dark:text-zinc-100">Know Your True Buying Costs</h2>
-          <p className="text-lg mb-8 text-gray-700 dark:text-zinc-300">
-            DLD fees, agent commission, mortgage registration, service charges — our free calculator breaks it all down.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Link href="/dubai-property/calculator" className="w-full sm:w-auto inline-block bg-primary text-white hover:bg-primary-hover font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
-              Property Cost Calculator
-            </Link>
-            <a href="#connect-expert" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 text-slate-950 hover:bg-amber-600 font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
-              <i className="fas fa-user-shield"></i>
-              <span>Connect with a Verified Dubai Expert</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Lead Generation Form Section */}
-      <section id="connect-expert" className="bg-primary/5 dark:bg-primary/10 py-16 px-6 scroll-mt-20">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      {/* Broker Partner Callout Section */}
+      <section className="bg-primary/5 dark:bg-primary/10 py-12 px-6">
+        <div className="max-w-6xl mx-auto bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="text-3xl font-bold mb-6 text-slate-900 dark:text-zinc-100">Ready to Take the Next Step?</h2>
-            <p className="text-lg text-gray-700 dark:text-zinc-300 mb-6">
-              Whether you are looking for a high-yield investment, a luxury holiday home, or a Golden Visa property, our network of verified Dubai real estate experts is here to guide you.
+            <p className="text-xs font-bold uppercase tracking-wider text-[#c5a059] mb-1.5 flex items-center gap-1.5">
+              <i className="fas fa-handshake"></i>
+              <span>For Real Estate Professionals</span>
             </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
-                <span className="text-gray-700 dark:text-zinc-300">Access to exclusive off-plan launches</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
-                <span className="text-gray-700 dark:text-zinc-300">Unbiased advice across all major developers</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <i className="fas fa-check-circle text-primary mt-1 text-xl"></i>
-                <span className="text-gray-700 dark:text-zinc-300">End-to-end support including mortgage and handover</span>
-              </li>
-            </ul>
+            <h3 className="text-xl font-black text-[#0f2042] dark:text-zinc-100">
+              Are you a RERA-licensed Dubai Broker or Agency?
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-1 max-w-2xl">
+              Join our exclusive Partner Network to receive pre-qualified buyer inquiries from India, UK, and worldwide. Standard (Free) and Pro Partner (AED 199/yr) plans available.
+            </p>
           </div>
-          <div>
-            <DubaiLeadForm />
-          </div>
+          <Link 
+            href="/dubai-property/partners"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white font-black text-xs whitespace-nowrap transition shadow-md shrink-0 border border-[#c5a059]/40 hover:border-[#c5a059]"
+          >
+            <span>Partner Portal</span>
+            <i className="fas fa-arrow-right text-xs text-[#c5a059]"></i>
+          </Link>
         </div>
       </section>
 

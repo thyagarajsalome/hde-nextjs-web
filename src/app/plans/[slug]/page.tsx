@@ -216,7 +216,7 @@ export default async function HousePlanSeoPage({ params }: Props) {
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-200/60">
               🇮🇳 Modern Architectural Design
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/10 px-3 py-1 rounded-full border border-[#c5a059]/30">
               Plot: {data.dimensions}
             </span>
             <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full">
@@ -285,16 +285,16 @@ export default async function HousePlanSeoPage({ params }: Props) {
         </header>
 
         {/* Interactive Cost Estimator Strip */}
-        <section className="bg-gradient-to-br from-amber-500 via-amber-600 to-yellow-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg space-y-4">
+        <section className="bg-gradient-to-br from-[#0f2042] via-[#1a3360] to-[#0f2042] border border-[#c5a059]/30 rounded-3xl p-6 sm:p-8 text-white shadow-lg space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-black uppercase tracking-widest bg-white/20 text-white px-3 py-1 rounded-full">
+              <span className="text-xs font-black uppercase tracking-widest bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/30 px-3 py-1 rounded-full">
                 Live Calculator Integration
               </span>
               <h2 className="text-xl sm:text-2xl font-black mt-2">
                 Estimate Exact Building Cost for {data.dimensions} ({data.plotAreaSqft} sq ft)
               </h2>
-              <p className="text-xs sm:text-sm text-amber-100 max-w-2xl mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1">
                 Calculate total cement, steel (TMT), bricks, sand, and labor costs for this exact floor area using our free India Construction Estimator.
               </p>
             </div>
@@ -302,16 +302,16 @@ export default async function HousePlanSeoPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 href={`/?calc=construction&area=${data.builtUpAreaSqft}#tools`}
-                className="px-5 py-3 rounded-xl bg-white text-slate-900 font-extrabold text-xs shadow-md hover:bg-amber-50 transition no-underline flex items-center gap-2"
+                className="px-5 py-3 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-extrabold text-xs shadow-md transition no-underline flex items-center gap-2 border border-[#b38e47]/30"
               >
-                <i className="fas fa-calculator text-amber-600"></i>
+                <i className="fas fa-calculator text-[#0f2042]"></i>
                 <span>Open Construction Calculator</span>
               </Link>
               <Link
                 href="/?calc=india-emi#tools"
-                className="px-5 py-3 rounded-xl bg-black/30 hover:bg-black/40 text-white font-extrabold text-xs transition no-underline flex items-center gap-2 border border-white/20"
+                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-extrabold text-xs transition no-underline flex items-center gap-2 border border-white/20"
               >
-                <i className="fas fa-university text-amber-300"></i>
+                <i className="fas fa-university text-[#c5a059]"></i>
                 <span>Calculate Home Loan EMI</span>
               </Link>
             </div>
@@ -500,8 +500,8 @@ export default async function HousePlanSeoPage({ params }: Props) {
         )}
 
         {/* Architectural Concept & Sanction Disclaimer */}
-        <div className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-start gap-4 shadow-xs">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+        <div className="bg-[#0f2042]/5 dark:bg-[#c5a059]/5 border border-[#c5a059]/30 rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-start gap-4 shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center shrink-0 mt-0.5">
             <i className="fas fa-compass-drafting text-base"></i>
           </div>
           <div className="space-y-1.5 text-xs sm:text-sm leading-relaxed text-amber-950/90 dark:text-amber-200/90">

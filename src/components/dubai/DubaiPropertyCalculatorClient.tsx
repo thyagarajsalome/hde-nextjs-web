@@ -1,0 +1,536 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import Chart from "@/components/ui/Chart";
+import { useUser } from "@/context/UserContext";
+import { useProjectActions } from "@/hooks/useProjectActions";
+
+interface DubaiPropertyCalculatorClientProps {
+  showTitle?: boolean;
+  onConsultationClick?: () => void;
+}
+
+export default function DubaiPropertyCalculatorClient({
+  showTitle = true,
+  onConsultationClick,
+}: DubaiPropertyCalculatorClientProps) {
+  const { user, credits, hasPaid } = useUser();
+  const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("dubai-property");
+
+  const [propertyPrice, setPropertyPrice] = useState(1500000);
+  const [propertyType, setPropertyType] = useState("Apartment");
+  const [purchaseType, setPurchaseType] = useState("Ready Property");
+  const [paymentMethod, setPaymentMethod] = useState("Mortgage");
+  
+  const [downPaymentPct, setDownPaymentPct] = useState(25);
+  const [mortgageTerm, setMortgageTerm] = useState(25);
+  const [interestRate, setInterestRate] = useState(4.5);
+  
+  const [serviceChargeRate, setServiceChargeRate] = useState(15);
+  const [propertySize, setPropertySize] = useState(800);
+  const [currency, setCurrency] = useState("AED");
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({ AED: 1, USD: 0.272, INR: 22.85 });
+  const [rateUpdated, setRateUpdated] = useState<string | null>(null);
+
+  // Fetch daily cached live exchange rates from Edge API
+  useEffect(() => {
+    fetch('/api/currency')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.rates) {
+          setExchangeRates((prev) => ({
+            ...prev,
+            ...data.rates,
+          }));
+          if (data.updatedAt) {
+            setRateUpdated(data.source === 'live' ? 'Live market rates (updated daily)' : 'Indicative market rates');
+          }
+        }
+      })
+      .catch((err) => console.warn('Using local exchange rates fallback:', err));
+  }, []);
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    if (newCurrency === currency) return;
+    const oldRate = exchangeRates[currency] || 1;
+    const newRate = exchangeRates[newCurrency] || 1;
+    const multiplier = newRate / oldRate;
+
+    setPropertyPrice(Math.round(propertyPrice * multiplier));
+    setServiceChargeRate(Math.round(serviceChargeRate * multiplier * 100) / 100);
+    setCurrency(newCurrency);
+  };
+
+  // Calculations
+  const isMortgage = paymentMethod === "Mortgage";
+  const isReady = purchaseType === "Ready Property";
+
+  const rate = exchangeRates[currency] || 1;
+
+  const dldRegistrationFee = propertyPrice * 0.04;
+  const dldAdminFee = 580 * rate;
+  const agentCommission = isReady ? propertyPrice * 0.02 : 0;
+  
+  const downPayment = isMortgage ? propertyPrice * (downPaymentPct / 100) : propertyPrice;
+  const mortgageAmount = isMortgage ? propertyPrice - downPayment : 0;
+
+  const mortgageRegistrationFee = isMortgage ? mortgageAmount * 0.0025 : 0;
+  const mortgageArrangementFee = isMortgage ? mortgageAmount * 0.01 : 0;
+  const propertyValuationFee = isMortgage ? 3000 * rate : 0;
+  
+  const conveyancingFee = 4000 * rate;
+  const nocFee = isReady ? 1000 * rate : 0;
+
+  const totalOneTimeCosts = 
+    dldRegistrationFee +
+    dldAdminFee +
+    agentCommission +
+    mortgageRegistrationFee +
+    mortgageArrangementFee +
+    propertyValuationFee +
+    conveyancingFee +
+    nocFee;
+
+  const totalUpfrontCash = downPayment + totalOneTimeCosts;
+  const effectivePurchaseCost = propertyPrice + totalOneTimeCosts;
+  const annualServiceCharge = propertySize * serviceChargeRate;
+
+  // Monthly Mortgage Calculation
+  let monthlyMortgagePayment = 0;
+  if (isMortgage && mortgageAmount > 0 && interestRate > 0) {
+    const monthlyInterestRate = interestRate / 100 / 12;
+    const totalPayments = mortgageTerm * 12;
+    monthlyMortgagePayment =
+      mortgageAmount *
+      ((monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalPayments)) /
+        (Math.pow(1 + monthlyInterestRate, totalPayments) - 1));
+  }
+
+  // Format helper with Indian Crores/Lakhs support
+  const formatCurrency = (val: number, showWords = false) => {
+    if (currency === "INR") {
+      const standardINR = new Intl.NumberFormat("en-IN", { 
+        style: "currency", 
+        currency: "INR", 
+        maximumFractionDigits: 0 
+      }).format(val);
+
+      if (showWords) {
+        if (val >= 10000000) {
+          const cr = (val / 10000000).toFixed(2);
+          return `${standardINR} (~₹${cr} Cr)`;
+        } else if (val >= 100000) {
+          const lk = (val / 100000).toFixed(2);
+          return `${standardINR} (~₹${lk} Lakhs)`;
+        }
+      }
+      return standardINR;
+    }
+
+    return new Intl.NumberFormat(currency === "USD" ? "en-US" : "en-AE", { 
+      style: "currency", 
+      currency: currency, 
+      maximumFractionDigits: 0 
+    }).format(val);
+  };
+
+  // Chart data
+  const chartData = {
+    "DLD Registration (4%)": dldRegistrationFee,
+    "DLD Admin": dldAdminFee,
+    "Conveyancing": conveyancingFee,
+    ...(isReady && { "Agent Commission": agentCommission }),
+    ...(isReady && { "NOC Fee": nocFee }),
+    ...(isMortgage && {
+      "Mortgage Registration": mortgageRegistrationFee,
+      "Mortgage Arrangement": mortgageArrangementFee,
+      "Valuation Fee": propertyValuationFee,
+    })
+  };
+
+  const handleSave = () => {
+    saveProject({
+      propertyPrice,
+      propertyType,
+      purchaseType,
+      paymentMethod,
+      downPaymentPct: isMortgage ? downPaymentPct : 100,
+      mortgageTerm: isMortgage ? mortgageTerm : 0,
+      interestRate: isMortgage ? interestRate : 0,
+      propertySize,
+      serviceChargeRate,
+      currency,
+      dldRegistrationFee,
+      dldAdminFee,
+      agentCommission,
+      mortgageRegistrationFee,
+      mortgageArrangementFee,
+      propertyValuationFee,
+      conveyancingFee,
+      nocFee,
+      totalOneTimeCosts,
+      totalUpfrontCash,
+      effectivePurchaseCost,
+      annualServiceCharge,
+      monthlyMortgagePayment,
+    }, effectivePurchaseCost);
+  };
+
+  const handleDownloadPDF = () => {
+    const rows: (string | number)[][] = [
+      ["Base Property Price", `${propertyType} (${purchaseType})`, formatCurrency(propertyPrice)],
+      ["DLD Registration Fee", "4% Dubai Land Department Fee", formatCurrency(dldRegistrationFee)],
+      ["DLD Admin / Knowledge Fee", "Fixed Government Administrative Fee", formatCurrency(dldAdminFee)],
+      ["Property Registration Trustee", "Conveyancing & Trustee Office Fee", formatCurrency(conveyancingFee)],
+    ];
+
+    if (agentCommission > 0) {
+      rows.push(["Real Estate Broker Commission", "2% Agency Commission + 5% VAT", formatCurrency(agentCommission)]);
+    }
+
+    if (nocFee > 0) {
+      rows.push(["Developer NOC Fee", "No Objection Certificate for title transfer", formatCurrency(nocFee)]);
+    }
+
+    if (isMortgage) {
+      rows.push(["Mortgage Down Payment", `${downPaymentPct}% upfront equity requirement`, formatCurrency(downPayment)]);
+      rows.push(["Mortgage Registration Fee", "0.25% of loan + AED 290 Land Dept", formatCurrency(mortgageRegistrationFee)]);
+      rows.push(["Bank Loan Arrangement Fee", "1% Bank processing fee", formatCurrency(mortgageArrangementFee)]);
+      rows.push(["Property Valuation Fee", "Bank-approved surveyor valuation", formatCurrency(propertyValuationFee)]);
+    }
+
+    rows.push(["Total Upfront Cash Required", "Down payment + all acquisition closing fees", formatCurrency(totalUpfrontCash)]);
+    rows.push(["Estimated Annual Service Charge", `${propertySize} sq.ft @ ${serviceChargeRate} ${currency}/sqft/year`, formatCurrency(annualServiceCharge)]);
+
+    if (isMortgage && monthlyMortgagePayment > 0) {
+      rows.push(["Est. Monthly Mortgage Payment", `${mortgageTerm} yrs @ ${interestRate}% p.a. (P&I)`, formatCurrency(monthlyMortgagePayment)]);
+    }
+
+    const specs = [
+      `Property Type: ${propertyType} | Status: ${purchaseType}`,
+      `Payment Method: ${paymentMethod} | Unit Area: ${propertySize} sq.ft`,
+      `Currency: ${currency} | Tier: ${propertyPrice >= (currency === 'AED' ? 2000000 : 2000000 * rate) ? 'Prime Asset (AED 2M+)' : 'Standard Residential'}`,
+    ];
+
+    downloadSpreadsheetPDF(
+      `Dubai-Property-${propertyType}-${propertyPrice}`,
+      ["Cost Component", "Details & Government Regulations", `Amount (${currency})`],
+      rows,
+      "TOTAL EFFECTIVE PURCHASE COST",
+      formatCurrency(effectivePurchaseCost),
+      specs
+    );
+  };
+
+  return (
+    <div className="w-full">
+      {/* Header toolbar */}
+      <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {showTitle && (
+          <div>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+              <i className="fas fa-calculator text-primary"></i>
+              <span>Dubai Property Buying Cost Calculator</span>
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-1">
+              Estimate official DLD 4% fees, trustee charges, mortgage costs, and upfront cash required.
+            </p>
+            {rateUpdated && (
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1.5 font-medium">
+                <i className="fas fa-check-circle"></i>
+                {rateUpdated} (1 AED ≈ ₹{exchangeRates.INR} INR / ${exchangeRates.USD} USD)
+              </p>
+            )}
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-3 ml-auto">
+          {onConsultationClick ? (
+            <button
+              type="button"
+              onClick={onConsultationClick}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white text-xs font-bold shadow-xs transition border border-[#c5a059]/50 hover:border-[#c5a059] cursor-pointer"
+            >
+              <i className="fas fa-user-shield text-[#c5a059]"></i>
+              <span>Connect with Verified Expert</span>
+            </button>
+          ) : (
+            <a
+              href="#connect-expert"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white text-xs font-bold shadow-xs transition border border-[#c5a059]/50 hover:border-[#c5a059] cursor-pointer"
+            >
+              <i className="fas fa-user-shield text-[#c5a059]"></i>
+              <span>Connect with Verified Expert</span>
+            </a>
+          )}
+
+          {/* Currency Switcher */}
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Currency</span>
+            <div className="inline-flex items-center p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-inner">
+            {[
+              { code: 'AED', label: 'AED', sub: 'Dirham', flag: 'ae' },
+              { code: 'INR', label: 'INR', sub: '₹ Cr', flag: 'in' },
+              { code: 'USD', label: 'USD', sub: '$', flag: 'us' },
+            ].map((c) => {
+              const active = currency === c.code;
+              return (
+                <button
+                  key={c.code}
+                  type="button"
+                  onClick={() => handleCurrencyChange(c.code)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    active
+                      ? 'bg-white dark:bg-zinc-900 text-gray-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10 font-bold'
+                      : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-200 hover:bg-white/50'
+                  }`}
+                >
+                  <img
+                    src={`https://flagcdn.com/w20/${c.flag}.png`}
+                    width="16"
+                    height="12"
+                    alt={c.code}
+                    className="rounded-xs shadow-xs shrink-0 object-cover"
+                  />
+                  <span className="tracking-tight">{c.label}</span>
+                  <span className={`text-[10px] font-normal px-1 rounded ${active ? 'text-primary dark:text-primary' : 'text-gray-400 dark:text-zinc-500'}`}>
+                    {c.sub}
+                  </span>
+                </button>
+              );
+            })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Inputs Section */}
+        <div className="lg:col-span-5 space-y-6">
+          <Card title="Dubai Property Details">
+            <div className="space-y-4">
+              <Input
+                label={`Property Price (${currency})`}
+                type="number"
+                value={propertyPrice}
+                onChange={(e) => setPropertyPrice(Number(e.target.value))}
+                icon="fas fa-coins"
+              />
+
+              <div className="relative mb-0 group">
+                <select
+                  value={propertyType}
+                  onChange={(e) => setPropertyType(e.target.value)}
+                  className="peer w-full py-3.5 px-4 border-2 border-gray-200 dark:border-zinc-700 rounded-xl outline-none text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200"
+                >
+                  <option value="Apartment">Apartment</option>
+                  <option value="Villa">Villa</option>
+                  <option value="Townhouse">Townhouse</option>
+                  <option value="Penthouse">Penthouse</option>
+                </select>
+                <label className="absolute z-20 text-xs font-bold text-primary bg-white dark:bg-zinc-900 px-2 rounded-md -top-2.5 left-3">
+                  Property Type
+                </label>
+              </div>
+
+              <div className="relative mb-0 group">
+                <select
+                  value={purchaseType}
+                  onChange={(e) => setPurchaseType(e.target.value)}
+                  className="peer w-full py-3.5 px-4 border-2 border-gray-200 dark:border-zinc-700 rounded-xl outline-none text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200"
+                >
+                  <option value="Ready Property">Ready Property</option>
+                  <option value="Off-Plan">Off-Plan (from Developer)</option>
+                </select>
+                <label className="absolute z-20 text-xs font-bold text-primary bg-white dark:bg-zinc-900 px-2 rounded-md -top-2.5 left-3">
+                  Purchase Type
+                </label>
+              </div>
+
+              <div className="relative mb-0 group">
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="peer w-full py-3.5 px-4 border-2 border-gray-200 dark:border-zinc-700 rounded-xl outline-none text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200"
+                >
+                  <option value="Cash">Cash</option>
+                  <option value="Mortgage">Mortgage</option>
+                </select>
+                <label className="absolute z-20 text-xs font-bold text-primary bg-white dark:bg-zinc-900 px-2 rounded-md -top-2.5 left-3">
+                  Payment Method
+                </label>
+              </div>
+
+              {isMortgage && (
+                <>
+                  <Input
+                    label="Down Payment (%)"
+                    type="number"
+                    value={downPaymentPct}
+                    onChange={(e) => setDownPaymentPct(Number(e.target.value))}
+                    icon="fas fa-percent"
+                  />
+                  
+                  <div className="relative mb-0 group">
+                    <select
+                      value={mortgageTerm}
+                      onChange={(e) => setMortgageTerm(Number(e.target.value))}
+                      className="peer w-full py-3.5 px-4 border-2 border-gray-200 dark:border-zinc-700 rounded-xl outline-none text-gray-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200"
+                    >
+                      <option value="15">15 Years</option>
+                      <option value="20">20 Years</option>
+                      <option value="25">25 Years</option>
+                    </select>
+                    <label className="absolute z-20 text-xs font-bold text-primary bg-white dark:bg-zinc-900 px-2 rounded-md -top-2.5 left-3">
+                      Mortgage Term (years)
+                    </label>
+                  </div>
+
+                  <Input
+                    label="Interest Rate (%)"
+                    type="number"
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(Number(e.target.value))}
+                    icon="fas fa-chart-line"
+                  />
+                </>
+              )}
+
+              <Input
+                label="Property Size (sqft)"
+                type="number"
+                value={propertySize}
+                onChange={(e) => setPropertySize(Number(e.target.value))}
+                icon="fas fa-ruler-combined"
+              />
+              
+              <Input
+                label={`Est. Annual Service Charge (${currency}/sqft)`}
+                type="number"
+                value={serviceChargeRate}
+                onChange={(e) => setServiceChargeRate(Number(e.target.value))}
+                icon="fas fa-tools"
+              />
+
+              <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 p-3 rounded-lg flex gap-3 mt-4">
+                <i className="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                <p className="text-xs text-blue-800 dark:text-blue-300">
+                  <strong className="font-bold">Did you know?</strong> Service charges and property maintenance fees in Dubai are strictly regulated by the <strong>RERA Service Charge and Maintenance Index</strong>.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Results Section */}
+        <div className="lg:col-span-7 space-y-6">
+          <Card className="!p-6 bg-primary/5 border-primary/20">
+            <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Total Upfront Cash Required</h3>
+            <div className="text-3xl sm:text-4xl font-black text-primary">{formatCurrency(totalUpfrontCash, true)}</div>
+            <p className="text-sm text-gray-500 mt-2">
+              Includes {isMortgage ? "Down Payment" : "Property Price"} and all one-time fees.
+            </p>
+          </Card>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {isMortgage && (
+              <Card className="!p-4 bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800">
+                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Monthly Payment</h3>
+                <div className="text-2xl font-black text-blue-600 dark:text-blue-400">{formatCurrency(monthlyMortgagePayment)}</div>
+                <p className="text-xs text-gray-500 mt-1">Estimated Mortgage (P&amp;I)</p>
+              </Card>
+            )}
+            <Card className="!p-4 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-800">
+              <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Service Charge</h3>
+              <div className="text-2xl font-black text-green-600 dark:text-green-400">{formatCurrency(annualServiceCharge)}</div>
+              <p className="text-xs text-gray-500 mt-1">Estimated Annual Fee</p>
+            </Card>
+          </div>
+
+          {/* Action Card: Save & Export PDF */}
+          <div className="bg-gradient-to-r from-[#0f2042]/5 via-[#c5a059]/10 to-transparent border-2 border-[#c5a059]/40 dark:border-[#c5a059]/30 p-6 sm:p-7 rounded-2xl shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#0f2042] text-[#c5a059] border border-[#c5a059]/50 font-black text-[11px] uppercase tracking-wider whitespace-nowrap shadow-xs">
+                    HDE Report
+                  </span>
+                  <h4 className="font-extrabold text-base text-[#0f2042] dark:text-zinc-100">
+                    Save Unit &amp; Export Bank-Ready PDF
+                  </h4>
+                </div>
+                <p className="text-xs text-gray-600 dark:text-zinc-400 max-w-xl leading-relaxed">
+                  Save this unit to your private portfolio dashboard or download an itemized DLD, trustee &amp; mortgage fee statement.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3 w-full sm:w-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={handleDownloadPDF}
+                  disabled={isDownloading}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 border-2 border-[#0f2042] text-[#0f2042] dark:text-[#c5a059] dark:border-[#c5a059] font-black text-xs rounded-xl hover:bg-[#0f2042] hover:text-white dark:hover:bg-[#c5a059] dark:hover:text-[#0f2042] transition shadow-xs cursor-pointer disabled:opacity-50"
+                  title="Download Itemized PDF"
+                >
+                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                  <span>{isDownloading ? "Generating..." : "Download PDF"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black text-xs rounded-xl transition shadow-md cursor-pointer disabled:opacity-50 active:scale-95"
+                  title="Save to My Projects Dashboard"
+                >
+                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-cloud-upload-alt"}`}></i>
+                  <span>{isSaving ? "Saving..." : "Save Project"}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <Card title="Fee Breakdown">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="space-y-3">
+                  {Object.entries(chartData).map(([key, value]) => (
+                    value > 0 && (
+                      <div key={key} className="flex justify-between items-center p-2.5 bg-gray-50 dark:bg-zinc-900 rounded-lg">
+                        <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300">{key}</span>
+                        <span className="text-sm font-black text-gray-900 dark:text-zinc-100">{formatCurrency(value)}</span>
+                      </div>
+                    )
+                  ))}
+                  <div className="pt-3 border-t border-gray-200 dark:border-zinc-800 mt-3">
+                    <div className="flex justify-between items-center p-3 bg-gray-100 dark:bg-zinc-800 rounded-lg">
+                      <span className="font-bold text-gray-800 dark:text-zinc-200">Total Fees</span>
+                      <span className="font-black text-gray-900 dark:text-zinc-100">{formatCurrency(totalOneTimeCosts)}</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-primary/10 dark:bg-primary/20 rounded-lg border border-primary/20 dark:border-primary/30">
+                    <span className="font-semibold text-primary dark:text-blue-400">Effective Cost</span>
+                    <span className="font-black text-primary dark:text-blue-400">{formatCurrency(effectivePurchaseCost)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-64">
+                <Chart 
+                  data={chartData}
+                  colors={['#1e3a5f', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#f59e0b', '#fbbf24']}
+                />
+              </div>
+            </div>
+          </Card>
+          
+          <div className="text-xs text-gray-400 dark:text-zinc-500 text-center mt-6 bg-gray-50 dark:bg-zinc-900/50 p-4 rounded-lg border border-gray-100 dark:border-zinc-800">
+            <strong>Disclaimer:</strong> The figures provided by this calculator are for illustrative purposes only to give you a clear perspective on property costs. Actual values, taxes, and developer fees may fluctuate based on current market updates and government regulations. Home Design English (HDE) is an informational platform; please verify all final costs with our network of verified real estate professionals before making any financial commitments.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -90,8 +90,9 @@ const Header = () => {
             {/* UAE-only links */}
             {activeRegion.code === 'AE' && (
               <>
-                <Link href="/dubai-property" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Dubai Property</Link>
-                <Link href="/dubai-property/calculator" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Cost Calculator</Link>
+                <Link href="/dubai-property" className={`${pathname === '/dubai-property' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Dubai Property</Link>
+                <Link href="/dubai-property/calculator" className={`${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Cost Calculator</Link>
+                <Link href="/dubai-property/partners" className={`${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Partner Network</Link>
               </>
             )}
 
@@ -106,9 +107,9 @@ const Header = () => {
             {/* Pro Account Button - Always visible, region-aware */}
             <Link
               href="/upgrade"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
             >
-              <i className="fas fa-crown text-[11px] text-amber-100"></i>
+              <i className="fas fa-crown text-[11px] text-[#0f2042]"></i>
               <span>
                 {hasPaid 
                   ? "Pro Member" 
@@ -187,9 +188,9 @@ const Header = () => {
             {/* Mobile Pro button */}
             <Link 
               href="/upgrade" 
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-black bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-xs no-underline whitespace-nowrap cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-black bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-xs no-underline whitespace-nowrap cursor-pointer border border-[#b38e47]/30"
             >
-              <i className="fas fa-crown text-[10px] text-amber-100"></i>
+              <i className="fas fa-crown text-[10px] text-[#0f2042]"></i>
               <span>
                 {hasPaid 
                   ? "Pro" 
@@ -258,24 +259,24 @@ const Header = () => {
             <Link
               href="/upgrade"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-between p-3.5 mb-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 text-white shadow-sm font-bold no-underline cursor-pointer"
+              className="flex items-center justify-between p-3.5 mb-2 rounded-xl bg-gradient-to-r from-[#0f2042] via-[#1a3360] to-[#0f2042] border border-[#c5a059]/40 text-white shadow-sm font-bold no-underline cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
-                  <i className="fas fa-crown text-amber-100 text-sm"></i>
+                <div className="w-8 h-8 rounded-lg bg-[#c5a059]/20 border border-[#c5a059]/30 flex items-center justify-center shrink-0">
+                  <i className="fas fa-crown text-[#c5a059] text-sm"></i>
                 </div>
                 <div>
-                  <div className="text-sm font-black leading-tight">
+                  <div className="text-sm font-black leading-tight text-white">
                     {hasPaid ? "Pro Account Active" : "Upgrade to Pro"}
                   </div>
-                  <div className="text-[11px] text-amber-100 font-medium">
+                  <div className="text-[11px] text-slate-300 font-medium">
                     {hasPaid 
                       ? "Unlimited Cloud Saves & PDF Exports" 
                       : (activeRegion.code === 'US' ? "Only $9.99 Lifetime Access" : activeRegion.code === 'IN' ? "Only ₹199 Lifetime Access" : "Full Access & Cloud Saves")}
                   </div>
                 </div>
               </div>
-              <span className="text-xs bg-white text-amber-700 px-2.5 py-1 rounded-full font-black shrink-0">
+              <span className="text-xs bg-[#c5a059] text-[#0f2042] px-2.5 py-1 rounded-full font-black shrink-0">
                 {hasPaid ? "Active" : (activeRegion.code === 'US' ? "$9.99" : activeRegion.code === 'IN' ? "₹199" : "Go Pro")}
               </span>
             </Link>
@@ -299,11 +300,14 @@ const Header = () => {
             {/* UAE-only mobile links */}
             {activeRegion.code === 'AE' && (
               <>
-                <Link href="/dubai-property" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                <Link href="/dubai-property" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Dubai Property
                 </Link>
-                <Link href="/dubai-property/calculator" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
+                <Link href="/dubai-property/calculator" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Cost Calculator
+                </Link>
+                <Link href="/dubai-property/partners" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                  Partner Network
                 </Link>
               </>
             )}

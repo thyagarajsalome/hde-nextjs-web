@@ -454,6 +454,15 @@ ${data.checks
                 </li>
                 <li>
                   <Link
+                    href="/dubai-property/partners"
+                    className="hover:text-primary transition flex items-center justify-between text-amber-400 font-semibold"
+                  >
+                    <span>RERA Partner Network</span>
+                    <i className="fas fa-external-link-alt text-[10px]"></i>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/dubai-property/areas/dubai-marina"
                     className="hover:text-primary transition flex items-center justify-between"
                   >

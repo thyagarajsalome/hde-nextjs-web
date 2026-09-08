@@ -71,9 +71,9 @@ const INDIA_QUICK_TOOLS: QuickTool[] = [
     subtitle: "Complete BOQ & materials",
     icon: "fas fa-home",
     badge: "Most Popular",
-    color: "from-amber-500 to-amber-600",
-    textColor: "text-amber-600",
-    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+    color: "from-[#c5a059] to-[#b38e47]",
+    textColor: "text-[#0f2042] dark:text-[#c5a059]",
+    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
   },
   {
     id: "india-emi",
@@ -151,9 +151,9 @@ const INDIA_QUICK_TOOLS: QuickTool[] = [
     subtitle: "Switches, DB, points",
     icon: "fas fa-bolt",
     badge: "Pro",
-    color: "from-yellow-500 to-yellow-600",
-    textColor: "text-yellow-600",
-    bgColor: "bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200",
+    color: "from-[#c5a059] to-[#916d28]",
+    textColor: "text-[#0f2042] dark:text-[#c5a059]",
+    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
   },
   {
     id: "land-converter",
@@ -216,9 +216,9 @@ const USA_QUICK_TOOLS: QuickTool[] = [
     subtitle: "Cabinets, counters, labor",
     icon: "fas fa-utensils",
     badge: "Top ROI",
-    color: "from-amber-500 to-amber-600",
-    textColor: "text-amber-600",
-    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+    color: "from-[#c5a059] to-[#b38e47]",
+    textColor: "text-[#0f2042] dark:text-[#c5a059]",
+    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
   },
   {
     id: "usa-home-addition",
@@ -311,20 +311,31 @@ const UAE_QUICK_TOOLS: QuickTool[] = [
     icon: "fas fa-calculator",
     badge: "Essential",
     route: "/dubai-property/calculator",
-    color: "from-amber-500 to-amber-600",
-    textColor: "text-amber-600",
-    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+    color: "from-[#0f2042] to-[#1a3360]",
+    textColor: "text-[#0f2042] dark:text-[#c5a059]",
+    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
   },
   {
     id: "dubai-hub",
     name: "Investment Advisor",
-    subtitle: "Zero tax & Golden Visa rules",
+    subtitle: "Zero tax & freehold rules",
     icon: "fas fa-city",
     badge: "Advisor",
     route: "/dubai-property",
     color: "from-blue-500 to-blue-600",
     textColor: "text-blue-600",
     bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
+  {
+    id: "dubai-partners",
+    name: "RERA Partner Network",
+    subtitle: "Broker co-brokerage & leads",
+    icon: "fas fa-handshake",
+    badge: "Brokers",
+    route: "/dubai-property/partners",
+    color: "from-slate-600 to-slate-700",
+    textColor: "text-slate-700 dark:text-slate-300",
+    bgColor: "bg-slate-50 dark:bg-slate-900/30 border-slate-200",
   },
   {
     id: "dubai-areas",
@@ -794,17 +805,17 @@ export default function Dashboard() {
             {/* 3. House Plans Architectural Gallery */}
             <Link
               href="/plans"
-              className="group p-3.5 rounded-xl border border-amber-200/70 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition flex items-start gap-3 shadow-2xs"
+              className="group p-3.5 rounded-xl border border-[#c5a059]/30 dark:border-[#c5a059]/20 bg-[#c5a059]/5 dark:bg-[#c5a059]/10 hover:bg-[#c5a059]/10 dark:hover:bg-[#c5a059]/20 transition flex items-start gap-3 shadow-2xs"
             >
-              <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+              <div className="w-9 h-9 rounded-xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
                 <i className="fas fa-compass-drafting text-base"></i>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-[#0f2042] dark:group-hover:text-[#c5a059] transition">
                     House Plans Gallery
                   </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-amber-600 transition"></i>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-[#c5a059] transition"></i>
                 </div>
                 <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
                   30x40, 20x30, 30x50 architectural layouts, filters, and design ideas.

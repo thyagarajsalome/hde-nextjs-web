@@ -74,7 +74,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   return (
     <div className="w-full pt-2 pb-4">
       {/* PRO / ACCOUNT STATUS BAR */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-4 px-4 py-3 bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-transparent border border-amber-400/25 dark:border-amber-500/25 rounded-2xl shadow-xs">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-4 px-4 py-3 bg-gradient-to-r from-[#0f2042]/5 via-[#c5a059]/10 to-transparent border border-[#c5a059]/30 dark:border-[#c5a059]/25 rounded-2xl shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 text-xs text-gray-700 dark:text-zinc-300">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative shrink-0">
@@ -85,11 +85,11 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           </div>
           <span className="hidden sm:inline text-gray-300 dark:text-zinc-600">•</span>
           <div className="flex items-center gap-1.5 flex-wrap text-gray-600 dark:text-zinc-400 font-medium">
-            <span className="font-bold text-amber-700 dark:text-amber-400">Pro Benefits:</span>
-            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">💾 Cloud Saves</span>
-            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">📄 Bank &amp; Contractor PDFs</span>
-            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">🧱 7-Phase BOQ</span>
-            <span className="bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-md text-[11px] font-bold">♾️ Lifetime Access</span>
+            <span className="font-bold text-[#0f2042] dark:text-[#c5a059]">Pro Benefits:</span>
+            <span className="bg-[#c5a059]/15 dark:bg-[#c5a059]/20 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/30 px-2 py-0.5 rounded-md text-[11px] font-bold">💾 Cloud Saves</span>
+            <span className="bg-[#c5a059]/15 dark:bg-[#c5a059]/20 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/30 px-2 py-0.5 rounded-md text-[11px] font-bold">📄 Bank &amp; Contractor PDFs</span>
+            <span className="bg-[#c5a059]/15 dark:bg-[#c5a059]/20 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/30 px-2 py-0.5 rounded-md text-[11px] font-bold">🧱 7-Phase BOQ</span>
+            <span className="bg-[#c5a059]/15 dark:bg-[#c5a059]/20 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/30 px-2 py-0.5 rounded-md text-[11px] font-bold">♾️ Lifetime Access</span>
           </div>
         </div>
         <div className="flex items-center gap-2.5 w-full md:w-auto justify-end">
@@ -101,9 +101,9 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           </Link>
           <Link
             href="/upgrade"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
           >
-            <i className="fas fa-crown text-[10px] text-amber-100"></i>
+            <i className="fas fa-crown text-[10px] text-[#0f2042]"></i>
             <span>
               {hasPaid 
                 ? "Pro Account Active" 

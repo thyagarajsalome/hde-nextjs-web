@@ -24,14 +24,18 @@ export default function DisclaimerPage() {
       <h3>4. No Financial, Legal, or Investment Advice</h3>
       <p>The content and tools on this website do not constitute financial, investment, legal, or tax advice. Real estate investments involve capital risk, market fluctuation, and foreign currency volatility. Past yields or historical appreciation in Dubai or other markets do not guarantee future returns. Always seek independent advice from a certified financial planner, certified tax advisor, or RERA-licensed property consultant before committing capital.</p>
       
-      <h3>5. UAE Golden Visa Information</h3>
-      <p>Mentions of the 10-Year UAE Golden Visa for property investors purchasing properties worth AED 2,000,000 or above reflect general government announcements and are subject to immigration approval, developer payment milestones, and regulatory updates from the Federal Authority for Identity, Citizenship, Customs and Port Security (ICP).</p>
+      <h3>5. Government Regulations &amp; Statutory Updates</h3>
+      <p>UAE property regulations, statutory fees, developer escrow criteria, and foreign ownership guidelines are governed by relevant government authorities (including DLD and RERA) and are subject to periodic regulatory updates. Users are strongly advised to verify current statutory requirements directly with official government portals or licensed legal consultants.</p>
       
       <h3>6. Accuracy of Data & Currency Conversion</h3>
       <p>While we strive to keep material prices, property price ranges, and currency conversion rates updated via daily cached forex feeds, market prices fluctuate constantly. Conversion equivalents in INR, USD, and other currencies are indicative approximations.</p>
       
       <h3>7. Professional Consultation Required</h3>
       <p>You must always consult licensed architects, structural engineers, or RERA-registered real estate specialists before commencing construction, signing contracts, or transferring funds.</p>
+
+      <h3>8. Partner Network, Non-Government Affiliation &amp; Fair-Use Verification</h3>
+      <p>Home Design English (HDE) is <strong>not partnered with, endorsed by, or affiliated with the Government of Dubai, the UAE Government, the Dubai Land Department (DLD), or the Real Estate Regulatory Agency (RERA) in any manner whatsoever</strong>. HDE operates solely as an independent property technology, cost estimation, and lead-referral portal.</p>
+      <p>Our internal review team manually cross-references submitted broker license numbers (BRN) and office registration numbers (ORN) against <strong>already publicly available data</strong> published by official regulatory directories under recognized fair-use information policies. This check is conducted solely to ensure participating brokers are genuine, active industry practitioners. HDE stores <strong>verified information only</strong> in its database, and never charges government-related statutory fees.</p>
     </div>
   );
 }

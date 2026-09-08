@@ -181,13 +181,13 @@ const uaePlans = {
     originalPrice: 149,
     description: "Perfect for multi-unit property portfolio investors and relocation planners across UAE freehold areas.",
     credits: "15 Project Credits",
-    useCase: "Best for: Portfolio planning, rental yield ROI, and Golden Visa threshold evaluations.",
+    useCase: "Best for: Portfolio planning, rental yield ROI, and multi-unit acquisition budgets.",
     badge: "Most Popular",
     features: [
       "15 Permanent Cloud Project Save Credits",
       "Comprehensive DLD, Trustee & Broker Fee Takeoffs",
       "Service Charge & Gross Yield ROI Spreadsheets",
-      "Golden Visa (AED 2M+) Threshold Validation",
+      "Prime Tier (AED 2M+) Acquisition Budgeting",
       "Priority Support",
       "Everything in Starter"
     ],
@@ -337,7 +337,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "1 Free Starter Save",
         freeClass: "text-gray-400",
         pro: "Up to 100 Permanent Saves",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Client-Ready & Loan PDF Estimates",
@@ -345,7 +345,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Not Included",
         freeClass: "text-gray-400",
         pro: "✅ Professional PDF Estimates",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Detailed Trade Schedules & Takeoffs",
@@ -353,7 +353,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Basic totals only",
         freeClass: "text-gray-400",
         pro: "✅ Complete Trade Takeoffs",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Multi-Scenario Project Comparisons",
@@ -361,7 +361,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Side-by-Side Dashboard Comparison",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "1-Click Saved Estimate Re-Editing",
@@ -369,7 +369,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Unlimited Re-edits",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Ownership & Subscription Terms",
@@ -385,7 +385,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Standard",
         freeClass: "text-gray-400",
         pro: "👑 Priority VIP Support",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       }
     ]
   },
@@ -416,7 +416,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "1 Free Starter Save",
         freeClass: "text-gray-400",
         pro: "Up to 100 Permanent Saves",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Official Bank & Contractor PDF Reports",
@@ -424,7 +424,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Not Included",
         freeClass: "text-gray-400",
         pro: "✅ Official Downloadable PDFs",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Complete 7-Phase Material BOQ",
@@ -432,7 +432,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Basic totals only",
         freeClass: "text-gray-400",
         pro: "✅ Exact Quantities & Brand Schedules",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Multi-Scenario Budget Comparisons",
@@ -440,7 +440,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Side-by-Side Dashboard Comparison",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "1-Click Saved Estimate Re-Editing",
@@ -448,7 +448,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Unlimited Re-edits",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Ownership & Subscription Terms",
@@ -464,7 +464,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Standard",
         freeClass: "text-gray-400",
         pro: "👑 Priority VIP Support",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       }
     ]
   },
@@ -495,7 +495,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "1 Free Starter Save",
         freeClass: "text-gray-400",
         pro: "Up to 100 Permanent Saves",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Trustee & Bank-Ready PDF Reports",
@@ -503,7 +503,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Not Included",
         freeClass: "text-gray-400",
         pro: "✅ Official Investment Reports",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Cash vs Mortgage ROI Analysis",
@@ -511,7 +511,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Basic summary",
         freeClass: "text-gray-400",
         pro: "✅ Complete Financial Schedules",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Multi-Property Portfolio Tracking",
@@ -519,7 +519,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Side-by-Side Comparison",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "1-Click Saved Estimate Re-Editing",
@@ -527,7 +527,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "❌ Disabled",
         freeClass: "text-gray-400",
         pro: "✅ Unlimited Re-edits",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       },
       {
         title: "Ownership & Subscription Terms",
@@ -543,7 +543,7 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         free: "Standard",
         freeClass: "text-gray-400",
         pro: "👑 Priority VIP Support",
-        proClass: "text-amber-600 dark:text-amber-400 font-black"
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       }
     ]
   }
@@ -685,7 +685,7 @@ const UpgradePage = () => {
               onClick={() => setRegion('IN')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
                 region === 'IN'
-                  ? 'bg-white dark:bg-zinc-900 text-amber-600 shadow-xs'
+                  ? 'bg-white dark:bg-zinc-900 text-[#0f2042] dark:text-[#c5a059] shadow-xs'
                   : 'text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -731,8 +731,8 @@ const UpgradePage = () => {
           
           {/* Existing Customer Protection Notice */}
           {(hasPaid || planTier === 'pro') && (
-            <div className="mt-6 max-w-2xl mx-auto p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-300 text-xs flex items-center gap-3 text-left">
-              <i className="fas fa-crown text-amber-500 text-lg shrink-0"></i>
+            <div className="mt-6 max-w-2xl mx-auto p-4 rounded-2xl bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#0f2042] dark:text-[#c5a059] text-xs flex items-center gap-3 text-left">
+              <i className="fas fa-crown text-[#c5a059] text-lg shrink-0"></i>
               <div>
                 <strong>You are an active paid member ({planTier.toUpperCase()}):</strong> Your account has permanent access to your unlocked calculators. You can top up additional project credits below anytime if you need more cloud save slots.
               </div>
@@ -742,7 +742,7 @@ const UpgradePage = () => {
           {/* Pro Benefits Highlights */}
           <div className="mt-8 text-left max-w-5xl mx-auto">
             <div className="text-center mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/15 px-3 py-1 rounded-full border border-[#c5a059]/30">
                 {currentBenefits.tag}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 mt-2">
@@ -752,7 +752,7 @@ const UpgradePage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {currentBenefits.cards.map((card: any, idx: number) => (
-                <div key={idx} className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-amber-400/40 transition">
+                <div key={idx} className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs hover:border-[#c5a059]/40 transition">
                   <div className={`w-10 h-10 rounded-xl bg-${card.color}-50 dark:bg-${card.color}-950/40 text-${card.color}-600 flex items-center justify-center text-lg mb-3`}>
                     <i className={`fas ${card.icon}`}></i>
                   </div>
@@ -861,7 +861,7 @@ const UpgradePage = () => {
         {/* --- FREE VS PRO DETAILED COMPARISON TABLE --- */}
         <div id="compare" className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm scroll-mt-24">
           <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200/60">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/15 px-3 py-1 rounded-full border border-[#c5a059]/30">
               Full Feature Breakdown
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-zinc-100 mt-2.5">
@@ -878,7 +878,7 @@ const UpgradePage = () => {
                 <tr className="border-b-2 border-gray-100 dark:border-zinc-800">
                   <th className="pb-4 font-bold text-gray-400 uppercase tracking-wider text-[11px] w-2/5">Capability</th>
                   <th className="pb-4 font-bold text-gray-600 dark:text-zinc-300 text-center w-1/5">Free Visitor</th>
-                  <th className="pb-4 font-black text-amber-600 dark:text-amber-400 text-center w-2/5 bg-amber-50/50 dark:bg-amber-950/20 rounded-t-xl">
+                  <th className="pb-4 font-black text-[#0f2042] dark:text-[#c5a059] text-center w-2/5 bg-[#c5a059]/10 dark:bg-[#c5a059]/15 rounded-t-xl">
                     {currentComparison.proHeader}
                   </th>
                 </tr>
@@ -891,7 +891,7 @@ const UpgradePage = () => {
                       <p className="text-[11px] text-gray-400 font-normal">{row.desc}</p>
                     </td>
                     <td className={`py-4 text-center ${row.freeClass || 'text-gray-400'}`}>{row.free}</td>
-                    <td className={`py-4 text-center ${row.proClass || 'text-amber-600 dark:text-amber-400 font-black'} bg-amber-50/50 dark:bg-amber-950/20`}>
+                    <td className={`py-4 text-center ${row.proClass || 'text-[#0f2042] dark:text-[#c5a059] font-black'} bg-[#c5a059]/10 dark:bg-[#c5a059]/15`}>
                       {row.pro}
                     </td>
                   </tr>

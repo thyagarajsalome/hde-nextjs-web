@@ -74,7 +74,7 @@ export default function CaliforniaHubPage() {
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/15 text-amber-400 border border-amber-400/30 uppercase tracking-wider mb-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#c5a059]/15 text-[#c5a059] border border-[#c5a059]/30 uppercase tracking-wider mb-2">
                   <span>★</span> Golden State Directory
                 </span>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
@@ -87,7 +87,7 @@ export default function CaliforniaHubPage() {
 
               <div className="flex items-center gap-3 shrink-0">
                 <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 text-center">
-                  <div className="text-lg font-black text-amber-400">{CITIES.length}</div>
+                  <div className="text-lg font-black text-[#c5a059]">{CITIES.length}</div>
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">CA Cities</div>
                 </div>
                 <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 text-center">
@@ -111,7 +111,7 @@ export default function CaliforniaHubPage() {
                   <a
                     key={c.slug}
                     href={`#city-${c.slug}`}
-                    className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-800/90 text-slate-300 hover:text-white hover:bg-amber-500 hover:text-slate-950 transition-all border border-slate-700/60"
+                    className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-800/90 text-slate-300 hover:text-[#0f2042] hover:bg-[#c5a059] transition-all border border-slate-700/60"
                   >
                     {c.name}
                   </a>
@@ -162,7 +162,7 @@ export default function CaliforniaHubPage() {
                 >
                   <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 dark:border-zinc-800">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm font-bold">
+                      <div className="w-8 h-8 rounded-xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center text-sm font-bold">
                         <i className="fas fa-city"></i>
                       </div>
                       <h3 className="text-base font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
@@ -175,7 +175,7 @@ export default function CaliforniaHubPage() {
 
                     <a
                       href={`/cost/construction-in-${city.slug}`}
-                      className="text-xs font-semibold text-blue-600 dark:text-amber-400 hover:underline flex items-center gap-1"
+                      className="text-xs font-semibold text-[#0f2042] dark:text-[#c5a059] hover:underline flex items-center gap-1"
                     >
                       <span>Construction Cost</span>
                       <i className="fas fa-arrow-right text-[10px]"></i>
@@ -187,15 +187,15 @@ export default function CaliforniaHubPage() {
                       <a
                         key={tool.id}
                         href={`/real-estate/${tool.id}-in-${city.slug}`}
-                        className="group flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-zinc-800/80 bg-slate-50/70 dark:bg-zinc-800/40 hover:bg-amber-500/10 dark:hover:bg-amber-500/15 hover:border-amber-500/30 transition-all"
+                        className="group flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-zinc-800/80 bg-slate-50/70 dark:bg-zinc-800/40 hover:bg-[#c5a059]/10 dark:hover:bg-[#c5a059]/15 hover:border-[#c5a059]/30 transition-all"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <span className="text-base shrink-0">{tool.icon}</span>
-                          <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition truncate">
+                          <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 group-hover:text-[#0f2042] dark:group-hover:text-[#c5a059] transition truncate">
                             {tool.name}
                           </span>
                         </div>
-                        <i className="fas fa-chevron-right text-[10px] text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 group-hover:translate-x-0.5 transition shrink-0 ml-2"></i>
+                        <i className="fas fa-chevron-right text-[10px] text-slate-400 group-hover:text-[#c5a059] group-hover:translate-x-0.5 transition shrink-0 ml-2"></i>
                       </a>
                     ))}
                   </div>

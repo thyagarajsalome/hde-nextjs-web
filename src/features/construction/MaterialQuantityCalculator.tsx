@@ -472,8 +472,8 @@ const MaterialQuantityCalculator: React.FC = () => {
 
           {/* Freemium Teaser Card for Free / Non-Pro Users */}
           {!hasPaid && (
-            <div className="relative mt-4 rounded-2xl overflow-hidden border border-amber-200 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/80 via-white to-amber-50/50 dark:from-zinc-900 dark:via-zinc-900 dark:to-amber-950/20 p-6 md:p-8 text-center shadow-lg">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl border border-amber-500/20 shadow-inner">
+            <div className="relative mt-4 rounded-2xl overflow-hidden border border-[#c5a059]/30 dark:border-[#c5a059]/20 bg-gradient-to-br from-[#c5a059]/10 via-white to-[#c5a059]/5 dark:from-zinc-900 dark:via-zinc-900 dark:to-[#c5a059]/10 p-6 md:p-8 text-center shadow-lg">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center text-xl border border-[#c5a059]/30 shadow-inner">
                 <i className="fas fa-lock"></i>
               </div>
               <h3 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-zinc-100">
@@ -485,7 +485,7 @@ const MaterialQuantityCalculator: React.FC = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a
                   href="/upgrade"
-                  className="w-full sm:w-auto px-6 py-3.5 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-extrabold rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer no-underline"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-extrabold rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer no-underline border border-[#b38e47]/30"
                 >
                   <i className="fas fa-crown"></i>
                   <span>Upgrade to Pro — ₹999 (100 Credits)</span>

@@ -299,6 +299,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/dubai-property/partners`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
     ...DUBAI_AREAS.map(slug => ({
       url: `${BASE_URL}/dubai-property/areas/${slug}`,
       lastModified: new Date(),

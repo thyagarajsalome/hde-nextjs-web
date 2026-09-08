@@ -12,7 +12,7 @@ interface DubaiLeadFormProps {
 
 const INTEREST_OPTIONS = [
   { value: "Investment", label: "Investment & High ROI (5-9% Yield)" },
-  { value: "Golden Visa", label: "Golden Visa Property (AED 2M+ / ~$544K)" },
+  { value: "Prime Residential", label: "Prime Residential & Capital Growth (AED 2M+)" },
   { value: "Off-Plan", label: "Off-Plan / New Developer Launches" },
   { value: "Ready to Move", label: "Ready to Move-in Home" },
   { value: "Luxury Waterfront", label: "Luxury Villas & Waterfront Penthouses" },
@@ -21,7 +21,7 @@ const INTEREST_OPTIONS = [
 
 const RECOMMENDED_AREAS_BY_INTEREST: Record<string, string[]> = {
   "Investment": ["Business Bay", "Jumeirah Village Circle", "Dubai Marina", "Dubai Creek Harbour"],
-  "Golden Visa": ["Downtown Dubai", "Palm Jumeirah", "Dubai Hills Estate", "Mohammed Bin Rashid City"],
+  "Prime Residential": ["Downtown Dubai", "Palm Jumeirah", "Dubai Hills Estate", "Mohammed Bin Rashid City"],
   "Off-Plan": ["Dubai Creek Harbour", "Dubai South", "Jumeirah Village Circle", "Business Bay"],
   "Ready to Move": ["Dubai Marina", "Downtown Dubai", "Arabian Ranches", "Jumeirah Lake Towers"],
   "Luxury Waterfront": ["Palm Jumeirah", "Dubai Marina", "Jumeirah Beach Residence", "Dubai Creek Harbour"],
@@ -40,6 +40,7 @@ export default function DubaiLeadForm({
     location: initialArea || "All Dubai / Open to Recommendations",
     budget: "",
     reraConsent: false,
+    honeypot: "", // Bot trap
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -56,6 +57,61 @@ export default function DubaiLeadForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Anti-Bot Honeypot
+    if (formData.honeypot) {
+      console.warn("Spam bot trapped in Dubai lead form.");
+      setErrorMsg("Submission blocked. Please refresh.");
+      return;
+    }
+
+    // 2. Anti-Spam Rate Limiter (30s cooldown)
+    if (typeof window !== "undefined") {
+      const lastInquiry = sessionStorage.getItem("hde_lead_submit_cooldown");
+      if (lastInquiry && Date.now() - parseInt(lastInquiry, 10) < 30000) {
+        setErrorMsg("Your inquiry was recently submitted. Our team will contact you shortly.");
+        return;
+      }
+    }
+
+    // 3. Name Sanity Check
+    const trimmedName = formData.name.trim();
+    if (trimmedName.length < 2) {
+      setErrorMsg("Please enter your name.");
+      return;
+    }
+    const spamWords = ["test", "dummy", "fake", "asdf", "qwerty", "spam"];
+    if (spamWords.includes(trimmedName.toLowerCase())) {
+      setErrorMsg("Please enter an authentic name to receive property recommendations.");
+      return;
+    }
+
+    // 4. Email Validation & Disposable Domain Blocker
+    const emailLower = formData.email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailLower)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+    const disposableDomains = ["tempmail.com", "mailinator.com", "10minutemail.com", "guerrillamail.com", "throwawaymail.com", "yopmail.com", "trashmail.com"];
+    const domain = emailLower.split("@")[1];
+    if (disposableDomains.includes(domain)) {
+      setErrorMsg("Temporary or disposable email addresses are not accepted. Please provide a valid email.");
+      return;
+    }
+
+    // 5. Phone Number Sanity Check
+    const phoneDigits = formData.phone.replace(/[^0-9]/g, "");
+    if (phoneDigits.length < 7 || phoneDigits.length > 16) {
+      setErrorMsg("Please enter a valid phone number with country code (e.g. +971 50 123 4567 or +91 98...).");
+      return;
+    }
+    if (/^(\d)\1{6,}$/.test(phoneDigits)) {
+      setErrorMsg("Please enter a genuine contact number.");
+      return;
+    }
+
+    // 6. RERA Consent Check
     if (!formData.reraConsent) {
       setErrorMsg("Please agree to the RERA-certified professional contact consent to proceed.");
       return;
@@ -72,8 +128,8 @@ export default function DubaiLeadForm({
       const { error } = await supabase
         .from("dubai_leads")
         .insert([{ 
-          name: formData.name.trim(), 
-          email: formData.email.trim(), 
+          name: trimmedName, 
+          email: emailLower, 
           phone: formData.phone.trim(),
           interest: combinedInterest,
           budget: formData.budget.trim(),
@@ -82,6 +138,10 @@ export default function DubaiLeadForm({
 
       if (error) {
         throw new Error(error.message);
+      }
+
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("hde_lead_submit_cooldown", Date.now().toString());
       }
 
       setIsSuccess(true);
@@ -93,6 +153,7 @@ export default function DubaiLeadForm({
         location: initialArea || "All Dubai / Open to Recommendations",
         budget: "",
         reraConsent: false,
+        honeypot: "",
       });
     } catch {
       setErrorMsg("Something went wrong. Please try again or email us directly at hdeadmin@gmail.com.");
@@ -113,7 +174,7 @@ export default function DubaiLeadForm({
         </p>
         <button 
           onClick={() => setIsSuccess(false)}
-          className="mt-6 inline-flex items-center gap-2 text-primary dark:text-amber-400 font-semibold text-sm hover:underline"
+          className="mt-6 inline-flex items-center gap-2 text-[#0f2042] dark:text-[#c5a059] font-semibold text-sm hover:underline"
         >
           <i className="fas fa-redo text-xs"></i>
           Submit another inquiry
@@ -127,17 +188,31 @@ export default function DubaiLeadForm({
   return (
     <div className="bg-white dark:bg-zinc-950 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 p-6 md:p-8">
       <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-3">
-          <i className="fas fa-award"></i>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0f2042]/5 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/30 text-xs font-semibold mb-3">
+          <i className="fas fa-award text-[#c5a059]"></i>
           <span>Verified RERA Partner Network</span>
         </div>
         <h3 className="text-2xl font-bold text-gray-900 dark:text-zinc-100 mb-2">Connect with a Verified Dubai Expert</h3>
         <p className="text-sm text-gray-600 dark:text-zinc-400">
-          Get unbiased guidance on property ROI, Golden Visa qualification, and top communities from licensed professionals.
+          Get unbiased guidance on property ROI, capital appreciation, and top communities from licensed professionals.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Anti-Bot Honeypot */}
+        <div aria-hidden="true" className="opacity-0 absolute -z-50 pointer-events-none h-0 w-0 overflow-hidden">
+          <label htmlFor="lead_website_hp">Leave blank</label>
+          <input
+            id="lead_website_hp"
+            type="text"
+            name="honeypot"
+            value={formData.honeypot}
+            onChange={handleChange}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
+
         {/* Full Name */}
         <div>
           <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
@@ -213,7 +288,7 @@ export default function DubaiLeadForm({
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
-              <i className="fas fa-map-marker-alt text-amber-500 text-xs"></i>
+              <i className="fas fa-map-marker-alt text-[#c5a059] text-xs"></i>
               <span>Preferred Dubai Area / Location</span>
             </label>
             <span className="text-[11px] text-gray-400 dark:text-zinc-500">
@@ -244,7 +319,7 @@ export default function DubaiLeadForm({
           {recommendedAreas.length > 0 && (
             <div className="mt-2.5">
               <p className="text-[11px] font-semibold text-gray-500 dark:text-zinc-400 mb-1.5 flex items-center gap-1">
-                <i className="fas fa-sparkles text-amber-500 text-xs"></i>
+                <i className="fas fa-sparkles text-[#c5a059] text-xs"></i>
                 Popular for {formData.interest}:
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -270,7 +345,7 @@ export default function DubaiLeadForm({
         {/* Budget */}
         <div>
           <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
-            <i className="fas fa-coins text-amber-500 text-xs"></i>
+            <i className="fas fa-coins text-[#c5a059] text-xs"></i>
             <span>Estimated Budget (Optional)</span>
           </label>
           <input 
@@ -316,12 +391,12 @@ export default function DubaiLeadForm({
         <button 
           type="submit" 
           disabled={isSubmitting || !formData.reraConsent}
-          className="w-full mt-2 bg-primary hover:bg-primary-hover text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
+          className="w-full mt-2 bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base border border-[#c5a059]/40 hover:border-[#c5a059] cursor-pointer"
         >
           {isSubmitting ? (
-            <><i className="fas fa-spinner fa-spin"></i> Connecting to RERA Advisor...</>
+            <><i className="fas fa-spinner fa-spin text-[#c5a059]"></i> Connecting to RERA Advisor...</>
           ) : (
-            <><i className="fas fa-paper-plane"></i> Get Free Expert Consultation</>
+            <><i className="fas fa-paper-plane text-[#c5a059]"></i> Get Free Expert Consultation</>
           )}
         </button>
         
@@ -335,7 +410,7 @@ export default function DubaiLeadForm({
           </div>
           
           <p className="text-[11px] text-center text-gray-400 dark:text-zinc-500 max-w-sm leading-normal">
-            By submitting, you agree to our <Link href="/privacy" className="text-primary dark:text-amber-400 hover:underline">privacy policy</Link>. We never sell your data to unauthorized third parties.
+            By submitting, you agree to our <Link href="/privacy" className="text-[#0f2042] dark:text-[#c5a059] hover:underline">privacy policy</Link>. We never sell your data to unauthorized third parties.
           </p>
         </div>
       </form>

@@ -105,7 +105,7 @@ function generateFAQs(typeId: string, areaName: string, rentalYield: string, pri
     },
     {
       question: `Can foreigners buy ${typeId.replace(/-/g, ' ')} in ${areaName}?`,
-      answer: `Yes. ${areaName} is a designated freehold area where foreign nationals can buy, sell, and lease property with full ownership rights. Properties worth AED 2M+ may also qualify for a 10-year UAE Golden Visa.`
+      answer: `Yes. ${areaName} is a designated freehold area where foreign nationals can purchase, sell, and lease property with complete 100% freehold ownership rights.`
     }
   ];
   return faqs;
