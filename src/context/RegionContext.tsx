@@ -22,6 +22,28 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initRegion = async () => {
+      // 1. Check URL parameters first (e.g. redirected with ?region=US or ?calc=usa-...)
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const urlRegion = params.get('region') as Region;
+        const urlCalc = params.get('calc');
+
+        if (urlRegion === 'US' || urlRegion === 'IN' || urlRegion === 'AE') {
+          setRegionState(urlRegion);
+          localStorage.setItem('hde_region', urlRegion);
+          setIsReady(true);
+          return;
+        }
+
+        if (urlCalc) {
+          const inferred: Region = urlCalc.startsWith('usa-') ? 'US' : 'IN';
+          setRegionState(inferred);
+          localStorage.setItem('hde_region', inferred);
+          setIsReady(true);
+          return;
+        }
+      }
+
       const saved = localStorage.getItem('hde_region') as Region;
       if (saved === 'IN' || saved === 'US' || saved === 'AE') {
         setRegionState(saved);

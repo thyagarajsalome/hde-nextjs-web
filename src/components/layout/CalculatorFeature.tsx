@@ -48,7 +48,17 @@ interface CalculatorFeatureProps {
 export default function CalculatorFeature({ forceRegion, forceCalculator }: CalculatorFeatureProps = {}) {
   const { hasPaid } = useUser();
   const { region, setRegion } = useRegion();
-  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(forceCalculator || "construction");
+  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(() => {
+    if (forceCalculator) return forceCalculator;
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlCalc = params.get('calc') as CalculatorType;
+      if (urlCalc) return urlCalc;
+      const stored = localStorage.getItem('hde_active_calc') as CalculatorType;
+      if (stored) return stored;
+    }
+    return forceRegion === 'US' ? 'usa-framing' : 'construction';
+  });
 
   // Force region switch based on props (e.g. from pSEO pages)
   React.useEffect(() => {
@@ -68,26 +78,47 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
     }
   }, [forceCalculator]);
 
-  // Check URL params or localStorage for target calculator (e.g. redirected from Dashboard)
+  // Check URL params or localStorage for target calculator and auto-scroll
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlCalc = params.get('calc') as CalculatorType;
+      const urlRegion = params.get('region') as "US" | "IN" | "AE";
       const storedCalc = localStorage.getItem('hde_active_calc') as CalculatorType;
       const target = urlCalc || storedCalc;
+
+      if (urlRegion && (urlRegion === 'US' || urlRegion === 'IN' || urlRegion === 'AE')) {
+        setRegion(urlRegion);
+        localStorage.setItem('hde_region', urlRegion);
+      }
+
       if (target && !forceCalculator) {
         setActiveCalculator(target);
         if (target.startsWith('usa-')) {
           setRegion('US');
           localStorage.setItem('hde_region', 'US');
-        } else {
-          setRegion('IN');
-          localStorage.setItem('hde_region', 'IN');
+        } else if (target === 'india-emi' || !target.startsWith('usa-')) {
+          if (!urlRegion && region === 'AE') {
+            setRegion('IN');
+            localStorage.setItem('hde_region', 'IN');
+          }
         }
         localStorage.removeItem('hde_active_calc');
       }
+
+      // Smooth scroll to the calculator tools section if calc is present in URL or hash is #tools
+      if (urlCalc || window.location.hash === '#tools') {
+        const scrollToTools = () => {
+          const el = document.getElementById('tools');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        };
+        setTimeout(scrollToTools, 150);
+        setTimeout(scrollToTools, 400);
+      }
     }
-  }, [forceCalculator, setRegion]);
+  }, [forceCalculator, setRegion, region]);
 
   const renderCalculator = () => {
     switch (activeCalculator) {

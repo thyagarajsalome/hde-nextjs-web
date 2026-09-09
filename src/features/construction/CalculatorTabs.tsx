@@ -58,6 +58,15 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
     const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel', 'usa-bathroom-remodel', 'usa-home-addition', 'usa-swimming-pool', 'usa-pickleball-court', 'usa-outdoor-kitchen', 'visualizer'];
+    
+    // Do not override if URL explicitly requested this specific calculator
+    if (typeof window !== 'undefined') {
+      const urlCalc = new URLSearchParams(window.location.search).get('calc');
+      if (urlCalc && urlCalc === activeCalculator) {
+        return;
+      }
+    }
+
     if (region === 'US' && !usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('usa-framing');
     } else if (region === 'IN' && usaCalcs.includes(activeCalculator)) {

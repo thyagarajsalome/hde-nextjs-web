@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/calculators/:calc',
+        destination: '/?region=US&calc=:calc#tools',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
