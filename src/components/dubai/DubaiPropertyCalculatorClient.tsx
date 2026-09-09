@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import Chart from "@/components/ui/Chart";
@@ -526,6 +527,27 @@ export default function DubaiPropertyCalculatorClient({
             </div>
           </Card>
           
+          {/* Topical Guide Cross-Link */}
+          <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-[#0f2042] to-[#162e5c] text-white flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md border border-[#c5a059]/30">
+            <div>
+              <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-wider block mb-1">
+                Comprehensive 2026 Buying Guide
+              </span>
+              <h4 className="text-sm sm:text-base font-bold text-white">
+                Want to understand every DLD fee, trustee charge, and mortgage cost?
+              </h4>
+              <p className="text-xs text-gray-300 mt-1">
+                Read our in-depth breakdown of transfer fees, developer NOCs, and service charges across Dubai communities.
+              </p>
+            </div>
+            <Link
+              href="/blog/true-cost-of-buying-property-in-dubai-2026"
+              className="shrink-0 px-4 py-2.5 rounded-xl bg-[#c5a059] text-[#0f2042] hover:bg-[#d4b36b] font-bold text-xs transition-all shadow-xs"
+            >
+              Read Full Fee Guide →
+            </Link>
+          </div>
+
           <div className="text-xs text-gray-400 dark:text-zinc-500 text-center mt-6 bg-gray-50 dark:bg-zinc-900/50 p-4 rounded-lg border border-gray-100 dark:border-zinc-800">
             <strong>Disclaimer:</strong> The figures provided by this calculator are for illustrative purposes only to give you a clear perspective on property costs. Actual values, taxes, and developer fees may fluctuate based on current market updates and government regulations. Home Design English (HDE) is an informational platform; please verify all final costs with our network of verified real estate professionals before making any financial commitments.
           </div>
