@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:all": "vitest run && next build"
+    "check:all": "vitest run && next build",
+    "db:backup": "node scripts/backup-db.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",

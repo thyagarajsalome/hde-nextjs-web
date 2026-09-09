@@ -1,0 +1,70 @@
+﻿name: Daily Database Backup
+
+on:
+  schedule:
+    # Runs at 20:30 UTC every day (which is 02:00 AM IST - Indian Standard Time)
+    - cron: '30 20 * * *'
+  workflow_dispatch: # Allows manual 1-click trigger from GitHub Actions tab
+
+jobs:
+  backup:
+    name: Supabase PostgreSQL Backup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PostgreSQL 16 client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y wget ca-certificates gnupg
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client-16
+
+      - name: Create Database Backup Dump
+        id: dump
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$DB_URL" ]; then
+            echo "::error::SUPABASE_DB_URL secret is not set. Please add it to your GitHub Repository Secrets."
+            exit 1
+          fi
+
+          TIMESTAMP=$(date +'%Y-%m-%d_%H%M%S')
+          BACKUP_FILE="supabase_backup_${TIMESTAMP}.sql.gz"
+          
+          echo "Creating compressed database dump..."
+          # Dump all schemas, data, and sequences with clean recreate flags
+          pg_dump "$DB_URL" \
+            --clean \
+            --if-exists \
+            --no-owner \
+            --no-privileges \
+            | gzip > "$BACKUP_FILE"
+
+          FILE_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+          echo "backup_file=$BACKUP_FILE" >> $GITHUB_OUTPUT
+          echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "Successfully generated $BACKUP_FILE (Size: $FILE_SIZE)"
+
+      - name: Save Backup as Secure GitHub Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ steps.dump.outputs.timestamp }}
+          path: ${{ steps.dump.outputs.backup_file }}
+          retention-days: 60 # Retain backups in GitHub for 60 days
+          if-no-files-found: error
+
+      - name: Post Backup Summary
+        run: |
+          echo "### 🛡️ Supabase Database Backup Successful" >> $GITHUB_STEP_SUMMARY
+          echo "- **Timestamp:** ${{ steps.dump.outputs.timestamp }} (UTC)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Filename:** \`${{ steps.dump.outputs.backup_file }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Compressed File Size:** ${{ steps.dump.outputs.file_size }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Storage:** Stored in GitHub Artifacts (Retention: 60 days)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Cost:** \$0.00 (100% Free)" >> $GITHUB_STEP_SUMMARY
