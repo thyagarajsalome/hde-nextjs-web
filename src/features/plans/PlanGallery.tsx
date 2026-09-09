@@ -217,6 +217,18 @@ export const PlanGallery: React.FC = () => {
   const { showToast } = useToast();
   const navigate = useRouter();
 
+  // Track any fallback plans that the admin has deleted locally
+  const [deletedFbIds, setDeletedFbIds] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return JSON.parse(localStorage.getItem("deleted_fb_plans") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
   // Read URL params on mount if present (e.g. /plans?area=1200&facing=East)
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -271,6 +283,19 @@ export const PlanGallery: React.FC = () => {
   const handleDelete = async (plan: HousePlan) => {
     if (!window.confirm(`⚠️ Delete "${plan.title}" entirely?`)) return;
     try {
+      // If it's a fallback plan, remove it and save to deleted list
+      if (plan.id.startsWith("fb-")) {
+        setDeletedFbIds(prev => {
+          const next = [...prev, plan.id];
+          try { localStorage.setItem("deleted_fb_plans", JSON.stringify(next)); } catch (e) {}
+          return next;
+        });
+        setDbPlans(prev => prev.filter(p => p.id !== plan.id));
+        if (selectedPlan?.id === plan.id) setSelectedPlan(null);
+        showToast("Plan deleted.", "success");
+        return;
+      }
+
       const { data, error: dbError } = await supabase
         .from('house_plans')
         .delete()
@@ -281,9 +306,14 @@ export const PlanGallery: React.FC = () => {
       if (!data || data.length === 0) throw new Error("Deletion blocked by Database RLS Policy.");
 
       const getRelativePath = (url: string) => url.includes('/house-plans/') ? url.split('/house-plans/')[1].replace(/^\/+/, '') : url;
-      await supabase.storage.from('house-plans').remove([getRelativePath(plan.file_url)]);
+      try {
+        await supabase.storage.from('house-plans').remove([getRelativePath(plan.file_url)]);
+      } catch (storageErr) {
+        console.warn("Storage removal warning:", storageErr);
+      }
       
       setDbPlans(prev => prev.filter(p => p.id !== plan.id));
+      if (selectedPlan?.id === plan.id) setSelectedPlan(null);
       showToast("Plan deleted.", "success");
     } catch (err: any) { 
       showToast("Failed to delete plan: " + err.message, "error"); 
@@ -387,10 +417,13 @@ export const PlanGallery: React.FC = () => {
 
   // Combine DB plans with verified fallbacks, avoiding duplicate IDs
   const combinedPlans = useMemo(() => {
-    const dbIds = new Set(dbPlans.map(p => p.id));
-    const extraFallbacks = VERIFIED_FALLBACK_PLANS.filter(fb => !dbIds.has(fb.id));
-    return [...dbPlans, ...extraFallbacks];
-  }, [dbPlans]);
+    // If database has real plans, use ONLY the database plans to eliminate duplicate cards!
+    if (dbPlans.length > 0) {
+      return dbPlans;
+    }
+    // Only if database has 0 plans (or network fails), display fallbacks (excluding any deleted ones)
+    return VERIFIED_FALLBACK_PLANS.filter(fb => !deletedFbIds.includes(fb.id));
+  }, [dbPlans, deletedFbIds]);
 
   // Client-Side Multi-Filter Logic
   const filteredPlans = useMemo(() => {
@@ -748,8 +781,12 @@ export const PlanGallery: React.FC = () => {
                   </button>
                 )}
 
-                {role === 'admin' && !plan.id.startsWith("fb-") && (
-                  <button onClick={() => handleDelete(plan)} className="absolute top-2 right-2 z-20 bg-red-500/90 hover:bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md">
+                {role === 'admin' && (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDelete(plan); }} 
+                    className="absolute top-2 right-2 z-20 bg-red-500/90 hover:bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    title="Delete Plan"
+                  >
                     <i className="fas fa-trash-alt text-sm"></i>
                   </button>
                 )}
@@ -906,10 +943,20 @@ export const PlanGallery: React.FC = () => {
 
               <div className="flex justify-between items-center border-b border-gray-100 dark:border-zinc-800 pb-2 mb-4">
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Key Specifications</h4>
-                {role === 'admin' && !selectedPlan.id.startsWith("fb-") && (
-                  <button onClick={() => { if (isEditing) handleUpdatePlan(); else setIsEditing(true); }} disabled={isUpdating} className="text-xs font-bold bg-primary/10 text-primary px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-colors">
-                    {isUpdating ? "Saving..." : isEditing ? "Save" : "Edit"}
-                  </button>
+                {role === 'admin' && (
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => handleDelete(selectedPlan)} 
+                      className="text-xs font-bold bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+                      title="Delete Plan"
+                    >
+                      <i className="fas fa-trash-alt text-xs"></i>
+                      <span>Delete</span>
+                    </button>
+                    <button onClick={() => { if (isEditing) handleUpdatePlan(); else setIsEditing(true); }} disabled={isUpdating} className="text-xs font-bold bg-primary/10 text-primary px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                      {isUpdating ? "Saving..." : isEditing ? "Save" : "Edit"}
+                    </button>
+                  </div>
                 )}
               </div>
 
