@@ -11,6 +11,7 @@ import USAHomeAdditionCalculator from '@/features/construction/USAHomeAdditionCa
 import USASwimmingPoolCalculator from '@/features/construction/USASwimmingPoolCalculator';
 import USAPickleballCalculator from '@/features/construction/USAPickleballCalculator';
 import USAOutdoorKitchenCalculator from '@/features/construction/USAOutdoorKitchenCalculator';
+import USABathroomRemodelCalculator from '@/features/construction/USABathroomRemodelCalculator';
 
 interface PageProps {
   params: Promise<{
@@ -62,6 +63,7 @@ export async function generateStaticParams() {
     params.push({ slug: `salary-needed-to-buy-in-${loc.slug}` });
     params.push({ slug: `remodel-roi-in-${loc.slug}` });
     params.push({ slug: `kitchen-remodel-in-${loc.slug}` });
+    params.push({ slug: `bathroom-remodel-in-${loc.slug}` });
     params.push({ slug: `home-addition-in-${loc.slug}` });
     params.push({ slug: `swimming-pool-cost-in-${loc.slug}` });
     params.push({ slug: `pickleball-court-cost-in-${loc.slug}` });
@@ -74,7 +76,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -129,6 +131,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   else if (toolType === 'salary-needed-to-buy') titlePrefix = 'Salary Needed to Buy a House';
   else if (toolType === 'remodel-roi') titlePrefix = 'Remodel ROI Calculator';
   else if (toolType === 'kitchen-remodel') titlePrefix = 'Kitchen Remodel Cost Estimator';
+  else if (toolType === 'bathroom-remodel') titlePrefix = 'Bathroom Remodel Cost Estimator';
   else if (toolType === 'home-addition') titlePrefix = 'Home Addition Cost Estimator';
   else if (toolType === 'swimming-pool-cost') titlePrefix = 'Swimming Pool Cost Estimator';
   else if (toolType === 'pickleball-court-cost') titlePrefix = 'Pickleball Court Cost Estimator';
@@ -146,6 +149,7 @@ const ALL_TOOLS = [
   { id: 'salary-needed-to-buy', name: 'Salary Needed', icon: '💰' },
   { id: 'remodel-roi', name: 'Remodel ROI', icon: '📈' },
   { id: 'kitchen-remodel', name: 'Kitchen Remodel', icon: '🍳' },
+  { id: 'bathroom-remodel', name: 'Bathroom Remodel', icon: '🛁' },
   { id: 'home-addition', name: 'Home Addition', icon: '🏗️' },
   { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊' },
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },
@@ -212,6 +216,20 @@ function getSampleCalculation(toolType: string, cityName: string, stateName: str
           { label: 'Total Estimated Cost', value: '~$30,500' },
         ],
         verdict: 'A standard 10x12 kitchen remodel typically costs around $30,500 depending on materials and labor rates.'
+      };
+    case 'bathroom-remodel':
+      return {
+        description: `Cost breakdown for remodeling a standard 5x8 (40 sq. ft.) full bathroom in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Plumbing & Fixtures', value: '$3,800' },
+          { label: 'Tile & Waterproofing', value: '$3,200' },
+          { label: 'Vanity & Countertop', value: '$2,400' },
+          { label: 'Electrical & Lighting', value: '$1,300' },
+          { label: 'Demolition & Disposal', value: '$900' },
+          { label: 'Contractor Labor', value: '$4,200' },
+          { label: 'Total Estimated Cost', value: '~$15,800' },
+        ],
+        verdict: 'A standard mid-range full bathroom remodel in this area averages $14,000 to $18,500 all-in.'
       };
     case 'home-addition':
       return {
@@ -326,6 +344,9 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'kitchen-remodel') {
     toolName = 'Kitchen Remodel Cost Estimator';
     CalculatorComponent = USAKitchenRemodelCalculator;
+  } else if (toolType === 'bathroom-remodel') {
+    toolName = 'Bathroom Remodel Cost Estimator';
+    CalculatorComponent = USABathroomRemodelCalculator;
   } else if (toolType === 'home-addition') {
     toolName = 'Home Addition Cost Estimator';
     CalculatorComponent = USAHomeAdditionCalculator;
@@ -377,6 +398,15 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `Do I need a permit for a kitchen remodel in ${location.city_name}?`,
       answer: `Usually, yes. If you are moving plumbing or electrical lines, ${location.city_name} building codes require permits. Replacing cabinets or countertops generally does not require a permit.`
+    });
+  } else if (toolType === 'bathroom-remodel') {
+    faqs.push({
+      question: `How much does an average bathroom remodel cost in ${location.city_name}?`,
+      answer: `In ${location.city_name}, ${location.state_name}, a full bathroom remodel typically costs between $10,500 for a cosmetic upgrade and $28,000+ for a luxury primary bath suite. Use our calculator above to tailor the estimate for your exact dimensions.`
+    });
+    faqs.push({
+      question: `What is the typical return on investment (ROI) for a bathroom remodel in ${location.city_name}?`,
+      answer: `Homeowners in ${location.city_name} can generally recoup 60% to 75% of their bathroom remodel investment at resale, making it one of the highest-value interior upgrades alongside kitchen renovations.`
     });
   } else if (toolType === 'home-addition') {
     faqs.push({

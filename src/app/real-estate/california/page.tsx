@@ -15,6 +15,7 @@ const TOOLS = [
   { id: 'salary-needed-to-buy', name: 'Salary Needed', icon: '💰' },
   { id: 'remodel-roi', name: 'Remodel ROI', icon: '📈' },
   { id: 'kitchen-remodel', name: 'Kitchen Remodel', icon: '🍳' },
+  { id: 'bathroom-remodel', name: 'Bathroom Remodel', icon: '🛁' },
   { id: 'home-addition', name: 'Home Addition', icon: '🏗️' },
   { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊' },
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },

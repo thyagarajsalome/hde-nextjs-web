@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
+type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -32,6 +32,7 @@ const USA_CALCULATORS = [
   { id: "usa-garden-bed", name: "Garden Bed", icon: "fas fa-leaf", reqTier: 0 },
   { id: "usa-interior-design", name: "Interior Design", icon: "fas fa-couch", reqTier: 0 },
   { id: "usa-kitchen-remodel", name: "Kitchen Remodel", icon: "fas fa-utensils", reqTier: 0 },
+  { id: "usa-bathroom-remodel", name: "Bathroom Remodel", icon: "fas fa-bath", reqTier: 0 },
   { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 0 },
   { id: "usa-swimming-pool", name: "Swimming Pool", icon: "fas fa-swimming-pool", reqTier: 0 },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0 },
@@ -56,7 +57,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel', 'usa-home-addition', 'usa-swimming-pool', 'usa-pickleball-court', 'usa-outdoor-kitchen', 'visualizer'];
+    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel', 'usa-bathroom-remodel', 'usa-home-addition', 'usa-swimming-pool', 'usa-pickleball-court', 'usa-outdoor-kitchen', 'visualizer'];
     if (region === 'US' && !usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('usa-framing');
     } else if (region === 'IN' && usaCalcs.includes(activeCalculator)) {

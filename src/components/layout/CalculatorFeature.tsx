@@ -26,6 +26,7 @@ import USARemodelROICalculator from "@/features/construction/USARemodelROICalcul
 import USAInteriorDesignCalculator from "@/features/construction/USAInteriorDesignCalculator";
 import USAGardenBedCalculator from "@/features/construction/USAGardenBedCalculator";
 import USAKitchenRemodelCalculator from "@/features/construction/USAKitchenRemodelCalculator";
+import USABathroomRemodelCalculator from "@/features/construction/USABathroomRemodelCalculator";
 import USAHomeAdditionCalculator from "@/features/construction/USAHomeAdditionCalculator";
 import USASwimmingPoolCalculator from "@/features/construction/USASwimmingPoolCalculator";
 import USAPickleballCalculator from "@/features/construction/USAPickleballCalculator";
@@ -37,7 +38,7 @@ import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
+type CalculatorType = "construction" | "india-emi" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -105,6 +106,7 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
       case "usa-garden-bed": return <USAGardenBedCalculator />;
       case "usa-interior-design": return <USAInteriorDesignCalculator />;
       case "usa-kitchen-remodel": return <USAKitchenRemodelCalculator />;
+      case "usa-bathroom-remodel": return <USABathroomRemodelCalculator />;
       case "usa-home-addition": return <USAHomeAdditionCalculator />;
       case "usa-swimming-pool": return <USASwimmingPoolCalculator />;
       case "usa-pickleball-court": return <USAPickleballCalculator />;

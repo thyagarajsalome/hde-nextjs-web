@@ -35,6 +35,7 @@ const USARemodelROICalculator    = lazyWithRetry(() => import("./USARemodelROICa
 const USAInteriorDesignCalculator = lazyWithRetry(() => import("./USAInteriorDesignCalculator"));
 const USAGardenBedCalculator     = lazyWithRetry(() => import("./USAGardenBedCalculator"));
 const USAKitchenRemodelCalculator = lazyWithRetry(() => import("./USAKitchenRemodelCalculator"));
+const USABathroomRemodelCalculator = lazyWithRetry(() => import("./USABathroomRemodelCalculator"));
 const USAHomeAdditionCalculator   = lazyWithRetry(() => import("./USAHomeAdditionCalculator"));
 const USASwimmingPoolCalculator   = lazyWithRetry(() => import("./USASwimmingPoolCalculator"));
 const USAPickleballCalculator     = lazyWithRetry(() => import("./USAPickleballCalculator"));
@@ -64,6 +65,7 @@ type CalculatorType =
   | "usa-garden-bed" 
   | "usa-interior-design"
   | "usa-kitchen-remodel"
+  | "usa-bathroom-remodel"
   | "usa-home-addition"
   | "usa-swimming-pool"
   | "usa-pickleball-court"
@@ -132,6 +134,7 @@ export default function CalculatorSuite() {
       case 'usa-interior-design':
         return <USAInteriorDesignCalculator />;
       case 'usa-kitchen-remodel': return <USAKitchenRemodelCalculator />;
+      case 'usa-bathroom-remodel': return <USABathroomRemodelCalculator />;
       case 'usa-home-addition': return <USAHomeAdditionCalculator />;
       case 'usa-swimming-pool': return <USASwimmingPoolCalculator />;
       case 'usa-pickleball-court': return <USAPickleballCalculator />;

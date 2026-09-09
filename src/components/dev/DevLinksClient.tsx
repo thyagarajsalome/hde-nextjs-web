@@ -64,6 +64,7 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
       list.push({ url: `/real-estate/salary-needed-to-buy-in-${loc.slug}`, label: 'Salary Needed', region: 'usa', group: g });
       list.push({ url: `/real-estate/remodel-roi-in-${loc.slug}`, label: 'Remodel ROI', region: 'usa', group: g });
       list.push({ url: `/real-estate/kitchen-remodel-in-${loc.slug}`, label: 'Kitchen Remodel', region: 'usa', group: g });
+      list.push({ url: `/real-estate/bathroom-remodel-in-${loc.slug}`, label: 'Bathroom Remodel', region: 'usa', group: g });
       list.push({ url: `/real-estate/home-addition-in-${loc.slug}`, label: 'Home Addition', region: 'usa', group: g });
       list.push({ url: `/real-estate/swimming-pool-cost-in-${loc.slug}`, label: 'Swimming Pool', region: 'usa', group: g });
       list.push({ url: `/real-estate/pickleball-court-cost-in-${loc.slug}`, label: 'Pickleball Court', region: 'usa', group: g });

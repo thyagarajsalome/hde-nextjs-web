@@ -15,6 +15,7 @@ const TOOLS = [
   { id: 'salary-needed-to-buy', name: 'Salary Needed', icon: '💰', desc: '28/36 DTI income threshold' },
   { id: 'remodel-roi', name: 'Remodel ROI', icon: '📈', desc: 'Home equity value recovery' },
   { id: 'kitchen-remodel', name: 'Kitchen Remodel', icon: '🍳', desc: 'Cabinets, counters & labor' },
+  { id: 'bathroom-remodel', name: 'Bathroom Remodel', icon: '🛁', desc: 'Tub, tile, vanity & fixtures' },
   { id: 'home-addition', name: 'Home Addition', icon: '🏗️', desc: 'Per sq ft expansion costs' },
   { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊', desc: 'Gunite & fiberglass estimates' },
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓', desc: 'Post-tension concrete & surface' },
