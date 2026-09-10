@@ -111,13 +111,11 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           </Link>
           <Link
             href="/upgrade"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-white shadow-xs hover:shadow-md transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
           >
-            <i className="fas fa-crown text-[10px] text-[#0f2042]"></i>
+            <i className="fas fa-crown text-[10px] text-white"></i>
             <span>
-              {hasPaid 
-                ? "Pro Account Active" 
-                : (region === 'US' ? "Get Pro Account ($9.99)" : region === 'IN' ? "Get Pro Account (₹199)" : "Get Pro Account")}
+              {hasPaid ? "Pro Account Active" : "Go Pro"}
             </span>
           </Link>
         </div>

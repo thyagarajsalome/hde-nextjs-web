@@ -107,14 +107,10 @@ const Header = () => {
             {/* Pro Account Button - Always visible, region-aware */}
             <Link
               href="/upgrade"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
             >
-              <i className="fas fa-crown text-[11px] text-[#0f2042]"></i>
-              <span>
-                {hasPaid 
-                  ? "Pro Member" 
-                  : (activeRegion.code === 'US' ? "Go Pro $9.99" : activeRegion.code === 'IN' ? "Go Pro ₹199" : "Go Pro")}
-              </span>
+              <i className="fas fa-crown text-[11px] text-white"></i>
+              <span>{hasPaid ? "Pro Member" : "Go Pro"}</span>
             </Link>
 
             {user ? (
@@ -188,14 +184,10 @@ const Header = () => {
             {/* Mobile Pro button */}
             <Link 
               href="/upgrade" 
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-black bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] shadow-xs no-underline whitespace-nowrap cursor-pointer border border-[#b38e47]/30"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-black bg-[#c5a059] hover:bg-[#b38e47] text-white shadow-xs no-underline whitespace-nowrap cursor-pointer border border-[#b38e47]/30"
             >
-              <i className="fas fa-crown text-[10px] text-[#0f2042]"></i>
-              <span>
-                {hasPaid 
-                  ? "Pro" 
-                  : (activeRegion.code === 'US' ? "Pro $9.99" : activeRegion.code === 'IN' ? "Pro ₹199" : "Pro")}
-              </span>
+              <i className="fas fa-crown text-[10px] text-white"></i>
+              <span>{hasPaid ? "Pro" : "Go Pro"}</span>
             </Link>
 
             {/* Mobile region button */}
@@ -276,8 +268,8 @@ const Header = () => {
                   </div>
                 </div>
               </div>
-              <span className="text-xs bg-[#c5a059] text-[#0f2042] px-2.5 py-1 rounded-full font-black shrink-0">
-                {hasPaid ? "Active" : (activeRegion.code === 'US' ? "$9.99" : activeRegion.code === 'IN' ? "₹199" : "Go Pro")}
+              <span className="text-xs bg-[#c5a059] text-white px-2.5 py-1 rounded-full font-black shrink-0">
+                {hasPaid ? "Active" : "Go Pro"}
               </span>
             </Link>
 
