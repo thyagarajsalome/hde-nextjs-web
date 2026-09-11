@@ -41,20 +41,95 @@ When you add in property taxes, insurance, and maintenance, the unrecoverable co
 
 To give you a real-world perspective, let's look at the estimated average monthly rent versus the estimated monthly mortgage payment (including taxes and insurance) for a median-priced home in 10 major US cities in 2026.
 
-| City | Median Home Price (Est. 2026) | Avg. Monthly Rent | Avg. Monthly Mortgage (PITI)* | Difference (Buy vs. Rent) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Austin, TX** | $520,000 | $1,950 | $3,850 | +$1,900 (More expensive to buy) |
-| **Miami, FL** | $610,000 | $2,800 | $4,700 | +$1,900 (More expensive to buy) |
-| **Los Angeles, CA** | $980,000 | $3,100 | $6,900 | +$3,800 (More expensive to buy) |
-| **New York, NY** | $850,000 | $3,800 | $6,100 | +$2,300 (More expensive to buy) |
-| **Dallas, TX** | $430,000 | $1,750 | $3,200 | +$1,450 (More expensive to buy) |
-| **Chicago, IL** | $360,000 | $1,900 | $2,700 | +$800 (More expensive to buy) |
-| **Seattle, WA** | $820,000 | $2,400 | $5,800 | +$3,400 (More expensive to buy) |
-| **Denver, CO** | $610,000 | $2,100 | $4,200 | +$2,100 (More expensive to buy) |
-| **Phoenix, AZ** | $450,000 | $1,800 | $3,100 | +$1,300 (More expensive to buy) |
-| **Atlanta, GA** | $420,000 | $1,850 | $2,950 | +$1,100 (More expensive to buy) |
+<div className="overflow-x-auto my-6 border border-gray-200 dark:border-zinc-800 rounded-xl shadow-xs">
+  <table className="w-full text-left text-sm border-collapse">
+    <thead className="bg-[#0f2042] text-white">
+      <tr>
+        <th className="p-3.5 font-bold">City</th>
+        <th className="p-3.5 font-bold">Median Home Price (Est. 2026)</th>
+        <th className="p-3.5 font-bold">Avg. Monthly Rent</th>
+        <th className="p-3.5 font-bold">Avg. Monthly Mortgage (PITI)*</th>
+        <th className="p-3.5 font-bold">Difference (Buy vs. Rent)</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-gray-200 dark:divide-zinc-800 bg-white dark:bg-zinc-900 text-gray-800 dark:text-gray-200">
+      <tr className="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Austin, TX</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$520,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$1,950</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$3,850</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$1,900 (More expensive to buy)</td>
+      </tr>
+      <tr className="bg-gray-50/50 dark:bg-zinc-800/30 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Miami, FL</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$610,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$2,800</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$4,700</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$1,900 (More expensive to buy)</td>
+      </tr>
+      <tr className="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Los Angeles, CA</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$980,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$3,100</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$6,900</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-bold">+$3,800 (More expensive to buy)</td>
+      </tr>
+      <tr className="bg-gray-50/50 dark:bg-zinc-800/30 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">New York, NY</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$850,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$3,800</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$6,100</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$2,300 (More expensive to buy)</td>
+      </tr>
+      <tr className="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Dallas, TX</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$430,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$1,750</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$3,200</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$1,450 (More expensive to buy)</td>
+      </tr>
+      <tr className="bg-gray-50/50 dark:bg-zinc-800/30 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Chicago, IL</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$360,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$1,900</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$2,700</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$800 (More expensive to buy)</td>
+      </tr>
+      <tr className="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Seattle, WA</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$820,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$2,400</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$5,800</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$3,400 (More expensive to buy)</td>
+      </tr>
+      <tr className="bg-gray-50/50 dark:bg-zinc-800/30 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Denver, CO</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$610,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$2,100</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$4,200</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$2,100 (More expensive to buy)</td>
+      </tr>
+      <tr className="hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Phoenix, AZ</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$450,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$1,800</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$3,100</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$1,300 (More expensive to buy)</td>
+      </tr>
+      <tr className="bg-gray-50/50 dark:bg-zinc-800/30 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+        <td className="p-3.5 font-bold text-gray-900 dark:text-white">Atlanta, GA</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$420,000</td>
+        <td className="p-3.5 text-gray-700 dark:text-gray-300">$1,850</td>
+        <td className="p-3.5 font-semibold text-[#0f2042] dark:text-[#c5a059]">$2,950</td>
+        <td className="p-3.5 text-rose-600 dark:text-rose-400 font-semibold">+$1,100 (More expensive to buy)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-*\*Assumes a 20% down payment, 6.5% interest rate, and average local property taxes and insurance.*
+<p className="text-xs text-gray-500 italic mt-2">
+  *Assumes a 20% down payment, 6.5% interest rate, and average local property taxes and insurance.
+</p>
 
 As you can see, in almost every major metropolitan area in the United States, the monthly cash flow requirement to buy a home significantly exceeds the cost of renting an equivalent property. This is why the "rent and invest the difference" strategy has gained so much traction. If you rent in Los Angeles and invest the $3,800 monthly difference in the S&P 500, your net worth might grow faster than if you tied all your capital up in a single piece of real estate.
 
