@@ -8,6 +8,9 @@ import { supabase } from "@/config/supabaseClient";
 export const metadata: Metadata = {
   title: "Dream Home Calculator | Construction Cost Estimator",
   description: "Calculate your home construction, interior, and material costs accurately.",
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default async function HomePage() {

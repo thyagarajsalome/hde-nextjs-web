@@ -140,6 +140,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
     description: `Use our free ${titlePrefix.toLowerCase()} for ${location.city_name}, ${location.state_name} to make informed real estate decisions.`,
+    alternates: {
+      canonical: `/real-estate/${resolvedParams.slug}`,
+    },
+    openGraph: {
+      title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
+      description: `Use our free ${titlePrefix.toLowerCase()} for ${location.city_name}, ${location.state_name} to make informed real estate decisions.`,
+      url: `/real-estate/${resolvedParams.slug}`,
+      type: 'website',
+    },
   };
 }
 

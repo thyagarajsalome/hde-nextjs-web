@@ -17,6 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
       title: post.meta.title + ' | HDE',
       description: post.meta.description,
+      alternates: {
+        canonical: `/blog/${resolvedParams.slug}`,
+      },
+      openGraph: {
+        title: `${post.meta.title} | HDE`,
+        description: post.meta.description,
+        url: `/blog/${resolvedParams.slug}`,
+        type: 'article',
+      },
     };
   } catch (e) {
     return { title: 'Not Found' };

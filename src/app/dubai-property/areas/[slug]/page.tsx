@@ -17,6 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${area.name} Area Guide & Property Prices | HDE`,
     description: `Comprehensive guide to ${area.name}. Explore property prices, rental yields, amenities, and lifestyle for ${area.name}, Dubai.`,
+    alternates: {
+      canonical: `/dubai-property/areas/${slug}`,
+    },
+    openGraph: {
+      title: `${area.name} Area Guide & Property Prices | HDE`,
+      description: `Comprehensive guide to ${area.name}. Explore property prices, rental yields, amenities, and lifestyle for ${area.name}, Dubai.`,
+      url: `/dubai-property/areas/${slug}`,
+      type: 'website',
+    },
   };
 }
 

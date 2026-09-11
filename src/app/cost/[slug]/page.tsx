@@ -215,10 +215,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
+    alternates: {
+      canonical: `/cost/${resolvedParams.slug}`,
+    },
     openGraph: {
       title: `${title} | HDE`,
       description,
       type: "website",
+      url: `/cost/${resolvedParams.slug}`,
     }
   };
 }

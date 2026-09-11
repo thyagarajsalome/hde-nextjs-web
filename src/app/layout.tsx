@@ -10,9 +10,6 @@ export const metadata: Metadata = {
   title: 'HDE - Dream Home Construction & Interior Cost Calculator',
   description: 'Calculate your dream home construction, materials BOQ, interior design, flooring, and MEP utility costs accurately.',
   metadataBase: new URL('https://www.homedesignenglish.com'),
-  alternates: {
-    canonical: '/',
-  },
   verification: {
     google: 'j0tDFreq7BZOn79uEWGW5K_70WrkdIr8GCnJRcC57MA',
   },

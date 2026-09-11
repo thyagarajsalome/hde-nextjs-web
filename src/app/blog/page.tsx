@@ -6,6 +6,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Construction & Home Design Blog | HDE',
   description: 'Expert advice on construction costs, interior design, and home planning in India.',
+  alternates: {
+    canonical: '/blog',
+  },
 };
 
 export default function BlogIndex() {

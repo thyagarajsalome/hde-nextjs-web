@@ -4,6 +4,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Contact Us | Home Design English',
   description: 'Get in touch with the Home Design English team.',
+  alternates: {
+    canonical: '/contact',
+  },
 };
 
 export default function ContactPage() {

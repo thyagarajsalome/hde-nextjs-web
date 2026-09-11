@@ -4,6 +4,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service | Home Design English',
   description: 'Terms and conditions of using our services.',
+  alternates: {
+    canonical: '/terms',
+  },
 };
 
 export default function TermsPage() {
