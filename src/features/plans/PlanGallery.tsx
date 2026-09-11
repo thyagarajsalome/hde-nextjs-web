@@ -772,48 +772,77 @@ export const PlanGallery: React.FC = () => {
           {filteredPlans.map((plan) => {
             const videoId = getYouTubeID(plan.youtube_url || "");
             return (
-              <div key={plan.id} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 border border-gray-100 dark:border-zinc-800 overflow-hidden flex flex-col relative transition-all duration-300">
-                {videoId && (
-                 <button 
-                    onClick={(e) => { e.stopPropagation(); setActiveVideo(videoId); }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all"
-                    title="Watch Video Tour"
-                  >
-                    <i className="fas fa-play text-[10px] ml-0.5"></i>
-                  </button>
-                )}
-
+              <div key={plan.id} className="group bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 border border-gray-150/80 dark:border-zinc-800 overflow-hidden flex flex-col relative transition-all duration-300">
+                {/* Admin Delete Action */}
                 {role === 'admin' && (
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDelete(plan); }} 
-                    className="absolute top-2 right-2 z-20 bg-red-500/90 hover:bg-red-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    className="absolute top-2.5 right-2.5 z-20 bg-red-600/90 hover:bg-red-700 text-white w-7 h-7 rounded-lg flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
                     title="Delete Plan"
                   >
-                    <i className="fas fa-trash-alt text-sm"></i>
+                    <i className="fas fa-trash-alt text-xs"></i>
                   </button>
                 )}
 
-                <HoverZoomImage src={getImageUrl(plan.file_url)} alt={plan.title} onClick={() => handleDownload(plan)} isLocked={isLockedForUser} />
+                {/* Card Image Container */}
+                <div className="relative overflow-hidden">
+                  <HoverZoomImage src={getImageUrl(plan.file_url)} alt={plan.title} onClick={() => handleDownload(plan)} isLocked={isLockedForUser} />
+
+                  {/* 3D Tour Pill Badge (Placed cleanly in bottom-right corner instead of blocking the center) */}
+                  {videoId && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setActiveVideo(videoId); }}
+                      className="absolute bottom-2.5 right-2.5 z-20 bg-slate-950/85 hover:bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 backdrop-blur-md border border-white/20 shadow-lg hover:scale-105 active:scale-95 transition-all"
+                      title="Watch Architectural Video Tour"
+                    >
+                      <i className="fas fa-play text-[8px] text-red-400 group-hover/btn:text-white"></i>
+                      <span>Tour</span>
+                    </button>
+                  )}
+
+                  {/* Top-Left Quick Area Pill */}
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <span className="bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-xs">
+                      {plan.dimensions || `${plan.area_sqft} sqft`}
+                    </span>
+                  </div>
+                </div>
                 
-                <div className="p-4 flex flex-col gap-3 bg-white dark:bg-zinc-900 flex-grow">
+                {/* Card Body */}
+                <div className="p-3.5 sm:p-4 flex flex-col gap-3 bg-white dark:bg-zinc-900 flex-grow">
+                  {/* Plan Title & Facing */}
                   <div>
-                    <h3 className="font-bold text-slate-800 dark:text-zinc-100 text-sm truncate mb-2" title={plan.title}>{plan.title}</h3>
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-gray-500 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-800 px-2.5 py-1 rounded-md border border-gray-200 dark:border-zinc-700">{plan.dimensions || `${plan.area_sqft} sqft`}</span>
-                      <span className="text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20">{plan.facing} Facing</span>
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="text-[10px] font-bold text-[#c5a059] bg-[#c5a059]/10 px-2 py-0.5 rounded-full border border-[#c5a059]/25 flex items-center gap-1">
+                        <i className="fas fa-compass text-[9px]"></i>
+                        <span>{plan.facing} Facing</span>
+                      </span>
+                      <span className="text-[10px] text-gray-400 font-semibold">
+                        ~{plan.area_sqft} sqft
+                      </span>
                     </div>
+                    <h3 
+                      onClick={() => setSelectedPlan(plan)}
+                      className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm line-clamp-1 group-hover:text-[#0f2042] dark:group-hover:text-[#c5a059] cursor-pointer transition-colors" 
+                      title={plan.title}
+                    >
+                      {plan.title}
+                    </h3>
                   </div>
 
-                  <div className="flex flex-col gap-1.5 text-[10px] text-gray-500 dark:text-zinc-400 border-t border-gray-100 dark:border-zinc-800 pt-3 px-1">
-                    <div className="flex justify-between items-center">
-                      <span title="Bedrooms" className="flex items-center gap-1"><i className="fas fa-bed text-gray-400"></i>{plan.bedrooms} BHK</span>
-                      <span title="Bathrooms" className="flex items-center gap-1"><i className="fas fa-bath text-gray-400"></i>{plan.bathrooms} Bath</span>
-                      <span title="Living Hall" className="flex items-center gap-1"><i className="fas fa-couch text-gray-400"></i>{plan.living_hall_info || '1 Hall'}</span>
+                  {/* Architectural Specs Chips */}
+                  <div className="grid grid-cols-3 gap-1.5 text-center text-[10px] font-bold text-slate-700 dark:text-zinc-300 bg-slate-50/70 dark:bg-zinc-800/60 p-2 rounded-xl border border-gray-150/70 dark:border-zinc-700/60">
+                    <div className="flex items-center justify-center gap-1">
+                      <i className="fas fa-bed text-[#c5a059]"></i>
+                      <span>{plan.bedrooms} BHK</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span title="Kitchen" className="flex items-center gap-1"><i className="fas fa-kitchen-set text-gray-400"></i>{plan.kitchen_info || '1 Kitchen'}</span>
-                      <span title="Floors" className="flex items-center gap-1"><i className="fas fa-layer-group text-gray-400"></i>{plan.floors}</span>
-                      <span title="Car Parking" className="flex items-center gap-1"><i className="fas fa-car text-gray-400"></i>{plan.parking?.split(' ')[0] || '1 Car'}</span>
+                    <div className="flex items-center justify-center gap-1 border-x border-gray-200 dark:border-zinc-700">
+                      <i className="fas fa-bath text-[#c5a059]"></i>
+                      <span>{plan.bathrooms} Bath</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1 truncate" title={plan.floors || 'G+1'}>
+                      <i className="fas fa-layer-group text-[#c5a059]"></i>
+                      <span className="truncate">{plan.floors || 'G+1'}</span>
                     </div>
                   </div>
 
@@ -821,40 +850,50 @@ export const PlanGallery: React.FC = () => {
                   {(() => {
                     const est = getHousePlanEstimate(plan.area_sqft, plan.floors, plan.dimensions);
                     return (
-                      <div className="bg-slate-50 dark:bg-zinc-800/60 border border-slate-200/80 dark:border-zinc-700/70 rounded-xl px-2.5 py-2 flex items-center justify-between gap-2 shadow-2xs">
+                      <div className="bg-amber-50/40 hover:bg-amber-50/70 dark:bg-zinc-800/50 dark:hover:bg-zinc-800/80 border border-amber-200/60 dark:border-amber-900/40 rounded-xl p-2.5 flex items-center justify-between gap-2 transition-colors">
                         <div className="min-w-0">
-                          <span className="text-[9px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block truncate">
+                          <span className="text-[9px] font-bold text-gray-400 dark:text-zinc-400 uppercase tracking-wider block truncate">
                             Est. Construction
                           </span>
-                          <span className="text-xs font-black text-slate-900 dark:text-zinc-100 tracking-tight">
+                          <span className="text-xs font-black text-[#0f2042] dark:text-amber-300 tracking-tight">
                             ₹{est.minLakhs} – ₹{est.maxLakhs} L
                           </span>
                         </div>
                         <a
                           href={`/?calc=construction&area=${est.builtUpAreaSqft}#tools`}
-                          title={`Estimate custom construction cost for ${est.builtUpAreaSqft} sqft built-up area`}
-                          className="px-2.5 py-1 bg-white hover:bg-slate-100 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-slate-800 dark:text-zinc-100 border border-slate-300 dark:border-zinc-600 rounded-lg text-[10px] font-bold flex items-center gap-1 transition shadow-2xs shrink-0 no-underline"
+                          title={`Open construction calculator with ${est.builtUpAreaSqft} sqft`}
+                          className="px-2.5 py-1.5 bg-white hover:bg-amber-100/60 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-[#0f2042] dark:text-zinc-100 border border-amber-200/80 dark:border-zinc-600 rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition shadow-2xs shrink-0 no-underline"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <i className="fas fa-calculator text-[9px] text-gray-500 dark:text-zinc-400"></i>
+                          <i className="fas fa-calculator text-[9px] text-[#c5a059]"></i>
                           <span>Calc</span>
                         </a>
                       </div>
                     );
                   })()}
                   
-                  <div className="grid grid-cols-2 gap-2 mt-auto pt-2">
-                    <button onClick={() => setSelectedPlan(plan)} className="w-full py-2 text-xs font-bold rounded-xl border border-gray-200 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors">
-                      <i className="fas fa-eye mr-1"></i> Specs
+                  {/* Action Buttons: Soft, elegant, high legibility */}
+                  <div className="grid grid-cols-2 gap-2 mt-auto pt-1">
+                    <button 
+                      onClick={() => setSelectedPlan(plan)} 
+                      className="w-full py-2 text-xs font-bold rounded-xl bg-white hover:bg-slate-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 border border-gray-200 dark:border-zinc-700 transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                    >
+                      <i className="fas fa-eye text-[10px] text-slate-400 dark:text-zinc-400"></i>
+                      <span>Details</span>
                     </button>
                     {downloadingId === plan.id ? (
-                      <div className="w-full flex items-center bg-gray-100 dark:bg-zinc-800 rounded-xl px-2"><div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-1.5"><div className="bg-primary h-1.5 rounded-full" style={{ width: `${downloadProgress}%` }}></div></div></div>
+                      <div className="w-full flex items-center bg-gray-100 dark:bg-zinc-800 rounded-xl px-2"><div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-1.5"><div className="bg-[#c5a059] h-1.5 rounded-full" style={{ width: `${downloadProgress}%` }}></div></div></div>
                     ) : (
                       <button 
                         onClick={() => handleDownload(plan)}
-                        className={`w-full py-2 text-xs font-bold rounded-xl shadow-sm transition-colors ${!isLockedForUser ? "bg-primary text-white dark:text-zinc-950 hover:bg-primary-hover" : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:bg-gray-200 dark:hover:bg-zinc-700"}`}
+                        className={`w-full py-2 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs ${
+                          !isLockedForUser 
+                            ? "bg-amber-50 hover:bg-amber-100/80 text-[#8c6b2d] border border-amber-200/80 dark:bg-amber-950/30 dark:hover:bg-amber-950/50 dark:text-amber-300 dark:border-amber-900/50" 
+                            : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:border-zinc-700"
+                        }`}
                       >
-                        <i className={`mr-1 ${!isLockedForUser ? "fas fa-download" : "fas fa-lock"}`}></i> {!isLockedForUser ? "DL" : "Pro"}
+                        <i className={`text-[10px] ${!isLockedForUser ? "fas fa-file-pdf text-[#c5a059]" : "fas fa-lock text-slate-400 dark:text-zinc-400"}`}></i>
+                        <span>{!isLockedForUser ? "Get PDF" : "Pro Plan"}</span>
                       </button>
                     )}
                   </div>
@@ -1089,14 +1128,14 @@ export const PlanGallery: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
                       <a
                         href={`/?calc=construction&area=${modalEst.builtUpAreaSqft}#tools`}
-                        className="py-2.5 px-3 rounded-xl bg-[#0f2042] hover:bg-[#1a3466] text-white font-bold text-center transition flex items-center justify-center gap-1.5 no-underline shadow-xs"
+                        className="py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 text-[#8c6b2d] dark:bg-amber-950/30 dark:hover:bg-amber-950/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-900/50 font-bold text-center transition flex items-center justify-center gap-1.5 no-underline shadow-2xs"
                       >
                         <i className="fas fa-hammer text-[#c5a059]"></i>
                         <span>Custom Construction Calc</span>
                       </a>
                       <a
                         href={`/?calc=india-emi&amount=${Math.round(modalEst.standardCost * 0.8)}#tools`}
-                        className="py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-[#0f2042] dark:text-zinc-200 font-bold text-center transition flex items-center justify-center gap-1.5 no-underline border border-gray-300 dark:border-zinc-700 shadow-2xs"
+                        className="py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 font-bold text-center transition flex items-center justify-center gap-1.5 no-underline border border-gray-200 dark:border-zinc-700 shadow-2xs"
                       >
                         <i className="fas fa-percent text-[#c5a059]"></i>
                         <span>Check Loan EMI</span>
