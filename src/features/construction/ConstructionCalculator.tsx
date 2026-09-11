@@ -2,6 +2,7 @@
 // src/features/construction/ConstructionCalculator.tsx
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { useUser } from "../../context/UserContext";
@@ -129,7 +130,17 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
     const state = location.state as { projectData?: any } | null;
     const data  = projectData || state?.projectData;
 
-    if (data) {
+    // Check if area is passed via URL query parameters (e.g. /?calc=construction&area=1800)
+    let urlArea: string | null = null;
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlArea = urlParams.get("area");
+    }
+
+    if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
+      setArea(urlArea);
+      setWizardStep(3);
+    } else if (data) {
       if (data.area)               setArea(String(data.area));
       if (data.parkingArea)        setParkingArea(String(data.parkingArea));
       if (data.compoundWallLength) setCompoundWallLength(String(data.compoundWallLength));
@@ -145,6 +156,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
     } else {
       // If not editing an existing project, attempt to load draft
       getAutosaveDraft().then((draft) => {
+        if (urlArea) return; // Don't override explicit query param
         if (draft && draft.data) {
           const d = draft.data;
           if (d.area)                  setArea(String(d.area));
@@ -896,6 +908,89 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 <Chart data={breakdownData} colors={CHART_COLORS} />
               </div>
             </Card>
+
+            {/* Matching Floor Plans & Blueprints Cross-Link */}
+            {parsedArea > 0 && (
+              <div className="bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700/80 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-xl bg-slate-200/80 dark:bg-zinc-700 text-slate-700 dark:text-zinc-300 flex items-center justify-center text-sm shrink-0">
+                      <i className="fas fa-drafting-compass"></i>
+                    </span>
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-zinc-100">
+                        Matching Floor Plans for {parsedArea.toLocaleString('en-IN')} sq.ft
+                      </h4>
+                      <p className="text-[11px] text-gray-500 dark:text-zinc-400">
+                        Explore verified 2D floor designs &amp; blueprints tailored for this space.
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/plans"
+                    className="text-[11px] font-bold text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition hidden sm:inline-flex items-center gap-1 shrink-0"
+                  >
+                    <span>Browse 100+ Plans</span>
+                    <i className="fas fa-arrow-right text-[9px]"></i>
+                  </Link>
+                </div>
+
+                {(() => {
+                  let recSlug = "30x40-house-plans";
+                  let recTitle = "30×40 (1,200 sq.ft) 2 & 3 BHK Duplex Floor Designs";
+                  let recDim = "30x40";
+
+                  if (parsedArea <= 750) {
+                    recSlug = "20x30-house-plans";
+                    recTitle = "20×30 (600 sq.ft) 1 & 2 BHK Compact Urban Plans";
+                    recDim = "20x30";
+                  } else if (parsedArea <= 1000) {
+                    recSlug = "20x40-house-plans";
+                    recTitle = "20×40 (800 sq.ft) & 20×50 Linear Floor Plans";
+                    recDim = "20x40";
+                  } else if (parsedArea <= 1400) {
+                    recSlug = "30x40-house-plans";
+                    recTitle = "30×40 (1,200 sq.ft) 2 & 3 BHK Duplex Floor Designs";
+                    recDim = "30x40";
+                  } else if (parsedArea <= 1900) {
+                    recSlug = "30x50-house-plans";
+                    recTitle = "30×50 (1,500 sq.ft) 3 & 4 BHK Luxury Duplex Plans";
+                    recDim = "30x50";
+                  } else {
+                    recSlug = "40x60-house-plans";
+                    recTitle = "40×60 (2,400 sq.ft) Luxury Villa & Bungalow Blueprints";
+                    recDim = "40x60";
+                  }
+
+                  return (
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-zinc-900 rounded-xl p-3 border border-slate-200/80 dark:border-zinc-700 text-xs">
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide">
+                          Recommended Blueprint: {recDim}
+                        </span>
+                        <p className="font-bold text-slate-900 dark:text-zinc-100">
+                          {recTitle}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Link
+                          href={`/plans/${recSlug}`}
+                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-200 border border-slate-300 dark:border-zinc-600 font-bold text-[11px] transition text-center shadow-2xs"
+                        >
+                          Specs &amp; Bylaws →
+                        </Link>
+                        <Link
+                          href="/plans"
+                          className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white font-bold text-[11px] transition text-center shadow-xs"
+                        >
+                          View Blueprints
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
 
             <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 text-[11px] text-zinc-600 dark:text-zinc-400 leading-relaxed shadow-sm select-none">
               <i className="fas fa-info-circle mr-1 text-primary"></i>

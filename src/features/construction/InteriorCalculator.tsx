@@ -62,9 +62,15 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
       }
     } else {
       if (typeof window !== "undefined") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlArea = urlParams.get("area");
         const sharedArea = window.localStorage.getItem("hde_shared_area");
         const sharedQuality = window.localStorage.getItem("hde_shared_quality");
-        if (sharedArea) setArea(sharedArea);
+        if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
+          setArea(urlArea);
+        } else if (sharedArea) {
+          setArea(sharedArea);
+        }
         if (sharedQuality) {
           if (sharedQuality in QUALITY_RATES) {
             setQuality(sharedQuality as any);

@@ -2,11 +2,13 @@
 // src/features/plans/PlanGallery.tsx
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "../../config/supabaseClient";
 import { useUser } from "../../context/UserContext";
 import { useToast } from "../../context/ToastContext";
 import { Button } from "../../components/ui/Button";
 import { PlanUploader } from "./PlanUploader";
+import { getHousePlanEstimate, getHousePlanTradeBreakdown } from "../../utils/calculatorEngines";
 
 const PLANS_PER_PAGE = 24;
 
@@ -655,17 +657,6 @@ export const PlanGallery: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setSpecificFilter("1200", "all", "30x40")}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "1200" && facingFilter === "all"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              📐 30×40 (1200 sqft)
-            </button>
-
-            <button
               onClick={() => setSpecificFilter("600", "all", "20x30")}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
                 areaFilter === "600"
@@ -674,6 +665,17 @@ export const PlanGallery: React.FC = () => {
               }`}
             >
               📐 20×30 (600 sqft)
+            </button>
+
+            <button
+              onClick={() => setSpecificFilter("1200", "all", "30x40")}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
+                areaFilter === "1200" && facingFilter === "all"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+              }`}
+            >
+              📐 30×40 (1200 sqft)
             </button>
 
             <button
@@ -814,6 +816,32 @@ export const PlanGallery: React.FC = () => {
                       <span title="Car Parking" className="flex items-center gap-1"><i className="fas fa-car text-gray-400"></i>{plan.parking?.split(' ')[0] || '1 Car'}</span>
                     </div>
                   </div>
+
+                  {/* Estimated Construction Budget & Live Calculator Connection */}
+                  {(() => {
+                    const est = getHousePlanEstimate(plan.area_sqft, plan.floors, plan.dimensions);
+                    return (
+                      <div className="bg-slate-50 dark:bg-zinc-800/60 border border-slate-200/80 dark:border-zinc-700/70 rounded-xl px-2.5 py-2 flex items-center justify-between gap-2 shadow-2xs">
+                        <div className="min-w-0">
+                          <span className="text-[9px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block truncate">
+                            Est. Construction
+                          </span>
+                          <span className="text-xs font-black text-slate-900 dark:text-zinc-100 tracking-tight">
+                            ₹{est.minLakhs} – ₹{est.maxLakhs} L
+                          </span>
+                        </div>
+                        <a
+                          href={`/?calc=construction&area=${est.builtUpAreaSqft}#tools`}
+                          title={`Estimate custom construction cost for ${est.builtUpAreaSqft} sqft built-up area`}
+                          className="px-2.5 py-1 bg-white hover:bg-slate-100 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-slate-800 dark:text-zinc-100 border border-slate-300 dark:border-zinc-600 rounded-lg text-[10px] font-bold flex items-center gap-1 transition shadow-2xs shrink-0 no-underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <i className="fas fa-calculator text-[9px] text-gray-500 dark:text-zinc-400"></i>
+                          <span>Calc</span>
+                        </a>
+                      </div>
+                    );
+                  })()}
                   
                   <div className="grid grid-cols-2 gap-2 mt-auto pt-2">
                     <button onClick={() => setSelectedPlan(plan)} className="w-full py-2 text-xs font-bold rounded-xl border border-gray-200 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors">
@@ -1004,6 +1032,175 @@ export const PlanGallery: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Estimated Construction Budget & Home Loan Section */}
+              {!isEditing && (() => {
+                const modalEst = getHousePlanEstimate(selectedPlan.area_sqft, selectedPlan.floors, selectedPlan.dimensions);
+                return (
+                  <div className="bg-white dark:bg-zinc-900 border border-amber-200/60 dark:border-amber-900/30 rounded-2xl p-4 sm:p-5 mb-6 text-slate-800 dark:text-zinc-100 shadow-sm">
+                    {/* Header */}
+                    <div className="flex items-center justify-between gap-2 border-b border-gray-100 dark:border-zinc-800 pb-3 mb-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-8 h-8 rounded-xl bg-[#0f2042]/5 dark:bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center text-xs font-bold border border-[#0f2042]/10 dark:border-[#c5a059]/20">
+                          <i className="fas fa-calculator"></i>
+                        </span>
+                        <div>
+                          <h4 className="text-xs font-black uppercase tracking-wider text-[#0f2042] dark:text-zinc-100">
+                            Estimated Construction Budget
+                          </h4>
+                          <span className="text-[10px] text-gray-500 dark:text-zinc-400">
+                            Built-up: ~{modalEst.builtUpAreaSqft.toLocaleString('en-IN')} sq ft ({selectedPlan.floors || 'G+1'})
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-black text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/10 dark:bg-[#c5a059]/15 px-3 py-1 rounded-full border border-[#c5a059]/30 shrink-0">
+                        ₹{modalEst.minLakhs} – ₹{modalEst.maxLakhs} L
+                      </span>
+                    </div>
+
+                    {/* 3 Quality Tiers Grid */}
+                    <div className="grid grid-cols-3 gap-2 text-center mb-3.5">
+                      <div className="bg-slate-50/70 dark:bg-zinc-800/60 rounded-xl p-2.5 border border-gray-200/80 dark:border-zinc-700/80">
+                        <span className="text-[10px] text-gray-500 dark:text-zinc-400 font-semibold block mb-0.5">Basic (₹1,650)</span>
+                        <strong className="text-xs font-black text-slate-700 dark:text-zinc-200">₹{(modalEst.basicCost / 100000).toFixed(1)} L</strong>
+                      </div>
+                      <div className="bg-amber-50/50 dark:bg-amber-950/20 rounded-xl p-2.5 border-2 border-[#c5a059] shadow-2xs relative">
+                        <span className="text-[10px] text-[#0f2042] dark:text-amber-200 font-bold block mb-0.5">Standard (₹2,200)</span>
+                        <strong className="text-xs font-black text-[#0f2042] dark:text-white">₹{(modalEst.standardCost / 100000).toFixed(1)} L</strong>
+                      </div>
+                      <div className="bg-slate-50/70 dark:bg-zinc-800/60 rounded-xl p-2.5 border border-gray-200/80 dark:border-zinc-700/80">
+                        <span className="text-[10px] text-gray-500 dark:text-zinc-400 font-semibold block mb-0.5">Premium (₹3,000)</span>
+                        <strong className="text-xs font-black text-slate-700 dark:text-zinc-200">₹{(modalEst.premiumCost / 100000).toFixed(1)} L</strong>
+                      </div>
+                    </div>
+
+                    {/* Estimated Loan EMI */}
+                    <div className="bg-slate-50/70 dark:bg-zinc-800/60 rounded-xl px-3.5 py-2.5 flex items-center justify-between text-[11px] mb-3.5 border border-gray-200/80 dark:border-zinc-700/80">
+                      <span className="text-gray-600 dark:text-zinc-400 flex items-center gap-1.5 font-medium">
+                        <i className="fas fa-university text-[#c5a059]"></i>
+                        <span>Est. Home Loan EMI (80% loan, 20 yrs):</span>
+                      </span>
+                      <span className="font-black text-[#0f2042] dark:text-[#c5a059]">
+                        ₹{modalEst.monthlyEmi.toLocaleString('en-IN')}/mo
+                      </span>
+                    </div>
+
+                    {/* Quick Action Links */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                      <a
+                        href={`/?calc=construction&area=${modalEst.builtUpAreaSqft}#tools`}
+                        className="py-2.5 px-3 rounded-xl bg-[#0f2042] hover:bg-[#1a3466] text-white font-bold text-center transition flex items-center justify-center gap-1.5 no-underline shadow-xs"
+                      >
+                        <i className="fas fa-hammer text-[#c5a059]"></i>
+                        <span>Custom Construction Calc</span>
+                      </a>
+                      <a
+                        href={`/?calc=india-emi&amount=${Math.round(modalEst.standardCost * 0.8)}#tools`}
+                        className="py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-[#0f2042] dark:text-zinc-200 font-bold text-center transition flex items-center justify-center gap-1.5 no-underline border border-gray-300 dark:border-zinc-700 shadow-2xs"
+                      >
+                        <i className="fas fa-percent text-[#c5a059]"></i>
+                        <span>Check Loan EMI</span>
+                      </a>
+                    </div>
+
+                    {/* Trade-by-Trade Cost Breakdown Section */}
+                    {(() => {
+                      const tradeData = getHousePlanTradeBreakdown(
+                        selectedPlan.area_sqft,
+                        selectedPlan.floors,
+                        selectedPlan.bedrooms,
+                        selectedPlan.bathrooms,
+                        selectedPlan.dimensions
+                      );
+
+                      return (
+                        <div className="mt-4 pt-3.5 border-t border-gray-100 dark:border-zinc-800">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-black uppercase tracking-wider text-[#0f2042] dark:text-zinc-100 flex items-center gap-1.5">
+                              <i className="fas fa-layer-group text-[#c5a059]"></i>
+                              <span>Trade-by-Trade Cost Breakdown</span>
+                            </span>
+                            <span className="text-xs font-black text-[#0f2042] dark:text-[#c5a059] bg-amber-50 dark:bg-amber-950/30 px-2.5 py-0.5 rounded-md border border-amber-200/80 dark:border-amber-900/40">
+                              Turnkey: ~₹{tradeData.totalTurnkeyCostLakhs} L
+                            </span>
+                          </div>
+
+                          <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-2.5 leading-relaxed">
+                            Itemized trade estimates for {selectedPlan.bedrooms} BHK, {selectedPlan.bathrooms} Bathrooms, and ~{tradeData.carpetAreaSqft.toLocaleString('en-IN')} sq.ft interior space:
+                          </p>
+
+                          <div className="space-y-1.5">
+                            {tradeData.tradeList.map((trade) => (
+                              <div
+                                key={trade.id}
+                                className="bg-slate-50/50 hover:bg-slate-50 dark:bg-zinc-800/40 dark:hover:bg-zinc-800/70 rounded-xl p-2.5 border border-gray-200/70 dark:border-zinc-700/70 transition flex items-center justify-between gap-2.5 text-xs"
+                              >
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                  <div className="w-7 h-7 rounded-lg bg-[#0f2042]/5 dark:bg-zinc-700 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center text-xs shrink-0">
+                                    <i className={trade.icon}></i>
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <h5 className="text-xs font-bold text-slate-800 dark:text-zinc-100 truncate">
+                                        {trade.name}
+                                      </h5>
+                                      <span className="text-[10px] text-gray-400 font-medium">
+                                        ({trade.pctOfTotal}%)
+                                      </span>
+                                    </div>
+                                    <p className="text-[10px] text-gray-500 dark:text-zinc-400 truncate">
+                                      {trade.specs}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <span className="text-xs font-black text-[#0f2042] dark:text-zinc-100">
+                                    {trade.costFormatted}
+                                  </span>
+                                  <a
+                                    href={`/?calc=${trade.calcType}&area=${tradeData.builtUpAreaSqft}#tools`}
+                                    title={`Open ${trade.name} Calculator`}
+                                    className="px-2 py-1 bg-white hover:bg-amber-50 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-[#0f2042] dark:text-zinc-200 rounded-md text-[10px] font-bold flex items-center gap-1 transition no-underline border border-gray-200 dark:border-zinc-600 hover:border-[#c5a059]/40 shadow-2xs"
+                                    onClick={() => {
+                                      if (typeof window !== "undefined") {
+                                        window.localStorage.setItem("hde_shared_area", String(tradeData.carpetAreaSqft));
+                                      }
+                                    }}
+                                  >
+                                    <span>Calc</span>
+                                    <i className="fas fa-arrow-right text-[8px] text-[#c5a059]"></i>
+                                  </a>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Cost Estimation Disclaimer Notice */}
+                    <div className="mt-3.5 pt-2.5 border-t border-gray-100 dark:border-zinc-800 flex items-start gap-2 text-[10px] text-gray-500 dark:text-zinc-400 leading-relaxed bg-slate-50/70 dark:bg-zinc-800/40 p-2.5 rounded-xl border border-gray-200/60 dark:border-zinc-700/60">
+                      <i className="fas fa-info-circle text-[#c5a059] mt-0.5 shrink-0 text-[11px]"></i>
+                      <p>
+                        <strong>Disclaimer:</strong> Costs provided are approximate estimates for budget guidance only. Individual trade items and overall project totals may vary depending on local market fluctuations, actual material specifications, and current labour rates in your city.
+                      </p>
+                    </div>
+
+                    {modalEst.seoSlug && (
+                      <div className="mt-3 pt-2 border-t border-gray-100 dark:border-zinc-800 text-center">
+                        <Link
+                          href={`/plans/${modalEst.seoSlug}`}
+                          className="text-[11px] font-bold text-[#0f2042] dark:text-[#c5a059] hover:underline transition inline-flex items-center gap-1"
+                        >
+                          <span>Read complete {selectedPlan.dimensions} Architectural Bylaws &amp; Layout Guide</span>
+                          <i className="fas fa-arrow-right text-[9px] text-[#c5a059]"></i>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               {(selectedPlan.description || isEditing) && (
                 <>

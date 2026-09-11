@@ -98,7 +98,7 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
           setRegion('US');
           localStorage.setItem('hde_region', 'US');
         } else if (target === 'india-emi' || !target.startsWith('usa-')) {
-          if (!urlRegion && region === 'AE') {
+          if (!urlRegion && (region === 'AE' || region === 'US')) {
             setRegion('IN');
             localStorage.setItem('hde_region', 'IN');
           }

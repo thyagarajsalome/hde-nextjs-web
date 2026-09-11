@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import Chart from '@/components/ui/Chart';
@@ -15,6 +15,16 @@ export default function IndiaEMICalculator() {
   const [interestRate, setInterestRate] = useState<number>(8.5);
   const [tenureYears, setTenureYears] = useState<number>(20);
   const [processingFeePercent, setProcessingFeePercent] = useState<number>(0.5);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const amt = params.get('amount') || params.get('loanAmount');
+      if (amt && !isNaN(Number(amt)) && Number(amt) > 0) {
+        setLoanAmount(Number(amt));
+      }
+    }
+  }, []);
 
   const calculateEMI = () => {
     const P = loanAmount;

@@ -57,8 +57,14 @@ const FlooringCalculator: React.FC = () => {
       setIncludeSkirting(state.includeSkirting);
     } else {
       if (typeof window !== "undefined") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlArea = urlParams.get("area");
         const sharedArea = window.localStorage.getItem("hde_shared_area");
-        if (sharedArea && !area) setArea(sharedArea);
+        if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
+          setArea(urlArea);
+        } else if (sharedArea && !area) {
+          setArea(sharedArea);
+        }
       }
     }
   }, []);

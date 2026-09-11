@@ -88,6 +88,229 @@ export function calculateIndiaConstruction(
   };
 }
 
+export interface HousePlanCostEstimate {
+  plotAreaSqft: number;
+  builtUpAreaSqft: number;
+  basicCost: number;
+  standardCost: number;
+  premiumCost: number;
+  minLakhs: string;
+  maxLakhs: string;
+  monthlyEmi: number;
+  seoSlug?: string;
+}
+
+export function getHousePlanEstimate(
+  areaSqft: number,
+  floors: string = "",
+  dimensions: string = ""
+): HousePlanCostEstimate {
+  const plotArea = Math.max(0, Number(areaSqft) || 1200);
+  const fl = (floors || "").toLowerCase();
+
+  let multiplier = 1.5; // standard duplex G+1
+  if (fl.includes("g+2") || fl.includes("3") || fl.includes("triple") || fl.includes("three")) {
+    multiplier = 2.3;
+  } else if (fl.includes("ground") || fl.includes("single") || fl.includes("g+0") || fl === "1") {
+    multiplier = 0.85;
+  } else if (fl.includes("g+1") || fl.includes("duplex") || fl.includes("2") || fl.includes("two")) {
+    multiplier = 1.5;
+  }
+
+  const builtUpAreaSqft = Math.round(plotArea * multiplier);
+  const basicCost = builtUpAreaSqft * 1650;
+  const standardCost = builtUpAreaSqft * 2200;
+  const premiumCost = builtUpAreaSqft * 3000;
+
+  const minLakhs = (basicCost / 100000).toFixed(1);
+  const maxLakhs = (standardCost / 100000).toFixed(1);
+
+  // 80% loan at 8.5% for 20 years
+  const loanAmount = standardCost * 0.8;
+  const emiRes = calculateIndiaEMI(loanAmount, 8.5, 20, 0.5);
+
+  let seoSlug: string | undefined = undefined;
+  const dimClean = (dimensions || "").replace(/[^0-9xX]/g, "").toLowerCase();
+  if (dimClean.includes("30x40") || plotArea === 1200) seoSlug = "30x40-house-plans";
+  else if (dimClean.includes("20x30") || plotArea === 600) seoSlug = "20x30-house-plans";
+  else if (dimClean.includes("30x50") || plotArea === 1500) seoSlug = "30x50-house-plans";
+  else if (dimClean.includes("40x60") || plotArea === 2400) seoSlug = "40x60-house-plans";
+  else if (dimClean.includes("20x40") || plotArea === 800) seoSlug = "20x40-house-plans";
+  else if (dimClean.includes("20x50") || plotArea === 1000) seoSlug = "20x50-house-plans";
+
+  return {
+    plotAreaSqft: plotArea,
+    builtUpAreaSqft,
+    basicCost,
+    standardCost,
+    premiumCost,
+    minLakhs,
+    maxLakhs,
+    monthlyEmi: emiRes.monthlyEmi,
+    seoSlug,
+  };
+}
+
+export interface TradeItemEstimate {
+  id: string;
+  name: string;
+  calcType: string;
+  icon: string;
+  specs: string;
+  cost: number;
+  costFormatted: string;
+  costLakhs: string;
+  pctOfTotal: number;
+}
+
+export interface HousePlanTradeBreakdown {
+  builtUpAreaSqft: number;
+  carpetAreaSqft: number;
+  totalTurnkeyCost: number;
+  totalTurnkeyCostLakhs: string;
+  tradeList: TradeItemEstimate[];
+}
+
+export function getHousePlanTradeBreakdown(
+  areaSqft: number,
+  floors: string = "",
+  bedrooms: number = 3,
+  bathrooms: number = 2,
+  dimensions: string = ""
+): HousePlanTradeBreakdown {
+  const est = getHousePlanEstimate(areaSqft, floors, dimensions);
+  const builtUp = est.builtUpAreaSqft;
+  const carpetArea = Math.round(builtUp * 0.75);
+  const bCount = Math.max(1, Number(bedrooms) || 2);
+  const bathCount = Math.max(1, Number(bathrooms) || 2);
+
+  // 1. Civil Structure (foundation, RCC columns/slabs, brickwork, plaster)
+  const civilCost = Math.round(builtUp * 1250);
+
+  // 2. Interior Design & Woodwork (modular kitchen, wardrobes, TV unit, false ceiling)
+  const kitchenCost = 160000;
+  const wardrobesCost = bCount * 70000;
+  const livingWoodwork = 60000;
+  const falseCeiling = Math.round(carpetArea * 70);
+  const interiorCost = kitchenCost + wardrobesCost + livingWoodwork + falseCeiling;
+
+  // 3. Flooring & Tiling (vitrified 800x800 + bathroom tiles + labor)
+  const flooringCost = Math.round((carpetArea * 150) + (bathCount * 250 * 90));
+
+  // 4. Doors & Windows (1 main teak door + flush doors + UPVC sliding windows)
+  const mainDoorCost = 40000;
+  const internalDoorsCost = (bCount + bathCount + 1) * 7500;
+  const windowsCost = Math.round((bCount * 2 + 2) * 20 * 600);
+  const doorsWindowsCost = mainDoorCost + internalDoorsCost + windowsCost;
+
+  // 5. Bathrooms & Plumbing (sanitaryware, CPVC piping, motor, 1000L tank)
+  const sanitaryCost = bathCount * 42000;
+  const pipingAndTank = 45000;
+  const plumbingCost = sanitaryCost + pipingAndTank;
+
+  // 6. Electrical & Lighting (FR-LSH wiring, modular switches, points, MCB)
+  const electricalCost = Math.round(builtUp * 110);
+
+  // 7. Painting & Putty (2 coats putty + primer + 2 coats interior & exterior emulsion)
+  const wallArea = Math.round(carpetArea * 3.5);
+  const paintingCost = Math.round(wallArea * 42);
+
+  const totalTurnkeyCost = civilCost + interiorCost + flooringCost + doorsWindowsCost + plumbingCost + electricalCost + paintingCost;
+  const totalTurnkeyCostLakhs = (totalTurnkeyCost / 100000).toFixed(1);
+
+  const formatCost = (val: number) => {
+    return `₹${(val / 100000).toFixed(2)} L`;
+  };
+
+  const tradeList: TradeItemEstimate[] = [
+    {
+      id: "civil",
+      name: "Civil & Structure",
+      calcType: "construction",
+      icon: "fas fa-trowel-bricks",
+      specs: `Foundation, RCC columns, slabs & brickwork (~${builtUp} sq.ft)`,
+      cost: civilCost,
+      costFormatted: formatCost(civilCost),
+      costLakhs: (civilCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((civilCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "interior",
+      name: "Interior & Woodwork",
+      calcType: "interior",
+      icon: "fas fa-couch",
+      specs: `Modular kitchen, ${bCount} wardrobes, TV unit & false ceiling`,
+      cost: interiorCost,
+      costFormatted: formatCost(interiorCost),
+      costLakhs: (interiorCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((interiorCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "flooring",
+      name: "Flooring & Tiling",
+      calcType: "flooring",
+      icon: "fas fa-border-all",
+      specs: `800×800 GVT vitrified + anti-skid bath tiles (~${carpetArea} sq.ft)`,
+      cost: flooringCost,
+      costFormatted: formatCost(flooringCost),
+      costLakhs: (flooringCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((flooringCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "doors-windows",
+      name: "Doors & Windows",
+      calcType: "doors-windows",
+      icon: "fas fa-door-open",
+      specs: `Main teak door, ${bCount + bathCount + 1} flush doors & UPVC windows`,
+      cost: doorsWindowsCost,
+      costFormatted: formatCost(doorsWindowsCost),
+      costLakhs: (doorsWindowsCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((doorsWindowsCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "plumbing",
+      name: "Bathrooms & Plumbing",
+      calcType: "plumbing",
+      icon: "fas fa-faucet-drip",
+      specs: `${bathCount} bathrooms, CPVC piping, fixtures & 1000L tank`,
+      cost: plumbingCost,
+      costFormatted: formatCost(plumbingCost),
+      costLakhs: (plumbingCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((plumbingCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "electrical",
+      name: "Electrical & Lighting",
+      calcType: "electrical",
+      icon: "fas fa-bolt",
+      specs: `FR-LSH wiring, modular switches, MCBs & power points`,
+      cost: electricalCost,
+      costFormatted: formatCost(electricalCost),
+      costLakhs: (electricalCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((electricalCost / totalTurnkeyCost) * 100),
+    },
+    {
+      id: "painting",
+      name: "Painting & Finishing",
+      calcType: "painting",
+      icon: "fas fa-paint-roller",
+      specs: `2 coats putty + primer + premium interior/exterior emulsion`,
+      cost: paintingCost,
+      costFormatted: formatCost(paintingCost),
+      costLakhs: (paintingCost / 100000).toFixed(1),
+      pctOfTotal: Math.round((paintingCost / totalTurnkeyCost) * 100),
+    },
+  ];
+
+  return {
+    builtUpAreaSqft: builtUp,
+    carpetAreaSqft: carpetArea,
+    totalTurnkeyCost,
+    totalTurnkeyCostLakhs,
+    tradeList,
+  };
+}
+
 // ==========================================
 // 2. USA REGION ENGINES
 // ==========================================
