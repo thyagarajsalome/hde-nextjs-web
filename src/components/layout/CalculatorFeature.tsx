@@ -48,17 +48,27 @@ interface CalculatorFeatureProps {
 export default function CalculatorFeature({ forceRegion, forceCalculator }: CalculatorFeatureProps = {}) {
   const { hasPaid } = useUser();
   const { region, setRegion } = useRegion();
-  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(() => {
-    if (forceCalculator) return forceCalculator;
+  // Ensure initial state matches server rendering to prevent hydration mismatch
+  const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(
+    forceCalculator || (forceRegion === 'US' ? 'usa-framing' : 'construction')
+  );
+
+  // Sync with URL query parameter or localStorage safely on client mount
+  React.useEffect(() => {
+    if (forceCalculator) return;
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const urlCalc = params.get('calc') as CalculatorType;
-      if (urlCalc) return urlCalc;
+      if (urlCalc) {
+        setActiveCalculator(urlCalc);
+        return;
+      }
       const stored = localStorage.getItem('hde_active_calc') as CalculatorType;
-      if (stored) return stored;
+      if (stored) {
+        setActiveCalculator(stored);
+      }
     }
-    return forceRegion === 'US' ? 'usa-framing' : 'construction';
-  });
+  }, [forceCalculator]);
 
   // Force region switch based on props (e.g. from pSEO pages)
   React.useEffect(() => {

@@ -106,15 +106,21 @@ export function getHousePlanEstimate(
   dimensions: string = ""
 ): HousePlanCostEstimate {
   const plotArea = Math.max(0, Number(areaSqft) || 1200);
-  const fl = (floors || "").toLowerCase();
+  const fl = (floors || "").toLowerCase().trim();
 
-  let multiplier = 1.5; // standard duplex G+1
-  if (fl.includes("g+2") || fl.includes("3") || fl.includes("triple") || fl.includes("three")) {
-    multiplier = 2.3;
-  } else if (fl.includes("ground") || fl.includes("single") || fl.includes("g+0") || fl === "1") {
+  // Accurate Indian residential construction floor multipliers
+  let multiplier = 0.85; // default Ground Floor (setbacks + compound)
+  if (fl.includes("g+3") || fl.includes("4 floors") || fl === "4") {
+    multiplier = 3.4; // Ground + 3 floors
+  } else if (fl.includes("g+2") || fl.includes("3 floors") || fl.includes("triple") || fl === "3") {
+    multiplier = 2.55; // Ground + 2 floors
+  } else if (fl.includes("g+1") || fl.includes("duplex") || fl.includes("2 floors") || fl === "2") {
+    multiplier = 1.7; // Ground + 1 floor (Duplex)
+  } else if (fl.includes("ground") || fl.includes("single") || fl.includes("g+0") || fl === "1" || fl === "g") {
+    multiplier = 0.85; // Ground floor only
+  } else {
+    // fallback based on floor string if present
     multiplier = 0.85;
-  } else if (fl.includes("g+1") || fl.includes("duplex") || fl.includes("2") || fl.includes("two")) {
-    multiplier = 1.5;
   }
 
   const builtUpAreaSqft = Math.round(plotArea * multiplier);
@@ -181,31 +187,43 @@ export function getHousePlanTradeBreakdown(
   const est = getHousePlanEstimate(areaSqft, floors, dimensions);
   const builtUp = est.builtUpAreaSqft;
   const carpetArea = Math.round(builtUp * 0.75);
-  const bCount = Math.max(1, Number(bedrooms) || 2);
-  const bathCount = Math.max(1, Number(bathrooms) || 2);
+
+  // Compute floor multiplier scale for bedrooms and bathrooms
+  const fl = (floors || "").toLowerCase().trim();
+  let floorCount = 1;
+  if (fl.includes("g+3") || fl.includes("4")) floorCount = 4;
+  else if (fl.includes("g+2") || fl.includes("3")) floorCount = 3;
+  else if (fl.includes("g+1") || fl.includes("2")) floorCount = 2;
+
+  const baseBedrooms = Math.max(1, Number(bedrooms) || 2);
+  const baseBathrooms = Math.max(1, Number(bathrooms) || 2);
+
+  // Scale bedrooms and bathrooms proportionally if building multiple floors
+  const bCount = floorCount === 1 ? baseBedrooms : Math.round(baseBedrooms * (1 + (floorCount - 1) * 0.75));
+  const bathCount = floorCount === 1 ? baseBathrooms : Math.round(baseBathrooms * (1 + (floorCount - 1) * 0.75));
 
   // 1. Civil Structure (foundation, RCC columns/slabs, brickwork, plaster)
   const civilCost = Math.round(builtUp * 1250);
 
   // 2. Interior Design & Woodwork (modular kitchen, wardrobes, TV unit, false ceiling)
-  const kitchenCost = 160000;
+  const kitchenCost = 160000 * Math.max(1, Math.round(floorCount * 0.8));
   const wardrobesCost = bCount * 70000;
-  const livingWoodwork = 60000;
+  const livingWoodwork = 60000 * floorCount;
   const falseCeiling = Math.round(carpetArea * 70);
   const interiorCost = kitchenCost + wardrobesCost + livingWoodwork + falseCeiling;
 
   // 3. Flooring & Tiling (vitrified 800x800 + bathroom tiles + labor)
   const flooringCost = Math.round((carpetArea * 150) + (bathCount * 250 * 90));
 
-  // 4. Doors & Windows (1 main teak door + flush doors + UPVC sliding windows)
-  const mainDoorCost = 40000;
+  // 4. Doors & Windows (1 main teak door + internal doors + UPVC sliding windows)
+  const mainDoorCost = 40000 * floorCount;
   const internalDoorsCost = (bCount + bathCount + 1) * 7500;
   const windowsCost = Math.round((bCount * 2 + 2) * 20 * 600);
   const doorsWindowsCost = mainDoorCost + internalDoorsCost + windowsCost;
 
-  // 5. Bathrooms & Plumbing (sanitaryware, CPVC piping, motor, 1000L tank)
+  // 5. Bathrooms & Plumbing (sanitaryware, CPVC piping, motor, overhead water tanks)
   const sanitaryCost = bathCount * 42000;
-  const pipingAndTank = 45000;
+  const pipingAndTank = 45000 + (floorCount - 1) * 25000;
   const plumbingCost = sanitaryCost + pipingAndTank;
 
   // 6. Electrical & Lighting (FR-LSH wiring, modular switches, points, MCB)

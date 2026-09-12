@@ -9,6 +9,7 @@ import { useToast } from "../../context/ToastContext";
 import { Button } from "../../components/ui/Button";
 import { PlanUploader } from "./PlanUploader";
 import { getHousePlanEstimate, getHousePlanTradeBreakdown } from "../../utils/calculatorEngines";
+import { numberToIndianWords } from "../../utils/currency";
 
 const PLANS_PER_PAGE = 24;
 
@@ -209,6 +210,7 @@ export const PlanGallery: React.FC = () => {
   const [downloadProgress, setDownloadProgress] = useState(0);
   
   const [selectedPlan, setSelectedPlan] = useState<HousePlan | null>(null);
+  const [selectedModalFloors, setSelectedModalFloors] = useState<string>("Ground Only");
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   
   const [isEditing, setIsEditing] = useState(false);
@@ -407,6 +409,272 @@ export const PlanGallery: React.FC = () => {
       setDownloadingId(null);
       setDownloadProgress(0);
     }
+  };
+
+  /**
+   * Generates and prints an official branded HDE Architectural & Estimation Report.
+   * Restricted strictly to Pro/Paid subscribers and Admins.
+   */
+  const handlePrintEstimate = (plan: HousePlan, currentFloors: string) => {
+    if (isLockedForUser) {
+      navigate.push("/upgrade");
+      return;
+    }
+
+    const est = getHousePlanEstimate(plan.area_sqft, currentFloors, plan.dimensions);
+    const tradeData = getHousePlanTradeBreakdown(
+      plan.area_sqft,
+      currentFloors,
+      plan.bedrooms,
+      plan.bathrooms,
+      plan.dimensions
+    );
+
+    const totalInWords = numberToIndianWords(tradeData.totalTurnkeyCost);
+    const planImgSrc = getImageUrl(plan.file_url);
+
+    const printWindow = window.open("", "_blank", "width=900,height=1100");
+    if (!printWindow) {
+      showToast("Please allow popups to print the estimation document.", "error");
+      return;
+    }
+
+    const tradeRowsHtml = tradeData.tradeList
+      .map(
+        (t, idx) => `
+        <tr style="background-color: ${idx % 2 === 0 ? "#ffffff" : "#fbfbfb"}; border-bottom: 1px solid #eef2f6;">
+          <td style="padding: 10px 12px; font-weight: 700; color: #1e293b; font-size: 12px;">${idx + 1}. ${t.name}</td>
+          <td style="padding: 10px 12px; color: #64748b; font-size: 11px;">${t.specs}</td>
+          <td style="padding: 10px 12px; text-align: center; font-size: 11px; font-weight: 600; color: #64748b;">${t.pctOfTotal}%</td>
+          <td style="padding: 10px 12px; text-align: right; font-weight: 800; color: #0f2042; font-size: 12px;">${t.costFormatted}</td>
+        </tr>
+      `
+      )
+      .join("");
+
+    const printHtml = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>HDE Architectural Plan & Cost Estimation - ${plan.title}</title>
+        <style>
+          @page {
+            size: A4 portrait;
+            margin: 14mm 12mm 14mm 12mm;
+          }
+          * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+          body { color: #1e293b; background: #ffffff; line-height: 1.4; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid #0f2042; padding-bottom: 12px; margin-bottom: 14px; }
+          .brand { display: flex; align-items: center; gap: 10px; }
+          .logo { width: 44px; height: 44px; object-fit: contain; }
+          .brand-title { font-size: 20px; font-weight: 900; color: #0f2042; letter-spacing: -0.5px; }
+          .brand-title span { color: #c5a059; }
+          .brand-sub { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+          .doc-meta { text-align: right; font-size: 10px; color: #64748b; }
+          .doc-badge { display: inline-block; background: #fdfbf7; border: 1px solid #c5a059; color: #8c6b2d; font-weight: 800; font-size: 9px; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; margin-bottom: 4px; }
+          .plan-hero { display: flex; gap: 16px; margin-bottom: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+          .plan-img-wrap { width: 220px; height: 260px; flex-shrink: 0; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+          .plan-img { width: 100%; height: 100%; object-fit: contain; }
+          .plan-details { flex-grow: 1; display: flex; flex-col; justify-content: space-between; }
+          .plan-title { font-size: 16px; font-weight: 800; color: #0f2042; margin-bottom: 8px; }
+          .specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 11px; margin-bottom: 10px; }
+          .spec-box { background: #ffffff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; }
+          .spec-label { font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+          .spec-val { font-weight: 800; color: #0f2042; }
+          .budget-banner { background: #0f2042; color: #ffffff; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+          .budget-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #cbd5e1; }
+          .budget-amount { font-size: 20px; font-weight: 900; color: #c5a059; }
+          .budget-words { font-size: 10px; color: #e2e8f0; font-style: italic; margin-top: 2px; }
+          .table-title { font-size: 12px; font-weight: 900; text-transform: uppercase; color: #0f2042; margin-bottom: 6px; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+          table { width: 100%; border-collapse: collapse; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
+          th { background: #0f2042; color: #ffffff; font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 8px 12px; text-align: left; }
+          th.text-right { text-align: right; }
+          th.text-center { text-align: center; }
+          .total-row td { background: #fdfbf7 !important; border-top: 2px solid #c5a059; padding: 10px 12px; }
+          .total-cell { font-size: 14px; font-weight: 900; color: #0f2042; text-align: right; }
+          .bank-summary-card { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #fdfbf7; border: 1.5px solid #e2d9c8; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
+          .bank-metric-label { font-size: 9px; text-transform: uppercase; font-weight: 700; color: #64748b; }
+          .bank-metric-val { font-size: 13px; font-weight: 900; color: #0f2042; }
+          .tiers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+          .tier-box { border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; text-align: center; background: #ffffff; }
+          .tier-box.active { border: 1.5px solid #c5a059; background: #fdfbf7; }
+          .footer-notes { font-size: 9px; color: #64748b; line-height: 1.4; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 10px; }
+          .page-break { page-break-before: always; break-before: page; margin-top: 20px; padding-top: 10px; }
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; break-before: page; }
+            .no-print { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="brand">
+            <img src="/bg-logo.png" alt="HDE Logo" class="logo" />
+            <div>
+              <div class="brand-title">Home Design <span>English</span></div>
+              <div class="brand-sub">Architectural Blueprints & Construction Estimation</div>
+            </div>
+          </div>
+          <div class="doc-meta">
+            <div><span class="doc-badge">Verified Pro Estimate</span></div>
+            <div><strong>Report ID:</strong> HDE-${plan.id.toUpperCase()}-${Date.now().toString().slice(-4)}</div>
+            <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+          </div>
+        </div>
+
+        <div class="plan-hero">
+          <div class="plan-img-wrap">
+            <img src="${planImgSrc}" alt="${plan.title}" class="plan-img" />
+          </div>
+          <div class="plan-details">
+            <div>
+              <h1 class="plan-title">${plan.title}</h1>
+              <div class="specs-grid">
+                <div class="spec-box"><div class="spec-label">Plot Dimensions</div><div class="spec-val">${plan.dimensions || 'Custom'}</div></div>
+                <div class="spec-box"><div class="spec-label">Plot Area</div><div class="spec-val">${plan.area_sqft} sq.ft</div></div>
+                <div class="spec-box"><div class="spec-label">Bedrooms & Bath</div><div class="spec-val">${plan.bedrooms} BHK, ${plan.bathrooms} Bath</div></div>
+                <div class="spec-box"><div class="spec-label">Car Parking</div><div class="spec-val">${plan.parking || '1 Car Space'}</div></div>
+                <div class="spec-box"><div class="spec-label">Living Hall & Kitchen</div><div class="spec-val">${plan.living_hall_info || '1 Hall'}, ${plan.kitchen_info || '1 Kitchen'}</div></div>
+                <div class="spec-box"><div class="spec-label">Vastu Orientation</div><div class="spec-val">${plan.facing} Facing</div></div>
+                <div class="spec-box"><div class="spec-label">Estimated Levels</div><div class="spec-val">${currentFloors}</div></div>
+                <div class="spec-box"><div class="spec-label">Total Built-up Area</div><div class="spec-val">~${tradeData.builtUpAreaSqft.toLocaleString('en-IN')} sq.ft</div></div>
+              </div>
+            </div>
+            ${plan.description ? `<div style="font-size: 10px; color: #475569; background: #ffffff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 4px; line-height: 1.35;">
+              <strong>Architectural Note:</strong> ${plan.description}
+            </div>` : ""}
+          </div>
+        </div>
+
+        <div class="footer-notes">
+          <p><strong>Architectural Concept Disclaimer:</strong> All floor plans serve as <strong>conceptual design ideas</strong>. Users must consult licensed professional architects, structural engineers, and local authorities for official structural drawings and statutory sanction approvals. You may start using this plan as an initial concept and feel free to modify it; however, try to incorporate the recommended dimensions and ventilation standards as much as possible where practical for your site.</p>
+          <div style="margin-top: 6px; display: flex; justify-content: space-between; font-weight: 700; color: #94a3b8;">
+            <span>https://www.homedesignenglish.com/plans</span>
+            <span>Subscriber: ${user?.email || 'Pro Member'} • Page 1 of 2</span>
+          </div>
+        </div>
+
+        <!-- ==================== PAGE 2: FINANCIAL BILL OF QUANTITIES (BOQ) ==================== -->
+        <div class="page page-break">
+          <div class="header">
+            <div class="brand">
+              <img src="/bg-logo.png" alt="HDE Logo" class="logo" />
+              <div>
+                <div class="brand-title">Home Design <span>English</span></div>
+                <div class="brand-sub">Cost Estimation & Bank Feasibility (Sheet 2 of 2)</div>
+              </div>
+            </div>
+            <div class="doc-meta">
+              <div><span class="doc-badge">Verified Cost Estimation</span></div>
+              <div><strong>Target Project:</strong> ${plan.title}</div>
+              <div><strong>Levels:</strong> ${currentFloors} (~${tradeData.builtUpAreaSqft.toLocaleString('en-IN')} sq.ft)</div>
+            </div>
+          </div>
+
+          <!-- Total Turnkey Banner -->
+          <div class="budget-banner">
+            <div>
+              <div class="budget-label">Total Turnkey Project Cost (${currentFloors})</div>
+              <div class="budget-words">Amount in Words: <strong>${totalInWords}</strong></div>
+            </div>
+            <div style="text-align: right;">
+              <div class="budget-amount">₹${tradeData.totalTurnkeyCost.toLocaleString('en-IN')}</div>
+              <div style="font-size: 10px; color: #cbd5e1; font-weight: 600;">(~₹${tradeData.totalTurnkeyCostLakhs} Lakhs)</div>
+            </div>
+          </div>
+
+          <!-- Bank Loan Feasibility Summary Box -->
+          <div class="bank-summary-card">
+            <div>
+              <div class="bank-metric-label">Estimated Project Cost</div>
+              <div class="bank-metric-val">₹${tradeData.totalTurnkeyCost.toLocaleString('en-IN')}</div>
+            </div>
+            <div>
+              <div class="bank-metric-label">Max Bank Loan (80%)</div>
+              <div class="bank-metric-val" style="color: #0f2042;">₹${Math.round(tradeData.totalTurnkeyCost * 0.8).toLocaleString('en-IN')}</div>
+            </div>
+            <div>
+              <div class="bank-metric-label">Own Contribution (20%)</div>
+              <div class="bank-metric-val" style="color: #8c6b2d;">₹${Math.round(tradeData.totalTurnkeyCost * 0.2).toLocaleString('en-IN')}</div>
+            </div>
+            <div>
+              <div class="bank-metric-label">Est. EMI (8.5%, 20 Yrs)</div>
+              <div class="bank-metric-val" style="color: #0f2042;">₹${est.monthlyEmi.toLocaleString('en-IN')}/mo</div>
+            </div>
+          </div>
+
+          <!-- 3 Quality Tiers Comparison -->
+          <div class="tiers-grid">
+            <div class="tier-box">
+              <div style="font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase;">Basic Tier (₹1,650/sqft)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #1e293b; margin-top: 2px;">₹${(est.basicCost / 100000).toFixed(1)} Lakhs</div>
+            </div>
+            <div class="tier-box active">
+              <div style="font-size: 9px; color: #8c6b2d; font-weight: 800; text-transform: uppercase;">Standard Recommended (₹2,200/sqft)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #0f2042; margin-top: 2px;">₹${(est.standardCost / 100000).toFixed(1)} Lakhs</div>
+            </div>
+            <div class="tier-box">
+              <div style="font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase;">Premium Luxury (₹3,000/sqft)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #1e293b; margin-top: 2px;">₹${(est.premiumCost / 100000).toFixed(1)} Lakhs</div>
+            </div>
+          </div>
+
+          <div class="table-title">
+            <span>Itemized Trade-by-Trade Cost Breakdown (${currentFloors})</span>
+            <span style="font-size: 9px; color: #64748b; font-weight: normal;">7 Core Construction Trades</span>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 26%;">Trade / Work Category</th>
+                <th style="width: 44%;">Specifications & Material Scope</th>
+                <th class="text-center" style="width: 10%;">Share</th>
+                <th class="text-right" style="width: 20%;">Estimated Cost (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tradeRowsHtml}
+              <tr class="total-row">
+                <td colspan="3" style="font-size: 12px; font-weight: 900; color: #0f2042; text-transform: uppercase;">
+                  Total Turnkey Project Cost (${currentFloors}):
+                </td>
+                <td class="total-cell">
+                  ₹${tradeData.totalTurnkeyCost.toLocaleString('en-IN')}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="background: #fdfbf7; border: 1px solid #c5a059; border-radius: 6px; padding: 6px 10px; margin-bottom: 8px; font-size: 9.5px; color: #8c6b2d;">
+            <strong>Total Amount in Words:</strong> ${totalInWords}
+          </div>
+
+          <div class="footer-notes">
+            <p style="margin-bottom: 4px;"><strong>Estimation & Cost Disclaimer:</strong> Costs provided are approximate estimates for budget guidance only. Individual trade items and overall project totals may vary depending on local market fluctuations, actual material specifications, and current labour rates in your city. Consult a licensed structural engineer and municipal architect prior to physical execution.</p>
+            <div style="margin-top: 6px; display: flex; justify-content: space-between; font-weight: 700; color: #94a3b8;">
+              <span>Home Design English • https://www.homedesignenglish.com</span>
+              <span>Subscriber: ${user?.email || 'Pro Member'} • Page 2 of 2</span>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 500);
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(printHtml);
+    printWindow.document.close();
   };
 
   const getImageUrl = (path: string) => {
@@ -822,7 +1090,10 @@ export const PlanGallery: React.FC = () => {
                       </span>
                     </div>
                     <h3 
-                      onClick={() => setSelectedPlan(plan)}
+                      onClick={() => {
+                        setSelectedPlan(plan);
+                        setSelectedModalFloors(plan.floors || "Ground Only");
+                      }}
                       className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm line-clamp-1 group-hover:text-[#0f2042] dark:group-hover:text-[#c5a059] cursor-pointer transition-colors" 
                       title={plan.title}
                     >
@@ -875,7 +1146,10 @@ export const PlanGallery: React.FC = () => {
                   {/* Action Buttons: Soft, elegant, high legibility */}
                   <div className="grid grid-cols-2 gap-2 mt-auto pt-1">
                     <button 
-                      onClick={() => setSelectedPlan(plan)} 
+                      onClick={() => {
+                        setSelectedPlan(plan);
+                        setSelectedModalFloors(plan.floors || "Ground Only");
+                      }} 
                       className="w-full py-2 text-xs font-bold rounded-xl bg-white hover:bg-slate-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 border border-gray-200 dark:border-zinc-700 transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                     >
                       <i className="fas fa-eye text-[10px] text-slate-400 dark:text-zinc-400"></i>
@@ -1074,7 +1348,16 @@ export const PlanGallery: React.FC = () => {
 
               {/* Estimated Construction Budget & Home Loan Section */}
               {!isEditing && (() => {
-                const modalEst = getHousePlanEstimate(selectedPlan.area_sqft, selectedPlan.floors, selectedPlan.dimensions);
+                const currentFloors = selectedModalFloors || selectedPlan.floors || "Ground Only";
+                const modalEst = getHousePlanEstimate(selectedPlan.area_sqft, currentFloors, selectedPlan.dimensions);
+                
+                const FLOOR_OPTIONS = [
+                  { id: "Ground Only", label: "Ground Floor", tag: "G", subtitle: "1 Floor" },
+                  { id: "G+1", label: "Duplex (G+1)", tag: "G+1", subtitle: "2 Floors" },
+                  { id: "G+2", label: "Triplex (G+2)", tag: "G+2", subtitle: "3 Floors" },
+                  { id: "G+3", label: "Multi-Unit (G+3)", tag: "G+3", subtitle: "4 Floors" },
+                ];
+
                 return (
                   <div className="bg-white dark:bg-zinc-900 border border-amber-200/60 dark:border-amber-900/30 rounded-2xl p-4 sm:p-5 mb-6 text-slate-800 dark:text-zinc-100 shadow-sm">
                     {/* Header */}
@@ -1088,13 +1371,44 @@ export const PlanGallery: React.FC = () => {
                             Estimated Construction Budget
                           </h4>
                           <span className="text-[10px] text-gray-500 dark:text-zinc-400">
-                            Built-up: ~{modalEst.builtUpAreaSqft.toLocaleString('en-IN')} sq ft ({selectedPlan.floors || 'G+1'})
+                            Built-up Area: ~{modalEst.builtUpAreaSqft.toLocaleString('en-IN')} sq ft ({currentFloors})
                           </span>
                         </div>
                       </div>
                       <span className="text-xs font-black text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/10 dark:bg-[#c5a059]/15 px-3 py-1 rounded-full border border-[#c5a059]/30 shrink-0">
                         ₹{modalEst.minLakhs} – ₹{modalEst.maxLakhs} L
                       </span>
+                    </div>
+
+                    {/* Interactive Floors Selector (G, G+1, G+2, G+3) */}
+                    <div className="mb-4">
+                      <label className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block mb-1.5 flex items-center justify-between">
+                        <span>Select Construction Levels to Estimate:</span>
+                        <span className="text-[#8c6b2d] dark:text-amber-300 font-extrabold normal-case">
+                          Active: {currentFloors}
+                        </span>
+                      </label>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {FLOOR_OPTIONS.map((opt) => {
+                          const isSelected = currentFloors.toLowerCase().includes(opt.id.toLowerCase()) || 
+                            (opt.id === "Ground Only" && (currentFloors.toLowerCase().includes("ground") || currentFloors === "1"));
+                          return (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => setSelectedModalFloors(opt.id)}
+                              className={`py-2 px-1.5 rounded-xl text-center transition flex flex-col items-center justify-center cursor-pointer border ${
+                                isSelected
+                                  ? "bg-[#c5a059]/15 border-[#c5a059] text-[#0f2042] dark:text-amber-200 font-black shadow-xs ring-1 ring-[#c5a059]/30"
+                                  : "bg-slate-50/60 hover:bg-slate-100/80 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-400 border-gray-200/80 dark:border-zinc-700 font-semibold"
+                              }`}
+                            >
+                              <span className="text-xs font-black">{opt.tag}</span>
+                              <span className="text-[9px] opacity-80 leading-tight">{opt.subtitle}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     {/* 3 Quality Tiers Grid */}
@@ -1124,8 +1438,26 @@ export const PlanGallery: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Quick Action Links */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                    {/* Dedicated PDF Print Action Button within the Card */}
+                    <div className="mb-3.5">
+                      <button
+                        type="button"
+                        onClick={() => handlePrintEstimate(selectedPlan, currentFloors)}
+                        className={`w-full py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer shadow-xs border ${
+                          !isLockedForUser
+                            ? "bg-gradient-to-r from-[#0f2042] to-[#1a3466] hover:from-[#1a3466] hover:to-[#0f2042] text-white border-[#0f2042] ring-2 ring-[#c5a059]/30"
+                            : "bg-slate-100 hover:bg-slate-200 text-slate-500 border-gray-200 dark:bg-zinc-800 dark:border-zinc-700"
+                        }`}
+                        title={!isLockedForUser ? "Print Complete Blueprint & Estimation Report with HDE Logo" : "Pro Plan Required to Print"}
+                      >
+                        <i className={`text-sm ${!isLockedForUser ? "fas fa-file-pdf text-[#c5a059]" : "fas fa-lock"}`}></i>
+                        <span>{!isLockedForUser ? `Print / Save PDF Report (${currentFloors})` : `Print / Save PDF (Unlock Pro)`}</span>
+                        {!isLockedForUser && <span className="bg-[#c5a059] text-[#0f2042] text-[9px] px-2 py-0.5 rounded-full font-black ml-1">Pro Feature</span>}
+                      </button>
+                    </div>
+
+                    {/* Quick Calculator Action Links */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                       <a
                         href={`/?calc=construction&area=${modalEst.builtUpAreaSqft}#tools`}
                         className="py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 text-[#8c6b2d] dark:bg-amber-950/30 dark:hover:bg-amber-950/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-900/50 font-bold text-center transition flex items-center justify-center gap-1.5 no-underline shadow-2xs"
@@ -1146,7 +1478,7 @@ export const PlanGallery: React.FC = () => {
                     {(() => {
                       const tradeData = getHousePlanTradeBreakdown(
                         selectedPlan.area_sqft,
-                        selectedPlan.floors,
+                        currentFloors,
                         selectedPlan.bedrooms,
                         selectedPlan.bathrooms,
                         selectedPlan.dimensions
@@ -1157,7 +1489,7 @@ export const PlanGallery: React.FC = () => {
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-black uppercase tracking-wider text-[#0f2042] dark:text-zinc-100 flex items-center gap-1.5">
                               <i className="fas fa-layer-group text-[#c5a059]"></i>
-                              <span>Trade-by-Trade Cost Breakdown</span>
+                              <span>Trade-by-Trade Cost Breakdown ({currentFloors})</span>
                             </span>
                             <span className="text-xs font-black text-[#0f2042] dark:text-[#c5a059] bg-amber-50 dark:bg-amber-950/30 px-2.5 py-0.5 rounded-md border border-amber-200/80 dark:border-amber-900/40">
                               Turnkey: ~₹{tradeData.totalTurnkeyCostLakhs} L
@@ -1165,7 +1497,7 @@ export const PlanGallery: React.FC = () => {
                           </div>
 
                           <p className="text-[11px] text-gray-500 dark:text-zinc-400 mb-2.5 leading-relaxed">
-                            Itemized trade estimates for {selectedPlan.bedrooms} BHK, {selectedPlan.bathrooms} Bathrooms, and ~{tradeData.carpetAreaSqft.toLocaleString('en-IN')} sq.ft interior space:
+                            Itemized estimates scaled for {currentFloors}, {selectedPlan.bedrooms} BHK layout, and ~{tradeData.carpetAreaSqft.toLocaleString('en-IN')} sq.ft interior space:
                           </p>
 
                           <div className="space-y-1.5">
@@ -1265,14 +1597,28 @@ export const PlanGallery: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 mt-auto">
+              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 mt-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button 
+                  type="button"
+                  onClick={() => handlePrintEstimate(selectedPlan!, selectedModalFloors || selectedPlan!.floors || "Ground Only")} 
+                  className={`w-full py-3.5 px-4 rounded-xl text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer border ${
+                    !isLockedForUser
+                      ? "bg-white hover:bg-amber-50 text-[#0f2042] border-amber-200/80 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 shadow-sm"
+                      : "bg-gray-100 hover:bg-gray-200 text-gray-500 border-gray-200 dark:bg-zinc-800 dark:border-zinc-700"
+                  }`}
+                  disabled={isEditing}
+                  title={!isLockedForUser ? "Print Official HDE Architectural & Cost Report" : "Pro Plan Required to Print Report"}
+                >
+                  <i className={`text-sm ${!isLockedForUser ? "fas fa-print text-[#c5a059]" : "fas fa-lock"}`}></i>
+                  <span>{!isLockedForUser ? "Print Estimate & Plan" : "Print Report (Pro)"}</span>
+                </button>
                 <Button 
                   onClick={() => { handleDownload(selectedPlan!); setSelectedPlan(null); }} 
-                  className="w-full py-4 text-sm shadow-md" 
+                  className="w-full py-3.5 text-sm shadow-md" 
                   icon={!isLockedForUser ? "fas fa-download" : "fas fa-lock"} 
                   disabled={isEditing}
                 >
-                  {!isLockedForUser ? "Download High-Res Blueprint" : "Unlock to Download Plan"}
+                  {!isLockedForUser ? "Download Blueprint" : "Unlock Blueprint"}
                 </Button>
               </div>
             </div>
