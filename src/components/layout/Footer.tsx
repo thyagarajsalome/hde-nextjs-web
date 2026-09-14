@@ -34,6 +34,8 @@ export default function Footer() {
               <span className="text-gray-300">|</span>
               <Link href="/land-converter" className="text-gray-500 hover:text-primary transition-colors no-underline">Land Area Converter</Link>
               <span className="text-gray-300">|</span>
+              <Link href="/about" className="text-gray-500 hover:text-primary transition-colors no-underline">About Us</Link>
+              <span className="text-gray-300">|</span>
               <Link href="/contact" className="text-gray-500 hover:text-primary transition-colors no-underline">Contact Us</Link>
               <span className="text-gray-300">|</span>
               <Link href="/disclaimer" className="text-gray-500 hover:text-primary transition-colors no-underline">Disclaimer</Link>
