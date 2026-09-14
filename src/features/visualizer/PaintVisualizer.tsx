@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { colors, getCategorizedColors, CATEGORIES, rgbStringToHex } from './colors';
 
 const ROOM_CONFIGS = [
@@ -33,7 +34,7 @@ export default function PaintVisualizer() {
             <i className="fas fa-magic text-xl"></i>
           </div>
           <div className="text-center sm:text-left flex-grow">
-            <h4 className="text-sm font-bold text-gray-900 dark:text-zinc-100">Want full AI-powered Interior Design?</h4>
+            <p className="text-sm font-bold text-gray-900 dark:text-zinc-100">Want full AI-powered Interior Design?</p>
             <p className="text-xs text-gray-500 dark:text-zinc-400">Generate 3D room concepts instantly with our dedicated Android app.</p>
           </div>
           <a 
@@ -165,8 +166,74 @@ export default function PaintVisualizer() {
             )}
           </div>
         </div>
-        
       </div>
+
+      {/* Educational & Practical Guide Section */}
+      <section className="mt-16 border-t border-gray-200 dark:border-zinc-800 pt-12 space-y-12">
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-secondary dark:text-zinc-100 tracking-tight">
+            How to Use the Virtual Paint Visualizer
+          </h2>
+          <p className="text-gray-600 dark:text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Finding the ideal wall shade can be challenging without seeing how sunlight and artificial lighting reflect on real wall textures. Follow our 3-step visualization workflow.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white dark:bg-zinc-900 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base mb-4">
+              1
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 mb-2">Select Your Space</h3>
+            <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+              Toggle between Living Room, Kitchen, Master Bedroom, and Building Exterior scenes to see how colors fit specific room functions and architectural layouts.
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-zinc-900 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base mb-4">
+              2
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 mb-2">Explore Shade Families</h3>
+            <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+              Browse 500+ curated shades across warm reds, tranquil blues, organic greens, earthy neutrals, and vibrant accents matching popular Asian Paints and Berger codes.
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-zinc-900 border border-gray-200/80 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base mb-4">
+              3
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 mb-2">Estimate Material &amp; Labor</h3>
+            <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+              Once you finalize your color palette, calculate required primer, putty coats, and emulsion paint liters using our <Link href="/?calc=painting#tools" className="text-primary font-bold hover:underline">Paint Cost Calculator</Link>.
+            </p>
+          </div>
+        </div>
+
+        {/* Pro Tips Grid */}
+        <div className="bg-slate-50 dark:bg-zinc-900/60 border border-gray-200/80 dark:border-zinc-800 rounded-3xl p-8 space-y-8">
+          <h2 className="text-2xl font-bold text-secondary dark:text-zinc-100">
+            Interior &amp; Exterior Wall Finish Guidelines
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-zinc-100 text-base mb-2">Choosing the Right Sheen</h3>
+              <p className="text-gray-600 dark:text-zinc-400 leading-relaxed">
+                <strong>Matte/Flat:</strong> Best for ceilings and low-traffic master bedrooms; hides surface plaster imperfections effectively. <br />
+                <strong>Satin &amp; Silk:</strong> Ideal for living halls and children's rooms; provides velvety elegance with moderate washability. <br />
+                <strong>Gloss/High-Gloss:</strong> Best for trim, moldings, doors, and kitchens where moisture resistance and scrubbability are paramount.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 dark:text-zinc-100 text-base mb-2">Natural Lighting &amp; Vastu Alignment</h3>
+              <p className="text-gray-600 dark:text-zinc-400 leading-relaxed">
+                North-facing rooms benefit from warm tints (creams, warm beige, soft peach) to offset cool indirect light. East-facing master bedrooms flourish with calming sage greens and pastels for soothing morning sunrise ambience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

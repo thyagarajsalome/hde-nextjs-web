@@ -6,8 +6,8 @@ import LandUnitConverter from '@/features/tools/LandUnitConverter';
 import { TOP_CONVERSION_PAIRS, LAND_UNITS } from '@/data/landUnits';
 
 export const metadata: Metadata = {
-  title: 'Land Area Converter India | Gunta, Bigha, Cent, Ground to Sq Ft',
-  description: 'Free Indian land measurement converter. Instantly convert Gunta, Bigha, Cent, Ground, Ankanam, Gaj to Square Feet (Sq Ft), Acres, and Square Yards with official state formulas.',
+  title: 'Land Area Converter India - Gunta, Bigha to Sq Ft | HDE',
+  description: 'Free Indian land measurement converter. Convert Gunta, Bigha, Cent, Ground, and Gaj to Square Feet and Acres with official state conversion formulas.',
   keywords: 'land area converter india, gunta to sq ft, bigha to sq ft, cent to sq ft, ground to sqft, ankanam to sqft, gaj to sqft, land measurement units india',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/land-converter',

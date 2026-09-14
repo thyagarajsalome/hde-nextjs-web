@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'California Real Estate Calculators & City Directory | HDE',
-  description: 'Free California real estate calculators across major cities. Compare rent vs. buy, property taxes, kitchen remodel costs, swimming pool costs, and salary requirements.',
+  description: 'Free California real estate calculators. Compare rent vs. buy, property taxes, home remodel, pool costs, and salary needed across major California cities.',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/real-estate/california',
   },

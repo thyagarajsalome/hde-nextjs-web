@@ -140,10 +140,45 @@ export const CITIES_DATA: Record<string, CityData> = {
 
 interface CityContentProps {
   cityData: CityData;
+  toolType?: string;
 }
 
-export default function CityContent({ cityData }: CityContentProps) {
+export default function CityContent({ cityData, toolType = 'construction' }: CityContentProps) {
   const { cityName, stateName, metaDesc, neighborhoods, soilType, basicRate, standardRate, premiumRate } = cityData;
+
+  const getToolTitle = () => {
+    switch (toolType) {
+      case 'interior-design':
+        return `Interior Design Cost in ${cityName}, ${stateName}`;
+      case 'flooring':
+        return `Flooring & Tiling Cost in ${cityName}, ${stateName}`;
+      case 'painting':
+        return `House Painting Cost in ${cityName}, ${stateName}`;
+      case 'home-loan-emi':
+        return `Home Loan EMI Calculator for ${cityName}, ${stateName}`;
+      case 'building-material-cost':
+        return `Building Material Cost in ${cityName}, ${stateName}`;
+      default:
+        return `House Construction Cost in ${cityName}, ${stateName}`;
+    }
+  };
+
+  const getToolSubtext = () => {
+    switch (toolType) {
+      case 'interior-design':
+        return `Estimate complete residential interior costs including modular kitchen, wardrobes, false ceiling, and woodwork packages in ${cityName}.`;
+      case 'flooring':
+        return `Calculate flooring material and installation charges per sq ft for vitrified tiles, marble, granite, and wooden flooring in ${cityName}.`;
+      case 'painting':
+        return `Estimate fresh and repaint labor and material costs for interior walls, exterior weatherproof coats, putty, and primer in ${cityName}.`;
+      case 'home-loan-emi':
+        return `Calculate your monthly housing loan EMI, interest payout, and bank loan feasibility for properties across ${cityName}.`;
+      case 'building-material-cost':
+        return `Track current cement bag prices, TMT steel rebar per kg, red bricks, sand, and aggregate rates across ${cityName}.`;
+      default:
+        return `Estimate the complete residential construction cost including materials, finishes, MEP fitting, and designer fees in ${cityName}. Try our dynamic builder-funnel calculators below.`;
+    }
+  };
 
   return (
     <>
@@ -156,14 +191,14 @@ export default function CityContent({ cityData }: CityContentProps) {
                 Localized Building Cost Guide
               </span>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-100 tracking-tight">
-                House Construction Cost in <span className="text-primary">{cityName}</span>, {stateName}
+                {getToolTitle()}
               </h1>
               <p className="mt-3 text-stone-300 max-w-3xl text-sm sm:text-base leading-relaxed">
-                Estimate the complete residential construction cost including materials, finishes, MEP fitting, and designer fees in {cityName}. Try our dynamic builder-funnel calculators below.
+                {getToolSubtext()}
               </p>
             </div>
             <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl max-w-sm w-full shadow-xl">
-              <h3 className="text-xs font-bold text-primary uppercase tracking-wider mb-3">⚡ Quick Stats for {cityName}</h3>
+              <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3">⚡ Quick Stats for {cityName}</p>
               <ul className="space-y-2.5 text-xs text-stone-300">
                 <li className="flex justify-between border-b border-white/10 pb-1.5">
                   <span>Basic Rate:</span>
@@ -192,11 +227,11 @@ export default function CityContent({ cityData }: CityContentProps) {
         <div className="max-w-7xl mx-auto flex flex-col gap-12">
           <div className="w-full max-w-4xl space-y-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900">
-              Understanding Building Costs in {cityName}
+              Understanding Local Market Rates in {cityName}
             </h2>
             
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              Building a home in <strong>{cityName}</strong> requires navigating specific local market factors. Ready-mix concrete (RMC) availability, local sand excavation bans, and varying transport/logistics rules directly impact the raw materials pricing. Over the past 12 months, standard steel rates and premium grade 53 OPC cement prices have witnessed slight volatility, making accurate estimation critical before breaking ground.
+              Planning property construction and remodeling in <strong>{cityName}</strong> requires navigating specific local market factors. Ready-mix concrete (RMC) availability, local sand excavation bylaws, and transport logistics directly impact raw materials pricing. Accurate estimation is critical before finalizing budgets and contractor agreements.
             </p>
 
             <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">

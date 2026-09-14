@@ -196,20 +196,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  let title = `House Construction Cost in ${cityData.cityName} - Calculator & Rates`;
-  let description = cityData.metaDesc;
+  let title = `House Construction Cost in ${cityData.cityName} | HDE`;
+  let description = `Estimate house construction cost in ${cityData.cityName}, ${cityData.stateName}. Calculate foundation, structure, and turnkey building costs with local 2026 rates.`;
+
   if (resolvedParams.slug.startsWith('interior-design-in-')) {
-    title = `Interior Design Cost in ${cityData.cityName} - Calculator & Rates`;
+    title = `Interior Design Cost in ${cityData.cityName} | HDE`;
+    description = `Calculate interior design cost in ${cityData.cityName}, ${cityData.stateName}. Estimate modular kitchen, wardrobes, false ceiling, and woodwork packages easily.`;
   } else if (resolvedParams.slug.startsWith('flooring-in-')) {
-    title = `Flooring Cost in ${cityData.cityName} - Calculator & Rates`;
+    title = `Flooring & Tiling Cost in ${cityData.cityName} | HDE`;
+    description = `Calculate flooring and tiling cost in ${cityData.cityName}, ${cityData.stateName}. Compare vitrified tiles, marble, granite, and wooden flooring per sq ft rates.`;
   } else if (resolvedParams.slug.startsWith('painting-in-')) {
-    title = `House Painting Cost in ${cityData.cityName} - Calculator & Rates`;
+    title = `House Painting Cost in ${cityData.cityName} | HDE`;
+    description = `Estimate house painting cost in ${cityData.cityName}, ${cityData.stateName}. Compare interior and exterior paint, primer, putty, and labor cost per sq ft.`;
   } else if (resolvedParams.slug.startsWith('home-loan-emi-in-')) {
-    title = `Home Loan EMI Calculator for ${cityData.cityName} - Compare SBI, HDFC Rates`;
-    description = `Calculate monthly home loan EMI for residential property in ${cityData.cityName}. Compare current SBI, HDFC, ICICI interest rates, loan tenure, and amortization schedules.`;
+    title = `Home Loan EMI Calculator - ${cityData.cityName} | HDE`;
+    description = `Calculate home loan EMI for property in ${cityData.cityName}. Compare current SBI, HDFC, ICICI interest rates, loan tenure, and amortization schedules.`;
   } else if (resolvedParams.slug.startsWith('building-material-cost-in-')) {
-    title = `Building Material Cost in ${cityData.cityName} - Cement, Steel & Bricks Price`;
-    description = `Get latest construction building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
+    title = `Building Material Cost in ${cityData.cityName} | HDE`;
+    description = `Get building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
   }
 
   return {
@@ -219,7 +223,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       canonical: `/cost/${resolvedParams.slug}`,
     },
     openGraph: {
-      title: `${title} | HDE`,
+      title,
       description,
       type: "website",
       url: `/cost/${resolvedParams.slug}`,
@@ -403,7 +407,7 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CityContent cityData={cityData} />
+      <CityContent cityData={cityData} toolType={toolType} />
       <CalculatorFeature forceRegion={forceRegion} forceCalculator={forceCalculator as any} />
       {/* Hide specific sections for USA mode as requested previously */}
 

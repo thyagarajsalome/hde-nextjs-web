@@ -3,14 +3,14 @@ import { Metadata } from 'next';
 import PlanGallery from '@/features/plans/PlanGallery';
 
 export const metadata: Metadata = {
-  title: '100+ Modern House Plans & Floor Designs in India | 20x30, 30x40, 30x50, 40x60 | HDE',
-  description: 'Download 100+ architectural house plans and 2D floor designs for India. 1 BHK, 2 BHK, 3 BHK duplex plans with car parking, optimal airflow & lighting, and estimated construction budgets.',
+  title: '100+ House Plans & 2D Floor Designs in India | HDE',
+  description: 'Download 100+ architectural house plans and 2D floor designs in India. 1, 2, 3 BHK duplex layouts with parking and estimated building budgets.',
   keywords: 'house plans india, 30x40 house plans, 20x30 house plans, architectural floor plans, 2 bhk house design, duplex house plan, 3 bhk floor plan with parking, small house design',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/plans',
   },
   openGraph: {
-    title: '100+ Modern House Plans & Floor Designs in India | HDE',
+    title: '100+ House Plans & 2D Floor Designs in India | HDE',
     description: 'Browse modern Indian house plans for 20x30, 30x40, 30x50, 40x60 plots. Download high-resolution blueprints and calculate building costs.',
     url: 'https://www.homedesignenglish.com/plans',
     siteName: 'Home Design English (HDE)',

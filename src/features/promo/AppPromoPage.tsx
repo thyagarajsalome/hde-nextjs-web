@@ -303,9 +303,9 @@ const AppPromoPage = () => {
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
                   <i className="fas fa-users-cog"></i> HDE Professional Directory
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-secondary dark:text-zinc-100 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-bold text-secondary dark:text-zinc-100 tracking-tight">
                   Grow Your Business or Find Trusted Local Pros
-                </h3>
+                </h2>
               </div>
 
               {/* English-only Paragraph (No URL inside text) */}

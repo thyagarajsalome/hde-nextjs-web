@@ -171,6 +171,16 @@ const DirectoryPage = () => {
         </form>
       </div>
 
+      {/* Results Header */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h2 className="text-2xl font-bold text-secondary dark:text-zinc-150">
+          Verified Construction &amp; Home Specialists
+        </h2>
+        <span className="text-xs font-semibold text-gray-500 dark:text-zinc-400 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full w-fit">
+          Direct Connect &bull; Transparent Rates &bull; No Commission
+        </span>
+      </div>
+
       {/* Results Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {pros.length > 0 ? (
@@ -190,6 +200,125 @@ const DirectoryPage = () => {
           </Button>
         </div>
       )}
+
+      {/* Educational Guide & FAQs to resolve thin content and provide authoritative guidance */}
+      <div className="mt-20 pt-12 border-t border-gray-200 dark:border-zinc-800">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-secondary dark:text-zinc-100 mb-4">
+              How to Choose the Right Construction &amp; Interior Professional
+            </h2>
+            <p className="text-gray-600 dark:text-zinc-400 leading-relaxed mb-6">
+              Building or renovating a home requires coordinating multiple specialized trades. Having verified, skilled professionals on your team protects your investment, eliminates costly rework, and ensures local building code compliance.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-zinc-100 mb-2 flex items-center gap-2">
+                  <i className="fas fa-drafting-compass text-primary"></i> 1. Design &amp; Architectural Planning
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  Before breaking ground, consult certified architects and structural engineers. They prepare sanctioned floor plans, 3D elevations, foundation load calculations, and municipal sanction drawings tailored to your plot dimensions and local municipal setback bylaws.
+                </p>
+              </div>
+
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-zinc-100 mb-2 flex items-center gap-2">
+                  <i className="fas fa-hard-hat text-primary"></i> 2. Civil Contractors &amp; Turnkey Builders
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  Civil contractors supervise ground excavation, RCC column erection, brickwork, and roof slab casting. Choose between labor-only contracts (where you procure materials) or comprehensive turnkey with-material contracts with strict BOQ material specifications.
+                </p>
+              </div>
+
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-zinc-100 mb-2 flex items-center gap-2">
+                  <i className="fas fa-bolt text-primary"></i> 3. Essential MEP (Electrical &amp; Plumbing)
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  Concealed conduit piping, borewell installation, rainwater harvesting, septic tank sizing, and CPVC plumbing require licensed trade specialists. Proper early MEP planning prevents wall demolition and leakages after tile and marble installation.
+                </p>
+              </div>
+
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-lg text-gray-900 dark:text-zinc-100 mb-2 flex items-center gap-2">
+                  <i className="fas fa-couch text-primary"></i> 4. Finishing, Carpentry &amp; Interiors
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  Modular kitchens, floor tiling, waterproof wall putty, false ceilings, and bespoke wardrobes represent 30% to 40% of total project costs. Work with experienced interior designers and carpenters who provide itemized quotes and 3D visual mockups.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-secondary dark:text-zinc-100 mb-4">
+              Key Verification Guidelines Before Awarding Contracts
+            </h2>
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-6 rounded-2xl space-y-4">
+              <div className="flex gap-3">
+                <i className="fas fa-check-circle text-amber-600 dark:text-amber-400 mt-1"></i>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-zinc-100 text-sm">Stage-Wise Payment Milestones</h3>
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mt-0.5">
+                    Never release full payment upfront. Structure agreements across measurable milestones (e.g., 10% advance, 20% plinth level, 25% slab casting, 25% masonry &amp; plastering, 15% flooring/finishing, 5% retention after handover).
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <i className="fas fa-check-circle text-amber-600 dark:text-amber-400 mt-1"></i>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-zinc-100 text-sm">Clear Bill of Quantities (BOQ) Specification</h3>
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mt-0.5">
+                    Insist on written brand specifications for 53-grade OPC cement, Fe-550D TMT rebars, CPVC plumbing lines, and vitrified tile brands to avoid lower-grade material substitutions during execution.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <i className="fas fa-check-circle text-amber-600 dark:text-amber-400 mt-1"></i>
+                <div>
+                  <h3 className="font-bold text-gray-900 dark:text-zinc-100 text-sm">Physical Site Visits of Completed Projects</h3>
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mt-0.5">
+                    Ask the contractor for references and visit at least two residential homes completed within the last 12–24 months to inspect plastering quality, plumbing joints, and overall finishing standards.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-secondary dark:text-zinc-100 mb-6">
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-4">
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-gray-900 dark:text-zinc-100 mb-2">
+                  What is the difference between a labour contract and a turnkey material contract?
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  In a labour-only contract, the homeowner purchases all raw materials (cement, steel, sand, bricks, tiles) while the contractor supplies skilled and unskilled workforce. In a turnkey contract, the builder manages procurement, deliveries, and construction under an agreed per-square-foot rate.
+                </p>
+              </div>
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-gray-900 dark:text-zinc-100 mb-2">
+                  Does Home Design English (HDE) charge any commission on bookings?
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  No. HDE operates as an open, transparent directory platform. Homeowners connect directly with listed professionals and contractors without paying brokerage, booking fees, or intermediation surcharges.
+                </p>
+              </div>
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-gray-150 dark:border-zinc-800">
+                <h3 className="font-bold text-gray-900 dark:text-zinc-100 mb-2">
+                  How can civil contractors and architects register their profile on HDE?
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  Professionals can click &quot;Manage My Listing&quot; at the top of this directory to submit their credentials, specialization, operating city, experience, and portfolio photos for listing verification.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

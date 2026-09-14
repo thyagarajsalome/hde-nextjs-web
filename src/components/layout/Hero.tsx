@@ -129,8 +129,18 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
         </div>
       </div>
 
-      {/* Button Content - Centered and visible on all devices */}
-      <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+      {/* Content - Centered and visible on all devices */}
+      <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col items-center justify-center text-center">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight drop-shadow-md max-w-3xl mb-3">
+          {region === 'AE' ? 'Dubai Property Investment & Buying Cost Calculator' : 'Dream Home Construction & Interior Cost Calculator'}
+        </h1>
+        <p className="text-white/90 text-xs sm:text-base font-medium max-w-2xl mb-6 drop-shadow-sm">
+          {region === 'AE' 
+            ? 'Estimate DLD fees, mortgage registration, and service charges across Dubai freehold districts.' 
+            : 'Estimate civil construction, interior woodwork, flooring, and material quantities with accurate 2026 rates.'}
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         {region === 'AE' ? (
           <>
             <button
@@ -182,6 +192,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             </Link>
           </>
         )}
+        </div>
       </div>
     </section>
   );

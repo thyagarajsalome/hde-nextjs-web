@@ -48,7 +48,7 @@ export default function Footer() {
         {/* City/Area links - dynamic based on route */}
         {isDubaiRoute ? (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Dubai Property Guides By Area</h4>
+            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Dubai Property Guides By Area</p>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
               <Link href="/dubai-property/areas/dubai-marina" className="text-gray-500 hover:text-primary transition-colors no-underline">Dubai Marina</Link>
               <span className="hidden md:inline text-gray-300">|</span>
@@ -65,7 +65,7 @@ export default function Footer() {
           </div>
         ) : !isUSRoute ? (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</h4>
+            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</p>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
               <Link href="/cost/construction-in-mumbai" className="text-gray-500 hover:text-primary transition-colors no-underline">Mumbai</Link>
               <span className="hidden md:inline text-gray-300">|</span>
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
         ) : (
           <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <h4 className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Real Estate Calculators By City</h4>
+            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Real Estate Calculators By City</p>
             <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
               <Link href="/real-estate/rent-vs-buy-in-austin-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Austin</Link>
               <span className="hidden md:inline text-gray-300">|</span>

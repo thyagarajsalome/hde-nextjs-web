@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Texas Real Estate Calculators & City Directory | HDE',
-  description: 'Free Texas real estate calculators across 19 major cities. Compare rent vs. buy, property taxes, kitchen remodel costs, swimming pool costs, and salary requirements.',
+  description: 'Free Texas real estate calculators across 19 cities. Compare rent vs. buy, property taxes, home remodel, pool costs, and salary requirements.',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/real-estate/texas',
   },
