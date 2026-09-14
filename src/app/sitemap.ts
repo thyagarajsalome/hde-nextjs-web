@@ -248,6 +248,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/home-loan-emi-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      {
+        url: `${BASE_URL}/cost/building-material-cost-in-${cityKey}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
       }
     ]);
 
