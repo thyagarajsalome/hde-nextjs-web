@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About Us | Home Design English (HDE)',
-  description: 'Learn about Home Design English (HDE) - our mission to provide transparent construction cost estimators, 2D floor plans, and building calculators.',
+  description: 'Learn about Home Design English (HDE) - our mission and three tailored modes (India, USA, UAE) solving real construction and property budgeting problems.',
   alternates: {
     canonical: '/about',
   },
@@ -20,11 +20,45 @@ export default function AboutPage() {
 
       <h2>Our Mission</h2>
       <p>
-        Building or remodeling a home is one of life&apos;s most significant personal and financial milestones. Yet, homeowners frequently face ambiguous contractor quotes, fluctuating material prices, and opaque budgeting processes.
+        Building, renovating, or investing in property is one of the most significant financial and personal commitments anyone will make. Yet, homeowners and investors frequently encounter opaque contractor quotes, unpredictable material expenses, hidden closing costs, and fragmented information.
       </p>
       <p>
-        <strong>Home Design English (HDE)</strong> was created to solve this problem. We provide accessible, accurate, and localized digital tools that help users estimate construction budgets, understand material requirements, explore curated floor plans, and connect with trusted local professionals.
+        <strong>Home Design English (HDE)</strong> was built to solve these real-world problems. We replace guesswork with transparent, data-driven calculators, practical floor plans, and reliable cost estimation models tailored to local construction practices.
       </p>
+
+      <h2>Three Dedicated Regional Modes: Solving Real Problems</h2>
+      <p>
+        Construction standards, regulatory fees, and currencies vary drastically across the globe. Rather than offering generic formulas, HDE features three purpose-built regional modes designed to assist and address real challenges:
+      </p>
+
+      <div className="not-prose space-y-4 my-6">
+        <div className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 flex items-center gap-2.5 mb-1">
+            <span className="text-2xl">🇮🇳</span> India Mode (INR)
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+            Addresses the lack of transparent construction pricing in Indian cities. Accurately estimate civil construction per sq ft rates, modular interiors, flooring, and exact material bill of quantities (cement bags, steel in kg/tonnes, bricks, and sand). Includes instant regional land area conversions (Gunta, Bigha, Cent to Sq Ft) and Home Loan EMI calculations.
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 flex items-center gap-2.5 mb-1">
+            <span className="text-2xl">🇺🇸</span> USA Mode (USD)
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+            Solves remodeling and home addition budgeting hurdles for American homeowners. Calculate accurate costs for kitchen remodels, bathroom renovations, home additions, swimming pools, outdoor kitchens, and pickleball courts, along with local property tax assessments and rent-vs-buy financial analyses.
+          </p>
+        </div>
+
+        <div className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-zinc-100 flex items-center gap-2.5 mb-1">
+            <span className="text-2xl">🇦🇪</span> UAE / Dubai Mode (AED)
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+            Eliminates fee ambiguity for international and expatriate property buyers. Accurately calculates upfront acquisition expenses including Dubai Land Department (DLD 4%) transfer fees, mortgage registration, trustee admin fees, and ongoing community service charges across Dubai freehold districts.
+          </p>
+        </div>
+      </div>
 
       <h2>What We Provide</h2>
       <ul>
@@ -32,16 +66,13 @@ export default function AboutPage() {
           <strong>Cost Estimation Calculators:</strong> Instant, localized budget calculators covering turnkey civil construction, flooring, painting, modular interiors, and structural bill of quantities (BOQ) for cement, steel, bricks, and sand.
         </li>
         <li>
-          <strong>Architectural Floor Plans:</strong> Curated 2D residential floor plans and room layouts with dimension guidelines, ventilation standards, and Vastu orientation principles.
+          <strong>Architectural Floor Plans:</strong> Curated 2D residential floor plans and room layouts with dimension guidelines, natural lighting considerations, and functional space planning.
         </li>
         <li>
           <strong>Land Area Converter:</strong> Seamless conversions across regional Indian land measurement units including Gunta, Bigha, Cent, Ground, Biswa, Kanal, Marla, and Square Feet.
         </li>
         <li>
           <strong>Verified Experts Directory:</strong> An open directory enabling homeowners to contact certified civil contractors, architects, structural engineers, and interior designers directly—with zero middleman commissions.
-        </li>
-        <li>
-          <strong>International Property Guides:</strong> Specialized cost estimation and regulatory fee calculators for real estate buyers in the United States and the United Arab Emirates (Dubai).
         </li>
       </ul>
 
