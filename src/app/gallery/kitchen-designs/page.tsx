@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { KitchenDesign, KitchenLayoutShape } from '@/types/gallery';
 import { KitchenGalleryService } from '@/services/kitchenGalleryService';
@@ -13,6 +14,7 @@ export default function KitchenGalleryPage() {
   const [loading, setLoading] = useState(true);
   const [selectedShape, setSelectedShape] = useState<string>('All');
   const [activeModalDesign, setActiveModalDesign] = useState<KitchenDesign | null>(null);
+  const [modalLoading, setModalLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +32,22 @@ export default function KitchenGalleryPage() {
     loadData();
   }, []);
 
+  // Two-phase loading: fetch full detail when modal opens
+  const handleOpenModal = useCallback(async (design: KitchenDesign) => {
+    // Show modal immediately with card data
+    setActiveModalDesign(design);
+    // Fetch full detail in background (for fields not in card columns)
+    setModalLoading(true);
+    try {
+      const full = await KitchenGalleryService.getDesignById(design.id);
+      if (full) setActiveModalDesign(full);
+    } catch {
+      // Card data is sufficient as fallback
+    } finally {
+      setModalLoading(false);
+    }
+  }, []);
+
   // Close modal on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -43,9 +61,26 @@ export default function KitchenGalleryPage() {
     ? designs
     : designs.filter(d => d.layout_shape === selectedShape);
 
-  // Navigate to India Interior Calculator
+  // Navigate to India Modular Kitchen Calculator with pre-filled specs
   const handleOpenCalculator = (design: KitchenDesign) => {
-    router.push('/app');
+    const sqftMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:sq\s*ft|sqft)/i);
+    const dimMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:ft|'|feet)?\s*[×xX*]\s*(\d+(?:\.\d+)?)/i);
+    const length = dimMatch ? dimMatch[1] : '';
+    const width = dimMatch ? dimMatch[2] : '';
+    const sqft = sqftMatch ? sqftMatch[1] : (length && width ? String(Math.round(Number(length) * Number(width))) : '120');
+
+    const params = new URLSearchParams({
+      calc: 'india-kitchen',
+      area: sqft,
+      shape: design.layout_shape || '',
+      title: design.title || '',
+    });
+    if (length) params.set('length', length);
+    if (width) params.set('width', width);
+    if (design.cabinet_finish) params.set('finish', design.cabinet_finish);
+    if (design.countertop_material) params.set('countertop', design.countertop_material);
+
+    router.push(`/app?${params.toString()}`);
   };
 
   return (
@@ -62,12 +97,10 @@ export default function KitchenGalleryPage() {
             "description": "Explore 9:16 modular kitchen designs with layout shapes, dimensions, and approximate INR budgets in India.",
             "url": "https://www.homedesignenglish.com/gallery/kitchen-designs",
             "inLanguage": "en-IN",
-            "hasPart": filteredDesigns.map((item) => ({
+            "hasPart": filteredDesigns.slice(0, 10).map((item) => ({
               "@type": "ImageObject",
               "contentUrl": item.image_url,
               "name": item.title,
-              "description": item.meta_description,
-              "encodingFormat": "image/webp"
             }))
           })
         }}
@@ -85,113 +118,118 @@ export default function KitchenGalleryPage() {
         </div>
 
         {/* Hero Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-400 text-xs font-bold uppercase tracking-wider">
-            <span>🇮🇳</span> India Mode &bull; 2026 Realistic Cost Estimates
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+            <i className="fas fa-kitchen-set"></i>
+            <span>Indian Modular Kitchen Portfolio &bull; 9:16 Showcase</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-secondary dark:text-zinc-100 tracking-tight leading-tight">
-            Modular Kitchen Designs <br className="hidden sm:inline" />
-            <span className="text-primary">&amp; Approximate Budgets</span>
+          <h1 className="text-3xl sm:text-5xl font-black text-secondary dark:text-zinc-100 tracking-tight">
+            Modular Kitchen Designs &amp; Cost
           </h1>
           <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
-            Browse real 9:16 mobile-first modular kitchen design ideas tailored for Indian homes. Each design includes layout shapes, room dimensions, material finishes, and estimated budget ranges in INR.
+            Discover 9:16 mobile-first modular kitchen design ideas curated for Indian flats and homes. Each concept includes layout shapes, room dimensions, material finishes, and approximate INR modular costs.
           </p>
         </div>
 
-        {/* Layout Shape Filter Bar */}
-        <div className="flex items-center justify-center">
-          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-sm max-w-full">
+        {/* Layout Shape Filter Pills */}
+        <div className="flex items-center justify-center flex-wrap gap-2 pt-2">
+          {['All', ...SHAPES].map((shape) => (
             <button
-              onClick={() => setSelectedShape('All')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                selectedShape === 'All'
-                  ? 'bg-secondary text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-md'
-                  : 'text-gray-600 dark:text-zinc-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-zinc-800'
+              key={shape}
+              onClick={() => setSelectedShape(shape)}
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                selectedShape === shape
+                  ? 'bg-primary text-white dark:text-zinc-950 shadow-md scale-105'
+                  : 'bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-zinc-300 hover:border-primary'
               }`}
             >
-              All Shapes ({designs.length})
+              {shape}
             </button>
-            {SHAPES.map((shape) => {
-              const count = designs.filter(d => d.layout_shape === shape).length;
-              return (
-                <button
-                  key={shape}
-                  onClick={() => setSelectedShape(shape)}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                    selectedShape === shape
-                      ? 'bg-secondary text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-md'
-                      : 'text-gray-600 dark:text-zinc-400 hover:text-primary hover:bg-gray-100 dark:hover:bg-zinc-800'
-                  }`}
-                >
-                  {shape} {count > 0 && <span className="opacity-70 text-[11px]">({count})</span>}
-                </button>
-              );
-            })}
-          </div>
+          ))}
         </div>
 
-        {/* 9:16 Visual Card Grid */}
+        {/* Designs Grid (Mobile First 9:16 Aspect Ratio) */}
         {loading ? (
-          <div className="py-24 text-center text-gray-400">
-            <i className="fas fa-spinner fa-spin text-3xl mb-3 text-primary"></i>
-            <p className="font-bold text-sm">Loading kitchen designs...</p>
+          <div className="py-20 text-center text-gray-400 text-sm">
+            <i className="fas fa-circle-notch fa-spin text-2xl text-primary mb-3"></i>
+            <p>Loading kitchen designs...</p>
           </div>
         ) : filteredDesigns.length === 0 ? (
-          <div className="py-20 text-center text-gray-400 border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl">
-            <i className="fas fa-kitchen-set text-4xl mb-3 opacity-20"></i>
-            <p className="font-bold text-base">No designs found for this layout</p>
+          <div className="py-16 text-center text-gray-500 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 p-8">
+            <i className="fas fa-kitchen-set text-3xl text-gray-300 mb-2"></i>
+            <p className="text-sm font-semibold">No kitchen designs found for this layout.</p>
             <button
               onClick={() => setSelectedShape('All')}
-              className="mt-3 text-xs font-bold text-primary hover:underline"
+              className="mt-4 px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold"
             >
-              View All Layouts
+              View All Kitchens
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredDesigns.map((design) => (
               <div
                 key={design.id}
-                onClick={() => setActiveModalDesign(design)}
-                className="group relative aspect-[9/16] rounded-2xl overflow-hidden bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-end"
+                onClick={() => handleOpenModal(design)}
+                className="group relative bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col"
               >
-                {/* Background Image */}
-                <img
-                  src={design.image_url}
-                  alt={design.alt_text}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-
-                {/* Top Badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-black/60 text-white backdrop-blur-md border border-white/10 shadow-sm">
-                    {design.layout_shape}
-                  </span>
-                  {design.is_featured && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-primary text-white dark:text-zinc-950 uppercase tracking-tight shadow-md">
-                      Featured
-                    </span>
-                  )}
-                </div>
-
-                {/* Bottom Gradient Overlay */}
-                <div className="relative z-10 p-4 bg-gradient-to-t from-black via-black/70 to-transparent pt-16 text-white space-y-1.5">
-                  <h3 className="font-bold text-xs sm:text-sm line-clamp-2 leading-snug drop-shadow-sm group-hover:text-primary-light transition-colors">
-                    {design.title}
-                  </h3>
+                {/* 9:16 Aspect Ratio Image Container */}
+                <div className="relative aspect-[9/16] w-full overflow-hidden bg-gray-100 dark:bg-zinc-800">
+                  <Image
+                    src={design.image_url}
+                    alt={design.alt_text || design.title}
+                    width={720}
+                    height={1280}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                   
-                  <div className="flex items-center justify-between text-[11px] text-gray-300 font-medium pt-1 border-t border-white/15">
-                    <span>{design.dimensions}</span>
-                    <span className="font-bold text-amber-400 text-xs">
-                      {design.formatted_budget}
+                  {/* Top Badges */}
+                  <div className="absolute top-3 left-3 right-3 flex justify-between items-center z-10 pointer-events-none">
+                    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 dark:bg-zinc-900/90 text-gray-800 dark:text-zinc-200 backdrop-blur-md shadow-xs border border-white/20">
+                      {design.layout_shape}
                     </span>
+                    {design.is_featured && (
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-amber-500 text-white shadow-xs uppercase tracking-wider">
+                        Featured
+                      </span>
+                    )}
                   </div>
 
-                  <div className="pt-2">
-                    <span className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg bg-white/20 hover:bg-white text-white hover:text-secondary text-[11px] font-bold backdrop-blur-md transition-all">
-                      <span>View Details &amp; Cost</span>
-                      <i className="fas fa-arrow-right text-[9px]"></i>
+                  {/* Bottom Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+
+                  {/* On-Image Budget Pill */}
+                  <div className="absolute bottom-3 left-3 right-3 z-10 pointer-events-none">
+                    <p className="text-[11px] font-semibold text-emerald-400">Approx. Modular Cost</p>
+                    <p className="text-lg font-black text-white leading-tight drop-shadow-sm">
+                      {design.formatted_budget}
+                    </p>
+                    <p className="text-[10px] text-gray-300 font-medium mt-0.5">
+                      {design.dimensions}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card Details Footer */}
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div>
+                    <h3 className="font-bold text-sm text-gray-900 dark:text-zinc-100 group-hover:text-primary transition-colors line-clamp-1">
+                      {design.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1 line-clamp-1">
+                      {design.cabinet_finish} &bull; {design.countertop_material}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-100 dark:border-zinc-800">
+                    <span className="text-[11px] text-gray-400 font-medium">
+                      {design.layout_shape} Kitchen
+                    </span>
+                    <span className="text-primary font-bold text-xs flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>View Specs</span>
+                      <i className="fas fa-arrow-right text-[10px]"></i>
                     </span>
                   </div>
                 </div>
@@ -200,58 +238,26 @@ export default function KitchenGalleryPage() {
           </div>
         )}
 
-        {/* Informative Guidance Section (SEO + User Value) */}
-        <div className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 p-6 sm:p-10 space-y-6">
-          <div className="max-w-3xl">
-            <h2 className="text-xl sm:text-2xl font-black text-secondary dark:text-zinc-100">
-              How to Plan Your Modular Kitchen Budget in India
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-2 leading-relaxed">
-              In Indian homes, modular kitchen pricing is determined by running counter length, carcass woodwork material (BWP 710 marine plywood vs HDHMR), and shutter finishes:
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40 border border-gray-150 dark:border-zinc-800">
-              <div className="text-xs font-bold text-primary uppercase">Budget Friendly</div>
-              <h3 className="font-bold text-gray-900 dark:text-zinc-100 mt-1">High-Pressure Laminate</h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                Standard 0.8mm to 1mm laminates offer extreme scratch resistance and moisture resistance. Ideal for budgets between ₹1 Lakh to ₹1.8 Lakhs.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40 border border-gray-150 dark:border-zinc-800">
-              <div className="text-xs font-bold text-primary uppercase">Modern &amp; Glossy</div>
-              <h3 className="font-bold text-gray-900 dark:text-zinc-100 mt-1">High-Gloss Acrylic</h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                Mirror-like reflective finish that makes compact kitchens look spacious. Extremely easy to wipe clean. Typical cost ₹1.5 Lakhs to ₹2.6 Lakhs.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/40 border border-gray-150 dark:border-zinc-800">
-              <div className="text-xs font-bold text-primary uppercase">Ultra Luxury</div>
-              <h3 className="font-bold text-gray-900 dark:text-zinc-100 mt-1">PU Lacquer &amp; Quartz</h3>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
-                Seamless satin spray-painted finish paired with stain-resistant engineered quartz countertops and Blum tandem drawer hardware. ₹2.5 Lakhs+.
-              </p>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       {/* Interactive Detail Modal (Lightbox View) */}
       {activeModalDesign && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div 
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn"
+          onClick={() => setActiveModalDesign(null)}
+        >
           <div 
+            className="relative bg-white dark:bg-zinc-900 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-100 dark:border-zinc-800 my-auto grid grid-cols-1 md:grid-cols-12"
             onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-zinc-900 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 dark:border-zinc-800 grid grid-cols-1 md:grid-cols-12 overflow-hidden"
           >
             {/* Modal Image (9:16 preview) */}
             <div className="md:col-span-5 bg-zinc-950 relative aspect-[9/16] md:aspect-auto md:min-h-[500px]">
-              <img
+              <Image
                 src={activeModalDesign.image_url}
                 alt={activeModalDesign.alt_text}
+                width={720}
+                height={1280}
+                priority
                 className="w-full h-full object-cover"
               />
               <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-black bg-black/70 text-white backdrop-blur-md">
@@ -260,7 +266,7 @@ export default function KitchenGalleryPage() {
             </div>
 
             {/* Modal Specs & CTA */}
-            <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-6 overflow-y-auto max-h-[85vh]">
               <div className="space-y-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>

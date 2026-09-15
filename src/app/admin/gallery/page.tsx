@@ -6,7 +6,7 @@ export default function AdminGalleryHubPage() {
   const sections = [
     {
       title: 'Modular Kitchen Designs',
-      description: 'Manage 9:16 modular kitchen photo cards, L-shape/U-shape layouts, dimensions, and approximate budgets.',
+      description: 'Manage 9:16 modular kitchen photo cards, L-shape/U-shape layouts, dimensions, and approximate INR budgets.',
       href: '/admin/gallery/kitchen',
       icon: 'fa-kitchen-set',
       status: 'Live & Ready',
@@ -14,31 +14,13 @@ export default function AdminGalleryHubPage() {
       accent: 'border-emerald-500/40 bg-emerald-500/5 text-emerald-600',
     },
     {
-      title: 'Master Bedroom & Wardrobes',
-      description: 'Manage bedroom headboards, sliding wardrobes, lofts, and dressing unit designs.',
-      href: '#',
-      icon: 'fa-bed',
-      status: 'Phase 5 (Next)',
-      count: 'Upcoming',
-      accent: 'border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/40 text-gray-400',
-    },
-    {
-      title: 'Bathroom & Tile Concepts',
-      description: 'Showcase vanity counters, glass shower enclosures, dry/wet layouts, and wall tiles.',
-      href: '#',
+      title: 'Modern Bathroom & Tile Concepts',
+      description: 'Manage 9:16 bathroom photos, wet & dry partitions, vanity units, tile concepts, and approximate INR budgets.',
+      href: '/admin/gallery/bathroom',
       icon: 'fa-bath',
-      status: 'Phase 5 (Next)',
-      count: 'Upcoming',
-      accent: 'border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/40 text-gray-400',
-    },
-    {
-      title: 'House Front Elevations',
-      description: 'Showcase 20x30, 30x40, 30x50, and 40x60 single floor, duplex, and triplex elevation 3D models.',
-      href: '#',
-      icon: 'fa-building',
-      status: 'Phase 5 (Next)',
-      count: 'Upcoming',
-      accent: 'border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/40 text-gray-400',
+      status: 'Live & Ready',
+      count: 'Active CRUD',
+      accent: 'border-blue-500/40 bg-blue-500/5 text-blue-600',
     }
   ];
 
@@ -90,7 +72,7 @@ export default function AdminGalleryHubPage() {
                     href={sec.href}
                     className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold text-sm shadow-md transition-all"
                   >
-                    <span>Open Kitchen CRUD Manager</span>
+                    <span>Manage {sec.title}</span>
                     <i className="fas fa-arrow-right text-xs"></i>
                   </Link>
                 ) : (

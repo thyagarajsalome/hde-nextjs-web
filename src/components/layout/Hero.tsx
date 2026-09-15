@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { HeroService, HeroBanner } from "../../services/heroService";
 import { useGSAPHeroParallax } from "../../hooks/useGSAP";
@@ -64,7 +63,15 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       <section className="relative w-full h-[65vh] overflow-hidden flex flex-col items-center justify-center bg-secondary">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 opacity-40 scale-105">
-            <Image src={banners[0].image_url} alt="Hero" fill priority className="object-cover" />
+            <Image 
+              src={banners[0].image_url} 
+              alt="Hero" 
+              fill 
+              priority 
+              sizes="100vw"
+              quality={80}
+              className="object-cover" 
+            />
           </div>
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
@@ -123,66 +130,50 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       {/* Background Banner */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-100 scale-100">
-          <Image src={displayBanner.image_url} alt="Hero" fill priority className="object-cover" />
-          {/* Slightly darker overlay on mobile to ensure button accessibility */}
-          <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
+          <Image 
+            src={displayBanner.image_url} 
+            alt="Hero" 
+            fill 
+            priority 
+            sizes="100vw"
+            quality={80}
+            className="object-cover" 
+          />
+          {/* Dark overlay only needed for AE region with buttons */}
+          {region === 'AE' && (
+            <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
+          )}
         </div>
       </div>
 
-      {/* Button Content - Centered and visible on all devices */}
-      <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        {region === 'AE' ? (
-          <>
-            <button
-              onClick={scrollToTools}
-              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white font-bold 
-                         py-3 px-8 text-base w-full sm:w-auto
-                         md:py-4 md:px-10 md:text-lg 
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-            >
-              <span>🇦🇪</span>
-              Calculate Buying Cost
-              <i className="fas fa-arrow-down text-sm"></i>
-            </button>
-            
-            <a
-              href="/dubai-property#areas"
-              onClick={scrollToAreas}
-              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
-                         py-2.5 px-8 text-base w-full sm:w-auto
-                         md:py-3.5 md:px-10 md:text-lg no-underline
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md cursor-pointer"
-            >
-              Explore Dubai Areas
-              <i className="fas fa-compass text-sm"></i>
-            </a>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={scrollToTools}
-              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold 
-                         py-3 px-8 text-base w-full sm:w-auto
-                         md:py-4 md:px-10 md:text-lg 
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
-            >
-              Start Calculating
-              <i className="fas fa-arrow-down text-sm"></i>
-            </button>
-            
-            <Link
-              href="/visualizer"
-              className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
-                         py-2.5 px-8 text-base w-full sm:w-auto
-                         md:py-3.5 md:px-10 md:text-lg no-underline
-                         rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md"
-            >
-              Try Paint Visualizer
-              <i className="fas fa-paint-roller text-sm"></i>
-            </Link>
-          </>
-        )}
-      </div>
+      {/* Button Content - Only for UAE region if applicable */}
+      {region === 'AE' && (
+        <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            onClick={scrollToTools}
+            className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white font-bold 
+                       py-3 px-8 text-base w-full sm:w-auto
+                       md:py-4 md:px-10 md:text-lg 
+                       rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+          >
+            <span>🇦🇪</span>
+            Calculate Buying Cost
+            <i className="fas fa-arrow-down text-sm"></i>
+          </button>
+          
+          <a
+            href="/dubai-property#areas"
+            onClick={scrollToAreas}
+            className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
+                       py-2.5 px-8 text-base w-full sm:w-auto
+                       md:py-3.5 md:px-10 md:text-lg no-underline
+                       rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md cursor-pointer"
+          >
+            Explore Dubai Areas
+            <i className="fas fa-compass text-sm"></i>
+          </a>
+        </div>
+      )}
     </section>
   );
 }

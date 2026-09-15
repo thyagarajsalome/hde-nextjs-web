@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { KitchenDesign, CreateKitchenDesignInput, KitchenLayoutShape } from '@/types/gallery';
 import { KitchenGalleryService } from '@/services/kitchenGalleryService';
+import { compressAndCropTo916, CompressionResult } from '@/utils/imageCompressor';
+import { estimateIndiaKitchenCost } from '@/utils/indiaCostEstimator';
 
 const SHAPES: KitchenLayoutShape[] = ['L-Shape', 'U-Shape', 'Parallel', 'Straight', 'Island'];
 const POPULAR_FINISHES = ['High-Gloss Acrylic', 'Matte Laminate', 'Glossy Laminate', 'PU Lacquer Satin', 'Membrane Finish', 'Wood Veneer'];
@@ -40,6 +42,30 @@ export default function AdminKitchenGalleryPage() {
   const [fileSizeKb, setFileSizeKb] = useState<number>(75);
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
+
+  // Auto-Calculator Engine Fields (India Mode)
+  const [autoLength, setAutoLength] = useState<number>(15);
+  const [autoWidth, setAutoWidth] = useState<number>(12);
+  const [autoSqft, setAutoSqft] = useState<number>(180);
+  const [qualityTier, setQualityTier] = useState<'Economy' | 'Standard' | 'Premium' | 'Ultra Luxury'>('Premium');
+
+  const applyAutoEstimate = (sqftVal?: number, lenVal?: number, widVal?: number, tierVal?: any, shapeVal?: any) => {
+    const res = estimateIndiaKitchenCost({
+      lengthFt: lenVal !== undefined ? lenVal : autoLength,
+      widthFt: widVal !== undefined ? widVal : autoWidth,
+      areaSqFt: sqftVal !== undefined ? sqftVal : autoSqft,
+      layoutShape: shapeVal || layoutShape,
+      qualityTier: tierVal || qualityTier,
+      cabinetFinish,
+      countertopMaterial,
+    });
+
+    setMinCost(res.minCost);
+    setMaxCost(res.maxCost);
+    setRatePerUnit(res.ratePerUnit);
+    setDimensions(res.dimensionsStr);
+    showToast(`Calculated: ${res.formattedBudget} (${res.ratePerUnit})`);
+  };
 
   // File Upload State
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -86,27 +112,39 @@ export default function AdminKitchenGalleryPage() {
     return `${format(min)} - ${format(max)}`;
   };
 
-  // Handle File Selection with 9:16 Aspect Ratio Check
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressionStats, setCompressionStats] = useState<{ original: number; compressed: number; saved: number } | null>(null);
+
+  // Handle File Selection with Automatic 9:16 Crop and WebP Compression
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setSelectedFile(file);
-    setFileName(file.name);
-    setFileSizeKb(Math.round(file.size / 1024));
+    setIsCompressing(true);
+    setUploadProgress('Auto-cropping to 9:16 & compressing into WebP...');
 
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-
-    // Verify dimensions
-    const img = new Image();
-    img.onload = () => {
-      const ratio = img.width / img.height;
-      if (ratio > 0.75) {
-        showToast('Notice: Ideal mobile vertical ratio is 9:16 (height greater than width)', 'error');
-      }
-    };
-    img.src = objectUrl;
+    try {
+      const result = await compressAndCropTo916(file);
+      setSelectedFile(result.file);
+      setFileName(result.file.name);
+      setFileSizeKb(result.compressedSizeKb);
+      setPreviewUrl(result.previewUrl);
+      setCompressionStats({
+        original: result.originalSizeKb,
+        compressed: result.compressedSizeKb,
+        saved: result.reductionPercentage,
+      });
+      showToast(`Optimized: ${result.originalSizeKb} KB → ${result.compressedSizeKb} KB (${result.reductionPercentage}% smaller)`);
+    } catch (err: any) {
+      console.warn('Browser auto-compression fallback:', err);
+      setSelectedFile(file);
+      setFileName(file.name);
+      setFileSizeKb(Math.round(file.size / 1024));
+      setPreviewUrl(URL.createObjectURL(file));
+    } finally {
+      setIsCompressing(false);
+      setUploadProgress(null);
+    }
   };
 
   // Upload to Cloudflare R2
@@ -492,6 +530,96 @@ export default function AdminKitchenGalleryPage() {
                       required
                       className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-mono focus:border-primary outline-none"
                     />
+                  </div>
+                </div>
+
+                {/* Auto-Calculate Budget Engine (India Mode) */}
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-primary/5 to-amber-500/10 border border-amber-500/30 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs">
+                        <i className="fas fa-calculator"></i>
+                      </span>
+                      <div>
+                        <p className="text-xs font-black text-amber-900 dark:text-amber-200">
+                          ⚡ Auto-Calculate Budget from Sq.Ft (India Engine)
+                        </p>
+                        <p className="text-[10px] text-gray-500 dark:text-zinc-400">
+                          Enter room dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => applyAutoEstimate()}
+                      className="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                    >
+                      <i className="fas fa-bolt text-[10px]"></i>
+                      <span>Calculate Budget</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1 text-xs">
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Length (ft)</label>
+                      <input
+                        type="number"
+                        value={autoLength}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoLength(val);
+                          const newSqft = val * autoWidth;
+                          setAutoSqft(newSqft);
+                          applyAutoEstimate(newSqft, val, autoWidth);
+                        }}
+                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Width (ft)</label>
+                      <input
+                        type="number"
+                        value={autoWidth}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoWidth(val);
+                          const newSqft = autoLength * val;
+                          setAutoSqft(newSqft);
+                          applyAutoEstimate(newSqft, autoLength, val);
+                        }}
+                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Total Area (sq ft)</label>
+                      <input
+                        type="number"
+                        value={autoSqft}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoSqft(val);
+                          applyAutoEstimate(val);
+                        }}
+                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-black text-primary"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Quality Tier</label>
+                      <select
+                        value={qualityTier}
+                        onChange={(e) => {
+                          const val = e.target.value as any;
+                          setQualityTier(val);
+                          applyAutoEstimate(autoSqft, autoLength, autoWidth, val);
+                        }}
+                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
+                      >
+                        <option value="Economy">Economy (Laminate)</option>
+                        <option value="Standard">Standard (Marine Ply)</option>
+                        <option value="Premium">Premium (Acrylic/Quartz)</option>
+                        <option value="Ultra Luxury">Ultra Luxury (PU/Dekton)</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

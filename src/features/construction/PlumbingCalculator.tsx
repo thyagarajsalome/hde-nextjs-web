@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Chart from "../../components/ui/Chart";
 import { useUser } from "../../context/UserContext";
 import { useProjectActions } from "../../hooks/useProjectActions";
@@ -50,7 +50,6 @@ const WATER_TIPS = [
 // ── Component ──────────────────────────────────────────────────────────────────
 const PlumbingCalculator: React.FC = () => {
   const { hasPaid }  = useUser();
-  const location = { state: null }; // TODO: Replace with useSearchParams if needed
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("plumbing");
 
   const [kitchens,      setKitchens]      = useState("1");
@@ -61,35 +60,14 @@ const PlumbingCalculator: React.FC = () => {
   const [activeTab,     setActiveTab]     = useState<"result"|"pipes"|"water">("result");
 
   useEffect(() => {
-    const state = (location.state as any)?.projectData;
-    if (state?.kitchens) {
-      setKitchens(state.kitchens);
-      setCommonBaths(state.commonBaths);
-      setMasterBaths(state.masterBaths);
-      setIncludeMotor(state.includeMotor);
-      setQuality(state.quality);
-    } else {
-      if (typeof window !== "undefined") {
-        const sharedArea = window.localStorage.getItem("hde_shared_area");
-        if (sharedArea) {
-          const areaNum = parseFloat(sharedArea) || 0;
-          if (areaNum > 0) {
-            if (areaNum < 1200) {
-              setKitchens("1");
-              setCommonBaths("1");
-              setMasterBaths("1");
-            } else if (areaNum < 2200) {
-              setKitchens("1");
-              setCommonBaths("1");
-              setMasterBaths("2");
-            } else {
-              setKitchens("1");
-              setCommonBaths("2");
-              setMasterBaths("3");
-            }
-          }
-        }
-      }
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const qKitchens = searchParams.get("kitchens");
+      const qCommon = searchParams.get("commonBaths");
+      const qMaster = searchParams.get("masterBaths");
+      if (qKitchens) setKitchens(qKitchens);
+      if (qCommon) setCommonBaths(qCommon);
+      if (qMaster) setMasterBaths(qMaster);
     }
   }, []);
 
@@ -127,7 +105,23 @@ const PlumbingCalculator: React.FC = () => {
 
       {/* ── Left ── */}
       <div className="space-y-5">
-        <Card title="🚿 Plumbing Cost Calculator">
+        <Card title="🚿 Whole-House Civil Plumbing Calculator">
+          {/* Bathroom Remodel Link (Eliminates Redundancy) */}
+          <div className="p-3.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800/40 text-xs mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2 text-cyan-800 dark:text-cyan-300">
+              <i className="fas fa-info-circle text-cyan-600 shrink-0"></i>
+              <span className="text-[11px]">
+                Looking to renovate a <strong>single bathroom</strong> with waterproofing, wall tiles &amp; glass partition?
+              </span>
+            </div>
+            <Link
+              href="/app?calc=india-bathroom"
+              className="inline-flex items-center gap-1 font-bold text-cyan-700 dark:text-cyan-400 hover:underline shrink-0 text-xs"
+            >
+              <span>Bathroom Renovation Calculator →</span>
+            </Link>
+          </div>
+
           <div className="space-y-4">
             {[
               { label: "Kitchens / Utility Rooms", icon: "fas fa-utensils", val: kitchens,    set: setKitchens,    info: `₹${(UNIT_RATES.kitchen.rate/1000).toFixed(0)}k/unit — Sink, mixer tap, drain` },

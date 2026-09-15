@@ -14,6 +14,8 @@ const lazyWithRetry = (componentImport: () => Promise<any>) =>
 
 // Lazy-loaded calculators
 const ConstructionCalculator     = lazyWithRetry(() => import("./ConstructionCalculator"));
+const IndiaKitchenCalculator     = lazyWithRetry(() => import("./IndiaKitchenCalculator"));
+const IndiaBathroomCalculator    = lazyWithRetry(() => import("./IndiaBathroomCalculator"));
 const IndiaEMICalculator         = lazyWithRetry(() => import("./IndiaEMICalculator"));
 const FlooringCalculator         = lazyWithRetry(() => import("./FlooringCalculator"));
 const PaintingCalculator         = lazyWithRetry(() => import("./PaintingCalculator"));
@@ -44,6 +46,8 @@ const PaintVisualizer            = lazyWithRetry(() => import("../visualizer/Pai
 
 type CalculatorType =
   | "construction"
+  | "india-kitchen"
+  | "india-bathroom"
   | "india-emi"
   | "interior"
   | "doors-windows"
@@ -116,8 +120,10 @@ export default function CalculatorSuite() {
 
   const renderCalculator = () => {
     switch (activeCalculator) {
-      case "construction":  return <ConstructionCalculator projectData={projectData} />;
-      case "india-emi":     return <IndiaEMICalculator />;
+      case "construction":    return <ConstructionCalculator projectData={projectData} />;
+      case "india-kitchen":   return <IndiaKitchenCalculator />;
+      case "india-bathroom":  return <IndiaBathroomCalculator />;
+      case "india-emi":       return <IndiaEMICalculator />;
       case "usa-framing":   return <USAFramingCalculator />;
       case "usa-roofing":   return <USARoofingCalculator />;
       case "usa-accent-wall":   return <USAAccentWallCalculator />;

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useProjectActions } from "../../hooks/useProjectActions";
@@ -43,53 +44,25 @@ const CHART_COLORS = ["#c5a059", "#5c473c", "#8c776c", "#dfd0bf", "#ebdcd0"];
 
 const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("interior");
-  const location = { state: null }; // TODO: Replace with useSearchParams if needed
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const [area, setArea] = useState("1200");
   const [quality, setQuality] = useState<keyof typeof QUALITY_RATES>("standard");
 
   useEffect(() => {
-    if (location.state && (location.state as any).projectData) {
-      const data = (location.state as any).projectData;
-      if (data.area && data.quality && !data.doorCount) {
-        setArea(data.area);
-        if (data.quality in QUALITY_RATES) {
-          setQuality(data.quality);
-        } else {
-          setQuality("standard");
-        }
-      }
-    } else {
-      if (typeof window !== "undefined") {
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlArea = urlParams.get("area");
-        const sharedArea = window.localStorage.getItem("hde_shared_area");
-        const sharedQuality = window.localStorage.getItem("hde_shared_quality");
-        if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
-          setArea(urlArea);
-        } else if (sharedArea) {
-          setArea(sharedArea);
-        }
-        if (sharedQuality) {
-          if (sharedQuality in QUALITY_RATES) {
-            setQuality(sharedQuality as any);
-          } else if (sharedQuality === "economy") {
-            setQuality("basic");
-          } else {
-            setQuality("standard");
-          }
-        }
-      }
-    }
-  }, []); // Run only on mount since location is a dummy object
-
-  useEffect(() => {
     if (typeof window !== "undefined") {
-      if (area) window.localStorage.setItem("hde_shared_area", area);
-      if (quality) window.localStorage.setItem("hde_shared_quality", quality);
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlArea = urlParams.get("area") || urlParams.get("sqft");
+      const urlQuality = urlParams.get("quality");
+
+      if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
+        setArea(urlArea);
+      }
+      if (urlQuality && urlQuality in QUALITY_RATES) {
+        setQuality(urlQuality as keyof typeof QUALITY_RATES);
+      }
     }
-  }, [area, quality]);
+  }, []);
 
   const parsedArea = parseFloat(area) || 0;
   const ratePreset = QUALITY_RATES[quality] || QUALITY_RATES.standard;
@@ -198,6 +171,33 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
 
               <div className="h-64">
                 <Chart data={INTERIOR_BREAKDOWN} colors={CHART_COLORS} />
+              </div>
+
+              {/* Room-Specific Precision Calculators (Removes Redundancy) */}
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/5 via-[#c5a059]/10 to-transparent border border-[#c5a059]/30 space-y-2.5">
+                <div className="flex items-center gap-2 text-primary font-bold text-xs">
+                  <i className="fas fa-layer-group"></i>
+                  <span>Looking for Technical Room-Specific Quotations?</span>
+                </div>
+                <p className="text-[11px] text-gray-600 dark:text-zinc-400 leading-relaxed">
+                  This macro estimate calculates whole-flat woodwork. For itemized technical calculations with running feet, IS:710 ply, and waterproofing protocols:
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <Link
+                    href="/app?calc=india-kitchen"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-850 border border-gray-200 dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold hover:border-primary text-xs shadow-xs transition-colors"
+                  >
+                    <i className="fas fa-kitchen-set text-primary"></i>
+                    <span>Modular Kitchen (Running Feet &amp; Baskets) →</span>
+                  </Link>
+                  <Link
+                    href="/app?calc=india-bathroom"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-850 border border-gray-200 dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold hover:border-primary text-xs shadow-xs transition-colors"
+                  >
+                    <i className="fas fa-bath text-primary"></i>
+                    <span>Bathroom Renovation &amp; Glass Partition →</span>
+                  </Link>
+                </div>
               </div>
 
               <div className="space-y-3 mt-6">

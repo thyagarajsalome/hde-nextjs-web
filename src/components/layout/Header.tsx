@@ -18,7 +18,10 @@ const Header = () => {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [regionDropdownOpen, setRegionDropdownOpen] = useState(false);
+  const [galleryDropdownOpen, setGalleryDropdownOpen] = useState(false);
+  const [mobileGalleryOpen, setMobileGalleryOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const galleryDropdownRef = useRef<HTMLDivElement>(null);
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -32,9 +35,13 @@ const Header = () => {
       const clickedOutsideDesktop = dropdownRef.current && !dropdownRef.current.contains(target);
       const clickedOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(target);
       const clickedOutsideMobileBtn = mobileButtonRef.current && !mobileButtonRef.current.contains(target);
+      const clickedOutsideGallery = galleryDropdownRef.current && !galleryDropdownRef.current.contains(target);
       
       if (clickedOutsideDesktop && clickedOutsideMobile && clickedOutsideMobileBtn) {
         setRegionDropdownOpen(false);
+      }
+      if (clickedOutsideGallery) {
+        setGalleryDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -83,7 +90,53 @@ const Header = () => {
             {activeRegion.code === 'IN' && (
               <>
                 <Link href="/plans" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">House Plans</Link>
-                <Link href="/gallery/kitchen-designs" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Kitchen Gallery</Link>
+                
+                {/* Gallery Dropdown */}
+                <div className="relative" ref={galleryDropdownRef}>
+                  <button
+                    onClick={() => setGalleryDropdownOpen(!galleryDropdownOpen)}
+                    onMouseEnter={() => setGalleryDropdownOpen(true)}
+                    className={`flex items-center gap-1.5 ${pathname.startsWith('/gallery') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline py-1 cursor-pointer`}
+                  >
+                    <span>Gallery</span>
+                    <i className={`fas fa-chevron-down text-[10px] transition-transform ${galleryDropdownOpen ? 'rotate-180 text-primary' : 'text-gray-400'}`}></i>
+                  </button>
+
+                  {galleryDropdownOpen && (
+                    <div 
+                      onMouseLeave={() => setGalleryDropdownOpen(false)}
+                      className="absolute left-0 top-full mt-2 w-60 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl shadow-xl py-2 z-50 animate-fadeIn"
+                    >
+                      <Link
+                        href="/gallery/kitchen-designs"
+                        onClick={() => setGalleryDropdownOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/kitchen-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-sm shrink-0">
+                          <i className="fas fa-kitchen-set"></i>
+                        </div>
+                        <div>
+                          <p className="font-bold text-xs leading-tight">Kitchen Designs</p>
+                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">Modular & L/U-Shape</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/gallery/bathroom-designs"
+                        onClick={() => setGalleryDropdownOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/bathroom-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                          <i className="fas fa-bath"></i>
+                        </div>
+                        <div>
+                          <p className="font-bold text-xs leading-tight">Bathroom Designs</p>
+                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet & Dry / Vanities</p>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
                 <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
               </>
             )}
@@ -284,9 +337,38 @@ const Header = () => {
                 <Link href="/plans" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
                   House Plans
                 </Link>
-                <Link href="/gallery/kitchen-designs" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
-                  Kitchen Gallery
-                </Link>
+
+                {/* Mobile Gallery Accordion */}
+                <div>
+                  <button
+                    onClick={() => setMobileGalleryOpen(!mobileGalleryOpen)}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 cursor-pointer"
+                  >
+                    <span>Gallery</span>
+                    <i className={`fas fa-chevron-down text-xs transition-transform ${mobileGalleryOpen ? 'rotate-180 text-primary' : 'text-gray-400'}`}></i>
+                  </button>
+                  {mobileGalleryOpen && (
+                    <div className="pl-4 pr-2 py-1 space-y-1">
+                      <Link
+                        href="/gallery/kitchen-designs"
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${pathname === '/gallery/kitchen-designs' ? 'text-primary font-bold bg-primary/5' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                      >
+                        <i className="fas fa-kitchen-set text-xs text-emerald-500"></i>
+                        <span>Kitchen Designs</span>
+                      </Link>
+                      <Link
+                        href="/gallery/bathroom-designs"
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${pathname === '/gallery/bathroom-designs' ? 'text-primary font-bold bg-primary/5' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                      >
+                        <i className="fas fa-bath text-xs text-blue-500"></i>
+                        <span>Bathroom Designs</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
                 <Link href="/app" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
                   HDE App
                 </Link>
