@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { BathroomDesign, BathroomLayoutType } from '@/types/gallery';
 import { bathroomGalleryService } from '@/services/bathroomGalleryService';
+import { estimateIndiaBathroomCost, CostEstimateResult } from '@/utils/indiaCostEstimator';
 
 const LAYOUT_TYPES: BathroomLayoutType[] = [
   'Master Bathroom',
@@ -24,6 +25,47 @@ export default function BathroomGalleryPage() {
   const [loadingProgress, setLoadingProgress] = useState(15);
   const [loadingStage, setLoadingStage] = useState('Connecting to design database...');
   const router = useRouter();
+
+  // Public Auto-Calculator State (India Engine)
+  const [calcLength, setCalcLength] = useState<number>(8);
+  const [calcWidth, setCalcWidth] = useState<number>(7);
+  const [calcSqft, setCalcSqft] = useState<number>(56);
+  const [calcTier, setCalcTier] = useState<'Standard' | 'Premium' | 'Luxury'>('Premium');
+  const [calcResult, setCalcResult] = useState<CostEstimateResult | null>(() => {
+    return estimateIndiaBathroomCost({
+      lengthFt: 8,
+      widthFt: 7,
+      areaSqFt: 56,
+      layoutType: 'Wet & Dry Partition',
+      qualityTier: 'Premium'
+    });
+  });
+
+  const handleLengthChange = (val: number) => {
+    setCalcLength(val);
+    const w = Number(calcWidth) || 0;
+    if (val > 0 && w > 0) setCalcSqft(val * w);
+  };
+
+  const handleWidthChange = (val: number) => {
+    setCalcWidth(val);
+    const l = Number(calcLength) || 0;
+    if (val > 0 && l > 0) setCalcSqft(l * val);
+  };
+
+  const handleCalculateBudget = () => {
+    const l = Number(calcLength) || 0;
+    const w = Number(calcWidth) || 0;
+    const sqft = Number(calcSqft) || (l > 0 && w > 0 ? l * w : 56);
+    const res = estimateIndiaBathroomCost({
+      lengthFt: l,
+      widthFt: w,
+      areaSqFt: sqft,
+      layoutType: (selectedType !== 'All' ? selectedType as BathroomLayoutType : 'Wet & Dry Partition'),
+      qualityTier: calcTier
+    });
+    setCalcResult(res);
+  };
 
   useEffect(() => {
     let progressTimer: NodeJS.Timeout;
@@ -164,6 +206,116 @@ export default function BathroomGalleryPage() {
           <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
             Discover 9:16 mobile-first bathroom interior ideas curated for Indian apartments and villas. Each concept features wet/dry partitions, vanity layouts, tile recommendations, and approximate INR renovation costs.
           </p>
+        </div>
+
+        {/* ⚡ Public Auto-Calculate Renovation Budget from Sq.Ft (India Engine) */}
+        <div className="p-4 sm:p-6 rounded-3xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/80 dark:border-blue-900/40 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-blue-200/50 dark:border-blue-900/30">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg shrink-0">
+                <i className="fas fa-calculator"></i>
+              </div>
+              <div>
+                <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                  <span>⚡ Auto-Calculate Renovation Budget from Sq.Ft</span>
+                  <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">India Engine</span>
+                </h3>
+                <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                  Enter bathroom dimensions or total sqft to auto-fill pricing &amp; budget in seconds.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCalculateBudget}
+              className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+            >
+              <i className="fas fa-bolt"></i>
+              <span>Calculate Budget</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
+              <input
+                type="number"
+                min="3"
+                max="50"
+                value={calcLength}
+                onChange={(e) => handleLengthChange(Number(e.target.value))}
+                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
+              <input
+                type="number"
+                min="3"
+                max="50"
+                value={calcWidth}
+                onChange={(e) => handleWidthChange(Number(e.target.value))}
+                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
+              <input
+                type="number"
+                min="10"
+                max="1000"
+                value={calcSqft}
+                onChange={(e) => setCalcSqft(Number(e.target.value))}
+                className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Fitting Quality Tier</label>
+              <select
+                value={calcTier}
+                onChange={(e) => setCalcTier(e.target.value as any)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+              >
+                <option value="Standard">Standard (Jaquar / Hindware)</option>
+                <option value="Premium">Premium (Kohler / Grohe)</option>
+                <option value="Luxury">Luxury (Hansgrohe / Toto)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Calculated Summary Pill */}
+          {calcResult && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white dark:bg-zinc-900 border border-blue-200 dark:border-blue-900/50 shadow-xs">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">Estimated Budget:</span>
+                <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">
+                  {calcResult.formattedBudget}
+                </span>
+                <span className="text-xs font-semibold text-gray-400">({calcResult.ratePerUnit})</span>
+              </div>
+
+              <button
+                onClick={() => {
+                  const params = new URLSearchParams({
+                    calc: 'india-bathroom',
+                    area: String(calcResult.totalSqFt),
+                    length: String(calcLength),
+                    width: String(calcWidth),
+                    tier: calcTier,
+                    type: selectedType !== 'All' ? selectedType : 'Wet & Dry Partition'
+                  });
+                  router.push(`/app?${params.toString()}`);
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline cursor-pointer"
+              >
+                <span>Open in Detailed India Calculator</span>
+                <i className="fas fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Shape / Layout Filter Pills */}

@@ -59,13 +59,15 @@ export interface CostEstimateResult {
 /**
  * Format Indian Lakhs / Thousands currency string
  */
-export function formatIndianBudget(min: number, max: number): string {
-  const format = (num: number) => {
-    if (num >= 100000) {
-      const lakhs = num / 100000;
+export function formatIndianBudget(min?: number | null, max?: number | null): string {
+  const format = (num?: number | null) => {
+    const val = Number(num);
+    if (isNaN(val) || val <= 0) return '₹0';
+    if (val >= 100000) {
+      const lakhs = val / 100000;
       return `₹${lakhs.toFixed(2).replace(/\.00$/, '')} Lakhs`;
     }
-    return `₹${num.toLocaleString('en-IN')}`;
+    return `₹${val.toLocaleString('en-IN')}`;
   };
   return `${format(min)} - ${format(max)}`;
 }
