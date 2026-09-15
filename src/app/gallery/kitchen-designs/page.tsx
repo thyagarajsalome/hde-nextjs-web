@@ -20,45 +20,69 @@ export default function KitchenGalleryPage() {
   const [loadingStage, setLoadingStage] = useState('Connecting to design database...');
   const router = useRouter();
 
-  // Public Auto-Calculator State (India Engine)
+  // Interactive Auto-Calculator State within Design Card/Modal (India Engine)
   const [calcLength, setCalcLength] = useState<number>(12);
   const [calcWidth, setCalcWidth] = useState<number>(10);
   const [calcSqft, setCalcSqft] = useState<number>(120);
   const [calcTier, setCalcTier] = useState<'Economy' | 'Standard' | 'Premium' | 'Ultra Luxury'>('Standard');
-  const [calcResult, setCalcResult] = useState<CostEstimateResult | null>(() => {
-    return estimateIndiaKitchenCost({
-      lengthFt: 12,
-      widthFt: 10,
-      areaSqFt: 120,
-      layoutShape: 'L-Shape',
-      qualityTier: 'Standard'
-    });
-  });
+  const [calcResult, setCalcResult] = useState<CostEstimateResult | null>(null);
 
   const handleLengthChange = (val: number) => {
     setCalcLength(val);
     const w = Number(calcWidth) || 0;
-    if (val > 0 && w > 0) setCalcSqft(val * w);
+    const sqft = val > 0 && w > 0 ? val * w : calcSqft;
+    if (val > 0 && w > 0) setCalcSqft(sqft);
+    if (activeModalDesign) {
+      setCalcResult(estimateIndiaKitchenCost({
+        lengthFt: val,
+        widthFt: w,
+        areaSqFt: sqft,
+        layoutShape: (activeModalDesign.layout_shape as KitchenLayoutShape) || 'L-Shape',
+        qualityTier: calcTier
+      }));
+    }
   };
 
   const handleWidthChange = (val: number) => {
     setCalcWidth(val);
     const l = Number(calcLength) || 0;
-    if (val > 0 && l > 0) setCalcSqft(l * val);
+    const sqft = val > 0 && l > 0 ? l * val : calcSqft;
+    if (val > 0 && l > 0) setCalcSqft(sqft);
+    if (activeModalDesign) {
+      setCalcResult(estimateIndiaKitchenCost({
+        lengthFt: l,
+        widthFt: val,
+        areaSqFt: sqft,
+        layoutShape: (activeModalDesign.layout_shape as KitchenLayoutShape) || 'L-Shape',
+        qualityTier: calcTier
+      }));
+    }
   };
 
-  const handleCalculateBudget = () => {
-    const l = Number(calcLength) || 0;
-    const w = Number(calcWidth) || 0;
-    const sqft = Number(calcSqft) || (l > 0 && w > 0 ? l * w : 120);
-    const res = estimateIndiaKitchenCost({
-      lengthFt: l,
-      widthFt: w,
-      areaSqFt: sqft,
-      layoutShape: (selectedShape !== 'All' ? selectedShape as KitchenLayoutShape : 'L-Shape'),
-      qualityTier: calcTier
-    });
-    setCalcResult(res);
+  const handleSqftChange = (val: number) => {
+    setCalcSqft(val);
+    if (activeModalDesign) {
+      setCalcResult(estimateIndiaKitchenCost({
+        lengthFt: calcLength,
+        widthFt: calcWidth,
+        areaSqFt: val,
+        layoutShape: (activeModalDesign.layout_shape as KitchenLayoutShape) || 'L-Shape',
+        qualityTier: calcTier
+      }));
+    }
+  };
+
+  const handleTierChange = (val: 'Economy' | 'Standard' | 'Premium' | 'Ultra Luxury') => {
+    setCalcTier(val);
+    if (activeModalDesign) {
+      setCalcResult(estimateIndiaKitchenCost({
+        lengthFt: calcLength,
+        widthFt: calcWidth,
+        areaSqFt: calcSqft,
+        layoutShape: (activeModalDesign.layout_shape as KitchenLayoutShape) || 'L-Shape',
+        qualityTier: val
+      }));
+    }
   };
 
   useEffect(() => {
@@ -105,8 +129,28 @@ export default function KitchenGalleryPage() {
     return () => clearInterval(progressTimer);
   }, []);
 
-  // Two-phase loading: fetch full detail when modal opens
+  // Two-phase loading: fetch full detail when modal opens and initialize auto-calculator for this card
   const handleOpenModal = useCallback(async (design: KitchenDesign) => {
+    // Parse dimensions from this design card
+    const sqftMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:sq\s*ft|sqft)/i);
+    const dimMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:ft|'|feet)?\s*[×xX*]\s*(\d+(?:\.\d+)?)/i);
+    const l = dimMatch ? Math.round(Number(dimMatch[1])) : 12;
+    const w = dimMatch ? Math.round(Number(dimMatch[2])) : 10;
+    const s = sqftMatch ? Math.round(Number(sqftMatch[1])) : (l > 0 && w > 0 ? l * w : 120);
+    const tier = (design.quality_tier as any) || 'Standard';
+
+    setCalcLength(l);
+    setCalcWidth(w);
+    setCalcSqft(s);
+    setCalcTier(tier);
+    setCalcResult(estimateIndiaKitchenCost({
+      lengthFt: l,
+      widthFt: w,
+      areaSqFt: s,
+      layoutShape: (design.layout_shape as KitchenLayoutShape) || 'L-Shape',
+      qualityTier: tier
+    }));
+
     // Show modal immediately with card data
     setActiveModalDesign(design);
     // Fetch full detail in background (for fields not in card columns)
@@ -134,22 +178,17 @@ export default function KitchenGalleryPage() {
     ? designs
     : designs.filter(d => d.layout_shape === selectedShape);
 
-  // Navigate to India Modular Kitchen Calculator with pre-filled specs
+  // Navigate to India Modular Kitchen Calculator with customized specs
   const handleOpenCalculator = (design: KitchenDesign) => {
-    const sqftMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:sq\s*ft|sqft)/i);
-    const dimMatch = design.dimensions?.match(/(\d+(?:\.\d+)?)\s*(?:ft|'|feet)?\s*[×xX*]\s*(\d+(?:\.\d+)?)/i);
-    const length = dimMatch ? dimMatch[1] : '';
-    const width = dimMatch ? dimMatch[2] : '';
-    const sqft = sqftMatch ? sqftMatch[1] : (length && width ? String(Math.round(Number(length) * Number(width))) : '120');
-
     const params = new URLSearchParams({
       calc: 'india-kitchen',
-      area: sqft,
-      shape: design.layout_shape || '',
+      area: String(calcSqft || '120'),
+      shape: design.layout_shape || 'L-Shape',
       title: design.title || '',
+      tier: calcTier,
     });
-    if (length) params.set('length', length);
-    if (width) params.set('width', width);
+    if (calcLength) params.set('length', String(calcLength));
+    if (calcWidth) params.set('width', String(calcWidth));
     if (design.cabinet_finish) params.set('finish', design.cabinet_finish);
     if (design.countertop_material) params.set('countertop', design.countertop_material);
 
@@ -202,117 +241,6 @@ export default function KitchenGalleryPage() {
           <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
             Discover 9:16 mobile-first modular kitchen design ideas curated for Indian flats and homes. Each concept includes layout shapes, room dimensions, material finishes, and approximate INR modular costs.
           </p>
-        </div>
-
-        {/* ⚡ Public Auto-Calculate Modular Kitchen Budget from Sq.Ft (India Engine) */}
-        <div className="p-4 sm:p-6 rounded-3xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 shadow-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg shrink-0">
-                <i className="fas fa-calculator"></i>
-              </div>
-              <div>
-                <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
-                  <span>⚡ Auto-Calculate Modular Kitchen Budget from Sq.Ft</span>
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">India Engine</span>
-                </h3>
-                <p className="text-gray-600 dark:text-zinc-400 text-xs">
-                  Enter kitchen dimensions or total carpet area to auto-estimate Indian modular cost &amp; materials.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleCalculateBudget}
-              className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
-            >
-              <i className="fas fa-bolt"></i>
-              <span>Calculate Budget</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
-              <input
-                type="number"
-                min="5"
-                max="60"
-                value={calcLength}
-                onChange={(e) => handleLengthChange(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
-              <input
-                type="number"
-                min="4"
-                max="40"
-                value={calcWidth}
-                onChange={(e) => handleWidthChange(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
-              <input
-                type="number"
-                min="20"
-                max="1500"
-                value={calcSqft}
-                onChange={(e) => setCalcSqft(Number(e.target.value))}
-                className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Material Quality Tier</label>
-              <select
-                value={calcTier}
-                onChange={(e) => setCalcTier(e.target.value as any)}
-                className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-              >
-                <option value="Economy">Economy (MDF / Particle Board)</option>
-                <option value="Standard">Standard (MR Plywood + Laminate)</option>
-                <option value="Premium">Premium (BWP Marine Ply + Acrylic)</option>
-                <option value="Ultra Luxury">Ultra Luxury (PU Lacquered / Glass / SS)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Calculated Summary Pill */}
-          {calcResult && (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white dark:bg-zinc-900 border border-amber-200 dark:border-amber-900/50 shadow-xs">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">Estimated Budget:</span>
-                <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 font-mono">
-                  {calcResult.formattedBudget}
-                </span>
-                <span className="text-xs font-semibold text-gray-400">({calcResult.ratePerUnit})</span>
-              </div>
-
-              <button
-                onClick={() => {
-                  const params = new URLSearchParams({
-                    calc: 'india-kitchen',
-                    area: String(calcResult.totalSqFt),
-                    length: String(calcLength),
-                    width: String(calcWidth),
-                    tier: calcTier,
-                    shape: selectedShape !== 'All' ? selectedShape : 'L-Shape'
-                  });
-                  router.push(`/app?${params.toString()}`);
-                }}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline cursor-pointer"
-              >
-                <span>Open in Detailed India Calculator</span>
-                <i className="fas fa-arrow-right text-[10px]"></i>
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Layout Shape Filter Pills */}
@@ -454,7 +382,7 @@ export default function KitchenGalleryPage() {
                       {design.layout_shape} Kitchen
                     </span>
                     <span className="text-primary font-bold text-xs flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>View Specs</span>
+                      <span>⚡ Auto-Calculate</span>
                       <i className="fas fa-arrow-right text-[10px]"></i>
                     </span>
                   </div>
@@ -511,21 +439,80 @@ export default function KitchenGalleryPage() {
                   </button>
                 </div>
 
-                {/* Estimated Budget Box */}
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs font-bold text-amber-800 dark:text-amber-400 block">
-                      Approximate Total Budget
-                    </span>
-                    <span className="text-xl font-black text-amber-900 dark:text-amber-300 font-mono">
-                      {activeModalDesign.formatted_budget}
+                {/* ⚡ Auto-Calculate Budget for this Kitchen Design (India Engine) */}
+                <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-zinc-200">
+                      <span className="text-amber-500 text-sm">⚡</span>
+                      <span>Auto-Calculate Renovation Budget</span>
+                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">India Engine</span>
+                    </div>
+                    <span className="text-[10px] text-gray-500 dark:text-zinc-400">Edit dimensions to recalculate</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Length (ft)</label>
+                      <input
+                        type="number"
+                        min="4"
+                        max="60"
+                        value={calcLength}
+                        onChange={(e) => handleLengthChange(Number(e.target.value))}
+                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Width (ft)</label>
+                      <input
+                        type="number"
+                        min="4"
+                        max="40"
+                        value={calcWidth}
+                        onChange={(e) => handleWidthChange(Number(e.target.value))}
+                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Total Sq.Ft</label>
+                      <input
+                        type="number"
+                        min="20"
+                        max="1500"
+                        value={calcSqft}
+                        onChange={(e) => handleSqftChange(Number(e.target.value))}
+                        className="w-full p-2 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-xs font-black text-amber-700 dark:text-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Quality Tier</label>
+                      <select
+                        value={calcTier}
+                        onChange={(e) => handleTierChange(e.target.value as any)}
+                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                      >
+                        <option value="Economy">Economy (MDF)</option>
+                        <option value="Standard">Standard (MR Ply)</option>
+                        <option value="Premium">Premium (Marine)</option>
+                        <option value="Ultra Luxury">Ultra Luxury</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Approximate Total Budget Result Box */}
+                  <div className="p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-amber-200/80 dark:border-amber-900/60 flex items-center justify-between shadow-xs">
+                    <div>
+                      <span className="text-[11px] font-bold text-gray-500 dark:text-zinc-400 block">
+                        Approximate Total Budget
+                      </span>
+                      <span className="text-xl font-black text-amber-900 dark:text-amber-300 font-mono">
+                        {calcResult?.formattedBudget || activeModalDesign.formatted_budget}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold text-gray-600 dark:text-zinc-400">
+                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,600 - ₹2,500/sqft'}
                     </span>
                   </div>
-                  {activeModalDesign.rate_per_unit && (
-                    <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">
-                      {activeModalDesign.rate_per_unit}
-                    </span>
-                  )}
                 </div>
 
                 {/* Key Specifications Grid */}

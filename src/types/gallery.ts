@@ -17,6 +17,7 @@ export interface KitchenDesign {
   cabinet_finish: string;              // e.g. "High-Gloss Acrylic", "Matte Laminate"
   countertop_material: string;         // e.g. "Jet Black Granite", "Engineered Quartz"
   features: string[];                  // e.g. ["Tandem Drawers", "Loft Storage", "Profile LED"]
+  quality_tier?: string;               // e.g. "Standard", "Premium"
   
   // Cost Estimation (INR)
   min_cost: number;                     // e.g. 140000
@@ -85,6 +86,7 @@ export interface BathroomDesign {
   fittings_brand: string;              // e.g. "Jaquar / Kohler Concealed Diverter"
   partition_type: string;             // e.g. "Toughened Glass Walk-in"
   features: string[];                  // e.g. ["LED Backlit Mirror", "Wall-Hung WC", "Shower Niche"]
+  quality_tier?: string;               // e.g. "Standard", "Premium", "Luxury"
   
   // Cost Estimation (INR)
   min_cost: number;                     // e.g. 75000
