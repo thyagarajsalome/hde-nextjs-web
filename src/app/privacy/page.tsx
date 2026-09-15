@@ -3,8 +3,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Dream Home Calculator & Home Design English',
-  description: 'Privacy Policy for Dream Home Calculator and Home Design English, developed by Thyagaraj Salome. Learn how we handle your data and privacy.',
+  title: 'Privacy Policy | HDE: Home Design & Real Estate',
+  description: 'Privacy Policy for HDE: Home Design & Real Estate, published by HDE-TM. Learn how we handle your data, saved projects, and user privacy.',
   alternates: {
     canonical: '/privacy',
   },
@@ -17,28 +17,28 @@ export default function PrivacyPage() {
       <p><strong>Effective Date:</strong> September 15, 2026</p>
       
       <p>
-        This Privacy Policy applies to the <strong>Dream Home Calculator</strong> mobile application 
-        (available on the Google Play Store) and the <strong>Home Design English (HDE)</strong> web platform 
-        (located at <Link href="/" className="text-primary hover:underline">homedesignenglish.com</Link>), 
-        owned, developed, and operated by independent developer <strong>Thyagaraj Salome</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;).
+        This Privacy Policy applies to the <strong>HDE: Home Design &amp; Real Estate</strong> mobile application 
+        (formerly known as <em>Dream Home Calculator</em>, available on the Google Play Store) and the 
+        <strong>Home Design English (HDE)</strong> platform (located at <Link href="/" className="text-primary hover:underline">homedesignenglish.com</Link>), 
+        owned, developed, and published by <strong>HDE-TM</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;).
       </p>
 
       <h2>1. Application &amp; Developer Identification</h2>
       <ul>
-        <li><strong>Application Name:</strong> Dream Home Calculator</li>
-        <li><strong>Website:</strong> Home Design English (homedesignenglish.com)</li>
-        <li><strong>Developer / Publisher:</strong> Thyagaraj Salome</li>
-        <li><strong>Contact Email:</strong> <a href="mailto:hdeadmin@gmail.com" className="text-primary hover:underline font-semibold">hdeadmin@gmail.com</a></li>
+        <li><strong>Application Name:</strong> HDE: Home Design &amp; Real Estate (Dream Home Calculator)</li>
+        <li><strong>Developer / Publisher Name:</strong> HDE-TM</li>
+        <li><strong>Official Website:</strong> <Link href="/" className="text-primary hover:underline">https://www.homedesignenglish.com</Link></li>
+        <li><strong>Developer Contact Email:</strong> <a href="mailto:hdeadmin@gmail.com" className="text-primary hover:underline font-semibold">hdeadmin@gmail.com</a></li>
       </ul>
 
       <h2>2. Information We Collect</h2>
-      <p>We collect information to provide and improve our estimation and architectural planning services:</p>
+      <p>We collect information to provide, maintain, and improve our construction cost estimation and architectural planning tools:</p>
       <ul>
         <li>
-          <strong>Account Information:</strong> When you create an account, we collect your email address and authentication credentials securely via our authentication provider (Google Sign-In / Supabase Auth).
+          <strong>Account Information:</strong> When you create an account, we collect your email address and authentication credentials securely via our authentication providers (Google Sign-In / Supabase Auth).
         </li>
         <li>
-          <strong>User Inputs &amp; Saved Projects:</strong> Construction dimensions, selected materials, project locations, and saved cost estimation calculations that you explicitly create and save.
+          <strong>User Inputs &amp; Saved Projects:</strong> Construction dimensions, material preferences, project locations, and saved cost estimation calculations that you explicitly create and save.
         </li>
         <li>
           <strong>Device &amp; Diagnostic Data:</strong> In the mobile application, non-identifying technical data such as operating system version, device model, and crash diagnostics may be collected to ensure app stability.
@@ -94,10 +94,10 @@ export default function PrivacyPage() {
 
       <h2>9. Contact Information</h2>
       <p>
-        If you have questions, concerns, or privacy-related requests regarding the <strong>Dream Home Calculator</strong> app or <strong>Home Design English</strong>, please contact:
+        If you have questions, concerns, or privacy-related requests regarding the <strong>HDE: Home Design &amp; Real Estate</strong> app or <strong>Home Design English</strong>, please contact:
       </p>
       <p>
-        <strong>Developer:</strong> Thyagaraj Salome<br />
+        <strong>Developer:</strong> HDE-TM<br />
         <strong>Email:</strong> <a href="mailto:hdeadmin@gmail.com" className="text-primary hover:underline font-semibold">hdeadmin@gmail.com</a><br />
         <strong>Website:</strong> <Link href="/" className="text-primary hover:underline">https://www.homedesignenglish.com</Link>
       </p>
