@@ -144,6 +144,17 @@ const Header = () => {
                           <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet & Dry / Vanities</p>
                         </div>
                       </Link>
+
+                      <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
+                        <Link
+                          href="/admin/gallery"
+                          onClick={() => setGalleryDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
+                        >
+                          <i className="fas fa-cloud-arrow-up text-xs"></i>
+                          <span>Upload &amp; Manage Designs</span>
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>

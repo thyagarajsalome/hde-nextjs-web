@@ -177,6 +177,28 @@ const INDIA_QUICK_TOOLS: QuickTool[] = [
     textColor: "text-blue-600",
     bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
   },
+  {
+    id: "admin-kitchen",
+    name: "Kitchen Gallery Upload",
+    subtitle: "Upload 9:16 modular designs",
+    icon: "fas fa-kitchen-set",
+    badge: "Upload",
+    route: "/admin/gallery/kitchen",
+    color: "from-amber-500 to-amber-600",
+    textColor: "text-amber-600",
+    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
+  },
+  {
+    id: "admin-bathroom",
+    name: "Bathroom Gallery Upload",
+    subtitle: "Upload 9:16 bathroom concepts",
+    icon: "fas fa-bath",
+    badge: "Upload",
+    route: "/admin/gallery/bathroom",
+    color: "from-blue-500 to-blue-600",
+    textColor: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
 ];
 
 const USA_QUICK_TOOLS: QuickTool[] = [
@@ -631,6 +653,15 @@ export default function Dashboard() {
               </div>
 
               <Link
+                href="/admin/gallery"
+                className="px-3.5 py-2.5 rounded-xl bg-[#c5a059]/15 hover:bg-[#c5a059]/25 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/35 text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs"
+                title="Upload & Manage Gallery Designs (Kitchen & Bathroom)"
+              >
+                <i className="fas fa-cloud-arrow-up text-primary"></i>
+                <span className="hidden sm:inline">Upload to Gallery</span>
+              </Link>
+
+              <Link
                 href="/admin/health"
                 className="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs"
                 title="View Real-Time Platform Health & Diagnostics"
@@ -882,6 +913,48 @@ export default function Dashboard() {
                 </div>
                 <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
                   Published 2026 home construction, interest rate, and remodeling pillar posts.
+                </p>
+              </div>
+            </Link>
+
+            {/* 7. Kitchen Gallery & Upload Manager */}
+            <Link
+              href="/admin/gallery/kitchen"
+              className="group p-3.5 rounded-xl border border-amber-200/70 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-kitchen-set text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
+                    Kitchen Gallery Upload
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-amber-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Upload 9:16 modular kitchen photo cards, set layouts, materials &amp; INR budgets.
+                </p>
+              </div>
+            </Link>
+
+            {/* 8. Bathroom Gallery & Upload Manager */}
+            <Link
+              href="/admin/gallery/bathroom"
+              className="group p-3.5 rounded-xl border border-blue-200/70 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/10 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition flex items-start gap-3 shadow-2xs"
+            >
+              <div className="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                <i className="fas fa-bath text-base"></i>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                    Bathroom Gallery Upload
+                  </h4>
+                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-blue-600 transition"></i>
+                </div>
+                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                  Upload 9:16 bathroom concepts, configure partitions, vanity &amp; CP fittings.
                 </p>
               </div>
             </Link>
