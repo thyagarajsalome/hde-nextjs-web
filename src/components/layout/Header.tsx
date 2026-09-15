@@ -76,9 +76,20 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center gap-2 text-2xl font-bold text-secondary dark:text-zinc-100 hover:text-primary transition-colors no-underline">
-              <img src="/bg-logo.png" alt="HDE Logo" className="w-12 h-12 object-contain" />
-              <span className="text-primary font-extrabold">HDE</span>
+            <Link href="/" className="flex items-center gap-1.5 group no-underline">
+              <img 
+                src="/bg-logo.png" 
+                alt="HDE Logo" 
+                className="w-9 h-9 sm:w-10 sm:h-10 object-contain transition-transform group-hover:scale-105" 
+              />
+              <div className="flex flex-col justify-center">
+                <span className="text-primary font-black text-lg sm:text-xl leading-none tracking-tight">
+                  HDE
+                </span>
+                <span className="text-[9px] sm:text-[10px] font-semibold text-gray-500 dark:text-zinc-400 tracking-tight leading-none mt-0.5 whitespace-nowrap">
+                  Home Design &amp; Real Estate
+                </span>
+              </div>
             </Link>
           </div>
 

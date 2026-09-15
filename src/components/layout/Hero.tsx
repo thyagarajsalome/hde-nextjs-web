@@ -69,7 +69,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
               fill 
               priority 
               sizes="100vw"
-              quality={80}
+              quality={75}
               className="object-cover" 
             />
           </div>
@@ -136,7 +136,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             fill 
             priority 
             sizes="100vw"
-            quality={80}
+            quality={75}
             className="object-cover" 
           />
           {/* Dark overlay only needed for AE region with buttons */}

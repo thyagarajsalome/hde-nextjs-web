@@ -77,15 +77,15 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
   const CALCULATORS = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
 
-  // Auto-sync selected category if active calculator changes externally
+  // When activeCalculator changes externally (e.g. from deep link), auto-align category
   useEffect(() => {
     if (region === 'IN') {
       const found = INDIA_CALCULATORS.find(c => c.id === activeCalculator);
       if (found && selectedCategory !== "all" && found.category !== selectedCategory) {
-        setSelectedCategory("all");
+        setSelectedCategory(found.category);
       }
     }
-  }, [activeCalculator, region, selectedCategory]);
+  }, [activeCalculator, region]);
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
@@ -111,6 +111,16 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const handleTabClick = (id: CalculatorType) => {
     setActiveCalculator(id);
     setIsDropdownOpen(false);
+  };
+
+  const handleCategorySelect = (catId: string) => {
+    setSelectedCategory(catId);
+    if (catId !== 'all') {
+      const inCat = INDIA_CALCULATORS.filter(c => c.category === catId);
+      if (inCat.length > 0 && !inCat.some(c => c.id === activeCalculator)) {
+        setActiveCalculator(inCat[0].id);
+      }
+    }
   };
 
   // Filtered calculators for India mode
@@ -173,7 +183,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
             return (
               <button
                 key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
+                onClick={() => handleCategorySelect(cat.id)}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   isCatActive
                     ? 'bg-primary text-white dark:text-zinc-950 shadow-sm scale-[1.02]'
