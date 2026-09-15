@@ -85,6 +85,20 @@ export default function KitchenGalleryPage() {
     }
   };
 
+  const handleCalculateBudget = () => {
+    const l = Number(calcLength) || 0;
+    const w = Number(calcWidth) || 0;
+    const sqft = Number(calcSqft) || (l > 0 && w > 0 ? l * w : 120);
+    const res = estimateIndiaKitchenCost({
+      lengthFt: l,
+      widthFt: w,
+      areaSqFt: sqft,
+      layoutShape: (activeModalDesign?.layout_shape as KitchenLayoutShape) || 'L-Shape',
+      qualityTier: calcTier
+    });
+    setCalcResult(res);
+  };
+
   useEffect(() => {
     let progressTimer: NodeJS.Timeout;
 
@@ -439,78 +453,95 @@ export default function KitchenGalleryPage() {
                   </button>
                 </div>
 
-                {/* ⚡ Auto-Calculate Budget for this Kitchen Design (India Engine) */}
-                <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-zinc-200">
-                      <span className="text-amber-500 text-sm">⚡</span>
-                      <span>Auto-Calculate Renovation Budget</span>
-                      <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">India Engine</span>
+                {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
+                <div className="p-4 sm:p-5 rounded-3xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
+                        <i className="fas fa-calculator"></i>
+                      </div>
+                      <div>
+                        <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                          <span className="text-amber-500">⚡</span>
+                          <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
+                        </h3>
+                        <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                          Enter room dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-[10px] text-gray-500 dark:text-zinc-400">Edit dimensions to recalculate</span>
+
+                    <button
+                      type="button"
+                      onClick={handleCalculateBudget}
+                      className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+                    >
+                      <i className="fas fa-bolt"></i>
+                      <span>Calculate Budget</span>
+                    </button>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div>
-                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Length (ft)</label>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
                       <input
                         type="number"
                         min="4"
                         max="60"
                         value={calcLength}
                         onChange={(e) => handleLengthChange(Number(e.target.value))}
-                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Width (ft)</label>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
                       <input
                         type="number"
                         min="4"
                         max="40"
                         value={calcWidth}
                         onChange={(e) => handleWidthChange(Number(e.target.value))}
-                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Total Sq.Ft</label>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
                       <input
                         type="number"
                         min="20"
                         max="1500"
                         value={calcSqft}
                         onChange={(e) => handleSqftChange(Number(e.target.value))}
-                        className="w-full p-2 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-xs font-black text-amber-700 dark:text-amber-400"
+                        className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-gray-500 dark:text-zinc-400 mb-1">Quality Tier</label>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
                       <select
                         value={calcTier}
                         onChange={(e) => handleTierChange(e.target.value as any)}
-                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-gray-900 dark:text-white"
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
                       >
-                        <option value="Economy">Economy (MDF)</option>
-                        <option value="Standard">Standard (MR Ply)</option>
-                        <option value="Premium">Premium (Marine)</option>
-                        <option value="Ultra Luxury">Ultra Luxury</option>
+                        <option value="Economy">Economy (MDF / Particle Board)</option>
+                        <option value="Standard">Standard (Marine Ply / MR Plywood)</option>
+                        <option value="Premium">Premium (BWP Marine Ply + Acrylic)</option>
+                        <option value="Ultra Luxury">Ultra Luxury (PU Lacquered / Glass)</option>
                       </select>
                     </div>
                   </div>
 
                   {/* Approximate Total Budget Result Box */}
-                  <div className="p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-amber-200/80 dark:border-amber-900/60 flex items-center justify-between shadow-xs">
+                  <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between shadow-xs">
                     <div>
-                      <span className="text-[11px] font-bold text-gray-500 dark:text-zinc-400 block">
+                      <span className="text-xs font-bold text-amber-800 dark:text-amber-400 block">
                         Approximate Total Budget
                       </span>
-                      <span className="text-xl font-black text-amber-900 dark:text-amber-300 font-mono">
+                      <span className="text-xl sm:text-2xl font-black text-amber-900 dark:text-amber-300 font-mono">
                         {calcResult?.formattedBudget || activeModalDesign.formatted_budget}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-gray-600 dark:text-zinc-400">
-                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,600 - ₹2,500/sqft'}
+                    <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">
+                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,600 / sq ft'}
                     </span>
                   </div>
                 </div>

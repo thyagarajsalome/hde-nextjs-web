@@ -6,6 +6,7 @@ import { KitchenDesign, CreateKitchenDesignInput, KitchenLayoutShape } from '@/t
 import { KitchenGalleryService } from '@/services/kitchenGalleryService';
 import { compressAndCropTo916, CompressionResult } from '@/utils/imageCompressor';
 import { estimateIndiaKitchenCost } from '@/utils/indiaCostEstimator';
+import { supabase } from '@/config/supabaseClient';
 
 const SHAPES: KitchenLayoutShape[] = ['L-Shape', 'U-Shape', 'Parallel', 'Straight', 'Island'];
 const POPULAR_FINISHES = ['High-Gloss Acrylic', 'Matte Laminate', 'Glossy Laminate', 'PU Lacquer Satin', 'Membrane Finish', 'Wood Veneer'];
@@ -22,6 +23,34 @@ export default function AdminKitchenGalleryPage() {
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  // Auto-Calculate Budget Helper State (Admin Engine)
+  const [calcLength, setCalcLength] = useState<number>(10);
+  const [calcWidth, setCalcWidth] = useState<number>(8);
+  const [calcSqft, setCalcSqft] = useState<number>(80);
+  const [calcTier, setCalcTier] = useState<'Economy' | 'Standard' | 'Premium' | 'Ultra Luxury'>('Standard');
+
+  const handleAdminCalculateBudget = () => {
+    const l = Number(calcLength) || 0;
+    const w = Number(calcWidth) || 0;
+    const sqft = Number(calcSqft) || (l > 0 && w > 0 ? l * w : 80);
+    const res = estimateIndiaKitchenCost({
+      lengthFt: l,
+      widthFt: w,
+      areaSqFt: sqft,
+      layoutShape: layoutShape,
+      qualityTier: calcTier
+    });
+    setMinCost(res.minCost);
+    setMaxCost(res.maxCost);
+    setRatePerUnit(res.ratePerUnit);
+    if (l > 0 && w > 0) {
+      setDimensions(`${l} ft × ${w} ft (${sqft} sq ft)`);
+    } else {
+      setDimensions(`${sqft} sq ft`);
+    }
+    showToast(`Calculated: ${res.formattedBudget} (${res.ratePerUnit})`);
+  };
 
   // Form Fields
   const [title, setTitle] = useState('');
@@ -149,37 +178,55 @@ export default function AdminKitchenGalleryPage() {
     }
   };
 
-  // Upload to Cloudflare R2
+  // Upload to Cloudflare R2 with automatic Supabase Storage fallback
   const uploadToR2 = async (file: File): Promise<string> => {
-    setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
-    const res = await fetch('/api/gallery/upload-url', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fileName: file.name,
-        category: 'kitchen',
-        contentType: file.type || 'image/webp'
-      })
-    });
+    // 1. Try Cloudflare R2
+    try {
+      setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
+      const res = await fetch('/api/gallery/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileName: file.name,
+          category: 'kitchen',
+          contentType: file.type || 'image/webp'
+        })
+      });
 
-    const data = await res.json();
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || 'Failed to get Cloudflare R2 upload URL');
+      const data = await res.json();
+      if (res.ok && data.success && data.uploadUrl) {
+        setUploadProgress('Uploading directly to Cloudflare R2...');
+        const uploadRes = await fetch(data.uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': file.type || 'image/webp' },
+          body: file
+        });
+
+        if (uploadRes.ok) {
+          setUploadProgress(null);
+          return data.publicUrl;
+        }
+      }
+    } catch (r2Err) {
+      console.warn('R2 upload failed or not configured, using Supabase storage fallback...', r2Err);
     }
 
-    setUploadProgress('Uploading 9:16 WebP directly to Cloudflare R2...');
-    const uploadRes = await fetch(data.uploadUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': file.type || 'image/webp' },
-      body: file
-    });
+    // 2. Seamless Fallback: Supabase Storage
+    setUploadProgress('Uploading image to cloud storage...');
+    const cleanName = `${Date.now()}-${file.name.toLowerCase().replace(/[^a-z0-9.-]/g, '-')}`;
+    const filePath = `kitchen/${cleanName}`;
 
-    if (!uploadRes.ok) {
-      throw new Error('Cloudflare R2 rejected upload. Verify CORS and bucket settings.');
+    const { error: storageError } = await supabase.storage
+      .from('hero-banners')
+      .upload(filePath, file, { upsert: true });
+
+    if (!storageError) {
+      const { data: { publicUrl } } = supabase.storage.from('hero-banners').getPublicUrl(filePath);
+      setUploadProgress(null);
+      return publicUrl;
     }
 
-    setUploadProgress(null);
-    return data.publicUrl;
+    throw new Error(`Upload failed: ${storageError.message}. Make sure R2 environment variables are configured in Vercel or enter an Image URL directly.`);
   };
 
   const resetForm = () => {
@@ -703,6 +750,92 @@ export default function AdminKitchenGalleryPage() {
                     <datalist id="countertops">
                       {POPULAR_COUNTERTOPS.map(c => <option key={c} value={c} />)}
                     </datalist>
+                  </div>
+                </div>
+
+                {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
+                <div className="p-4 sm:p-5 rounded-3xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
+                        <i className="fas fa-calculator"></i>
+                      </div>
+                      <div>
+                        <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                          <span className="text-amber-500">⚡</span>
+                          <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
+                        </h3>
+                        <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                          Enter room dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleAdminCalculateBudget}
+                      className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+                    >
+                      <i className="fas fa-bolt"></i>
+                      <span>Calculate Budget</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
+                      <input
+                        type="number"
+                        min="4"
+                        max="60"
+                        value={calcLength}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setCalcLength(val);
+                          if (val > 0 && calcWidth > 0) setCalcSqft(val * calcWidth);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
+                      <input
+                        type="number"
+                        min="4"
+                        max="40"
+                        value={calcWidth}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setCalcWidth(val);
+                          if (val > 0 && calcLength > 0) setCalcSqft(calcLength * val);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
+                      <input
+                        type="number"
+                        min="20"
+                        max="1500"
+                        value={calcSqft}
+                        onChange={(e) => setCalcSqft(Number(e.target.value))}
+                        className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
+                      <select
+                        value={calcTier}
+                        onChange={(e) => setCalcTier(e.target.value as any)}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      >
+                        <option value="Economy">Economy (MDF / Particle Board)</option>
+                        <option value="Standard">Standard (Marine Ply / MR Plywood)</option>
+                        <option value="Premium">Premium (BWP Marine Ply + Acrylic)</option>
+                        <option value="Ultra Luxury">Ultra Luxury (PU Lacquered / Glass)</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

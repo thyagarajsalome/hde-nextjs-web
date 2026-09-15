@@ -6,6 +6,7 @@ import { BathroomDesign, CreateBathroomDesignInput, BathroomLayoutType } from '@
 import { bathroomGalleryService } from '@/services/bathroomGalleryService';
 import { compressAndCropTo916 } from '@/utils/imageCompressor';
 import { estimateIndiaBathroomCost } from '@/utils/indiaCostEstimator';
+import { supabase } from '@/config/supabaseClient';
 
 const LAYOUT_TYPES: BathroomLayoutType[] = [
   'Master Bathroom',
@@ -253,18 +254,33 @@ export default function AdminBathroomGalleryPage() {
 
         if (res.ok) {
           const { uploadUrl, publicUrl } = await res.json();
-          await fetch(uploadUrl, {
+          const uploadRes = await fetch(uploadUrl, {
             method: 'PUT',
             headers: { 'Content-Type': selectedFile.type || 'image/webp' },
             body: selectedFile
           });
+          if (uploadRes.ok) {
+            finalImageUrl = publicUrl;
+            finalFileName = selectedFile.name;
+          }
+        }
+      } catch (r2Err) {
+        console.warn('R2 upload failed, trying Supabase storage fallback...', r2Err);
+      }
+
+      // Seamless Fallback: Supabase Storage if R2 failed or unconfigured
+      if (!finalImageUrl) {
+        const cleanName = `${Date.now()}-${selectedFile.name.toLowerCase().replace(/[^a-z0-9.-]/g, '-')}`;
+        const filePath = `bathroom/${cleanName}`;
+        const { error: storageError } = await supabase.storage
+          .from('hero-banners')
+          .upload(filePath, selectedFile, { upsert: true });
+
+        if (!storageError) {
+          const { data: { publicUrl } } = supabase.storage.from('hero-banners').getPublicUrl(filePath);
           finalImageUrl = publicUrl;
           finalFileName = selectedFile.name;
-        } else {
-          finalImageUrl = previewUrl || finalImageUrl;
         }
-      } catch {
-        finalImageUrl = previewUrl || finalImageUrl;
       }
     }
 
@@ -706,6 +722,97 @@ export default function AdminBathroomGalleryPage() {
                         onChange={(e) => setFeaturesStr(e.target.value)}
                         className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
                       />
+                    </div>
+
+                    {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
+                    <div className="sm:col-span-2 p-4 sm:p-5 rounded-2xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
+                            <i className="fas fa-calculator"></i>
+                          </div>
+                          <div>
+                            <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                              <span className="text-amber-500">⚡</span>
+                              <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
+                            </h3>
+                            <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                              Enter bathroom dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => applyAutoEstimate(autoSqft, autoLength, autoWidth, qualityTier, layoutType)}
+                          className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+                        >
+                          <i className="fas fa-bolt"></i>
+                          <span>Calculate Budget</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
+                          <input
+                            type="number"
+                            min="3"
+                            max="30"
+                            value={autoLength}
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setAutoLength(val);
+                              if (val > 0 && autoWidth > 0) setAutoSqft(val * autoWidth);
+                            }}
+                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
+                          <input
+                            type="number"
+                            min="3"
+                            max="30"
+                            value={autoWidth}
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setAutoWidth(val);
+                              if (val > 0 && autoLength > 0) setAutoSqft(autoLength * val);
+                            }}
+                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
+                          <input
+                            type="number"
+                            min="15"
+                            max="500"
+                            value={autoSqft}
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setAutoSqft(val);
+                            }}
+                            className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
+                          <select
+                            value={qualityTier}
+                            onChange={(e) => {
+                              const val = e.target.value as any;
+                              setQualityTier(val);
+                            }}
+                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                          >
+                            <option value="Standard">Standard (Ceramic Tiles &amp; Diverter)</option>
+                            <option value="Premium">Premium (Vitrified &amp; Toughened Glass)</option>
+                            <option value="Luxury">Luxury (Statuario &amp; Thermostatic)</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Min Budget (INR) */}
