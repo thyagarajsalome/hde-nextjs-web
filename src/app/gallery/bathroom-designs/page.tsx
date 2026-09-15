@@ -21,21 +21,52 @@ export default function BathroomGalleryPage() {
   const [selectedType, setSelectedType] = useState<string>('All');
   const [activeModalDesign, setActiveModalDesign] = useState<BathroomDesign | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(15);
+  const [loadingStage, setLoadingStage] = useState('Connecting to design database...');
   const router = useRouter();
 
   useEffect(() => {
+    let progressTimer: NodeJS.Timeout;
+
+    // Smooth incremental progress counter while fetching data
+    progressTimer = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev < 42) {
+          setLoadingStage('Connecting to bathroom design catalog...');
+          return prev + Math.floor(Math.random() * 8) + 5;
+        }
+        if (prev < 78) {
+          setLoadingStage('Loading waterproofing & CP fittings (Jaquar/Kohler)...');
+          return prev + Math.floor(Math.random() * 6) + 3;
+        }
+        if (prev < 94) {
+          setLoadingStage('Optimizing 9:16 mobile previews...');
+          return prev + Math.floor(Math.random() * 3) + 1;
+        }
+        return prev;
+      });
+    }, 120);
+
     async function loadData() {
       setLoading(true);
       try {
         const data = await bathroomGalleryService.getActiveDesigns();
-        setDesigns(data);
+        setLoadingProgress(100);
+        setLoadingStage('Catalog ready!');
+        setTimeout(() => {
+          setDesigns(data);
+          setLoading(false);
+        }, 220);
       } catch (err) {
         console.error('Failed to load bathroom gallery:', err);
-      } finally {
         setLoading(false);
+      } finally {
+        clearInterval(progressTimer);
       }
     }
     loadData();
+
+    return () => clearInterval(progressTimer);
   }, []);
 
   // Two-phase loading: fetch full detail when modal opens
@@ -154,9 +185,51 @@ export default function BathroomGalleryPage() {
 
         {/* Designs Grid (Mobile First 9:16 Aspect Ratio) */}
         {loading ? (
-          <div className="py-20 text-center text-gray-400 text-sm">
-            <i className="fas fa-circle-notch fa-spin text-2xl text-primary mb-3"></i>
-            <p>Loading bathroom designs...</p>
+          <div className="space-y-8 py-4">
+            {/* Dynamic Progress Card */}
+            <div className="max-w-md mx-auto p-5 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-lg text-center space-y-3.5">
+              <div className="flex items-center justify-between text-xs font-bold px-1">
+                <span className="text-gray-700 dark:text-zinc-300 flex items-center gap-2">
+                  <i className="fas fa-spinner fa-spin text-primary"></i>
+                  <span>{loadingStage}</span>
+                </span>
+                <span className="text-primary font-mono text-sm font-black">{loadingProgress}%</span>
+              </div>
+
+              {/* Smooth Progress Bar Track */}
+              <div className="w-full bg-gray-100 dark:bg-zinc-800 rounded-full h-3 overflow-hidden p-0.5 border border-gray-100 dark:border-zinc-700">
+                <div 
+                  className="bg-gradient-to-r from-[#c5a059] to-[#e4c278] h-full rounded-full transition-all duration-200 ease-out shadow-xs"
+                  style={{ width: `${loadingProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-[11px] text-gray-400 dark:text-zinc-500 font-medium">
+                Fetching HD 9:16 bathroom concepts &amp; CP fittings...
+              </p>
+            </div>
+
+            {/* Skeleton Grid (9:16 cards shimmer placeholders) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((n) => (
+                <div 
+                  key={n} 
+                  className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-zinc-800 shadow-sm animate-pulse flex flex-col"
+                >
+                  <div className="relative aspect-[9/16] w-full bg-gray-100 dark:bg-zinc-800/80 flex flex-col items-center justify-center p-4">
+                    <i className="fas fa-bath text-3xl text-gray-300 dark:text-zinc-700 mb-2"></i>
+                    <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium">Loading layout...</span>
+                  </div>
+                  <div className="p-4 space-y-2.5">
+                    <div className="h-4 bg-gray-200 dark:bg-zinc-800 rounded-md w-3/4"></div>
+                    <div className="h-3 bg-gray-100 dark:bg-zinc-800/60 rounded-md w-1/2"></div>
+                    <div className="pt-2 border-t border-gray-100 dark:border-zinc-800 flex justify-between">
+                      <div className="h-3 bg-gray-100 dark:bg-zinc-800/60 rounded-md w-1/3"></div>
+                      <div className="h-3 bg-primary/20 rounded-md w-1/4"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : filteredDesigns.length === 0 ? (
           <div className="py-16 text-center text-gray-500 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 p-8">
