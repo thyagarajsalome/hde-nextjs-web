@@ -461,17 +461,17 @@ export default function BathroomGalleryPage() {
 
                 {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
                 <div className="p-4 sm:p-5 rounded-3xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-amber-200/50 dark:border-amber-900/30">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs shrink-0">
                         <i className="fas fa-calculator"></i>
                       </div>
-                      <div>
-                        <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs flex items-center gap-1.5 whitespace-nowrap">
                           <span className="text-amber-500">⚡</span>
                           <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
                         </h3>
-                        <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                        <p className="text-gray-500 dark:text-zinc-400 text-[10px] leading-tight">
                           Enter room dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
                         </p>
                       </div>
@@ -480,9 +480,9 @@ export default function BathroomGalleryPage() {
                     <button
                       type="button"
                       onClick={handleCalculateBudget}
-                      className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+                      className="px-3.5 py-1.5 rounded-lg bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer self-start sm:self-center"
                     >
-                      <i className="fas fa-bolt"></i>
+                      <i className="fas fa-bolt text-[10px]"></i>
                       <span>Calculate Budget</span>
                     </button>
                   </div>
@@ -536,16 +536,16 @@ export default function BathroomGalleryPage() {
                   </div>
 
                   {/* Approximate Total Budget Result Box */}
-                  <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between shadow-xs">
-                    <div>
-                      <span className="text-xs font-bold text-amber-800 dark:text-amber-400 block">
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-2 shadow-xs">
+                    <div className="min-w-0">
+                      <span className="text-[11px] font-bold text-amber-800 dark:text-amber-400 block">
                         Approximate Total Budget
                       </span>
-                      <span className="text-xl sm:text-2xl font-black text-amber-900 dark:text-amber-300 font-mono">
+                      <span className="text-base sm:text-lg font-black text-amber-900 dark:text-amber-300 font-mono whitespace-nowrap">
                         {calcResult?.formattedBudget || activeModalDesign.formatted_budget}
                       </span>
                     </div>
-                    <span className="text-xs font-bold text-gray-500 dark:text-zinc-400">
+                    <span className="text-xs font-bold text-gray-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
                       {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,800 / sq ft'}
                     </span>
                   </div>
