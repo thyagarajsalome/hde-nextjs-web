@@ -157,9 +157,15 @@ export default function AdminKitchenGalleryPage() {
   // Upload directly to Cloudflare R2 (gallery/kitchen/...)
   const uploadToR2 = async (file: File): Promise<string> => {
     setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+
     const res = await fetch('/api/gallery/upload-url', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({
         fileName: file.name,
         category: 'kitchen',

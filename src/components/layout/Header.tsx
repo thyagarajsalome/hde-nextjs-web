@@ -27,6 +27,7 @@ const Header = () => {
 
   const currentRegion = REGIONS.find(r => r.code === region) || REGIONS[0];
   const isDubaiRoute = pathname.includes('/dubai-property');
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -64,8 +65,8 @@ const Header = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate.push("/signin");
     setMenuOpen(false);
+    navigate.push("/");
   };
 
   // Determine active region for display
@@ -145,16 +146,18 @@ const Header = () => {
                         </div>
                       </Link>
 
-                      <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
-                        <Link
-                          href="/admin/gallery"
-                          onClick={() => setGalleryDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
-                        >
-                          <i className="fas fa-cloud-arrow-up text-xs"></i>
-                          <span>Upload &amp; Manage Designs</span>
-                        </Link>
-                      </div>
+                      {isAdmin && (
+                        <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
+                          <Link
+                            href="/admin/gallery"
+                            onClick={() => setGalleryDropdownOpen(false)}
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
+                          >
+                            <i className="fas fa-cloud-arrow-up text-xs"></i>
+                            <span>Upload &amp; Manage Designs</span>
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -387,6 +390,16 @@ const Header = () => {
                         <i className="fas fa-bath text-xs text-blue-500"></i>
                         <span>Bathroom Designs</span>
                       </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/admin/gallery"
+                          onClick={() => setMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-bold text-primary hover:bg-primary/5 no-underline"
+                        >
+                          <i className="fas fa-cloud-arrow-up text-xs"></i>
+                          <span>Upload &amp; Manage Designs</span>
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>

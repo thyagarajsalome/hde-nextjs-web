@@ -1,9 +1,28 @@
 // src/app/api/gallery/upload-url/route.ts
 import { NextResponse } from 'next/server';
 import { getR2PresignedUploadUrl, isR2Configured } from '@/lib/r2';
+import { supabase } from '@/config/supabaseClient';
+
+const ADMIN_EMAIL = 'thyagaraja1983@gmail.com';
 
 export async function POST(request: Request) {
   try {
+    // Verify admin access in production
+    const authHeader = request.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      if (error || !user || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        return NextResponse.json({
+          error: `Unauthorized: Image uploads are strictly restricted to administrator ${ADMIN_EMAIL}`
+        }, { status: 403 });
+      }
+    } else if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json({
+        error: 'Unauthorized: Admin authentication required for gallery uploads'
+      }, { status: 401 });
+    }
+
     const body = await request.json();
     const { fileName, category = 'kitchen', fileSize } = body;
     const contentType = body.contentType || body.fileType || 'image/webp';

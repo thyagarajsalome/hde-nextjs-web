@@ -245,9 +245,15 @@ export default function AdminBathroomGalleryPage() {
     if (selectedFile) {
       setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+
         const res = await fetch('/api/gallery/upload-url', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          },
           body: JSON.stringify({
             fileName: selectedFile.name,
             contentType: selectedFile.type || 'image/webp',
