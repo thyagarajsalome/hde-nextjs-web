@@ -73,8 +73,9 @@ function formatINR(val: number): string {
 
 // ── Component ──────────────────────────────────────────────────────────────────
 export const ConstructionCalculator = ({ projectData }: { projectData?: any }) => {
-  // FIXED: Single destructured assignment for UserContext data at the top
-  const { hasPaid, markup = 0 } = useUser();
+  // Destructure user status, planTier, and role to guarantee existing paid customers full access
+  const { hasPaid, planTier, role, markup = 0 } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   
   const pathname = usePathname();
     const location = { state: null, pathname: "" };
@@ -238,7 +239,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   const parsedWall    = parseFloat(compoundWallLength) || 0;
 
   // Builder Markup Multiplier
-  const mFactor = hasPaid ? (1 + markup / 100) : 1;
+  const mFactor = isUserPaid ? (1 + markup / 100) : 1;
 
   // Raw costs multiplication by mFactor
   const costs = useMemo(() => ({
@@ -850,7 +851,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
               </div>
             </Card>
 
-            {/* Breakdown Table & Donut Chart */}
+            {/* Cost Analysis Breakdown Card & Interactive SVG Donut Infographic Wheel */}
             <Card title="Cost Analysis Breakdown" className="glass-panel rounded-2xl shadow-xl border-gray-100/50">
               <div className="overflow-x-auto rounded-xl border border-gray-100 mb-5">
                 <table className="w-full text-xs">
@@ -903,7 +904,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 </table>
               </div>
 
-              {/* Interactive SVG Donut chart segment */}
+              {/* Interactive SVG Donut chart infographic wheel */}
               <div className="h-72 flex items-center justify-center p-3 border-t border-gray-50 mt-5">
                 <Chart data={breakdownData} colors={CHART_COLORS} />
               </div>
@@ -981,7 +982,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                         </Link>
                         <Link
                           href="/plans"
-                          className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white font-bold text-[11px] transition text-center shadow-xs"
+                          className="px-3 py-1.5 rounded-lg bg-[#0f2042] hover:bg-[#1a3360] text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white font-bold text-[11px] transition text-center shadow-xs"
                         >
                           View Blueprints
                         </Link>
@@ -1013,18 +1014,16 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 buttonText="Share Estimate via WhatsApp"
               />
 
-              <div className="grid grid-cols-2 gap-4">
-                {hasPaid && (
-                  <button onClick={handleDownloadPDF} disabled={isDownloading}
-                    className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-black rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all duration-300 shadow-sm cursor-pointer">
-                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                    <span>Export PDF</span>
-                  </button>
-                )}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <button onClick={handleDownloadPDF} disabled={isDownloading}
+                  className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border-2 border-[#0f2042] dark:border-zinc-700 text-[#0f2042] dark:text-zinc-100 font-bold rounded-xl hover:bg-[#0f2042] hover:text-white transition-all duration-200 shadow-xs cursor-pointer text-xs sm:text-sm">
+                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf text-red-500"}`}></i>
+                  <span>Export PDF</span>
+                </button>
                 <button onClick={handleSave} disabled={isSaving}
-                  className={`flex items-center justify-center gap-2 py-3.5 px-4 bg-primary text-white dark:text-zinc-950 font-black rounded-xl hover:bg-primary-hover transition-all duration-300 shadow-md transform active:scale-95 cursor-pointer ${!hasPaid ? "col-span-2" : ""}`}>
+                  className="flex items-center justify-center gap-2 py-3.5 px-4 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer text-xs sm:text-sm">
                   <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                  <span>{isSaving ? "Saving details..." : "Save Project"}</span>
+                  <span>{isSaving ? "Saving..." : "Save Project"}</span>
                 </button>
               </div>
             </div>

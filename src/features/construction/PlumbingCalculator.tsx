@@ -251,28 +251,14 @@ const PlumbingCalculator: React.FC = () => {
                     buttonText="Share Plumbing Quote via WhatsApp"
                   />
 
-                  {hasPaid ? (
-                    <div className="grid grid-cols-2 gap-4">
-                      <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all cursor-pointer">
-                        <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> PDF
-                      </button>
-                      <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all cursor-pointer">
-                        <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-                      <div>
-                        <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs block">
-                          🔒 Unlock Room-wise Specs &amp; PDF Report
-                        </span>
-                        <span className="text-[11px] text-gray-500 dark:text-zinc-400">Save plumbing estimates to your dashboard and export client PDF quotes.</span>
-                      </div>
-                      <a href="/upgrade" className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap no-underline cursor-pointer">
-                        Upgrade — ₹199
-                      </a>
-                    </div>
-                  )}
+                  <div className="grid grid-cols-2 gap-4">
+                    <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center justify-center gap-2 py-3 bg-white dark:bg-zinc-900 border-2 border-secondary dark:border-zinc-700 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-secondary dark:hover:bg-zinc-800 hover:text-white transition-all cursor-pointer">
+                      <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i> Export PDF
+                    </button>
+                    <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all cursor-pointer">
+                      <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i> Save Project
+                    </button>
+                  </div>
                 </div>
               </Card>
             )}

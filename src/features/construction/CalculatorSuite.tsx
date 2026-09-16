@@ -3,6 +3,8 @@ import React, { useState, useEffect, startTransition, Suspense, lazy } from "rea
 import { useUser } from "../../context/UserContext";
 import CalculatorTabs from "./CalculatorTabs";
 import { supabase } from "../../config/supabaseClient";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
+import { isProCalculator } from "../../config/calculatorTiers";
 
 // Helper to handle ChunkLoadError on deployment changes
 const lazyWithRetry = (componentImport: () => Promise<any>) => 
@@ -84,7 +86,8 @@ const Loading = () => (
 );
 
 export default function CalculatorSuite() {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const [activeCalculator, setActiveCalculator] = useState<CalculatorType>("construction");
   const [editingProjectName, setEditingProjectName] = useState<string | null>(null);
   const [projectData, setProjectData] = useState<any | null>(null);
@@ -119,6 +122,16 @@ export default function CalculatorSuite() {
   }, []);
 
   const renderCalculator = () => {
+    // Gate locked/pro calculators for unpaid users with direct upgrade CTA
+    if (!isUserPaid && isProCalculator(activeCalculator)) {
+      return (
+        <ProCalculatorGate
+          calculatorId={activeCalculator}
+          onSwitchToFree={() => setActiveCalculator("construction")}
+        />
+      );
+    }
+
     switch (activeCalculator) {
       case "construction":    return <ConstructionCalculator projectData={projectData} />;
       case "india-kitchen":   return <IndiaKitchenCalculator />;

@@ -5,6 +5,7 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
@@ -18,7 +19,8 @@ const POOL_TYPES = {
 const CHART_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#1d4ed8"];
 
 const USASwimmingPoolCalculator: React.FC = () => {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("usa-swimming-pool");
 
   const [area, setArea] = useState("400");
@@ -26,6 +28,10 @@ const USASwimmingPoolCalculator: React.FC = () => {
   const [hasHeater, setHasHeater] = useState(false);
   const [hasDecking, setHasDecking] = useState(true);
   const [hasHotTub, setHasHotTub] = useState(false);
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-swimming-pool" />;
+  }
 
   const parsedArea = parseFloat(area) || 0;
 

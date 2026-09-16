@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "../../config/supabaseClient";
 import { useUser } from "../../context/UserContext";
 import { useToast } from "../../context/ToastContext";
 import { useRegion } from "../../context/RegionContext";
+import { PRO_CALCULATOR_DETAILS } from "../../config/calculatorTiers";
 
 // 1. Define the strict TypeScript interface for your plans
 type PlanType = {
@@ -612,6 +613,9 @@ const UpgradePage = () => {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
   const navigate = useRouter();
+  const searchParams = useSearchParams();
+  const calcParam = searchParams.get('calc');
+  const calcDetails = calcParam ? PRO_CALCULATOR_DETAILS[calcParam] : null;
   const { region, setRegion } = useRegion();
   const currentRegion = (region && ['US', 'IN', 'AE'].includes(region) ? region : 'IN') as 'US' | 'IN' | 'AE';
 
@@ -729,6 +733,32 @@ const UpgradePage = () => {
               : "Live calculations are 100% free anytime. Upgrade to save estimates to your cloud portfolio and download itemized PDF cost sheets & BOQs."}
           </p>
           
+          {/* Contextual Pro Feature Callout */}
+          {calcParam && (
+            <div className="mt-6 max-w-2xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-[#c5a059]/20 to-amber-500/15 border-2 border-[#c5a059]/50 text-slate-900 dark:text-zinc-100 text-xs sm:text-sm flex items-start sm:items-center gap-3.5 text-left shadow-sm animate-fadeIn">
+              <div className="w-10 h-10 rounded-xl bg-[#c5a059] text-white flex items-center justify-center text-lg shrink-0 mt-0.5 sm:mt-0 shadow-xs">
+                <i className="fas fa-crown"></i>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                    Pro Tool Selected
+                  </span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-800 dark:text-amber-300 font-extrabold flex items-center gap-1">
+                    <i className="fas fa-lock text-[8px]"></i>
+                    <span>PRO</span>
+                  </span>
+                </div>
+                <p className="font-extrabold text-sm sm:text-base text-gray-900 dark:text-zinc-100 mt-0.5">
+                  {calcDetails?.name || calcParam.replace(/-/g, ' ').toUpperCase()}
+                </p>
+                <p className="text-xs text-gray-600 dark:text-zinc-400 mt-1 leading-relaxed">
+                  {calcDetails?.subtitle || "Upgrade to any plan below to immediately unlock this calculator, complete contractor BOQs, and unlimited PDF exports."}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Existing Customer Protection Notice */}
           {(hasPaid || planTier === 'pro') && (
             <div className="mt-6 max-w-2xl mx-auto p-4 rounded-2xl bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#0f2042] dark:text-[#c5a059] text-xs flex items-center gap-3 text-left">

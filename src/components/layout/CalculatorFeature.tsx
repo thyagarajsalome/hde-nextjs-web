@@ -36,6 +36,8 @@ import IndiaEMICalculator from "@/features/construction/IndiaEMICalculator";
 import IndiaKitchenCalculator from "@/features/construction/IndiaKitchenCalculator";
 import IndiaBathroomCalculator from "@/features/construction/IndiaBathroomCalculator";
 import DubaiPropertyCalculatorPage from "@/app/dubai-property/calculator/page";
+import ProCalculatorGate from "@/components/ui/ProCalculatorGate";
+import { isProCalculator } from "@/config/calculatorTiers";
 import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
@@ -48,7 +50,8 @@ interface CalculatorFeatureProps {
 }
 
 export default function CalculatorFeature({ forceRegion, forceCalculator }: CalculatorFeatureProps = {}) {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { region, setRegion } = useRegion();
   // Ensure initial state matches server rendering to prevent hydration mismatch
   const [activeCalculator, setActiveCalculator] = useState<CalculatorType>(
@@ -133,6 +136,16 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
   }, [forceCalculator, setRegion, region]);
 
   const renderCalculator = () => {
+    // Gate locked/pro calculators for unpaid users with direct upgrade CTA
+    if (!isUserPaid && isProCalculator(activeCalculator)) {
+      return (
+        <ProCalculatorGate
+          calculatorId={activeCalculator}
+          onSwitchToFree={() => setActiveCalculator(region === "US" ? "usa-framing" : "construction")}
+        />
+      );
+    }
+
     switch (activeCalculator) {
       case "construction":    return <ConstructionCalculator />;
       case "india-kitchen":   return <IndiaKitchenCalculator />;

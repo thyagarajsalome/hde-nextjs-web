@@ -5,6 +5,7 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
@@ -41,7 +42,8 @@ const OVERHEAD_STRUCTURES = {
 const CHART_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd"];
 
 const USAOutdoorKitchenCalculator: React.FC = () => {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("usa-outdoor-kitchen");
 
   const [linearFeet, setLinearFeet] = useState("12");
@@ -50,6 +52,10 @@ const USAOutdoorKitchenCalculator: React.FC = () => {
   const [appliances, setAppliances] = useState<keyof typeof APPLIANCE_PACKAGES>("premium");
   const [utilities, setUtilities] = useState<keyof typeof UTILITIES>("electricGas");
   const [structure, setStructure] = useState<keyof typeof OVERHEAD_STRUCTURES>("pergola");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-outdoor-kitchen" />;
+  }
 
   const parsedFeet = parseFloat(linearFeet) || 0;
 

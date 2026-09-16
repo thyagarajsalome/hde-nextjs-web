@@ -6,6 +6,8 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import PaywallLock from "../../components/ui/PaywallLock";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency } from "../../utils/currency";
 import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
@@ -40,7 +42,8 @@ const CHART_COLORS = ["#c5a059", "#0f2042", "#5c473c", "#dfd0bf"];
 
 // ── Component ──────────────────────────────────────────────────────────────────
 const FlooringCalculator: React.FC = () => {
-  const { hasPaid }  = useUser();
+  const { hasPaid, planTier, role }  = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("flooring");
   const location = { state: null }; // TODO: Replace with useSearchParams if needed
 
@@ -48,6 +51,10 @@ const FlooringCalculator: React.FC = () => {
   const [flooringType,   setFlooringType]   = useState<keyof typeof FLOORING_TYPES>("vitrified");
   const [includeSkirting,setIncludeSkirting]= useState(true);
   const [activeInfo,     setActiveInfo]     = useState<"specs"|"pattern"|"rooms">("specs");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="flooring" />;
+  }
 
   useEffect(() => {
     const state = (location.state as any)?.projectData;
@@ -232,52 +239,63 @@ const FlooringCalculator: React.FC = () => {
               <p className="text-xs text-gray-400 mt-1">for {parsedArea} sq.ft — {ft.name}</p>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-gray-100 mb-5">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-xs text-gray-500 uppercase font-bold">
-                  <tr>
-                    <th className="px-4 py-3 text-left">Component</th>
-                    <th className="px-4 py-3 text-right hidden sm:table-cell">Details</th>
-                    <th className="px-4 py-3 text-right">Cost</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Material</td>
-                    <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">+{breakdown.wastageArea} sqft wastage</td>
-                    <td className="px-4 py-3 text-right font-bold">{formatCurrency(breakdown.material)}</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Labor</td>
-                    <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">₹{ft.labor}/sqft</td>
-                    <td className="px-4 py-3 text-right">{formatCurrency(breakdown.labor)}</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Supplies</td>
-                    <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">Cement, sand, grout</td>
-                    <td className="px-4 py-3 text-right">{formatCurrency(breakdown.supplies)}</td>
-                  </tr>
-                  {breakdown.skirting > 0 && (
+            <PaywallLock
+              title="Unlock Detailed Flooring Material & Labor Takeoff"
+              subtitle="View separate tile box count, cement mortar bags, epoxy grout quantity, and contractor laying labor rates."
+              minTier="basic"
+              bullets={[
+                "Tile count & box breakdown with wastage allowance",
+                "Cement bags & sand volume for bedding mortar",
+                "Contractor laying labor rates & PDF export"
+              ]}
+            >
+              <div className="overflow-hidden rounded-xl border border-gray-100 mb-5">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 text-xs text-gray-500 uppercase font-bold">
                     <tr>
-                      <td className="px-4 py-3 font-medium">Skirting</td>
-                      <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">{breakdown.skirtingLen} R.ft</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(breakdown.skirting)}</td>
+                      <th className="px-4 py-3 text-left">Component</th>
+                      <th className="px-4 py-3 text-right hidden sm:table-cell">Details</th>
+                      <th className="px-4 py-3 text-right">Cost</th>
                     </tr>
-                  )}
-                  {breakdown.polishing > 0 && (
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
                     <tr>
-                      <td className="px-4 py-3 font-medium">Grinding & Polishing</td>
-                      <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">Initial polish</td>
-                      <td className="px-4 py-3 text-right">{formatCurrency(breakdown.polishing)}</td>
+                      <td className="px-4 py-3 font-medium">Material</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">+{breakdown.wastageArea} sqft wastage</td>
+                      <td className="px-4 py-3 text-right font-bold">{formatCurrency(breakdown.material)}</td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    <tr>
+                      <td className="px-4 py-3 font-medium">Labor</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">₹{ft.labor}/sqft</td>
+                      <td className="px-4 py-3 text-right">{formatCurrency(breakdown.labor)}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 font-medium">Supplies</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">Cement, sand, grout</td>
+                      <td className="px-4 py-3 text-right">{formatCurrency(breakdown.supplies)}</td>
+                    </tr>
+                    {breakdown.skirting > 0 && (
+                      <tr>
+                        <td className="px-4 py-3 font-medium">Skirting</td>
+                        <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">{breakdown.skirtingLen} R.ft</td>
+                        <td className="px-4 py-3 text-right">{formatCurrency(breakdown.skirting)}</td>
+                      </tr>
+                    )}
+                    {breakdown.polishing > 0 && (
+                      <tr>
+                        <td className="px-4 py-3 font-medium">Grinding & Polishing</td>
+                        <td className="px-4 py-3 text-gray-400 text-xs text-right hidden sm:table-cell">Initial polish</td>
+                        <td className="px-4 py-3 text-right">{formatCurrency(breakdown.polishing)}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
 
-            <div className="h-56 mb-5">
-              <Chart data={{ Material: breakdown.material, Labor: breakdown.labor, Supplies: breakdown.supplies, Skirting: breakdown.skirting || 0 }} colors={CHART_COLORS} />
-            </div>
+              <div className="h-56 mb-5">
+                <Chart data={{ Material: breakdown.material, Labor: breakdown.labor, Supplies: breakdown.supplies, Skirting: breakdown.skirting || 0 }} colors={CHART_COLORS} />
+              </div>
+            </PaywallLock>
 
             {/* Maintenance reminder */}
             <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700 mb-5">

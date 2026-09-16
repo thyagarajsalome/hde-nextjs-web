@@ -25,24 +25,24 @@ interface TabItem {
 const INDIA_CATEGORIES = [
   { id: "all", name: "All Tools", icon: "fas fa-th-large" },
   { id: "civil", name: "🏗️ Civil Construction & Core Trades", icon: "fas fa-hard-hat" },
-  { id: "interiors", name: "🛋️ Interiors & Renovation", icon: "fas fa-couch" },
+  { id: "interiors", name: "🛋️ Interiors & Renovation", icon: "fas fa-couch", isPro: true },
   { id: "finance", name: "💰 Finance & Planning", icon: "fas fa-coins" },
 ];
 
 const INDIA_CALCULATORS: TabItem[] = [
-  // 🏗️ Civil Construction & Core Trades (Full New House Construction)
+  // 🏗️ Civil Construction & Core Trades (Full New House Construction - 100% FREE FOR ALL)
   { id: "construction",    name: "Civil Construction",  icon: "fas fa-home",        reqTier: 0, category: "civil", tagline: "7-Phase structural RCC build" },
-  { id: "materials",       name: "Materials BOQ",       icon: "fas fa-cubes",       reqTier: 0, category: "civil", tagline: "Cement, steel, sand & bricks" },
+  { id: "materials",       name: "Materials BOQ",       icon: "fas fa-cubes",       reqTier: 1, category: "civil", tagline: "Detailed 7-phase structural BOQ" },
   { id: "plumbing",        name: "Plumbing & Sump",     icon: "fas fa-faucet",      reqTier: 0, category: "civil", tagline: "Whole-house water lines & motor" },
   { id: "electrical",      name: "Electrical & Conduit",icon: "fas fa-bolt",        reqTier: 0, category: "civil", tagline: "Concealed wiring points & board" },
   { id: "doors-windows",   name: "Doors & Windows",     icon: "fas fa-door-open",   reqTier: 0, category: "civil", tagline: "Teak, flush doors & UPVC frames" },
 
-  // 🛋️ Interiors & Renovation (Specific Room Fit-Outs & Modernization)
-  { id: "india-kitchen",   name: "Modular Kitchen",     icon: "fas fa-kitchen-set", reqTier: 0, category: "interiors", tagline: "IS:710 Marine ply, Rft & baskets" },
-  { id: "india-bathroom",  name: "Bathroom Renovation", icon: "fas fa-bath",        reqTier: 0, category: "interiors", tagline: "Waterproofing, diverters & glass" },
-  { id: "interior",        name: "Full Home Interiors", icon: "fas fa-couch",       reqTier: 0, category: "interiors", tagline: "Whole-flat woodwork & false ceiling" },
-  { id: "flooring",        name: "Flooring & Tiling",   icon: "fas fa-layer-group", reqTier: 0, category: "interiors", tagline: "Vitrified, marble & granite" },
-  { id: "painting",        name: "Painting & Putty",    icon: "fas fa-paint-roller",reqTier: 0, category: "interiors", tagline: "Interior emulsion & exterior apex" },
+  // 🛋️ Interiors & Renovation (Specific Room Fit-Outs & Modernization - PRO SUITE)
+  { id: "india-kitchen",   name: "Modular Kitchen",     icon: "fas fa-kitchen-set", reqTier: 1, category: "interiors", tagline: "IS:710 Marine ply, Rft & baskets" },
+  { id: "india-bathroom",  name: "Bathroom Renovation", icon: "fas fa-bath",        reqTier: 1, category: "interiors", tagline: "Waterproofing, diverters & glass" },
+  { id: "interior",        name: "Full Home Interiors", icon: "fas fa-couch",       reqTier: 1, category: "interiors", tagline: "Whole-flat woodwork & false ceiling" },
+  { id: "flooring",        name: "Flooring & Tiling",   icon: "fas fa-layer-group", reqTier: 1, category: "interiors", tagline: "Vitrified, marble & granite" },
+  { id: "painting",        name: "Painting & Putty",    icon: "fas fa-paint-roller",reqTier: 1, category: "interiors", tagline: "Interior emulsion & exterior apex" },
 
   // 💰 Finance & Planning
   { id: "india-emi",       name: "Home Loan EMI",       icon: "fas fa-university",  reqTier: 0, category: "finance", tagline: "SBI/HDFC bank comparison & schedule" },
@@ -56,8 +56,8 @@ const USA_CALCULATORS: TabItem[] = [
   { id: "usa-interior-design", name: "Interior Design", icon: "fas fa-couch", reqTier: 0, category: "remodel" },
   { id: "usa-kitchen-remodel", name: "Kitchen Remodel", icon: "fas fa-utensils", reqTier: 0, category: "remodel" },
   { id: "usa-bathroom-remodel", name: "Bathroom Remodel", icon: "fas fa-bath", reqTier: 0, category: "remodel" },
-  { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 0, category: "remodel" },
-  { id: "usa-swimming-pool", name: "Swimming Pool", icon: "fas fa-swimming-pool", reqTier: 0, category: "outdoor" },
+  { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 1, category: "remodel" },
+  { id: "usa-swimming-pool", name: "Swimming Pool", icon: "fas fa-swimming-pool", reqTier: 1, category: "outdoor" },
   { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0, category: "trades" },
   { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 0, category: "remodel" },
   { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 0, category: "trades" },
@@ -66,12 +66,15 @@ const USA_CALCULATORS: TabItem[] = [
   { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0, category: "trades" },
   { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 0, category: "trades" },
   { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 0, category: "trades" },
-  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 0, category: "outdoor" },
-  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 0, category: "outdoor" },
+  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 1, category: "outdoor" },
+  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 1, category: "outdoor" },
 ];
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
+  const router = useRouter();
   const { region } = useRegion();
+  const { planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -109,6 +112,13 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
 
   const handleTabClick = (id: CalculatorType) => {
+    const allCalcs = [...INDIA_CALCULATORS, ...USA_CALCULATORS];
+    const targetCalc = allCalcs.find(c => c.id === id);
+    if (!isUserPaid && targetCalc && targetCalc.reqTier > 0) {
+      router.push(`/upgrade?calc=${id}`);
+      setIsDropdownOpen(false);
+      return;
+    }
     setActiveCalculator(id);
     setIsDropdownOpen(false);
   };
@@ -118,7 +128,12 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
     if (catId !== 'all') {
       const inCat = INDIA_CALCULATORS.filter(c => c.category === catId);
       if (inCat.length > 0 && !inCat.some(c => c.id === activeCalculator)) {
-        setActiveCalculator(inCat[0].id);
+        const firstFree = inCat.find(c => c.reqTier === 0);
+        if (firstFree) {
+          setActiveCalculator(firstFree.id);
+        } else if (isUserPaid) {
+          setActiveCalculator(inCat[0].id);
+        }
       }
     }
   };
@@ -165,7 +180,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
           >
             <i className="fas fa-crown text-[10px] text-white"></i>
             <span>
-              {hasPaid ? "Pro Account Active" : "Go Pro"}
+              {isUserPaid ? "Pro Account Active" : "Go Pro"}
             </span>
           </Link>
         </div>
@@ -191,6 +206,25 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                 }`}
               >
                 <span>{cat.name}</span>
+                {cat.isPro && !isUserPaid ? (
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-extrabold flex items-center gap-1 shrink-0 ${
+                    isCatActive 
+                      ? 'bg-white/20 text-white dark:text-zinc-950' 
+                      : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/20'
+                  }`}>
+                    <i className="fas fa-lock text-[8px]"></i>
+                    <span>PRO</span>
+                  </span>
+                ) : (cat.id === 'civil' || cat.id === 'finance') ? (
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-black flex items-center gap-1 shrink-0 tracking-wider ${
+                    isCatActive 
+                      ? 'bg-white/20 text-white dark:text-zinc-950' 
+                      : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25'
+                  }`}>
+                    <i className="fas fa-check text-[8px]"></i>
+                    <span>FREE</span>
+                  </span>
+                ) : null}
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                   isCatActive ? 'bg-white/25 text-white dark:text-zinc-950' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'
                 }`}>
@@ -240,18 +274,31 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                             activeCalculator === calc.id ? "bg-primary/10" : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
                           }`}
                         >
-                          <div className="flex items-center gap-3">
-                            <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
-                            <div>
-                              <span className={`text-xs block ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
-                                {calc.name}
-                              </span>
-                              {calc.tagline && (
-                                <span className="text-[10px] text-gray-400 block leading-tight">{calc.tagline}</span>
-                              )}
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex items-center gap-3">
+                                <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
+                                <div>
+                                  <span className={`text-xs block ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
+                                    {calc.name}
+                                  </span>
+                                  {calc.tagline && (
+                                    <span className="text-[10px] text-gray-400 block leading-tight">{calc.tagline}</span>
+                                  )}
+                                </div>
+                              </div>
+                              {!isUserPaid && calc.reqTier > 0 ? (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
+                                  <i className="fas fa-lock text-[8px]"></i>
+                                  <span>PRO</span>
+                                </span>
+                              ) : calc.reqTier === 0 ? (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
+                                  <i className="fas fa-check text-[8px]"></i>
+                                  <span>FREE</span>
+                                </span>
+                              ) : null}
                             </div>
-                          </div>
-                        </button>
+                          </button>
                       ))}
                     </div>
                   );
@@ -270,6 +317,17 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                     <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400 dark:text-zinc-500'}`}></i>
                     <span className={`text-sm ${activeCalculator === calc.id ? 'font-bold text-secondary dark:text-zinc-100' : 'text-gray-600 dark:text-zinc-400'}`}>{calc.name}</span>
                   </div>
+                  {!isUserPaid && calc.reqTier > 0 ? (
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
+                      <i className="fas fa-lock text-[8px]"></i>
+                      <span>PRO</span>
+                    </span>
+                  ) : calc.reqTier === 0 ? (
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
+                      <i className="fas fa-check text-[8px]"></i>
+                      <span>FREE</span>
+                    </span>
+                  ) : null}
                 </button>
               ))
             )}
@@ -279,7 +337,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
       {/* TABLET & DESKTOP GRID (Categorized, clean, balanced columns) */}
       <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        {displayedCalculators.map(({ id, name, icon, tagline }) => {
+        {displayedCalculators.map(({ id, name, icon, tagline, reqTier }) => {
           const isActive = activeCalculator === id;
 
           return (
@@ -291,17 +349,30 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                   ? "bg-white dark:bg-zinc-900 border-primary shadow-md scale-[1.02]" 
                   : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-primary/40 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}`}
             >
-              <div className="flex items-center gap-2.5 w-full">
-                <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm ${
-                  isActive ? "bg-primary text-white" : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400"
-                }`}>
-                  <i className={icon}></i>
-                </span>
-                <span className={`text-xs font-bold leading-tight ${
-                  isActive ? "text-secondary dark:text-zinc-100" : "text-gray-800 dark:text-zinc-300"
-                }`}>
-                  {name}
-                </span>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2.5">
+                  <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm ${
+                    isActive ? "bg-primary text-white" : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400"
+                  }`}>
+                    <i className={icon}></i>
+                  </span>
+                  <span className={`text-xs font-bold leading-tight ${
+                    isActive ? "text-secondary dark:text-zinc-100" : "text-gray-800 dark:text-zinc-300"
+                  }`}>
+                    {name}
+                  </span>
+                </div>
+                {!isUserPaid && reqTier > 0 ? (
+                  <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 border border-amber-500/20 shrink-0">
+                    <i className="fas fa-lock text-[8px]"></i>
+                    <span>PRO</span>
+                  </span>
+                ) : reqTier === 0 ? (
+                  <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 border border-emerald-500/25 shrink-0 tracking-wider">
+                    <i className="fas fa-check text-[8px]"></i>
+                    <span>FREE</span>
+                  </span>
+                ) : null}
               </div>
               {tagline && (
                 <span className="text-[10px] text-gray-400 dark:text-zinc-500 mt-1.5 line-clamp-1">

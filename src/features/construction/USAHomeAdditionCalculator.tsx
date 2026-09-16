@@ -5,6 +5,7 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
@@ -23,12 +24,17 @@ const QUALITY_LEVELS = {
 const CHART_COLORS = ["#c5a059", "#0f2042", "#5c473c", "#dfd0bf", "#8e9aaf"];
 
 const USAHomeAdditionCalculator: React.FC = () => {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("usa-home-addition");
 
   const [area, setArea] = useState("400");
   const [type, setType] = useState<keyof typeof ADDITION_TYPES>("bedroom");
   const [quality, setQuality] = useState<keyof typeof QUALITY_LEVELS>("standard");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-home-addition" />;
+  }
 
   const parsedArea = parseFloat(area) || 0;
 

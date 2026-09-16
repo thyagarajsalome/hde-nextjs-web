@@ -6,6 +6,8 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import PaywallLock from "../../components/ui/PaywallLock";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'IN');
@@ -109,6 +111,8 @@ const COUNTERTOP_MATERIALS = {
 const CHART_COLORS = ["#c5a059", "#0f2042", "#2563eb", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#64748b"];
 
 export default function IndiaKitchenCalculator() {
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("india-kitchen");
 
   // Inputs
@@ -116,6 +120,10 @@ export default function IndiaKitchenCalculator() {
   const [lengthFt, setLengthFt] = useState("12");
   const [widthFt, setWidthFt] = useState("10");
   const [areaSqFt, setAreaSqFt] = useState("120");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="india-kitchen" />;
+  }
 
   const [layout, setLayout] = useState<keyof typeof KITCHEN_LAYOUTS>("lshape");
   const [carcass, setCarcass] = useState<keyof typeof CARCASS_MATERIALS>("bwp");
@@ -681,76 +689,83 @@ export default function IndiaKitchenCalculator() {
                 </div>
               )}
 
-              {/* Itemized BOQ Lines */}
-              <div className="space-y-2.5 pt-2 text-xs">
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Base Cabinets &amp; Skirting</span>
-                    <span className="text-[10px] text-gray-500">{breakdown.estimatedBaseRft} Rft &bull; 34" Ht BWP 710 Carcass</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.baseCabinetsCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Wall Overhead Cabinets</span>
-                    <span className="text-[10px] text-gray-500">{breakdown.estimatedWallRft} Rft &bull; Hydraulic soft-close stays</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.wallCabinetsCost)}</span>
-                </div>
-
-                {breakdown.loftCabinetsCost > 0 && (
+              {/* Itemized BOQ Lines with PaywallLock */}
+              <PaywallLock
+                minTier="basic"
+                title="Unlock Itemized Modular Kitchen BOQ"
+                subtitle="View exact woodwork carcass costs, hardware runners, tandem boxes, countertop bullnose, and carpentry installation labor."
+                previewHeight="max-h-[220px]"
+              >
+                <div className="space-y-2.5 pt-2 text-xs">
                   <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
                     <div>
-                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Ceiling Loft Storage</span>
-                      <span className="text-[10px] text-gray-500">{breakdown.estimatedLoftRft} Rft &bull; Seasonal luggage storage</span>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Base Cabinets &amp; Skirting</span>
+                      <span className="text-[10px] text-gray-500">{breakdown.estimatedBaseRft} Rft &bull; 34" Ht BWP 710 Carcass</span>
                     </div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.loftCabinetsCost)}</span>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.baseCabinetsCost)}</span>
                   </div>
-                )}
 
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Countertop Stone &amp; Bullnose</span>
-                    <span className="text-[10px] text-gray-500">{breakdown.counterSqFt} sq ft {COUNTERTOP_MATERIALS[countertop].name.split(' (')[0]}</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.countertopCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">SS 304 Baskets &amp; Tandem Box</span>
-                    <span className="text-[10px] text-gray-500">Thali, Cutlery, Bottle pull-out &amp; Soft-close runners</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.hardwareCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Backsplash Dado Tiling</span>
-                    <span className="text-[10px] text-gray-500">2 ft Height Vitrified tiles + Epoxy grout</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.dadoCost)}</span>
-                </div>
-
-                {breakdown.appliancesCost > 0 && (
                   <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
                     <div>
-                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Chimney &amp; Hob Allowance</span>
-                      <span className="text-[10px] text-gray-500">Heavy-suction baffle filter &amp; brass burner</span>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Wall Overhead Cabinets</span>
+                      <span className="text-[10px] text-gray-500">{breakdown.estimatedWallRft} Rft &bull; Hydraulic soft-close stays</span>
                     </div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.appliancesCost)}</span>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.wallCabinetsCost)}</span>
                   </div>
-                )}
 
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Carpentry &amp; Fitting Labor</span>
-                    <span className="text-[10px] text-gray-500">Factory finishing, alignment &amp; site fitting</span>
+                  {breakdown.loftCabinetsCost > 0 && (
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                      <div>
+                        <span className="font-bold text-gray-900 dark:text-zinc-100 block">Ceiling Loft Storage</span>
+                        <span className="text-[10px] text-gray-500">{breakdown.estimatedLoftRft} Rft &bull; Seasonal luggage storage</span>
+                      </div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.loftCabinetsCost)}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Countertop Stone &amp; Bullnose</span>
+                      <span className="text-[10px] text-gray-500">{breakdown.counterSqFt} sq ft {COUNTERTOP_MATERIALS[countertop].name.split(' (')[0]}</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.countertopCost)}</span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.laborCost)}</span>
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">SS 304 Baskets &amp; Tandem Box</span>
+                      <span className="text-[10px] text-gray-500">Thali, Cutlery, Bottle pull-out &amp; Soft-close runners</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.hardwareCost)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Backsplash Dado Tiling</span>
+                      <span className="text-[10px] text-gray-500">2 ft Height Vitrified tiles + Epoxy grout</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.dadoCost)}</span>
+                  </div>
+
+                  {breakdown.appliancesCost > 0 && (
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                      <div>
+                        <span className="font-bold text-gray-900 dark:text-zinc-100 block">Chimney &amp; Hob Allowance</span>
+                        <span className="text-[10px] text-gray-500">Heavy-suction baffle filter &amp; brass burner</span>
+                      </div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.appliancesCost)}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Carpentry &amp; Fitting Labor</span>
+                      <span className="text-[10px] text-gray-500">Factory finishing, alignment &amp; site fitting</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.laborCost)}</span>
+                  </div>
                 </div>
-              </div>
+              </PaywallLock>
             </Card>
           )}
         </div>

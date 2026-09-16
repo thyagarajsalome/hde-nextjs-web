@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { BathroomDesign, BathroomLayoutType } from '@/types/gallery';
 import { bathroomGalleryService } from '@/services/bathroomGalleryService';
 import { estimateIndiaBathroomCost, CostEstimateResult } from '@/utils/indiaCostEstimator';
+import { useUser } from '@/context/UserContext';
 
 const LAYOUT_TYPES: BathroomLayoutType[] = [
   'Master Bathroom',
@@ -17,6 +18,8 @@ const LAYOUT_TYPES: BathroomLayoutType[] = [
 ];
 
 export default function BathroomGalleryPage() {
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const [designs, setDesigns] = useState<BathroomDesign[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState<string>('All');
@@ -197,6 +200,11 @@ export default function BathroomGalleryPage() {
     : designs.filter(d => d.layout_type === selectedType);
 
   const handleOpenCalculator = (design: BathroomDesign) => {
+    if (!isUserPaid) {
+      router.push('/upgrade?calc=india-bathroom');
+      return;
+    }
+
     const params = new URLSearchParams({
       calc: 'india-bathroom',
       area: String(calcSqft || '56'),
@@ -622,14 +630,34 @@ export default function BathroomGalleryPage() {
                 <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 space-y-2">
                   <button
                     onClick={() => handleOpenCalculator(activeModalDesign)}
-                    className="w-full py-3.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    className={`w-full py-3.5 rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      isUserPaid
+                        ? "bg-[#c5a059] hover:bg-[#b38e47] text-white"
+                        : "bg-[#c5a059] hover:bg-[#b38e47] text-white"
+                    }`}
                   >
-                    <i className="fas fa-calculator"></i>
-                    <span>Customize in India Bathroom Calculator</span>
-                    <i className="fas fa-arrow-right text-xs"></i>
+                    {isUserPaid ? (
+                      <>
+                        <i className="fas fa-calculator"></i>
+                        <span>Customize in India Bathroom Calculator</span>
+                        <i className="fas fa-arrow-right text-xs"></i>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-crown text-amber-200"></i>
+                        <span>Unlock Detailed Calculator in HDE Pro</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/25 text-white font-black tracking-wider flex items-center gap-1">
+                          <i className="fas fa-lock text-[8px]"></i>
+                          <span>PRO</span>
+                        </span>
+                        <i className="fas fa-arrow-right text-xs ml-1"></i>
+                      </>
+                    )}
                   </button>
                   <p className="text-[11px] text-center text-gray-400">
-                    Open India Interior Calculator to calculate based on your exact city rates and dimensions.
+                    {isUserPaid
+                      ? "Open India Interior Calculator to calculate based on your exact city rates and dimensions."
+                      : "Pro members unlock sanitaryware takeoff, 3-coat waterproofing specs, and contractor PDF exports."}
                   </p>
                 </div>
 

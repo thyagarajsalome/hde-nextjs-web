@@ -7,6 +7,8 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import PaywallLock from "../../components/ui/PaywallLock";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency } from "../../utils/currency";
 import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
 
@@ -43,11 +45,17 @@ const INTERIOR_BREAKDOWN = {
 const CHART_COLORS = ["#c5a059", "#5c473c", "#8c776c", "#dfd0bf", "#ebdcd0"];
 
 const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
+  const { planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("interior");
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const [area, setArea] = useState("1200");
   const [quality, setQuality] = useState<keyof typeof QUALITY_RATES>("standard");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="interior" />;
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -145,33 +153,44 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
             </div>
 
             <div className="space-y-6">
-              <div className="overflow-hidden rounded-xl border border-gray-100">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-gray-50 text-gray-600 font-semibold uppercase text-xs">
-                    <tr>
-                      <th className="px-4 py-3">Component</th>
-                      <th className="px-4 py-3">Allocation</th>
-                      <th className="px-4 py-3 text-right">Approx Cost</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {Object.entries(INTERIOR_BREAKDOWN).map(([component, percentage]) => {
-                      const cost = (totalCost * percentage) / 100;
-                      return (
-                        <tr key={component}>
-                          <td className="px-4 py-3 font-medium">{component}</td>
-                          <td className="px-4 py-3 text-gray-500">{percentage}%</td>
-                          <td className="px-4 py-3 text-right font-medium">{formatCurrency(cost)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              <PaywallLock
+                title="Unlock Room-by-Room Woodwork & Ceiling BOQ"
+                subtitle="Access exact percentage allocations, material specifications (IS:710 Marine Ply vs HDHMR), and contractor-grade client PDF quotations."
+                minTier="basic"
+                bullets={[
+                  "Itemized modular kitchen, wardrobe & false ceiling takeoff",
+                  "Substrate grade guidelines (BWP 710 vs Commercial MR)",
+                  "Branded PDF client proposal download & save access"
+                ]}
+              >
+                <div className="overflow-hidden rounded-xl border border-gray-100">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-gray-50 text-gray-600 font-semibold uppercase text-xs">
+                      <tr>
+                        <th className="px-4 py-3">Component</th>
+                        <th className="px-4 py-3">Allocation</th>
+                        <th className="px-4 py-3 text-right">Approx Cost</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {Object.entries(INTERIOR_BREAKDOWN).map(([component, percentage]) => {
+                        const cost = (totalCost * percentage) / 100;
+                        return (
+                          <tr key={component}>
+                            <td className="px-4 py-3 font-medium">{component}</td>
+                            <td className="px-4 py-3 text-gray-500">{percentage}%</td>
+                            <td className="px-4 py-3 text-right font-medium">{formatCurrency(cost)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-              <div className="h-64">
-                <Chart data={INTERIOR_BREAKDOWN} colors={CHART_COLORS} />
-              </div>
+                <div className="h-64 mt-4">
+                  <Chart data={INTERIOR_BREAKDOWN} colors={CHART_COLORS} />
+                </div>
+              </PaywallLock>
 
               {/* Room-Specific Precision Calculators (Removes Redundancy) */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-primary/5 via-[#c5a059]/10 to-transparent border border-[#c5a059]/30 space-y-2.5">

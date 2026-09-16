@@ -5,6 +5,7 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
@@ -27,7 +28,8 @@ const FENCING_TYPES = {
 const CHART_COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd"];
 
 const USAPickleballCalculator: React.FC = () => {
-  const { hasPaid } = useUser();
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("usa-pickleball-court");
 
   const [length, setLength] = useState("60");
@@ -36,6 +38,10 @@ const USAPickleballCalculator: React.FC = () => {
   const [acrylicType, setAcrylicType] = useState<keyof typeof ACRYLIC_LAYERS>("standard");
   const [fencingType, setFencingType] = useState<keyof typeof FENCING_TYPES>("chainlink");
   const [hasLighting, setHasLighting] = useState(false);
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-pickleball-court" />;
+  }
 
   const parsedLength = parseFloat(length) || 0;
   const parsedWidth = parseFloat(width) || 0;

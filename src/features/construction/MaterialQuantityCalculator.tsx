@@ -7,6 +7,17 @@ import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import { formatCurrency } from "../../utils/currency";
 import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
+import Chart from "../../components/ui/Chart";
+
+const PHASE_CHART_COLORS = [
+  "#f59e0b", // Foundation & Substructure (amber)
+  "#3b82f6", // RCC Structural Work (blue)
+  "#ef4444", // Masonry (red)
+  "#8b5cf6", // Plastering (purple)
+  "#10b981", // Flooring & Tiling (emerald)
+  "#06b6d4", // Painting (cyan)
+  "#6366f1", // Waterproofing (indigo)
+];
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface MaterialRow {
@@ -206,15 +217,15 @@ function computeBOQ(
 
 // ── Component ──────────────────────────────────────────────────────────────────
 const MaterialQuantityCalculator: React.FC = () => {
-  // NEW: Destructure markup (default to 0)
-  const { hasPaid, markup = 0 } = useUser();
+  // Destructure user status, planTier, and role to guarantee existing paid customers full access
+  const { hasPaid, planTier, role, markup = 0 } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("materials");
 
   const [area,    setArea]    = useState("");
   const [floors,  setFloors]  = useState(1);
   const [wallType,setWallType]= useState<keyof typeof WALL_TYPES>("redBrick");
   const [quality, setQuality] = useState<keyof typeof QUALITY_PRESETS>("standard");
-  const [showBOQ, setShowBOQ] = useState(false);
   const [openPhase, setOpenPhase] = useState<number | null>(0);
 
   // Sync to/from localStorage for builder funnel connection
@@ -224,7 +235,6 @@ const MaterialQuantityCalculator: React.FC = () => {
       const sharedQuality = window.localStorage.getItem("hde_shared_quality");
       if (sharedArea && !area) {
         setArea(sharedArea);
-        setShowBOQ(true); // Automatically show BOQ if area was shared
       }
       if (sharedQuality) {
         if (sharedQuality in QUALITY_PRESETS) {
@@ -246,14 +256,14 @@ const MaterialQuantityCalculator: React.FC = () => {
   }, [area, quality]);
 
   // Calculate Builder Markup Multiplier
-  const mFactor = hasPaid ? (1 + markup / 100) : 1;
+  const mFactor = isUserPaid ? (1 + markup / 100) : 1;
 
   const phases = useMemo(() => {
     const a = parseFloat(area);
     if (!a || a <= 0) return null;
     const basePhases = computeBOQ(a, wallType, floors, quality);
     
-    // NEW: Automatically apply builder markup silently across all materials
+    // Automatically apply builder markup silently across all materials
     if (mFactor !== 1) {
       return basePhases.map(ph => {
          const newRows = ph.rows.map(r => ({
@@ -275,13 +285,16 @@ const MaterialQuantityCalculator: React.FC = () => {
   const totalBags   = phases ? phases.flatMap(p => p.rows).filter(r => r.unit === "Bags (50kg)").reduce((s, r) => s + r.qty, 0) : 0;
   const totalSteel  = phases ? phases.flatMap(p => p.rows).filter(r => r.item.includes("Steel")).reduce((s, r) => s + r.qty, 0) : 0;
 
-  const isLocked = !hasPaid;
-
-  const handleCalculate = () => {
-    if (!area || parseFloat(area) <= 0) return;
-    setShowBOQ(true);
-    setOpenPhase(0);
-  };
+  const phaseChartData: Record<string, number> = useMemo(() => {
+    if (!phases) return {} as Record<string, number>;
+    const data: Record<string, number> = {};
+    phases.forEach((p) => {
+      if (p.subtotal > 0) {
+        data[p.phase] = p.subtotal;
+      }
+    });
+    return data;
+  }, [phases]);
 
   const handleSave = () => {
     if (phases) saveProject({ area, floors, wallType, quality, phases }, grandTotal);
@@ -310,25 +323,6 @@ const MaterialQuantityCalculator: React.FC = () => {
 
       {/* ── Input Card ── */}
       <Card title="📐 Material BOQ Estimator">
-        {isLocked && (
-          <div className="mb-5 flex items-center justify-between p-4 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
-            <div className="flex items-center gap-3">
-              <i className="fas fa-eye text-amber-600 dark:text-amber-400 text-lg"></i>
-              <div>
-                <p className="font-bold text-slate-800 dark:text-zinc-200 text-sm">Interactive Freemium Preview</p>
-                <p className="text-gray-500 dark:text-zinc-400 text-xs">Enter your plot area to generate live material totals, key quantities, and sample phase BOQ.</p>
-              </div>
-            </div>
-            <a
-              href="/upgrade"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-primary hover:bg-primary-hover text-white transition shadow-sm whitespace-nowrap"
-            >
-              <i className="fas fa-crown text-[10px]"></i>
-              <span>Upgrade to Pro</span>
-            </a>
-          </div>
-        )}
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Area */}
           <div>
@@ -375,15 +369,10 @@ const MaterialQuantityCalculator: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <button onClick={handleCalculate} disabled={!area}
-          className="mt-6 w-full py-4 bg-primary text-white dark:text-zinc-950 font-bold text-base rounded-xl shadow-md hover:bg-primary-hover transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer">
-          <i className="fas fa-calculator"></i> Generate Full BOQ
-        </button>
       </Card>
 
-      {/* ── Summary KPI Strip ── */}
-      {showBOQ && phases && (
+      {/* ── Summary KPI Strip & Results ── */}
+      {phases ? (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -400,14 +389,61 @@ const MaterialQuantityCalculator: React.FC = () => {
             ))}
           </div>
 
-          {/* ── Phase Accordion ── */}
+          {/* ── Visual Cost Distribution Infographic Donut Wheel ── */}
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 sm:p-6 border border-gray-100 dark:border-zinc-800 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 className="text-sm font-black text-gray-800 dark:text-zinc-100 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                  <span>Phase-Wise Material Cost Infographic</span>
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
+                  Visual cost allocation wheel across all 7 construction phases ({area} sq.ft)
+                </p>
+              </div>
+              <span className="self-start sm:self-auto text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <i className="fas fa-check text-[10px]"></i>
+                <span>100% Free Infographic</span>
+              </span>
+            </div>
+
+            <div className="h-72 my-2 flex items-center justify-center">
+              <Chart data={phaseChartData} colors={PHASE_CHART_COLORS} />
+            </div>
+
+            {/* Quick Material Takeoff Highlights */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-gray-100 dark:border-zinc-800 text-center">
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-zinc-850 border border-gray-100 dark:border-zinc-800">
+                <span className="text-[10px] text-gray-400 block font-semibold">Total Cement</span>
+                <span className="text-xs font-black text-blue-700 dark:text-blue-400 font-mono block mt-0.5">{totalBags} Bags</span>
+                <span className="text-[9px] text-gray-500">UltraTech / Ambuja</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-zinc-850 border border-gray-100 dark:border-zinc-800">
+                <span className="text-[10px] text-gray-400 block font-semibold">TMT Steel</span>
+                <span className="text-xs font-black text-orange-700 dark:text-orange-400 font-mono block mt-0.5">{totalSteel.toLocaleString()} kg</span>
+                <span className="text-[9px] text-gray-500">Fe500D Primary</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-zinc-850 border border-gray-100 dark:border-zinc-800">
+                <span className="text-[10px] text-gray-400 block font-semibold">Wall Masonry</span>
+                <span className="text-xs font-black text-red-700 dark:text-red-400 font-mono block mt-0.5">{WALL_TYPES[wallType].name.split('(')[0]}</span>
+                <span className="text-[9px] text-gray-500">{wallType === 'aac' ? 'AAC Blocks' : 'Traditional'}</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gray-50 dark:bg-zinc-850 border border-gray-100 dark:border-zinc-800">
+                <span className="text-[10px] text-gray-400 block font-semibold">Grand Material Total</span>
+                <span className="text-xs font-black text-emerald-700 dark:text-emerald-400 font-mono block mt-0.5">{formatCurrency(grandTotal)}</span>
+                <span className="text-[9px] text-gray-500">{phases.length} Phases Total</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Phase Accordion (100% Free - All 7 Phases Unlocked) ── */}
           <div className="space-y-3">
             {phases.map((ph, idx) => (
               <div key={idx} className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm overflow-hidden">
                 {/* Phase Header */}
                 <button
                   onClick={() => setOpenPhase(openPhase === idx ? null : idx)}
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors">
+                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3">
                     <span className={`inline-flex items-center justify-center w-9 h-9 rounded-xl text-sm ${ph.color}`}>
                       <i className={ph.icon}></i>
@@ -470,42 +506,6 @@ const MaterialQuantityCalculator: React.FC = () => {
             ))}
           </div>
 
-          {/* Freemium Teaser Card for Free / Non-Pro Users */}
-          {!hasPaid && (
-            <div className="relative mt-4 rounded-2xl overflow-hidden border border-[#c5a059]/30 dark:border-[#c5a059]/20 bg-gradient-to-br from-[#c5a059]/10 via-white to-[#c5a059]/5 dark:from-zinc-900 dark:via-zinc-900 dark:to-[#c5a059]/10 p-6 md:p-8 text-center shadow-lg">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center text-xl border border-[#c5a059]/30 shadow-inner">
-                <i className="fas fa-lock"></i>
-              </div>
-              <h3 className="text-lg md:text-xl font-extrabold text-slate-900 dark:text-zinc-100">
-                Unlock Complete Phase-wise BOQ &amp; Brand Specifications
-              </h3>
-              <p className="text-gray-600 dark:text-zinc-400 text-xs md:text-sm max-w-xl mx-auto mt-2 mb-6 leading-relaxed">
-                You are viewing the initial foundation phase. Upgrade to access all {phases.length} construction phases including Columns &amp; Slabs, Brickwork, Plastering, Flooring, Electrical &amp; Plumbing, contractor brand recommendations, and exportable PDF spreadsheets.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a
-                  href="/upgrade"
-                  className="w-full sm:w-auto px-6 py-3.5 bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-extrabold rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer no-underline border border-[#b38e47]/30"
-                >
-                  <i className="fas fa-crown"></i>
-                  <span>Upgrade to Pro — ₹999 (100 Credits)</span>
-                </a>
-                <WhatsAppShareButton
-                  title="Material BOQ Estimate"
-                  total={formatCurrency(grandTotal)}
-                  details={[
-                    { label: "Built-up Area", value: `${area} sq.ft (${floors} Floor${floors > 1 ? 's' : ''})` },
-                    { label: "Cement Required", value: `${totalBags} Bags (50kg)` },
-                    { label: "Steel Required", value: `${totalSteel.toLocaleString()} kg` },
-                    { label: "Wall Material", value: WALL_TYPES[wallType].name },
-                  ]}
-                  variant="outline"
-                  buttonText="Share Summary on WhatsApp"
-                />
-              </div>
-            </div>
-          )}
-
           {/* ── Grand Total Card ── */}
           <div className="bg-secondary dark:bg-zinc-900 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg border dark:border-zinc-800">
             <div>
@@ -526,28 +526,16 @@ const MaterialQuantityCalculator: React.FC = () => {
                 variant="primary"
                 buttonText="Share on WhatsApp"
               />
-              {hasPaid ? (
-                <>
-                  <button onClick={handleDownloadPDF} disabled={isDownloading}
-                    className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-zinc-850 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-sm cursor-pointer">
-                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
-                    Download BOQ PDF
-                  </button>
-                  <button onClick={handleSave} disabled={isSaving}
-                    className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-float cursor-pointer">
-                    <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                    Save Project
-                  </button>
-                </>
-              ) : (
-                <a
-                  href="/upgrade"
-                  className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-md cursor-pointer no-underline"
-                >
-                  <i className="fas fa-crown"></i>
-                  <span>Unlock Full Report</span>
-                </a>
-              )}
+              <button onClick={handleDownloadPDF} disabled={isDownloading}
+                className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-zinc-850 text-secondary dark:text-zinc-100 font-bold rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all text-sm cursor-pointer">
+                <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf"}`}></i>
+                Download BOQ PDF
+              </button>
+              <button onClick={handleSave} disabled={isSaving}
+                className="flex items-center gap-2 px-5 py-3 bg-primary text-white dark:text-zinc-950 font-bold rounded-xl hover:bg-primary-hover transition-all text-sm shadow-float cursor-pointer">
+                <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                Save Project
+              </button>
             </div>
           </div>
 
@@ -573,6 +561,16 @@ const MaterialQuantityCalculator: React.FC = () => {
             </div>
           </Card>
         </>
+      ) : (
+        <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-2xl border border-dashed border-gray-200 dark:border-zinc-800 p-6">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3 text-xl">
+            <i className="fas fa-cubes"></i>
+          </div>
+          <p className="text-base font-bold text-gray-800 dark:text-zinc-100">Enter Your Built-up Area</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
+            Live material quantities, 7-phase structural BOQ, and interactive visual cost distribution wheel will appear instantly.
+          </p>
+        </div>
       )}
     </div>
   );

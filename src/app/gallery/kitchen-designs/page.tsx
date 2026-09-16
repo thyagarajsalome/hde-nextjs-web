@@ -7,10 +7,13 @@ import { useRouter } from 'next/navigation';
 import { KitchenDesign, KitchenLayoutShape } from '@/types/gallery';
 import { KitchenGalleryService } from '@/services/kitchenGalleryService';
 import { estimateIndiaKitchenCost, CostEstimateResult } from '@/utils/indiaCostEstimator';
+import { useUser } from '@/context/UserContext';
 
 const SHAPES: KitchenLayoutShape[] = ['L-Shape', 'U-Shape', 'Parallel', 'Straight', 'Island'];
 
 export default function KitchenGalleryPage() {
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const [designs, setDesigns] = useState<KitchenDesign[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedShape, setSelectedShape] = useState<string>('All');
@@ -192,8 +195,13 @@ export default function KitchenGalleryPage() {
     ? designs
     : designs.filter(d => d.layout_shape === selectedShape);
 
-  // Navigate to India Modular Kitchen Calculator with customized specs
+  // Navigate to India Modular Kitchen Calculator with customized specs (or Upgrade page if unpaid)
   const handleOpenCalculator = (design: KitchenDesign) => {
+    if (!isUserPaid) {
+      router.push('/upgrade?calc=india-kitchen');
+      return;
+    }
+
     const params = new URLSearchParams({
       calc: 'india-kitchen',
       area: String(calcSqft || '120'),
@@ -610,14 +618,34 @@ export default function KitchenGalleryPage() {
               <div className="pt-4 border-t border-gray-200 dark:border-zinc-800 space-y-2.5">
                 <button
                   onClick={() => handleOpenCalculator(activeModalDesign)}
-                  className="w-full py-4 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+                  className={`w-full py-4 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 cursor-pointer ${
+                    isUserPaid
+                      ? "bg-primary hover:bg-primary-hover text-white dark:text-zinc-950"
+                      : "bg-[#c5a059] hover:bg-[#b38e47] text-white"
+                  }`}
                 >
-                  <i className="fas fa-calculator"></i>
-                  <span>Customize in India Kitchen Calculator</span>
-                  <i className="fas fa-arrow-right text-xs"></i>
+                  {isUserPaid ? (
+                    <>
+                      <i className="fas fa-calculator"></i>
+                      <span>Customize in India Kitchen Calculator</span>
+                      <i className="fas fa-arrow-right text-xs"></i>
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-crown text-amber-200"></i>
+                      <span>Unlock Detailed Calculator in HDE Pro</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/25 text-white font-black tracking-wider flex items-center gap-1">
+                        <i className="fas fa-lock text-[8px]"></i>
+                        <span>PRO</span>
+                      </span>
+                      <i className="fas fa-arrow-right text-xs ml-1"></i>
+                    </>
+                  )}
                 </button>
                 <p className="text-[11px] text-center text-gray-400">
-                  Open India Interior Calculator to calculate based on your exact city rates and dimensions.
+                  {isUserPaid
+                    ? "Open India Interior Calculator to calculate based on your exact city rates and dimensions."
+                    : "Pro members unlock room-by-room hardware takeoff, IS:710 Marine ply schedules, and contractor PDF exports."}
                 </p>
               </div>
 

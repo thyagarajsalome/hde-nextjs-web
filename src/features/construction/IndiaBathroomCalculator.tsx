@@ -5,6 +5,8 @@ import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import PaywallLock from "../../components/ui/PaywallLock";
+import ProCalculatorGate from "../../components/ui/ProCalculatorGate";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'IN');
@@ -79,6 +81,8 @@ const TILE_CONCEPTS = {
 const CHART_COLORS = ["#0f2042", "#c5a059", "#2563eb", "#10b981", "#8b5cf6", "#f59e0b", "#06b6d4", "#ec4899"];
 
 export default function IndiaBathroomCalculator() {
+  const { hasPaid, planTier, role } = useUser();
+  const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   const { saveProject, downloadSpreadsheetPDF, isSaving, isDownloading } = useProjectActions("india-bathroom");
 
   // Inputs
@@ -86,6 +90,10 @@ export default function IndiaBathroomCalculator() {
   const [lengthFt, setLengthFt] = useState("8");
   const [widthFt, setWidthFt] = useState("6");
   const [areaSqFt, setAreaSqFt] = useState("48");
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="india-bathroom" />;
+  }
 
   const [bathType, setBathType] = useState<keyof typeof BATHROOM_TYPES>("wetdry");
   const [tier, setTier] = useState<keyof typeof FIXTURE_TIERS>("premium");
@@ -655,82 +663,89 @@ export default function IndiaBathroomCalculator() {
                 </div>
               )}
 
-              {/* Itemized BOQ Lines */}
-              <div className="space-y-2.5 pt-2 text-xs">
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Sunken Slab Waterproofing</span>
-                    <span className="text-[10px] text-gray-500">2-Coat Elastomeric + 48-hr ponding test</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.waterproofingCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Wall Dado &amp; Floor Tiling</span>
-                    <span className="text-[10px] text-gray-500">{breakdown.wallTileSqFt} sq ft dado + anti-skid floor &bull; Epoxy grout</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.tilingTotalCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Concealed CPVC &amp; Drainage</span>
-                    <span className="text-[10px] text-gray-500">Astral SDR 11 hot/cold lines &bull; Chipping &amp; core cuts</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.plumbingPipingCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Sanitaryware Fixtures</span>
-                    <span className="text-[10px] text-gray-500">Rimless wall-hung EWC &bull; Concealed slim tank &bull; Basin</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.sanitarywareCost)}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">CP Brass Diverters &amp; Shower</span>
-                    <span className="text-[10px] text-gray-500">Concealed 3-in-1 diverter, rain shower, spout &amp; health faucet</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.cpFittingsCost)}</span>
-                </div>
-
-                {breakdown.glassPartitionCost > 0 && (
+              {/* Itemized BOQ Lines with PaywallLock */}
+              <PaywallLock
+                minTier="basic"
+                title="Unlock Itemized Bathroom Renovation BOQ"
+                subtitle="View exact waterproofing costs, CP brass diverters, sanitaryware fixtures, glass enclosure, vanity counter, and plumbing labor."
+                previewHeight="max-h-[220px]"
+              >
+                <div className="space-y-2.5 pt-2 text-xs">
                   <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
                     <div>
-                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Shower Glass Enclosure</span>
-                      <span className="text-[10px] text-gray-500">{PARTITION_OPTIONS[partition].name}</span>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Sunken Slab Waterproofing</span>
+                      <span className="text-[10px] text-gray-500">2-Coat Elastomeric + 48-hr ponding test</span>
                     </div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.glassPartitionCost)}</span>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.waterproofingCost)}</span>
                   </div>
-                )}
 
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">BWP Marine Ply Vanity Counter</span>
-                    <span className="text-[10px] text-gray-500">Floating cabinet with quartz/granite counter</span>
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Wall Dado &amp; Floor Tiling</span>
+                      <span className="text-[10px] text-gray-500">{breakdown.wallTileSqFt} sq ft dado + anti-skid floor &bull; Epoxy grout</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.tilingTotalCost)}</span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.vanityCost)}</span>
-                </div>
 
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Electrical, LED Mirror &amp; Exhaust</span>
-                    <span className="text-[10px] text-gray-500">Backlit defogger mirror, 150mm exhaust &amp; geyser point</span>
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Concealed CPVC &amp; Drainage</span>
+                      <span className="text-[10px] text-gray-500">Astral SDR 11 hot/cold lines &bull; Chipping &amp; core cuts</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.plumbingPipingCost)}</span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.electricalCost)}</span>
-                </div>
 
-                <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
-                  <div>
-                    <span className="font-bold text-gray-900 dark:text-zinc-100 block">Plumbing &amp; Masonry Labor</span>
-                    <span className="text-[10px] text-gray-500">Tile fixing, core cutting &amp; fixture commissioning</span>
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Sanitaryware Fixtures</span>
+                      <span className="text-[10px] text-gray-500">Rimless wall-hung EWC &bull; Concealed slim tank &bull; Basin</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.sanitarywareCost)}</span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.plumbingLabor)}</span>
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">CP Brass Diverters &amp; Shower</span>
+                      <span className="text-[10px] text-gray-500">Concealed 3-in-1 diverter, rain shower, spout &amp; health faucet</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.cpFittingsCost)}</span>
+                  </div>
+
+                  {breakdown.glassPartitionCost > 0 && (
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                      <div>
+                        <span className="font-bold text-gray-900 dark:text-zinc-100 block">Shower Glass Enclosure</span>
+                        <span className="text-[10px] text-gray-500">{PARTITION_OPTIONS[partition].name}</span>
+                      </div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.glassPartitionCost)}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">BWP Marine Ply Vanity Counter</span>
+                      <span className="text-[10px] text-gray-500">Floating cabinet with quartz/granite counter</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.vanityCost)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Electrical, LED Mirror &amp; Exhaust</span>
+                      <span className="text-[10px] text-gray-500">Backlit defogger mirror, 150mm exhaust &amp; geyser point</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.electricalCost)}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-2.5 rounded-lg bg-gray-50 dark:bg-zinc-800/50">
+                    <div>
+                      <span className="font-bold text-gray-900 dark:text-zinc-100 block">Plumbing &amp; Masonry Labor</span>
+                      <span className="text-[10px] text-gray-500">Tile fixing, core cutting &amp; fixture commissioning</span>
+                    </div>
+                    <span className="font-bold text-gray-900 dark:text-zinc-100 font-mono">{formatCurrency(breakdown.plumbingLabor)}</span>
+                  </div>
                 </div>
-              </div>
+              </PaywallLock>
             </Card>
           )}
         </div>
