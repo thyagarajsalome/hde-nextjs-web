@@ -546,7 +546,7 @@ export default function BathroomGalleryPage() {
                       </span>
                     </div>
                     <span className="text-xs font-bold text-gray-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
-                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,800 / sq ft'}
+                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹2,450 / sq ft'}
                     </span>
                   </div>
                 </div>

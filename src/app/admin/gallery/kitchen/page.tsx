@@ -61,9 +61,9 @@ export default function AdminKitchenGalleryPage() {
   const [cabinetFinish, setCabinetFinish] = useState('High-Gloss Acrylic');
   const [countertopMaterial, setCountertopMaterial] = useState('Jet Black Granite');
   const [featuresStr, setFeaturesStr] = useState('Hydraulic Lift-Up, Tandem Drawers, Profile LED, Loft Storage');
-  const [minCost, setMinCost] = useState<number>(140000);
-  const [maxCost, setMaxCost] = useState<number>(200000);
-  const [ratePerUnit, setRatePerUnit] = useState('₹1,600 / sq ft');
+  const [minCost, setMinCost] = useState<number>(195000);
+  const [maxCost, setMaxCost] = useState<number>(280000);
+  const [ratePerUnit, setRatePerUnit] = useState('₹2,200 / sq ft');
   const [altText, setAltText] = useState('');
   const [keywordsStr, setKeywordsStr] = useState('l shape modular kitchen, acrylic kitchen, modern kitchen cost');
   const [imageUrl, setImageUrl] = useState('');

@@ -541,7 +541,7 @@ export default function KitchenGalleryPage() {
                       </span>
                     </div>
                     <span className="text-xs font-bold text-gray-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
-                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹1,600 / sq ft'}
+                      {calcResult?.ratePerUnit || activeModalDesign.rate_per_unit || '₹2,200 / sq ft'}
                     </span>
                   </div>
                 </div>

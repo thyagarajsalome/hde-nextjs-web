@@ -90,11 +90,12 @@ export function estimateIndiaKitchenCost(input: KitchenEstimateInput): CostEstim
   };
 
   // Base rate per sq ft in Tier 1/2 Indian cities (IS:710 BWP Plywood, Tandem drawers, Jet Black Granite / Quartz)
+  // Calibrated to realistic turnkey market pricing (35-40% inflation-adjusted & aligned with turnkey carpentry rates)
   const tierRates: Record<string, { minRate: number; maxRate: number; mult: number }> = {
-    'Economy': { minRate: 1200, maxRate: 1600, mult: 0.85 },       // Basic Laminate, Commercial Ply / MDF
-    'Standard': { minRate: 1650, maxRate: 2350, mult: 1.0 },       // BWP 710 Marine Ply, 1mm High-Gloss Laminate, Jet Black Granite
-    'Premium': { minRate: 2350, maxRate: 3550, mult: 1.5 },       // Anti-Fingerprint Acrylic, Quartz Counter, Blum/Hettich Tandem
-    'Ultra Luxury': { minRate: 3550, maxRate: 5600, mult: 2.3 },  // PU Lacquer, Ceramic/Dekton, Profile LED, Electric Lift-ups
+    'Economy': { minRate: 1650, maxRate: 2200, mult: 0.85 },       // Basic Laminate, Commercial Ply / MDF
+    'Standard': { minRate: 2250, maxRate: 3250, mult: 1.0 },       // BWP 710 Marine Ply, 1mm High-Gloss Laminate, Jet Black Granite
+    'Premium': { minRate: 3200, maxRate: 4850, mult: 1.5 },       // Anti-Fingerprint Acrylic, Quartz Counter, Blum/Hettich Tandem
+    'Ultra Luxury': { minRate: 4850, maxRate: 7600, mult: 2.3 },  // PU Lacquer, Ceramic/Dekton, Profile LED, Electric Lift-ups
   };
 
   const selectedTier = tierRates[input.qualityTier] || tierRates['Standard'];
@@ -157,10 +158,11 @@ export function estimateIndiaBathroomCost(input: BathroomEstimateInput): CostEst
     'Luxury Suite': 1.9,           // Freestanding acrylic tub, thermostatic shower
   };
 
+  // Calibrated to realistic Indian bathroom turnkey renovation costs (+35% to 40%)
   const tierRates: Record<string, { minRate: number; maxRate: number; mult: number }> = {
-    'Standard': { minRate: 1400, maxRate: 1950, mult: 1.0 },      // Ceramic Tiles, Jaquar Single-Lever Diverter, Wall-Hung EWC
-    'Premium': { minRate: 2050, maxRate: 3250, mult: 1.5 },       // 2x4 Vitrified, 10mm Toughened Glass, Kohler/Jaquar, Slim Cistern
-    'Luxury': { minRate: 3350, maxRate: 5300, mult: 2.4 },        // Statuario Porcelain, Grohe/Hansgrohe Thermostat, Rain Canopy
+    'Standard': { minRate: 1900, maxRate: 2650, mult: 1.0 },      // Ceramic Tiles, Jaquar Single-Lever Diverter, Wall-Hung EWC
+    'Premium': { minRate: 2800, maxRate: 4450, mult: 1.5 },       // 2x4 Vitrified, 10mm Toughened Glass, Kohler/Jaquar, Slim Cistern
+    'Luxury': { minRate: 4550, maxRate: 7200, mult: 2.4 },        // Statuario Porcelain, Grohe/Hansgrohe Thermostat, Rain Canopy
   };
 
   const selectedTier = tierRates[input.qualityTier] || tierRates['Premium'];

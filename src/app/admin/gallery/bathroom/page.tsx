@@ -70,9 +70,9 @@ export default function AdminBathroomGalleryPage() {
   const [fittingsBrand, setFittingsBrand] = useState('Jaquar Concealed Diverter & Rain Shower');
   const [partitionType, setPartitionType] = useState('10mm Toughened Frameless Glass Partition');
   const [featuresStr, setFeaturesStr] = useState('Toughened Glass Partition, LED Backlit Mirror, Wall-Hung WC, Shower Niche, Anti-Skid Tiles');
-  const [minCost, setMinCost] = useState<number>(85000);
-  const [maxCost, setMaxCost] = useState<number>(140000);
-  const [ratePerUnit, setRatePerUnit] = useState('₹1,800 / sq ft');
+  const [minCost, setMinCost] = useState<number>(120000);
+  const [maxCost, setMaxCost] = useState<number>(195000);
+  const [ratePerUnit, setRatePerUnit] = useState('₹2,450 / sq ft');
   const [altText, setAltText] = useState('');
   const [keywordsStr, setKeywordsStr] = useState('bathroom design india, wet dry bathroom partition, modern bathroom cost, small bathroom tiles');
   const [imageUrl, setImageUrl] = useState('');
