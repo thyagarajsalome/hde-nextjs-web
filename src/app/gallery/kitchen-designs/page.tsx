@@ -247,13 +247,13 @@ export default function KitchenGalleryPage() {
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
             <i className="fas fa-kitchen-set"></i>
-            <span>Indian Modular Kitchen Portfolio &bull; 9:16 Showcase</span>
+            <span>Indian Modular Kitchen Portfolio &bull; Design Showcase</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-secondary dark:text-zinc-100 tracking-tight">
             Modular Kitchen Designs &amp; Cost
           </h1>
           <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
-            Discover 9:16 mobile-first modular kitchen design ideas curated for Indian flats and homes. Each concept includes layout shapes, room dimensions, material finishes, and approximate INR modular costs.
+            Discover modern modular kitchen design ideas curated for Indian flats and homes. Each concept includes layout shapes, room dimensions, material finishes, and approximate INR modular costs.
           </p>
         </div>
 

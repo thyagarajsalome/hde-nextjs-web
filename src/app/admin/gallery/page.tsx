@@ -6,7 +6,7 @@ export default function AdminGalleryHubPage() {
   const sections = [
     {
       title: 'Modular Kitchen Designs',
-      description: 'Manage 9:16 modular kitchen photo cards, L-shape/U-shape layouts, dimensions, and approximate INR budgets.',
+      description: 'Manage modular kitchen photo cards, L-shape/U-shape layouts, dimensions, and approximate INR budgets.',
       href: '/admin/gallery/kitchen',
       icon: 'fa-kitchen-set',
       status: 'Live & Ready',
@@ -15,7 +15,7 @@ export default function AdminGalleryHubPage() {
     },
     {
       title: 'Modern Bathroom & Tile Concepts',
-      description: 'Manage 9:16 bathroom photos, wet & dry partitions, vanity units, tile concepts, and approximate INR budgets.',
+      description: 'Manage bathroom photos, wet & dry partitions, vanity units, tile concepts, and approximate INR budgets.',
       href: '/admin/gallery/bathroom',
       icon: 'fa-bath',
       status: 'Live & Ready',

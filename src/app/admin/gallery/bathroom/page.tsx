@@ -400,7 +400,7 @@ export default function AdminBathroomGalleryPage() {
               Modern Bathroom Gallery
             </h1>
             <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
-              Manage 9:16 mobile-first designs, Cloudflare R2 images, layouts, materials, and pricing.
+              Manage designs, Cloudflare R2 images, layouts, materials, and pricing.
             </p>
           </div>
 

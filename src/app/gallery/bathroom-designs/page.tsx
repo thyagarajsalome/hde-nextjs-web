@@ -257,7 +257,7 @@ export default function BathroomGalleryPage() {
             <span className="text-primary">&amp; Approximate Budgets</span>
           </h1>
           <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed">
-            Discover 9:16 mobile-first bathroom interior ideas curated for Indian apartments and villas. Each concept features wet/dry partitions, vanity layouts, tile recommendations, and approximate INR renovation costs.
+            Discover modern bathroom interior ideas curated for Indian apartments and villas. Each concept features wet/dry partitions, vanity layouts, tile recommendations, and approximate INR renovation costs.
           </p>
         </div>
 

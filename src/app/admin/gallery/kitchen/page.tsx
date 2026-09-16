@@ -357,24 +357,24 @@ export default function AdminKitchenGalleryPage() {
           </div>
         )}
 
-        {/* Top Breadcrumb & Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-200 dark:border-zinc-800 pb-6">
+        {/* Top Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs text-gray-500 font-semibold mb-1">
-              <Link href="/" className="hover:text-primary">Home</Link>
+            <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <Link href="/admin" className="hover:text-primary">Admin</Link>
               <span>/</span>
-              <span className="text-gray-400">Admin</span>
+              <Link href="/admin/gallery" className="hover:text-primary">Gallery</Link>
               <span>/</span>
-              <span className="text-primary font-bold">Kitchen Gallery Manager</span>
+              <span className="text-primary">Kitchens</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-secondary dark:text-zinc-100 flex items-center gap-3">
               <span className="p-2.5 rounded-xl bg-primary/10 text-primary">
                 <i className="fas fa-kitchen-set"></i>
               </span>
-              Kitchen Gallery Management (CRUD)
+              Modular Kitchen Gallery
             </h1>
-            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-1">
-              Upload 9:16 mobile-friendly WebP photos, set shapes, dimensions, and approximate INR budget ranges.
+            <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
+              Manage designs, Cloudflare R2 images, layouts, materials, and pricing.
             </p>
           </div>
 
