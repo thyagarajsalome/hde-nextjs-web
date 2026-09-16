@@ -80,8 +80,8 @@ function getPlanImageUrl(path: string): string {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const cleanPath = path.replace(/^\/+/, '');
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ncontvjtfhsabphxfuhb.supabase.co';
-  return `${supabaseUrl}/storage/v1/object/public/house-plans/${cleanPath}`;
+  const r2Url = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev';
+  return `${r2Url}/house-plans/${cleanPath}`;
 }
 
 export default async function HousePlanSeoPage({ params }: Props) {

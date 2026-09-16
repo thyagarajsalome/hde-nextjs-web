@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'fileName is required' }, { status: 400 });
     }
 
-    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery'];
+    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans'];
     const ALLOWED_CONTENT_TYPES = ['image/webp', 'image/jpeg', 'image/png', 'image/avif'];
 
     if (!ALLOWED_CATEGORIES.includes(category)) {
@@ -60,7 +60,9 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9.-]/g, '-')
       .replace(/-+/g, '-');
       
-    const key = `gallery/${category}/${Date.now()}-${cleanFileName}`;
+    const key = category === 'house-plans'
+      ? (fileName.startsWith('full-plans/') ? `house-plans/${fileName}` : `house-plans/full-plans/${Date.now()}-${cleanFileName}`)
+      : `gallery/${category}/${Date.now()}-${cleanFileName}`;
 
     const { uploadUrl, publicUrl } = await getR2PresignedUploadUrl(key, contentType);
 

@@ -95,12 +95,41 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
       const cleanFileName = title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30);
       const fullPath = `full-plans/${timestamp}-${cleanFileName}.${fullExt}`;
 
-      // 1. Upload File to Supabase Storage Bucket
+      // 1. Upload File to Supabase Storage Bucket (for mobile backwards-compatibility)
       const { error: fullError } = await supabase.storage.from('house-plans').upload(fullPath, fullFile, {
         cacheControl: '3600',
         upsert: false
       });
-      if (fullError) throw fullError;
+      if (fullError) console.warn("Supabase backup upload note:", fullError.message);
+
+      // 2. Also upload to Cloudflare R2 (for zero-egress web app serving)
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        const r2Res = await fetch('/api/gallery/upload-url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({
+            fileName: fullPath,
+            category: 'house-plans',
+            contentType: fullFile.type || 'image/webp',
+            fileSize: fullFile.size
+          })
+        });
+        const r2Data = await r2Res.json();
+        if (r2Data.success && r2Data.uploadUrl) {
+          await fetch(r2Data.uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': fullFile.type || 'image/webp' },
+            body: fullFile
+          });
+        }
+      } catch (r2Err: any) {
+        console.warn("Cloudflare R2 sync upload notice:", r2Err?.message);
+      }
       setUploadProgress(90);
 
       // Final formatted description
