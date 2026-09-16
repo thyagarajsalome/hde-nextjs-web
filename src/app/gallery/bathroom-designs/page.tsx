@@ -410,6 +410,14 @@ export default function BathroomGalleryPage() {
           </div>
         )}
 
+        {/* Gallery Level Disclaimer */}
+        <div className="p-3.5 rounded-2xl bg-gray-100/70 dark:bg-zinc-900 border border-gray-200/60 dark:border-zinc-800 text-[11px] text-gray-500 dark:text-zinc-400 leading-relaxed flex items-start gap-2.5 max-w-4xl mx-auto">
+          <i className="fas fa-info-circle text-gray-400 dark:text-zinc-500 mt-0.5 shrink-0 text-xs"></i>
+          <span>
+            <strong className="font-semibold text-gray-600 dark:text-zinc-300">Disclaimer:</strong> Cost and estimation are given approximate only. Actual cost might increase as per the site measurements, current market price on materials and labour charges. In images, few elements were added to enhance the interior design presentation; those are not part of the standard estimation.
+          </span>
+        </div>
+
       </div>
 
       {/* Lightbox / Specification Modal */}
@@ -600,6 +608,14 @@ export default function BathroomGalleryPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Small Gray Disclaimer */}
+                  <div className="p-3 rounded-xl bg-gray-50 dark:bg-zinc-800/40 border border-gray-200/60 dark:border-zinc-800/80 text-[11px] text-gray-500 dark:text-zinc-400 leading-relaxed flex items-start gap-2">
+                    <i className="fas fa-info-circle text-gray-400 dark:text-zinc-500 mt-0.5 shrink-0 text-xs"></i>
+                    <span>
+                      <strong className="font-semibold text-gray-600 dark:text-zinc-300">Disclaimer:</strong> Cost and estimation are given approximate only. Actual cost might increase as per the site measurements, current market price on materials and labour charges. In images, few elements were added to enhance the interior design presentation; those are not part of the standard estimation.
+                    </span>
+                  </div>
                 </div>
 
                 {/* Deep-link CTA to India Calculator */}
