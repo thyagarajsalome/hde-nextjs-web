@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard/', '/upgrade/', '/signin/', '/signup/', '/dev-links/'],
+      disallow: ['/dashboard/', '/upgrade/', '/signin/', '/signup/', '/dev-links/', '/admin/'],
     },
     sitemap: 'https://www.homedesignenglish.com/sitemap.xml',
   };
