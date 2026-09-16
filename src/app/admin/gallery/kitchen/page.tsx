@@ -72,30 +72,6 @@ export default function AdminKitchenGalleryPage() {
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
 
-  // Auto-Calculator Engine Fields (India Mode)
-  const [autoLength, setAutoLength] = useState<number>(15);
-  const [autoWidth, setAutoWidth] = useState<number>(12);
-  const [autoSqft, setAutoSqft] = useState<number>(180);
-  const [qualityTier, setQualityTier] = useState<'Economy' | 'Standard' | 'Premium' | 'Ultra Luxury'>('Premium');
-
-  const applyAutoEstimate = (sqftVal?: number, lenVal?: number, widVal?: number, tierVal?: any, shapeVal?: any) => {
-    const res = estimateIndiaKitchenCost({
-      lengthFt: lenVal !== undefined ? lenVal : autoLength,
-      widthFt: widVal !== undefined ? widVal : autoWidth,
-      areaSqFt: sqftVal !== undefined ? sqftVal : autoSqft,
-      layoutShape: shapeVal || layoutShape,
-      qualityTier: tierVal || qualityTier,
-      cabinetFinish,
-      countertopMaterial,
-    });
-
-    setMinCost(res.minCost);
-    setMaxCost(res.maxCost);
-    setRatePerUnit(res.ratePerUnit);
-    setDimensions(res.dimensionsStr);
-    showToast(`Calculated: ${res.formattedBudget} (${res.ratePerUnit})`);
-  };
-
   // File Upload State
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -109,7 +85,7 @@ export default function AdminKitchenGalleryPage() {
   const loadDesigns = async () => {
     setLoading(true);
     try {
-      const data = await KitchenGalleryService.getDesigns('All', false);
+      const data = await KitchenGalleryService.getAllDesignsForAdmin();
       setDesigns(data);
     } catch (err: any) {
       showToast(err.message || 'Failed to load designs', 'error');
@@ -239,24 +215,24 @@ export default function AdminKitchenGalleryPage() {
 
   const handleEdit = (design: KitchenDesign) => {
     setEditingId(design.id);
-    setTitle(design.title);
-    setSlug(design.slug);
-    setLayoutShape(design.layout_shape);
-    setDimensions(design.dimensions);
+    setTitle(design.title || '');
+    setSlug(design.slug || '');
+    setLayoutShape(design.layout_shape || 'L-Shape');
+    setDimensions(design.dimensions || '10 ft × 8 ft (80 sq ft)');
     setCountertopLength(design.countertop_length_ft || 18);
-    setCabinetFinish(design.cabinet_finish);
-    setCountertopMaterial(design.countertop_material);
+    setCabinetFinish(design.cabinet_finish || 'High-Gloss Acrylic');
+    setCountertopMaterial(design.countertop_material || 'Jet Black Granite');
     setFeaturesStr(design.features?.join(', ') || '');
-    setMinCost(design.min_cost);
-    setMaxCost(design.max_cost);
+    setMinCost(Number(design.min_cost) || 140000);
+    setMaxCost(Number(design.max_cost) || 200000);
     setRatePerUnit(design.rate_per_unit || '₹1,600 / sq ft');
-    setAltText(design.alt_text);
+    setAltText(design.alt_text || '');
     setKeywordsStr(design.keywords?.join(', ') || '');
-    setImageUrl(design.image_url);
-    setFileName(design.file_name);
-    setPreviewUrl(design.image_url);
-    setIsFeatured(design.is_featured);
-    setIsActive(design.is_active);
+    setImageUrl(design.image_url || '');
+    setFileName(design.file_name || '');
+    setPreviewUrl(design.image_url || null);
+    setIsFeatured(Boolean(design.is_featured));
+    setIsActive(design.is_active ?? true);
     setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -417,28 +393,6 @@ export default function AdminKitchenGalleryPage() {
           </div>
         </div>
 
-        {/* Stats Overview */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Designs</div>
-            <div className="text-2xl font-black text-secondary dark:text-zinc-100 mt-1">{designs.length}</div>
-          </div>
-          <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">Active Published</div>
-            <div className="text-2xl font-black text-emerald-600 mt-1">{designs.filter(d => d.is_active).length}</div>
-          </div>
-          <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">L-Shape Layouts</div>
-            <div className="text-2xl font-black text-amber-600 mt-1">{designs.filter(d => d.layout_shape === 'L-Shape').length}</div>
-          </div>
-          <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">Storage Target</div>
-            <div className="text-sm font-bold text-gray-800 dark:text-zinc-200 mt-2 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Cloudflare R2
-            </div>
-          </div>
-        </div>
-
         {/* Create / Edit Form Drawer */}
         {isFormOpen && (
           <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 rounded-2xl border-2 border-primary/30 p-6 sm:p-8 shadow-xl space-y-6">
@@ -562,96 +516,6 @@ export default function AdminKitchenGalleryPage() {
                       required
                       className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-mono focus:border-primary outline-none"
                     />
-                  </div>
-                </div>
-
-                {/* Auto-Calculate Budget Engine (India Mode) */}
-                <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-primary/5 to-amber-500/10 border border-amber-500/30 space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs">
-                        <i className="fas fa-calculator"></i>
-                      </span>
-                      <div>
-                        <p className="text-xs font-black text-amber-900 dark:text-amber-200">
-                          ⚡ Auto-Calculate Budget from Sq.Ft (India Engine)
-                        </p>
-                        <p className="text-[10px] text-gray-500 dark:text-zinc-400">
-                          Enter room dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => applyAutoEstimate()}
-                      className="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
-                    >
-                      <i className="fas fa-bolt text-[10px]"></i>
-                      <span>Calculate Budget</span>
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1 text-xs">
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Length (ft)</label>
-                      <input
-                        type="number"
-                        value={autoLength}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          setAutoLength(val);
-                          const newSqft = val * autoWidth;
-                          setAutoSqft(newSqft);
-                          applyAutoEstimate(newSqft, val, autoWidth);
-                        }}
-                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Width (ft)</label>
-                      <input
-                        type="number"
-                        value={autoWidth}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          setAutoWidth(val);
-                          const newSqft = autoLength * val;
-                          setAutoSqft(newSqft);
-                          applyAutoEstimate(newSqft, autoLength, val);
-                        }}
-                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Total Area (sq ft)</label>
-                      <input
-                        type="number"
-                        value={autoSqft}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          setAutoSqft(val);
-                          applyAutoEstimate(val);
-                        }}
-                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-black text-primary"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-gray-500 mb-1">Quality Tier</label>
-                      <select
-                        value={qualityTier}
-                        onChange={(e) => {
-                          const val = e.target.value as any;
-                          setQualityTier(val);
-                          applyAutoEstimate(autoSqft, autoLength, autoWidth, val);
-                        }}
-                        className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                      >
-                        <option value="Economy">Economy (Laminate)</option>
-                        <option value="Standard">Standard (Marine Ply)</option>
-                        <option value="Premium">Premium (Acrylic/Quartz)</option>
-                        <option value="Ultra Luxury">Ultra Luxury (PU/Dekton)</option>
-                      </select>
-                    </div>
                   </div>
                 </div>
 
@@ -839,7 +703,7 @@ export default function AdminKitchenGalleryPage() {
                       <input
                         type="number"
                         step="5000"
-                        value={minCost}
+                        value={minCost ?? ''}
                         onChange={(e) => setMinCost(Number(e.target.value))}
                         className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold"
                       />
@@ -849,7 +713,7 @@ export default function AdminKitchenGalleryPage() {
                       <input
                         type="number"
                         step="5000"
-                        value={maxCost}
+                        value={maxCost ?? ''}
                         onChange={(e) => setMaxCost(Number(e.target.value))}
                         className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold"
                       />
@@ -858,7 +722,7 @@ export default function AdminKitchenGalleryPage() {
                       <label className="block text-[11px] font-bold text-gray-500 mb-1">Rate / Unit Tag</label>
                       <input
                         type="text"
-                        value={ratePerUnit}
+                        value={ratePerUnit ?? ''}
                         onChange={(e) => setRatePerUnit(e.target.value)}
                         placeholder="₹1,600 / sq ft"
                         className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm"

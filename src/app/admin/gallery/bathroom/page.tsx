@@ -208,26 +208,26 @@ export default function AdminBathroomGalleryPage() {
 
   const handleEdit = (design: BathroomDesign) => {
     setEditingId(design.id);
-    setTitle(design.title);
-    setSlug(design.slug);
-    setLayoutType(design.layout_type);
-    setDimensions(design.dimensions);
-    setTileConcept(design.tile_concept);
-    setVanityType(design.vanity_type);
-    setFittingsBrand(design.fittings_brand);
-    setPartitionType(design.partition_type);
-    setFeaturesStr(design.features.join(', '));
-    setMinCost(design.min_cost);
-    setMaxCost(design.max_cost);
+    setTitle(design.title || '');
+    setSlug(design.slug || '');
+    setLayoutType(design.layout_type || 'Wet & Dry Partition');
+    setDimensions(design.dimensions || '8 ft × 6 ft (48 sq ft)');
+    setTileConcept(design.tile_concept || '');
+    setVanityType(design.vanity_type || '');
+    setFittingsBrand(design.fittings_brand || '');
+    setPartitionType(design.partition_type || '');
+    setFeaturesStr(design.features?.join(', ') || '');
+    setMinCost(Number(design.min_cost) || 85000);
+    setMaxCost(Number(design.max_cost) || 140000);
     setRatePerUnit(design.rate_per_unit || '₹1,800 / sq ft');
-    setAltText(design.alt_text);
-    setKeywordsStr(design.keywords.join(', '));
-    setImageUrl(design.image_url);
-    setFileName(design.file_name);
+    setAltText(design.alt_text || '');
+    setKeywordsStr(design.keywords?.join(', ') || '');
+    setImageUrl(design.image_url || '');
+    setFileName(design.file_name || '');
     setFileSizeKb(design.file_size_kb || 75);
-    setIsFeatured(design.is_featured);
-    setIsActive(design.is_active);
-    setPreviewUrl(design.image_url);
+    setIsFeatured(Boolean(design.is_featured));
+    setIsActive(design.is_active ?? true);
+    setPreviewUrl(design.image_url || null);
     setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -378,19 +378,23 @@ export default function AdminBathroomGalleryPage() {
         )}
 
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 dark:border-zinc-800 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs text-gray-500 font-semibold mb-1">
-              <Link href="/admin/gallery" className="hover:text-primary">Gallery Admin</Link>
+            <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+              <Link href="/admin" className="hover:text-primary">Admin</Link>
               <span>/</span>
-              <span className="text-primary font-bold">Bathroom Designs</span>
+              <Link href="/admin/gallery" className="hover:text-primary">Gallery</Link>
+              <span>/</span>
+              <span className="text-primary">Bathrooms</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-secondary dark:text-zinc-100 flex items-center gap-3">
-              <i className="fas fa-bath text-primary"></i>
-              Modern Bathroom Designs Admin
+              <span className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                <i className="fas fa-bath"></i>
+              </span>
+              Modern Bathroom Gallery
             </h1>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 mt-1">
-              Manage 9:16 mobile-first bathroom cards, wet/dry layouts, tile concepts, and approximate INR budgets.
+            <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
+              Manage 9:16 mobile-first designs, Cloudflare R2 images, layouts, materials, and pricing.
             </p>
           </div>
 
@@ -398,627 +402,614 @@ export default function AdminBathroomGalleryPage() {
             <Link
               href="/gallery/bathroom-designs"
               target="_blank"
-              className="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 text-gray-700 dark:text-zinc-300 transition-colors flex items-center gap-1.5 no-underline"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-primary text-gray-700 dark:text-zinc-300 font-bold text-sm transition-all shadow-sm"
             >
-              <span>View Public Page</span>
-              <i className="fas fa-external-link-alt text-[10px]"></i>
+              <i className="fas fa-external-link-alt text-xs text-primary"></i> View Public Gallery
             </Link>
-
             <button
               onClick={() => {
                 if (isFormOpen) resetForm();
                 else setIsFormOpen(true);
               }}
-              className="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 shadow-md transition-all flex items-center gap-2 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold text-sm transition-all shadow-md"
             >
               <i className={`fas ${isFormOpen ? 'fa-times' : 'fa-plus'}`}></i>
-              <span>{isFormOpen ? 'Close Form' : 'Add New Bathroom'}</span>
+              {isFormOpen ? 'Close Form' : 'Add Bathroom Design'}
             </button>
           </div>
         </div>
 
-        {/* CRUD Form Modal / Accordion */}
+        {/* Create / Edit Form Drawer */}
         {isFormOpen && (
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-xl p-6 sm:p-8 space-y-6">
-            <div className="flex justify-between items-center border-b border-gray-100 dark:border-zinc-800 pb-4">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-zinc-100 flex items-center gap-2">
-                <i className={`fas ${editingId ? 'fa-edit text-amber-500' : 'fa-plus-circle text-primary'}`}></i>
-                <span>{editingId ? 'Edit Bathroom Design' : 'Create New Bathroom Card (9:16 Format)'}</span>
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 rounded-2xl border-2 border-primary/30 p-6 sm:p-8 shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-gray-200 dark:border-zinc-800 pb-4">
+              <h2 className="text-xl font-bold text-secondary dark:text-zinc-100 flex items-center gap-2">
+                <i className="fas fa-edit text-primary"></i>
+                {editingId ? 'Edit Bathroom Design' : 'Add New Bathroom Design'}
               </h2>
-              <button onClick={resetForm} className="text-gray-400 hover:text-gray-600 text-sm">Cancel</button>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="text-xs text-gray-400 hover:text-gray-600 font-bold"
+              >
+                Reset / Cancel
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                {/* Left Column: 9:16 Image Dropzone */}
-                <div className="space-y-3">
-                  <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 uppercase tracking-wider">
-                    Bathroom Image (9:16 Aspect Ratio) *
-                  </label>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              
+              {/* Left Column: 9:16 Visual Dropzone */}
+              <div className="lg:col-span-4 space-y-4">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300">
+                  Design Image (9:16 Aspect Ratio) <span className="text-rose-500">*</span>
+                </label>
 
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="relative w-full aspect-[9/16] max-w-[260px] mx-auto rounded-2xl border-2 border-dashed border-gray-300 dark:border-zinc-700 hover:border-primary dark:hover:border-primary bg-gray-50 dark:bg-zinc-800/40 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-all group"
-                  >
-                    {previewUrl ? (
-                      <img
-                        src={previewUrl}
-                        alt="Bathroom preview"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`relative aspect-[9/16] w-full max-w-[280px] mx-auto rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden ${
+                    previewUrl 
+                      ? 'border-emerald-500 bg-zinc-950' 
+                      : 'border-gray-300 dark:border-zinc-700 hover:border-primary bg-gray-50 dark:bg-zinc-800/30'
+                  }`}
+                >
+                  {previewUrl ? (
+                    <>
+                      <img 
+                        src={previewUrl} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <div className="p-6 text-center space-y-2">
-                        <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-500 flex items-center justify-center mx-auto text-lg">
-                          <i className="fas fa-cloud-upload-alt"></i>
-                        </div>
-                        <p className="text-xs font-bold text-gray-700 dark:text-zinc-300">
-                          Click to select image
-                        </p>
-                        <p className="text-[11px] text-gray-400">
-                          Auto-compressed to 720×1280 WebP (35-65 KB)
-                        </p>
+                      <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center text-white text-xs font-bold transition-opacity">
+                        <i className="fas fa-camera text-2xl mb-2"></i>
+                        Click to Replace Image
                       </div>
-                    )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/webp,image/jpeg,image/png"
-                      className="hidden"
-                      onChange={handleFileSelect}
-                    />
-                  </div>
-
-                  {/* Fallback Direct URL Input */}
-                  <div className="space-y-1 pt-2">
-                    <label className="text-[11px] font-semibold text-gray-500">Or Paste Image URL directly:</label>
-                    <input
-                      type="url"
-                      placeholder="https://images.unsplash.com/..."
-                      value={imageUrl}
-                      onChange={(e) => {
-                        setImageUrl(e.target.value);
-                        setPreviewUrl(e.target.value);
-                      }}
-                      className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                    />
-                  </div>
-                </div>
-
-                {/* Center Column: Design Specifications */}
-                <div className="lg:col-span-2 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    
-                    {/* Title */}
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Design Title (SEO Keyword Optimized) *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. Modern Wet & Dry Partition Bathroom with Fluted Vanity"
-                        value={title}
-                        onChange={(e) => handleTitleChange(e.target.value)}
-                        className="w-full text-sm px-3.5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200 font-medium"
-                      />
-                    </div>
-
-                    {/* Slug */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        URL Slug
-                      </label>
-                      <input
-                        type="text"
-                        value={slug}
-                        onChange={(e) => setSlug(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 font-mono"
-                      />
-                    </div>
-
-                    {/* Layout Type */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Layout Type *
-                      </label>
-                      <select
-                        value={layoutType}
-                        onChange={(e) => setLayoutType(e.target.value as BathroomLayoutType)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200 font-semibold"
-                      >
-                        {LAYOUT_TYPES.map(t => (
-                          <option key={t} value={t}>{t}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Auto-Calculate Budget Engine (India Mode) */}
-                    <div className="sm:col-span-2 p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 via-primary/5 to-blue-500/10 border border-blue-500/30 space-y-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-700 dark:text-blue-300 flex items-center justify-center text-xs">
-                            <i className="fas fa-calculator"></i>
-                          </span>
-                          <div>
-                            <p className="text-xs font-black text-blue-900 dark:text-blue-200">
-                              ⚡ Auto-Calculate Renovation Budget from Sq.Ft (India Engine)
-                            </p>
-                            <p className="text-[10px] text-gray-500 dark:text-zinc-400">
-                              Enter bathroom dimensions or total sqft to auto-fill pricing &amp; budget in seconds.
-                            </p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => applyAutoEstimate()}
-                          className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
-                        >
-                          <i className="fas fa-bolt text-[10px]"></i>
-                          <span>Calculate Budget</span>
-                        </button>
+                      <div className="absolute top-3 left-3 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        9:16 Preview
                       </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1 text-xs">
-                        <div>
-                          <label className="block text-[10px] font-bold text-gray-500 mb-1">Length (ft)</label>
-                          <input
-                            type="number"
-                            value={autoLength}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoLength(val);
-                              const newSqft = val * autoWidth;
-                              setAutoSqft(newSqft);
-                              applyAutoEstimate(newSqft, val, autoWidth);
-                            }}
-                            className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                          />
+                      {fileSizeKb > 0 && (
+                        <div className="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          ~{fileSizeKb} KB
                         </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-gray-500 mb-1">Width (ft)</label>
-                          <input
-                            type="number"
-                            value={autoWidth}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoWidth(val);
-                              const newSqft = autoLength * val;
-                              setAutoSqft(newSqft);
-                              applyAutoEstimate(newSqft, autoLength, val);
-                            }}
-                            className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-gray-500 mb-1">Total Area (sq ft)</label>
-                          <input
-                            type="number"
-                            value={autoSqft}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoSqft(val);
-                              applyAutoEstimate(val);
-                            }}
-                            className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-black text-primary"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-gray-500 mb-1">Fitting Quality Tier</label>
-                          <select
-                            value={qualityTier}
-                            onChange={(e) => {
-                              const val = e.target.value as any;
-                              setQualityTier(val);
-                              applyAutoEstimate(autoSqft, autoLength, autoWidth, val);
-                            }}
-                            className="w-full p-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 font-semibold"
-                          >
-                            <option value="Standard">Standard (Jaquar / Ceramic)</option>
-                            <option value="Premium">Premium (Kohler / Glass Partition)</option>
-                            <option value="Luxury">Luxury (Grohe / Italian Marble / Spa)</option>
-                          </select>
-                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-center p-6 space-y-3">
+                      <div className="w-14 h-14 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl">
+                        <i className="fas fa-cloud-arrow-up"></i>
                       </div>
-                    </div>
-
-                    {/* Dimensions */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Dimensions (India Standard) *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. 8 ft × 6 ft (48 sq ft)"
-                        value={dimensions}
-                        onChange={(e) => setDimensions(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                    </div>
-
-                    {/* Tile Concept */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Tile Concept / Dado
-                      </label>
-                      <input
-                        type="text"
-                        list="tile-suggestions"
-                        placeholder="e.g. Vitrified Matte (2x4 ft) + Accent Wall"
-                        value={tileConcept}
-                        onChange={(e) => setTileConcept(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                      <datalist id="tile-suggestions">
-                        {POPULAR_TILES.map(t => <option key={t} value={t} />)}
-                      </datalist>
-                    </div>
-
-                    {/* Vanity Type */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Vanity & Basin Style
-                      </label>
-                      <input
-                        type="text"
-                        list="vanity-suggestions"
-                        placeholder="e.g. Wall-Hung Floating Vanity with Quartz Top"
-                        value={vanityType}
-                        onChange={(e) => setVanityType(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                      <datalist id="vanity-suggestions">
-                        {POPULAR_VANITIES.map(v => <option key={v} value={v} />)}
-                      </datalist>
-                    </div>
-
-                    {/* Fittings Brand */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        CP Fittings & Sanitaryware
-                      </label>
-                      <input
-                        type="text"
-                        list="fittings-suggestions"
-                        placeholder="e.g. Jaquar Concealed Diverter & Rain Shower"
-                        value={fittingsBrand}
-                        onChange={(e) => setFittingsBrand(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                      <datalist id="fittings-suggestions">
-                        {POPULAR_BRANDS.map(b => <option key={b} value={b} />)}
-                      </datalist>
-                    </div>
-
-                    {/* Partition Type */}
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Shower Partition Type
-                      </label>
-                      <input
-                        type="text"
-                        list="partition-suggestions"
-                        placeholder="e.g. 10mm Toughened Frameless Glass Partition"
-                        value={partitionType}
-                        onChange={(e) => setPartitionType(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                      <datalist id="partition-suggestions">
-                        {POPULAR_PARTITIONS.map(p => <option key={p} value={p} />)}
-                      </datalist>
-                    </div>
-
-                    {/* Features List */}
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Key Features (Comma-separated)
-                      </label>
-                      <input
-                        type="text"
-                        value={featuresStr}
-                        onChange={(e) => setFeaturesStr(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                    </div>
-
-                    {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
-                    <div className="sm:col-span-2 p-4 sm:p-5 rounded-2xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
-                            <i className="fas fa-calculator"></i>
-                          </div>
-                          <div>
-                            <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
-                              <span className="text-amber-500">⚡</span>
-                              <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
-                            </h3>
-                            <p className="text-gray-600 dark:text-zinc-400 text-xs">
-                              Enter bathroom dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => applyAutoEstimate(autoSqft, autoLength, autoWidth, qualityTier, layoutType)}
-                          className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
-                        >
-                          <i className="fas fa-bolt"></i>
-                          <span>Calculate Budget</span>
-                        </button>
+                      <div>
+                        <span className="text-sm font-bold text-gray-800 dark:text-zinc-200 block">Click to Upload .webp</span>
+                        <span className="text-xs text-gray-500 block mt-1">Mobile vertical 9:16 format (720x1280 px ideal)</span>
                       </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div>
-                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
-                          <input
-                            type="number"
-                            min="3"
-                            max="30"
-                            value={autoLength}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoLength(val);
-                              if (val > 0 && autoWidth > 0) setAutoSqft(val * autoWidth);
-                            }}
-                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
-                          <input
-                            type="number"
-                            min="3"
-                            max="30"
-                            value={autoWidth}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoWidth(val);
-                              if (val > 0 && autoLength > 0) setAutoSqft(autoLength * val);
-                            }}
-                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
-                          <input
-                            type="number"
-                            min="15"
-                            max="500"
-                            value={autoSqft}
-                            onChange={(e) => {
-                              const val = Number(e.target.value);
-                              setAutoSqft(val);
-                            }}
-                            className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
-                          <select
-                            value={qualityTier}
-                            onChange={(e) => {
-                              const val = e.target.value as any;
-                              setQualityTier(val);
-                            }}
-                            className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-                          >
-                            <option value="Standard">Standard (Ceramic Tiles &amp; Diverter)</option>
-                            <option value="Premium">Premium (Vitrified &amp; Toughened Glass)</option>
-                            <option value="Luxury">Luxury (Statuario &amp; Thermostatic)</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Min Budget (INR) */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Min Estimated Budget (₹ INR) *
-                      </label>
-                      <input
-                        type="number"
-                        step="5000"
-                        value={minCost}
-                        onChange={(e) => setMinCost(Number(e.target.value))}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                    </div>
-
-                    {/* Max Budget (INR) */}
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        Max Estimated Budget (₹ INR) *
-                      </label>
-                      <input
-                        type="number"
-                        step="5000"
-                        value={maxCost}
-                        onChange={(e) => setMaxCost(Number(e.target.value))}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                      <p className="text-[10px] text-emerald-600 font-semibold mt-1">
-                        Formatted: {formatCostLakhs(minCost, maxCost)}
-                      </p>
-                    </div>
-
-                    {/* Keywords */}
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
-                        SEO Keywords (Targeting India queries)
-                      </label>
-                      <input
-                        type="text"
-                        value={keywordsStr}
-                        onChange={(e) => setKeywordsStr(e.target.value)}
-                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-800 dark:text-zinc-200"
-                      />
-                    </div>
-
-                    {/* Checkboxes */}
-                    <div className="sm:col-span-2 flex items-center gap-6 pt-2">
-                      <label className="flex items-center gap-2 text-xs font-bold text-gray-700 dark:text-zinc-300 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={isFeatured}
-                          onChange={(e) => setIsFeatured(e.target.checked)}
-                          className="rounded text-primary focus:ring-primary w-4 h-4"
-                        />
-                        <span>Feature on Top Showcase</span>
-                      </label>
-
-                      <label className="flex items-center gap-2 text-xs font-bold text-gray-700 dark:text-zinc-300 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={isActive}
-                          onChange={(e) => setIsActive(e.target.checked)}
-                          className="rounded text-primary focus:ring-primary w-4 h-4"
-                        />
-                        <span>Active / Visible to Public</span>
-                      </label>
-                    </div>
-
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-t border-gray-100 dark:border-zinc-800 pt-4">
-                <div>
-                  {uploadProgress && (
-                    <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                      <i className="fas fa-spinner fa-spin"></i>
-                      <span>{uploadProgress}</span>
                     </div>
                   )}
+
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileSelect} 
+                    accept="image/webp,image/jpeg,image/png"
+                    className="hidden" 
+                  />
                 </div>
-                <div className="flex justify-end items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 text-xs font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-100 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 text-xs font-black shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {submitting && <i className="fas fa-spinner fa-spin"></i>}
-                    <span>{editingId ? 'Save Updates' : 'Publish Bathroom Card'}</span>
-                  </button>
+
+                {/* Direct Image URL input for fallback / remote CDN */}
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-500 mb-1">
+                    Or Direct Image CDN URL:
+                  </label>
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => {
+                      setImageUrl(e.target.value);
+                      if (!selectedFile) setPreviewUrl(e.target.value);
+                    }}
+                    placeholder="https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/gallery/bathroom/..."
+                    className="w-full text-xs p-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 font-mono"
+                  />
                 </div>
               </div>
-            </form>
-          </div>
+
+              {/* Right Column: Specification & Pricing Inputs */}
+              <div className="lg:col-span-8 space-y-6">
+                
+                {/* Title and Slug */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Design Title <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => handleTitleChange(e.target.value)}
+                      placeholder="e.g. Modern Wet & Dry Partition Bathroom with Fluted Vanity"
+                      required
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-bold focus:border-primary outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      SEO Slug <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value)}
+                      placeholder="modern-wet-dry-partition-bathroom"
+                      required
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-mono focus:border-primary outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Layout Type & Dimensions */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Layout Type <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      value={layoutType}
+                      onChange={(e) => {
+                        setLayoutType(e.target.value as BathroomLayoutType);
+                        setAltText(`${title || 'Modern'} - ${e.target.value} bathroom design`);
+                      }}
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold focus:border-primary outline-none"
+                    >
+                      {LAYOUT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Room Dimensions <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={dimensions}
+                      onChange={(e) => setDimensions(e.target.value)}
+                      placeholder="e.g. 8 ft × 6 ft (48 sq ft)"
+                      required
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm focus:border-primary outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Tile Concept & Vanity Type */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Tile Concept / Dado <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      list="tile-suggestions"
+                      value={tileConcept}
+                      onChange={(e) => setTileConcept(e.target.value)}
+                      placeholder="e.g. Vitrified Matte (2x4 ft) + Accent Wall"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm focus:border-primary outline-none"
+                    />
+                    <datalist id="tile-suggestions">
+                      {POPULAR_TILES.map(t => <option key={t} value={t} />)}
+                    </datalist>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Vanity & Basin Style <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      list="vanity-suggestions"
+                      value={vanityType}
+                      onChange={(e) => setVanityType(e.target.value)}
+                      placeholder="e.g. Wall-Hung Floating Vanity with Quartz Top"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm focus:border-primary outline-none"
+                    />
+                    <datalist id="vanity-suggestions">
+                      {POPULAR_VANITIES.map(v => <option key={v} value={v} />)}
+                    </datalist>
+                  </div>
+                </div>
+
+                {/* CP Fittings & Shower Partition */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      CP Fittings & Sanitaryware
+                    </label>
+                    <input
+                      list="fittings-suggestions"
+                      value={fittingsBrand}
+                      onChange={(e) => setFittingsBrand(e.target.value)}
+                      placeholder="e.g. Jaquar Concealed Diverter & Rain Shower"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm focus:border-primary outline-none"
+                    />
+                    <datalist id="fittings-suggestions">
+                      {POPULAR_BRANDS.map(b => <option key={b} value={b} />)}
+                    </datalist>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Shower Partition Type
+                    </label>
+                    <input
+                      list="partition-suggestions"
+                      value={partitionType}
+                      onChange={(e) => setPartitionType(e.target.value)}
+                      placeholder="e.g. 10mm Toughened Frameless Glass Partition"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm focus:border-primary outline-none"
+                    />
+                    <datalist id="partition-suggestions">
+                      {POPULAR_PARTITIONS.map(p => <option key={p} value={p} />)}
+                    </datalist>
+                  </div>
+                </div>
+
+                {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
+                <div className="p-4 sm:p-5 rounded-3xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-amber-200/50 dark:border-amber-900/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-base shrink-0 shadow-xs">
+                        <i className="fas fa-calculator"></i>
+                      </div>
+                      <div>
+                        <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base flex items-center gap-1.5">
+                          <span className="text-amber-500">⚡</span>
+                          <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
+                        </h3>
+                        <p className="text-gray-600 dark:text-zinc-400 text-xs">
+                          Enter bathroom dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => applyAutoEstimate(autoSqft, autoLength, autoWidth, qualityTier, layoutType)}
+                      className="px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer self-start sm:self-auto shrink-0"
+                    >
+                      <i className="fas fa-bolt"></i>
+                      <span>Calculate Budget</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
+                      <input
+                        type="number"
+                        min="3"
+                        max="30"
+                        value={autoLength}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoLength(val);
+                          if (val > 0 && autoWidth > 0) setAutoSqft(val * autoWidth);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Width (ft)</label>
+                      <input
+                        type="number"
+                        min="3"
+                        max="30"
+                        value={autoWidth}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoWidth(val);
+                          if (val > 0 && autoLength > 0) setAutoSqft(autoLength * val);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
+                      <input
+                        type="number"
+                        min="15"
+                        max="500"
+                        value={autoSqft}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setAutoSqft(val);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
+                      <select
+                        value={qualityTier}
+                        onChange={(e) => {
+                          const val = e.target.value as any;
+                          setQualityTier(val);
+                        }}
+                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                      >
+                        <option value="Standard">Standard (Ceramic Tiles &amp; Diverter)</option>
+                        <option value="Premium">Premium (Vitrified &amp; Toughened Glass)</option>
+                        <option value="Luxury">Luxury (Statuario &amp; Thermostatic)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Budget Range (INR) */}
+                <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                      Approximate Cost Range (INR)
+                    </span>
+                    <span className="text-sm font-black text-amber-800 dark:text-amber-300 font-mono">
+                      Preview: {formatCostLakhs(minCost, maxCost)}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-500 mb-1">Min Budget (₹)</label>
+                      <input
+                        type="number"
+                        step="5000"
+                        value={minCost ?? ''}
+                        onChange={(e) => setMinCost(Number(e.target.value))}
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-500 mb-1">Max Budget (₹)</label>
+                      <input
+                        type="number"
+                        step="5000"
+                        value={maxCost ?? ''}
+                        onChange={(e) => setMaxCost(Number(e.target.value))}
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-500 mb-1">Rate / Unit Tag</label>
+                      <input
+                        type="text"
+                        value={ratePerUnit ?? ''}
+                        onChange={(e) => setRatePerUnit(e.target.value)}
+                        placeholder="₹1,800 / sq ft"
+                        className="w-full p-2.5 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features & Keywords */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Key Hardware &amp; Features (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={featuresStr}
+                      onChange={(e) => setFeaturesStr(e.target.value)}
+                      placeholder="Toughened Glass Partition, LED Backlit Mirror, Wall-Hung WC"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs focus:border-primary outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-zinc-300 mb-1.5">
+                      Search Keywords (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={keywordsStr}
+                      onChange={(e) => setKeywordsStr(e.target.value)}
+                      placeholder="bathroom design india, wet dry bathroom partition"
+                      className="w-full p-3 rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs focus:border-primary outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Toggles */}
+                <div className="flex items-center gap-6 pt-2">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-700 dark:text-zinc-300">
+                    <input
+                      type="checkbox"
+                      checked={isActive}
+                      onChange={(e) => setIsActive(e.target.checked)}
+                      className="w-4 h-4 rounded text-primary focus:ring-primary"
+                    />
+                    <span>Active (Visible on public gallery)</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer text-sm font-bold text-gray-700 dark:text-zinc-300">
+                    <input
+                      type="checkbox"
+                      checked={isFeatured}
+                      onChange={(e) => setIsFeatured(e.target.checked)}
+                      className="w-4 h-4 rounded text-primary focus:ring-primary"
+                    />
+                    <span>Featured Hero Design</span>
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Submission Progress & Submit Button */}
+            <div className="border-t border-gray-200 dark:border-zinc-800 pt-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              {uploadProgress ? (
+                <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                  <i className="fas fa-spinner fa-spin"></i>
+                  <span>{uploadProgress}</span>
+                </div>
+              ) : (
+                <div className="text-xs text-gray-400">
+                  Click save to upload to Cloudflare R2 and publish to the gallery catalog.
+                </div>
+              )}
+
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-5 py-3 rounded-xl border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-zinc-300 text-sm font-bold hover:bg-gray-100 transition-all flex-1 sm:flex-none"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-8 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 text-sm font-bold shadow-lg transition-all flex-1 sm:flex-none flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {submitting && <i className="fas fa-spinner fa-spin"></i>}
+                  <span>{editingId ? 'Save Changes' : 'Publish Bathroom Design'}</span>
+                </button>
+              </div>
+            </div>
+          </form>
         )}
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-2">Filter by Layout:</span>
-          {['All', ...LAYOUT_TYPES].map(type => (
-            <button
-              key={type}
-              onClick={() => setFilterType(type)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                filterType === type
-                  ? 'bg-primary text-white dark:text-zinc-950 shadow-xs'
-                  : 'bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:border-primary'
-              }`}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
-
-        {/* Existing Designs Table / Grid */}
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-gray-100 dark:border-zinc-800 flex justify-between items-center">
-            <h3 className="text-sm font-bold text-gray-800 dark:text-zinc-200">
-              Bathroom Designs Catalog ({filteredDesigns.length})
-            </h3>
-            <span className="text-xs text-gray-400">Showing India Mode items</span>
+        {/* Layout Filter Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-200 dark:border-zinc-800">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-400 mr-1">Filter Layout:</span>
+            {['All', ...LAYOUT_TYPES].map((layout) => (
+              <button
+                key={layout}
+                onClick={() => setFilterType(layout)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  filterType === layout
+                    ? 'bg-secondary text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-sm'
+                    : 'bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 hover:bg-gray-200'
+                }`}
+              >
+                {layout}
+              </button>
+            ))}
           </div>
 
+          <div className="text-xs text-gray-500 font-semibold">
+            Showing <strong className="text-secondary dark:text-zinc-100">{filteredDesigns.length}</strong> designs
+          </div>
+        </div>
+
+        {/* CRUD Management Table */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
           {loading ? (
-            <div className="p-12 text-center text-gray-400 text-sm">
-              <i className="fas fa-circle-notch fa-spin mr-2"></i>
-              Loading designs...
+            <div className="py-20 text-center text-gray-400">
+              <i className="fas fa-spinner fa-spin text-3xl mb-3 text-primary"></i>
+              <p className="font-bold text-sm">Loading bathroom designs...</p>
             </div>
           ) : filteredDesigns.length === 0 ? (
-            <div className="p-12 text-center text-gray-400 text-sm">
-              No bathroom designs found for the selected layout.
+            <div className="py-20 text-center text-gray-400 border-2 border-dashed border-gray-100 dark:border-zinc-800 rounded-2xl m-6">
+              <i className="fas fa-bath text-4xl mb-3 opacity-30"></i>
+              <p className="font-bold text-base text-gray-600 dark:text-zinc-400">No bathroom designs found</p>
+              <p className="text-xs text-gray-400 mt-1">Click &quot;Add Bathroom Design&quot; above to upload your first design.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-gray-600 dark:text-zinc-400">
-                <thead className="bg-gray-50 dark:bg-zinc-800/50 text-[11px] font-bold text-gray-400 uppercase">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50 dark:bg-zinc-950/60 border-b border-gray-200 dark:border-zinc-800 text-[11px] uppercase tracking-wider text-gray-500 font-bold">
                   <tr>
-                    <th className="py-3 px-4">Card (9:16)</th>
-                    <th className="py-3 px-4">Title & Specifications</th>
-                    <th className="py-3 px-4">Layout</th>
-                    <th className="py-3 px-4">Approx Budget</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
+                    <th className="py-3.5 px-4">Visual (9:16)</th>
+                    <th className="py-3.5 px-4">Title &amp; Specifications</th>
+                    <th className="py-3.5 px-4">Layout Type</th>
+                    <th className="py-3.5 px-4">Budget Range</th>
+                    <th className="py-3.5 px-4">Status</th>
+                    <th className="py-3.5 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-zinc-800 font-medium">
-                  {filteredDesigns.map((d) => (
-                    <tr key={d.id} className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                      <td className="py-3 px-4 w-20">
-                        <div className="w-12 h-20 rounded-lg overflow-hidden bg-gray-100 shadow-xs border border-gray-200 dark:border-zinc-700">
-                          <img
-                            src={d.image_url}
-                            alt={d.alt_text}
-                            className="w-full h-full object-cover"
+                <tbody className="divide-y divide-gray-100 dark:divide-zinc-800">
+                  {filteredDesigns.map((design) => (
+                    <tr key={design.id} className="hover:bg-gray-50/70 dark:hover:bg-zinc-800/30 transition-colors">
+                      
+                      {/* Thumbnail */}
+                      <td className="py-3 px-4 w-24">
+                        <div className="w-16 aspect-[9/16] rounded-lg overflow-hidden bg-zinc-900 border border-gray-200 dark:border-zinc-700 shadow-sm relative group">
+                          <img 
+                            src={design.image_url} 
+                            alt={design.alt_text} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
                           />
                         </div>
                       </td>
-                      <td className="py-3 px-4 max-w-xs">
-                        <p className="font-bold text-gray-900 dark:text-zinc-100 line-clamp-1">{d.title}</p>
-                        <p className="text-[11px] text-gray-400">{d.dimensions} • {d.vanity_type}</p>
-                        <p className="text-[10px] text-gray-400 line-clamp-1">Tiles: {d.tile_concept}</p>
+
+                      {/* Title and Specs */}
+                      <td className="py-3 px-4 max-w-sm">
+                        <div className="font-bold text-gray-900 dark:text-zinc-100 text-sm leading-tight">
+                          {design.title}
+                        </div>
+                        <div className="text-xs text-gray-500 font-mono mt-0.5 truncate">
+                          /{design.slug}
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-gray-600 dark:text-zinc-400">
+                          <span className="bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded font-medium">
+                            {design.dimensions}
+                          </span>
+                          <span className="bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded font-medium">
+                            {design.vanity_type}
+                          </span>
+                        </div>
                       </td>
+
+                      {/* Layout Badge */}
                       <td className="py-3 px-4">
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/40">
-                          {d.layout_type}
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                          {design.layout_type}
                         </span>
                       </td>
+
+                      {/* Budget */}
                       <td className="py-3 px-4">
-                        <p className="font-bold text-emerald-600 dark:text-emerald-400">{d.formatted_budget}</p>
-                        <p className="text-[10px] text-gray-400">{d.rate_per_unit || '₹1,800/sqft'}</p>
+                        <div className="font-black text-secondary dark:text-zinc-100 text-sm">
+                          {design.formatted_budget}
+                        </div>
+                        {design.rate_per_unit && (
+                          <div className="text-[11px] text-gray-500 font-medium">
+                            {design.rate_per_unit}
+                          </div>
+                        )}
                       </td>
+
+                      {/* Status */}
                       <td className="py-3 px-4">
                         <button
-                          onClick={() => handleToggleActive(d.id, d.is_active)}
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer transition-colors ${
-                            d.is_active
-                              ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
-                              : 'bg-gray-100 dark:bg-zinc-800 text-gray-400'
+                          onClick={() => handleToggleActive(design.id, design.is_active)}
+                          title="Click to toggle status"
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                            design.is_active
+                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400'
+                              : 'bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400'
                           }`}
                         >
-                          {d.is_active ? 'Active' : 'Hidden'}
+                          <span className={`w-1.5 h-1.5 rounded-full ${design.is_active ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
+                          {design.is_active ? 'Active' : 'Draft'}
                         </button>
                       </td>
-                      <td className="py-3 px-4 text-right space-x-2">
-                        <button
-                          onClick={() => handleEdit(d)}
-                          className="p-1.5 text-gray-500 hover:text-amber-500 transition-colors cursor-pointer"
-                          title="Edit design"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(d.id, d.title)}
-                          className="p-1.5 text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
-                          title="Delete design"
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
+
+                      {/* Action Buttons */}
+                      <td className="py-3 px-4 text-right">
+                        <div className="inline-flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleEdit(design)}
+                            title="Edit specifications"
+                            className="p-2 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-primary/20 hover:text-primary text-gray-700 dark:text-zinc-300 text-xs font-bold transition-all"
+                          >
+                            <i className="fas fa-pencil-alt"></i>
+                          </button>
+
+                          <button
+                            onClick={() => handleDelete(design.id, design.title)}
+                            title="Delete design"
+                            className="p-2 rounded-lg bg-gray-100 dark:bg-zinc-800 hover:bg-rose-500/20 hover:text-rose-600 text-gray-700 dark:text-zinc-300 text-xs font-bold transition-all"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
