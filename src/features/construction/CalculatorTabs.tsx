@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
@@ -82,7 +81,6 @@ const USA_CALCULATORS: TabItem[] = [
 ];
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
-  const router = useRouter();
   const { region } = useRegion();
   const { planTier, role } = useUser();
   const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
@@ -96,15 +94,6 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   useEffect(() => {
     setSelectedCategory("all");
   }, [region]);
-
-  // When activeCalculator changes externally (e.g. from deep link), auto-align category
-  useEffect(() => {
-    const list = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
-    const found = list.find(c => c.id === activeCalculator);
-    if (found && selectedCategory !== "all" && found.category !== selectedCategory) {
-      setSelectedCategory(found.category);
-    }
-  }, [activeCalculator, region, selectedCategory]);
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
@@ -134,15 +123,15 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
 
   const handleTabClick = (id: CalculatorType) => {
-    const allCalcs = [...INDIA_CALCULATORS, ...USA_CALCULATORS];
-    const targetCalc = allCalcs.find(c => c.id === id);
-    if (!isUserPaid && targetCalc && targetCalc.reqTier > 0) {
-      router.push(`/upgrade?calc=${id}`);
-      setIsDropdownOpen(false);
-      return;
-    }
     setActiveCalculator(id);
     setIsDropdownOpen(false);
+
+    // If active calculator is selected outside the currently filtered category, align category filter
+    const list = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
+    const found = list.find(c => c.id === id);
+    if (found && selectedCategory !== 'all' && found.category !== selectedCategory) {
+      setSelectedCategory(found.category);
+    }
   };
 
   const handleCategorySelect = (catId: string) => {
@@ -151,11 +140,8 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
       const inCat = CALCULATORS.filter(c => c.category === catId);
       if (inCat.length > 0 && !inCat.some(c => c.id === activeCalculator)) {
         const firstFree = inCat.find(c => c.reqTier === 0);
-        if (firstFree) {
-          setActiveCalculator(firstFree.id);
-        } else if (isUserPaid) {
-          setActiveCalculator(inCat[0].id);
-        }
+        const target = firstFree || inCat[0];
+        setActiveCalculator(target.id as CalculatorType);
       }
     }
   };
