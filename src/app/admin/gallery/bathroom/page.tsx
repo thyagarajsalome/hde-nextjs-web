@@ -656,18 +656,18 @@ export default function AdminBathroomGalleryPage() {
 
                 {/* ⚡ Auto-Calculate Budget from Sq.Ft (India Engine) */}
                 <div className="p-4 sm:p-5 rounded-3xl bg-[#fffcf5] dark:bg-amber-950/20 border border-[#fde68a] dark:border-amber-900/40 shadow-xs space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-amber-200/50 dark:border-amber-900/30">
+                  <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-amber-200/50 dark:border-amber-900/30">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center text-xs shrink-0">
                         <i className="fas fa-calculator"></i>
                       </div>
                       <div className="min-w-0">
-                        <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs flex items-center gap-1.5">
                           <span className="text-amber-500">⚡</span>
-                          <span>Auto-Calculate Budget from Sq.Ft (India Engine)</span>
+                          <span>Auto-Calculate Budget from Sq.Ft</span>
                         </h3>
                         <p className="text-gray-500 dark:text-zinc-400 text-[10px] leading-tight">
-                          Enter bathroom dimensions or total sqft to auto-populate pricing &amp; budget in seconds.
+                          Enter dimensions to auto-populate pricing.
                         </p>
                       </div>
                     </div>
@@ -675,14 +675,14 @@ export default function AdminBathroomGalleryPage() {
                     <button
                       type="button"
                       onClick={() => applyAutoEstimate(autoSqft, autoLength, autoWidth, qualityTier, layoutType)}
-                      className="px-3.5 py-1.5 rounded-lg bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer self-start sm:self-center"
+                      className="px-3 py-1.5 rounded-lg bg-[#c5a059] hover:bg-[#b38e47] text-white font-bold text-[11px] shadow-xs transition flex items-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer"
                     >
                       <i className="fas fa-bolt text-[10px]"></i>
-                      <span>Calculate Budget</span>
+                      Calculate
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-3 gap-2.5">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Length (ft)</label>
                       <input
@@ -695,7 +695,7 @@ export default function AdminBathroomGalleryPage() {
                           setAutoLength(val);
                           if (val > 0 && autoWidth > 0) setAutoSqft(val * autoWidth);
                         }}
-                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
                       />
                     </div>
                     <div>
@@ -710,11 +710,11 @@ export default function AdminBathroomGalleryPage() {
                           setAutoWidth(val);
                           if (val > 0 && autoLength > 0) setAutoSqft(autoLength * val);
                         }}
-                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                        className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Total Area (sq ft)</label>
+                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Area (sq ft)</label>
                       <input
                         type="number"
                         min="15"
@@ -724,24 +724,24 @@ export default function AdminBathroomGalleryPage() {
                           const val = Number(e.target.value);
                           setAutoSqft(val);
                         }}
-                        className="w-full p-2.5 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
+                        className="w-full p-2 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-zinc-900 text-sm font-black text-amber-700 dark:text-amber-400"
                       />
                     </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
-                      <select
-                        value={qualityTier}
-                        onChange={(e) => {
-                          const val = e.target.value as any;
-                          setQualityTier(val);
-                        }}
-                        className="w-full p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
-                      >
-                        <option value="Standard">Standard (Ceramic Tiles &amp; Diverter)</option>
-                        <option value="Premium">Premium (Vitrified &amp; Toughened Glass)</option>
-                        <option value="Luxury">Luxury (Statuario &amp; Thermostatic)</option>
-                      </select>
-                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-600 dark:text-zinc-400 mb-1">Quality Tier</label>
+                    <select
+                      value={qualityTier}
+                      onChange={(e) => {
+                        const val = e.target.value as any;
+                        setQualityTier(val);
+                      }}
+                      className="w-full p-2 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-bold text-gray-900 dark:text-white"
+                    >
+                      <option value="Standard">Standard — Ceramic Tiles &amp; Diverter</option>
+                      <option value="Premium">Premium — Vitrified &amp; Toughened Glass</option>
+                      <option value="Luxury">Luxury — Statuario &amp; Thermostatic</option>
+                    </select>
                   </div>
                 </div>
 
