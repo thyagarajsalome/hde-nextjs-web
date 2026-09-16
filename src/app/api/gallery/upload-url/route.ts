@@ -5,7 +5,8 @@ import { getR2PresignedUploadUrl, isR2Configured } from '@/lib/r2';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { fileName, category = 'kitchen', contentType = 'image/webp', fileSize } = body;
+    const { fileName, category = 'kitchen', fileSize } = body;
+    const contentType = body.contentType || body.fileType || 'image/webp';
 
     if (!fileName) {
       return NextResponse.json({ error: 'fileName is required' }, { status: 400 });

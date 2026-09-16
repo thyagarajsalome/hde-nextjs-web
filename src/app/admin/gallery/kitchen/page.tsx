@@ -178,55 +178,38 @@ export default function AdminKitchenGalleryPage() {
     }
   };
 
-  // Upload to Cloudflare R2 with automatic Supabase Storage fallback
+  // Upload directly to Cloudflare R2 (gallery/kitchen/...)
   const uploadToR2 = async (file: File): Promise<string> => {
-    // 1. Try Cloudflare R2
-    try {
-      setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
-      const res = await fetch('/api/gallery/upload-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fileName: file.name,
-          category: 'kitchen',
-          contentType: file.type || 'image/webp'
-        })
-      });
+    setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
+    const res = await fetch('/api/gallery/upload-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fileName: file.name,
+        category: 'kitchen',
+        contentType: file.type || 'image/webp',
+        fileSize: file.size
+      })
+    });
 
-      const data = await res.json();
-      if (res.ok && data.success && data.uploadUrl) {
-        setUploadProgress('Uploading directly to Cloudflare R2...');
-        const uploadRes = await fetch(data.uploadUrl, {
-          method: 'PUT',
-          headers: { 'Content-Type': file.type || 'image/webp' },
-          body: file
-        });
-
-        if (uploadRes.ok) {
-          setUploadProgress(null);
-          return data.publicUrl;
-        }
-      }
-    } catch (r2Err) {
-      console.warn('R2 upload failed or not configured, using Supabase storage fallback...', r2Err);
+    const data = await res.json();
+    if (!res.ok || !data.success || !data.uploadUrl) {
+      throw new Error(data.error || 'Failed to get Cloudflare R2 upload authorization');
     }
 
-    // 2. Seamless Fallback: Supabase Storage
-    setUploadProgress('Uploading image to cloud storage...');
-    const cleanName = `${Date.now()}-${file.name.toLowerCase().replace(/[^a-z0-9.-]/g, '-')}`;
-    const filePath = `kitchen/${cleanName}`;
+    setUploadProgress('Uploading 9:16 WebP directly to Cloudflare R2...');
+    const uploadRes = await fetch(data.uploadUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type || 'image/webp' },
+      body: file
+    });
 
-    const { error: storageError } = await supabase.storage
-      .from('hero-banners')
-      .upload(filePath, file, { upsert: true });
-
-    if (!storageError) {
-      const { data: { publicUrl } } = supabase.storage.from('hero-banners').getPublicUrl(filePath);
-      setUploadProgress(null);
-      return publicUrl;
+    if (!uploadRes.ok) {
+      throw new Error(`Cloudflare R2 rejected upload (HTTP ${uploadRes.status}). Verify bucket configuration.`);
     }
 
-    throw new Error(`Upload failed: ${storageError.message}. Make sure R2 environment variables are configured in Vercel or enter an Image URL directly.`);
+    setUploadProgress(null);
+    return data.publicUrl;
   };
 
   const resetForm = () => {

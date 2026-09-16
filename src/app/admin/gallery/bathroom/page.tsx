@@ -57,6 +57,7 @@ export default function AdminBathroomGalleryPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Form Fields
@@ -137,10 +138,12 @@ export default function AdminBathroomGalleryPage() {
     }
   };
 
-  const formatCostLakhs = (min: number, max: number) => {
-    const format = (num: number) => {
-      if (num >= 100000) return `₹${(num / 100000).toFixed(2).replace(/\.00$/, '')} Lakhs`;
-      return `₹${num.toLocaleString('en-IN')}`;
+  const formatCostLakhs = (min?: number | null, max?: number | null) => {
+    const format = (num?: number | null) => {
+      const val = Number(num);
+      if (isNaN(val) || val <= 0) return '₹0';
+      if (val >= 100000) return `₹${(val / 100000).toFixed(2).replace(/\.00$/, '')} Lakhs`;
+      return `₹${val.toLocaleString('en-IN')}`;
     };
     return `${format(min)} - ${format(max)}`;
   };
@@ -240,47 +243,42 @@ export default function AdminBathroomGalleryPage() {
     let finalFileName = fileName || `${slug}.webp`;
 
     if (selectedFile) {
+      setUploadProgress('Requesting secure Cloudflare R2 upload URL...');
       try {
         const res = await fetch('/api/gallery/upload-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             fileName: selectedFile.name,
-            fileType: selectedFile.type || 'image/webp',
+            contentType: selectedFile.type || 'image/webp',
             fileSize: selectedFile.size,
             category: 'bathroom'
           })
         });
 
-        if (res.ok) {
-          const { uploadUrl, publicUrl } = await res.json();
-          const uploadRes = await fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': selectedFile.type || 'image/webp' },
-            body: selectedFile
-          });
-          if (uploadRes.ok) {
-            finalImageUrl = publicUrl;
-            finalFileName = selectedFile.name;
-          }
+        const data = await res.json();
+        if (!res.ok || !data.success || !data.uploadUrl) {
+          throw new Error(data.error || 'Failed to get Cloudflare R2 upload URL');
         }
-      } catch (r2Err) {
-        console.warn('R2 upload failed, trying Supabase storage fallback...', r2Err);
-      }
 
-      // Seamless Fallback: Supabase Storage if R2 failed or unconfigured
-      if (!finalImageUrl) {
-        const cleanName = `${Date.now()}-${selectedFile.name.toLowerCase().replace(/[^a-z0-9.-]/g, '-')}`;
-        const filePath = `bathroom/${cleanName}`;
-        const { error: storageError } = await supabase.storage
-          .from('hero-banners')
-          .upload(filePath, selectedFile, { upsert: true });
+        setUploadProgress('Uploading 9:16 WebP directly to Cloudflare R2...');
+        const uploadRes = await fetch(data.uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': selectedFile.type || 'image/webp' },
+          body: selectedFile
+        });
 
-        if (!storageError) {
-          const { data: { publicUrl } } = supabase.storage.from('hero-banners').getPublicUrl(filePath);
-          finalImageUrl = publicUrl;
-          finalFileName = selectedFile.name;
+        if (!uploadRes.ok) {
+          throw new Error(`Cloudflare R2 rejected upload with HTTP status ${uploadRes.status}`);
         }
+
+        finalImageUrl = data.publicUrl;
+        finalFileName = selectedFile.name;
+        setUploadProgress(null);
+      } catch (r2Err: any) {
+        setUploadProgress(null);
+        showToast(r2Err.message || 'Cloudflare R2 upload failed', 'error');
+        return;
       }
     }
 
@@ -888,22 +886,32 @@ export default function AdminBathroomGalleryPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end items-center gap-3 border-t border-gray-100 dark:border-zinc-800 pt-4">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 text-xs font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-100 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 text-xs font-black shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {submitting && <i className="fas fa-spinner fa-spin"></i>}
-                  <span>{editingId ? 'Save Updates' : 'Publish Bathroom Card'}</span>
-                </button>
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-t border-gray-100 dark:border-zinc-800 pt-4">
+                <div>
+                  {uploadProgress && (
+                    <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                      <i className="fas fa-spinner fa-spin"></i>
+                      <span>{uploadProgress}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex justify-end items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 text-xs font-bold text-gray-600 dark:text-zinc-300 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 text-xs font-black shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {submitting && <i className="fas fa-spinner fa-spin"></i>}
+                    <span>{editingId ? 'Save Updates' : 'Publish Bathroom Card'}</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
