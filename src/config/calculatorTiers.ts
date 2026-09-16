@@ -7,6 +7,10 @@ export const PRO_CALCULATOR_IDS = new Set<string>([
   'interior',
   'flooring',
   'painting',
+  'usa-kitchen-remodel',
+  'usa-bathroom-remodel',
+  'usa-interior-design',
+  'usa-roofing',
   'usa-home-addition',
   'usa-swimming-pool',
   'usa-pickleball-court',
@@ -70,6 +74,42 @@ export const PRO_CALCULATOR_DETAILS: Record<string, { name: string; subtitle: st
       'Exact paint bucket & primer quantity requirement',
       'Asian Paints, Berger, Nerolac & Dulux price comparisons',
       'Contractor labor & material breakdown PDF'
+    ]
+  },
+  'usa-kitchen-remodel': {
+    name: 'USA Kitchen Remodel Cost Estimator',
+    subtitle: 'Unlock detailed line-item costs for custom cabinetry, quartz/granite countertops, luxury appliance packages, and licensed contractor labor.',
+    bullets: [
+      'Line-item cabinet running-feet schedule & countertop square footage',
+      'Appliance grade packages (Standard, Premium, Luxury Chef)',
+      'Contractor-ready bid breakdown and printable PDF proposal'
+    ]
+  },
+  'usa-bathroom-remodel': {
+    name: 'USA Bathroom Remodel Cost Estimator',
+    subtitle: 'Unlock detailed takeoff for custom walk-in shower tile, double vanity fixtures, waterproof membrane, and licensed trade labor.',
+    bullets: [
+      'Tile area takeoff with moisture barrier & Schluter shower pan specs',
+      'Plumbing fixture selection (Moen, Kohler, Delta) & vanity sizing',
+      'Itemized contractor quote with PDF download'
+    ]
+  },
+  'usa-interior-design': {
+    name: 'USA Interior Design & Furnishing Estimator',
+    subtitle: 'Unlock whole-home and room-by-room luxury furniture, lighting, window treatments, and custom millwork budgets.',
+    bullets: [
+      'Living, bedroom, and dining room luxury furnishings takeoff',
+      'Custom drapery, recessed lighting, and designer finish schedules',
+      'Printable client presentation & budget report'
+    ]
+  },
+  'usa-roofing': {
+    name: 'USA Roofing & Shingles Replacement Estimator',
+    subtitle: 'Unlock architectural shingle squares takeoff, synthetic underlayment, ice & water shield, flashing, and crew labor rates.',
+    bullets: [
+      'Roofing squares calculation with roof pitch and waste factor',
+      'Architectural shingles vs Metal vs Slate material comparisons',
+      'Insurance claim and contractor estimate PDF export'
     ]
   },
   'usa-home-addition': {
