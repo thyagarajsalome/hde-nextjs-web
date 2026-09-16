@@ -110,7 +110,7 @@ export default function USAFramingCalculator() {
 
           <div className="space-y-5 bg-gray-50 dark:bg-zinc-950/50 p-6 rounded-2xl border border-gray-100 dark:border-zinc-800">
             <h3 className="font-bold text-gray-800 dark:text-zinc-200 flex items-center gap-2">
-              <i className="fas fa-tag text-primary"></i> Local Prices (USD)
+              <i className="fas fa-tag text-primary"></i> Market Rates ($)
             </h3>
             
             <div className="grid grid-cols-2 gap-4">

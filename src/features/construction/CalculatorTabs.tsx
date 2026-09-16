@@ -48,26 +48,37 @@ const INDIA_CALCULATORS: TabItem[] = [
   { id: "india-emi",       name: "Home Loan EMI",       icon: "fas fa-university",  reqTier: 0, category: "finance", tagline: "SBI/HDFC bank comparison & schedule" },
 ];
 
+const USA_CATEGORIES = [
+  { id: "all", name: "All Tools", icon: "fas fa-th-large" },
+  { id: "realty", name: "🏡 Realty & Finance", icon: "fas fa-house-chimney" },
+  { id: "remodel", name: "✨ Remodeling & Luxury", icon: "fas fa-crown", isPro: true },
+  { id: "trades", name: "🔨 Trades & Exterior", icon: "fas fa-hammer" },
+];
+
 const USA_CALCULATORS: TabItem[] = [
-  { id: "usa-rent-vs-buy", name: "Rent vs. Buy", icon: "fas fa-balance-scale", reqTier: 0, category: "realty" },
-  { id: "usa-salary-calculator", name: "Salary Needed", icon: "fas fa-money-bill-wave", reqTier: 0, category: "realty" },
-  { id: "usa-property-tax", name: "Property Tax", icon: "fas fa-file-invoice-dollar", reqTier: 0, category: "realty" },
-  { id: "usa-garden-bed", name: "Garden Bed", icon: "fas fa-leaf", reqTier: 0, category: "outdoor" },
-  { id: "usa-interior-design", name: "Interior Design", icon: "fas fa-couch", reqTier: 1, category: "remodel" },
-  { id: "usa-kitchen-remodel", name: "Kitchen Remodel", icon: "fas fa-utensils", reqTier: 1, category: "remodel" },
-  { id: "usa-bathroom-remodel", name: "Bathroom Remodel", icon: "fas fa-bath", reqTier: 1, category: "remodel" },
-  { id: "usa-home-addition", name: "Home Addition", icon: "fas fa-house-user", reqTier: 1, category: "remodel" },
-  { id: "usa-swimming-pool", name: "Swimming Pool", icon: "fas fa-swimming-pool", reqTier: 1, category: "outdoor" },
-  { id: "visualizer", name: "Paint Visualizer", icon: "fas fa-palette", reqTier: 0, category: "trades" },
-  { id: "usa-remodel-roi", name: "Remodel ROI", icon: "fas fa-hammer", reqTier: 0, category: "remodel" },
-  { id: "usa-roofing", name: "Roofing & Shingles", icon: "fas fa-home", reqTier: 1, category: "trades" },
-  { id: "usa-flooring", name: "Flooring", icon: "fas fa-layer-group", reqTier: 0, category: "trades" },
-  { id: "usa-framing", name: "Framing & Drywall", icon: "fas fa-hammer", reqTier: 0, category: "trades" },
-  { id: "usa-accent-wall", name: "Accent Walls & Woodwork", icon: "fas fa-border-all", reqTier: 0, category: "trades" },
-  { id: "usa-plumbing", name: "Plumbing", icon: "fas fa-bath", reqTier: 0, category: "trades" },
-  { id: "usa-electrical", name: "Electrical", icon: "fas fa-bolt", reqTier: 0, category: "trades" },
-  { id: "usa-pickleball-court", name: "Pickleball Court", icon: "fas fa-table-tennis", reqTier: 1, category: "outdoor" },
-  { id: "usa-outdoor-kitchen", name: "Outdoor Kitchen", icon: "fas fa-fire-burner", reqTier: 1, category: "outdoor" },
+  // 🏡 Realty & Finance (Top-of-funnel traffic magnets - 100% FREE)
+  { id: "usa-rent-vs-buy",        name: "Rent vs. Buy",       icon: "fas fa-balance-scale",        reqTier: 0, category: "realty",  tagline: "5-year wealth & equity comparison" },
+  { id: "usa-salary-calculator", name: "Salary Needed",      icon: "fas fa-money-bill-wave",      reqTier: 0, category: "realty",  tagline: "28/36 DTI home affordability" },
+  { id: "usa-property-tax",      name: "Property Tax",       icon: "fas fa-file-invoice-dollar",  reqTier: 0, category: "realty",  tagline: "County tax & monthly escrow" },
+  { id: "usa-remodel-roi",       name: "Remodel ROI",        icon: "fas fa-chart-line",           reqTier: 0, category: "realty",  tagline: "Resale value & equity return" },
+
+  // ✨ Remodeling & Luxury (High-ticket projects $15k-$150k+ - PRO SUITE)
+  { id: "usa-kitchen-remodel",   name: "Kitchen Remodel",    icon: "fas fa-utensils",             reqTier: 1, category: "remodel", tagline: "Cabinets, quartz & chef appliances" },
+  { id: "usa-bathroom-remodel",  name: "Bathroom Remodel",   icon: "fas fa-bath",                 reqTier: 1, category: "remodel", tagline: "Walk-in shower, tile & vanity" },
+  { id: "usa-interior-design",   name: "Interior Design",    icon: "fas fa-couch",                reqTier: 1, category: "remodel", tagline: "Whole-home luxury furniture & decor" },
+  { id: "usa-home-addition",     name: "Home Addition",      icon: "fas fa-house-user",           reqTier: 1, category: "remodel", tagline: "Framing, foundation & exterior" },
+  { id: "usa-roofing",           name: "Roofing & Shingles", icon: "fas fa-home",                 reqTier: 1, category: "remodel", tagline: "Architectural squares & underlayment" },
+  { id: "usa-swimming-pool",     name: "Swimming Pool",      icon: "fas fa-swimming-pool",        reqTier: 1, category: "remodel", tagline: "Gunite shell, decking & heater" },
+  { id: "usa-pickleball-court",  name: "Pickleball Court",   icon: "fas fa-table-tennis",         reqTier: 1, category: "remodel", tagline: "Post-tension pad & tournament turf" },
+  { id: "usa-outdoor-kitchen",   name: "Outdoor Kitchen",    icon: "fas fa-fire-burner",          reqTier: 1, category: "remodel", tagline: "Masonry island, grill & utilities" },
+
+  // 🔨 Trades & Exterior (Core construction & site trades - 100% FREE)
+  { id: "usa-framing",           name: "Framing & Drywall",  icon: "fas fa-hammer",               reqTier: 0, category: "trades",  tagline: "Studs, plates & sheetrock takeoff" },
+  { id: "usa-flooring",          name: "Flooring",           icon: "fas fa-layer-group",          reqTier: 0, category: "trades",  tagline: "Hardwood, LVP & tile takeoff" },
+  { id: "usa-plumbing",          name: "Plumbing",           icon: "fas fa-bath",                reqTier: 0, category: "trades",  tagline: "PEX supply & drain lines" },
+  { id: "usa-electrical",        name: "Electrical",         icon: "fas fa-bolt",                reqTier: 0, category: "trades",  tagline: "Wiring, panel & outlet trim" },
+  { id: "usa-accent-wall",       name: "Accent Walls",       icon: "fas fa-border-all",           reqTier: 0, category: "trades",  tagline: "Board & batten woodwork spacing" },
+  { id: "usa-garden-bed",        name: "Garden Bed & Soil",  icon: "fas fa-leaf",                 reqTier: 0, category: "trades",  tagline: "Topsoil, mulch & cubic yards" },
 ];
 
 const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setActiveCalculator, hasPaid }) => {
@@ -79,20 +90,31 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const CALCULATORS = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
+  const CATEGORIES = region === 'US' ? USA_CATEGORIES : INDIA_CATEGORIES;
+
+  // Reset category filter whenever region switches
+  useEffect(() => {
+    setSelectedCategory("all");
+  }, [region]);
 
   // When activeCalculator changes externally (e.g. from deep link), auto-align category
   useEffect(() => {
-    if (region === 'IN') {
-      const found = INDIA_CALCULATORS.find(c => c.id === activeCalculator);
-      if (found && selectedCategory !== "all" && found.category !== selectedCategory) {
-        setSelectedCategory(found.category);
-      }
+    const list = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
+    const found = list.find(c => c.id === activeCalculator);
+    if (found && selectedCategory !== "all" && found.category !== selectedCategory) {
+      setSelectedCategory(found.category);
     }
-  }, [activeCalculator, region]);
+  }, [activeCalculator, region, selectedCategory]);
 
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
-    const usaCalcs = ['usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing', 'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax', 'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel', 'usa-bathroom-remodel', 'usa-home-addition', 'usa-swimming-pool', 'usa-pickleball-court', 'usa-outdoor-kitchen', 'visualizer'];
+    const usaCalcs = [
+      'usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing',
+      'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax',
+      'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel',
+      'usa-bathroom-remodel', 'usa-home-addition', 'usa-swimming-pool',
+      'usa-pickleball-court', 'usa-outdoor-kitchen'
+    ];
     
     // Do not override if URL explicitly requested this specific calculator
     if (typeof window !== 'undefined') {
@@ -103,7 +125,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
     }
 
     if (region === 'US' && !usaCalcs.includes(activeCalculator)) {
-      setActiveCalculator('usa-framing');
+      setActiveCalculator('usa-rent-vs-buy');
     } else if (region === 'IN' && usaCalcs.includes(activeCalculator)) {
       setActiveCalculator('construction');
     }
@@ -126,7 +148,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const handleCategorySelect = (catId: string) => {
     setSelectedCategory(catId);
     if (catId !== 'all') {
-      const inCat = INDIA_CALCULATORS.filter(c => c.category === catId);
+      const inCat = CALCULATORS.filter(c => c.category === catId);
       if (inCat.length > 0 && !inCat.some(c => c.id === activeCalculator)) {
         const firstFree = inCat.find(c => c.reqTier === 0);
         if (firstFree) {
@@ -138,13 +160,13 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
     }
   };
 
-  // Filtered calculators for India mode
+  // Filtered calculators based on selected category
   const displayedCalculators = useMemo(() => {
-    if (region !== 'IN' || selectedCategory === 'all') {
+    if (selectedCategory === 'all') {
       return CALCULATORS;
     }
-    return INDIA_CALCULATORS.filter(c => c.category === selectedCategory);
-  }, [region, selectedCategory, CALCULATORS]);
+    return CALCULATORS.filter(c => c.category === selectedCategory);
+  }, [selectedCategory, CALCULATORS]);
 
   return (
     <div className="w-full pt-2 pb-4 space-y-4">
@@ -186,55 +208,53 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
         </div>
       </div>
 
-      {/* INDIA MODE: CATEGORY FILTER PILLS (Removes redundancy & groups tools by lifecycle) */}
-      {region === 'IN' && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {INDIA_CATEGORIES.map((cat) => {
-            const isCatActive = selectedCategory === cat.id;
-            const count = cat.id === 'all' 
-              ? INDIA_CALCULATORS.length 
-              : INDIA_CALCULATORS.filter(c => c.category === cat.id).length;
+      {/* CATEGORY FILTER PILLS (Removes redundancy & groups tools cleanly) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {CATEGORIES.map((cat) => {
+          const isCatActive = selectedCategory === cat.id;
+          const count = cat.id === 'all' 
+            ? CALCULATORS.length 
+            : CALCULATORS.filter(c => c.category === cat.id).length;
 
-            return (
-              <button
-                key={cat.id}
-                onClick={() => handleCategorySelect(cat.id)}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                  isCatActive
-                    ? 'bg-primary text-white dark:text-zinc-950 shadow-sm scale-[1.02]'
-                    : 'bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:border-primary/50'
-                }`}
-              >
-                <span>{cat.name}</span>
-                {cat.isPro && !isUserPaid ? (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-extrabold flex items-center gap-1 shrink-0 ${
-                    isCatActive 
-                      ? 'bg-white/20 text-white dark:text-zinc-950' 
-                      : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/20'
-                  }`}>
-                    <i className="fas fa-lock text-[8px]"></i>
-                    <span>PRO</span>
-                  </span>
-                ) : (cat.id === 'civil' || cat.id === 'finance') ? (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-black flex items-center gap-1 shrink-0 tracking-wider ${
-                    isCatActive 
-                      ? 'bg-white/20 text-white dark:text-zinc-950' 
-                      : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25'
-                  }`}>
-                    <i className="fas fa-check text-[8px]"></i>
-                    <span>FREE</span>
-                  </span>
-                ) : null}
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                  isCatActive ? 'bg-white/25 text-white dark:text-zinc-950' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleCategorySelect(cat.id)}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                isCatActive
+                  ? 'bg-primary text-white dark:text-zinc-950 shadow-sm scale-[1.02]'
+                  : 'bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:border-primary/50'
+              }`}
+            >
+              <span>{cat.name}</span>
+              {cat.isPro && !isUserPaid ? (
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-extrabold flex items-center gap-1 shrink-0 ${
+                  isCatActive 
+                    ? 'bg-white/20 text-white dark:text-zinc-950' 
+                    : 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/20'
                 }`}>
-                  {count}
+                  <i className="fas fa-lock text-[8px]"></i>
+                  <span>PRO</span>
                 </span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+              ) : (cat.id !== 'all' && !cat.isPro) ? (
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-black flex items-center gap-1 shrink-0 tracking-wider ${
+                  isCatActive 
+                    ? 'bg-white/20 text-white dark:text-zinc-950' 
+                    : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25'
+                }`}>
+                  <i className="fas fa-check text-[8px]"></i>
+                  <span>FREE</span>
+                </span>
+              ) : null}
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                isCatActive ? 'bg-white/25 text-white dark:text-zinc-950' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       {/* MOBILE DROPDOWN (Visible only on <768px) */}
       <div className="md:hidden relative">
@@ -256,81 +276,53 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
 
         {isDropdownOpen && (
           <div className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden max-h-[70vh] overflow-y-auto">
-            {region === 'IN' ? (
-              // Grouped Mobile View for India Mode
-              <div className="divide-y divide-gray-100 dark:divide-zinc-800">
-                {INDIA_CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
-                  const items = INDIA_CALCULATORS.filter(c => c.category === cat.id);
-                  return (
-                    <div key={cat.id} className="p-2">
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 py-1 block">
-                        {cat.name}
-                      </span>
-                      {items.map((calc) => (
-                        <button
-                          key={calc.id}
-                          onClick={() => handleTabClick(calc.id as CalculatorType)}
-                          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors cursor-pointer text-left ${
-                            activeCalculator === calc.id ? "bg-primary/10" : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                          }`}
-                        >
-                            <div className="flex items-center justify-between w-full">
-                              <div className="flex items-center gap-3">
-                                <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
-                                <div>
-                                  <span className={`text-xs block ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
-                                    {calc.name}
-                                  </span>
-                                  {calc.tagline && (
-                                    <span className="text-[10px] text-gray-400 block leading-tight">{calc.tagline}</span>
-                                  )}
-                                </div>
-                              </div>
-                              {!isUserPaid && calc.reqTier > 0 ? (
-                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
-                                  <i className="fas fa-lock text-[8px]"></i>
-                                  <span>PRO</span>
-                                </span>
-                              ) : calc.reqTier === 0 ? (
-                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
-                                  <i className="fas fa-check text-[8px]"></i>
-                                  <span>FREE</span>
-                                </span>
-                              ) : null}
+            <div className="divide-y divide-gray-100 dark:divide-zinc-800">
+              {CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
+                const items = CALCULATORS.filter(c => c.category === cat.id);
+                if (items.length === 0) return null;
+                return (
+                  <div key={cat.id} className="p-2">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 py-1 block">
+                      {cat.name}
+                    </span>
+                    {items.map((calc) => (
+                      <button
+                        key={calc.id}
+                        onClick={() => handleTabClick(calc.id as CalculatorType)}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors cursor-pointer text-left ${
+                          activeCalculator === calc.id ? "bg-primary/10" : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-3">
+                            <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
+                            <div>
+                              <span className={`text-xs block ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
+                                {calc.name}
+                              </span>
+                              {calc.tagline && (
+                                <span className="text-[10px] text-gray-400 block leading-tight">{calc.tagline}</span>
+                              )}
                             </div>
-                          </button>
-                      ))}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              // Standard USA View
-              CALCULATORS.map((calc) => (
-                <button
-                  key={calc.id}
-                  onClick={() => handleTabClick(calc.id as CalculatorType)}
-                  className={`w-full flex items-center justify-between px-5 py-4 border-b border-gray-50 dark:border-zinc-800 last:border-none hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors
-                    ${activeCalculator === calc.id ? "bg-primary/10" : ""}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400 dark:text-zinc-500'}`}></i>
-                    <span className={`text-sm ${activeCalculator === calc.id ? 'font-bold text-secondary dark:text-zinc-100' : 'text-gray-600 dark:text-zinc-400'}`}>{calc.name}</span>
+                          </div>
+                          {!isUserPaid && calc.reqTier > 0 ? (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
+                              <i className="fas fa-lock text-[8px]"></i>
+                              <span>PRO</span>
+                            </span>
+                          ) : calc.reqTier === 0 ? (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
+                              <i className="fas fa-check text-[8px]"></i>
+                              <span>FREE</span>
+                            </span>
+                          ) : null}
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                  {!isUserPaid && calc.reqTier > 0 ? (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
-                      <i className="fas fa-lock text-[8px]"></i>
-                      <span>PRO</span>
-                    </span>
-                  ) : calc.reqTier === 0 ? (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
-                      <i className="fas fa-check text-[8px]"></i>
-                      <span>FREE</span>
-                    </span>
-                  ) : null}
-                </button>
-              ))
-            )}
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

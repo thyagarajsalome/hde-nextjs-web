@@ -210,9 +210,9 @@ const USABathroomRemodelCalculator: React.FC = () => {
       {/* Results Column */}
       <div>
         {breakdown && breakdown.totalCost > 0 ? (
-          <Card title="Bathroom Cost Estimate" className="border-[#c5a059]/30 shadow-float">
+          <Card title="Bathroom Cost Breakdown" className="border-[#c5a059]/30 shadow-float">
             <div className="text-center py-4 bg-gradient-to-r from-[#0f2042]/5 via-[#c5a059]/10 to-[#0f2042]/5 rounded-xl mb-5 border border-[#c5a059]/20">
-              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Total Estimated Cost</p>
+              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Estimated Budget</p>
               <h2 className="text-4xl font-extrabold text-[#0f2042] dark:text-[#c5a059]">{formatCurrency(breakdown.totalCost)}</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 for {parsedArea} sq.ft — {FINISH_TIERS[tier].name} ({SCOPE_OPTIONS[scope].name})

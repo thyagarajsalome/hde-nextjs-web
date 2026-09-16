@@ -111,9 +111,9 @@ const USAKitchenRemodelCalculator: React.FC = () => {
 
       <div>
         {breakdown && breakdown.totalCost > 0 ? (
-          <Card title="Remodel Cost Estimate" className="border-primary/20 shadow-glow">
+          <Card title="Kitchen Cost Breakdown" className="border-primary/20 shadow-glow">
             <div className="text-center py-4 bg-gray-50 rounded-xl mb-5">
-              <p className="text-xs font-bold text-gray-400 uppercase mb-1">Total Estimate</p>
+              <p className="text-xs font-bold text-gray-400 uppercase mb-1">Estimated Budget</p>
               <h2 className="text-4xl font-extrabold text-secondary">{formatCurrency(breakdown.totalCost)}</h2>
               <p className="text-xs text-gray-400 mt-1">for {parsedArea} sq.ft — {QUALITY_LEVELS[quality].name}</p>
             </div>
