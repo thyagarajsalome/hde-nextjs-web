@@ -183,13 +183,6 @@ export default function GalleryHubPage() {
               <i className="fas fa-drafting-compass text-[#c5a059]"></i>
               House Plans (2D)
             </Link>
-            <Link
-              href="/visualizer"
-              className="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-800 dark:text-zinc-200 text-xs font-bold transition flex items-center gap-2 no-underline"
-            >
-              <i className="fas fa-palette text-[#c5a059]"></i>
-              Paint Visualizer
-            </Link>
           </div>
         </div>
 

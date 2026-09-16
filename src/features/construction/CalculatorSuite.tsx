@@ -44,7 +44,6 @@ const USAHomeAdditionCalculator   = lazyWithRetry(() => import("./USAHomeAdditio
 const USASwimmingPoolCalculator   = lazyWithRetry(() => import("./USASwimmingPoolCalculator"));
 const USAPickleballCalculator     = lazyWithRetry(() => import("./USAPickleballCalculator"));
 const USAOutdoorKitchenCalculator = lazyWithRetry(() => import("./USAOutdoorKitchenCalculator"));
-const PaintVisualizer            = lazyWithRetry(() => import("../visualizer/PaintVisualizer"));
 
 type CalculatorType =
   | "construction"
@@ -75,8 +74,7 @@ type CalculatorType =
   | "usa-home-addition"
   | "usa-swimming-pool"
   | "usa-pickleball-court"
-  | "usa-outdoor-kitchen"
-  | "visualizer";
+  | "usa-outdoor-kitchen";
 
 const Loading = () => (
   <div className="flex flex-col justify-center items-center min-h-[600px] bg-gray-50 rounded-2xl border border-gray-100 animate-pulse">
@@ -158,7 +156,6 @@ export default function CalculatorSuite() {
       case 'usa-swimming-pool': return <USASwimmingPoolCalculator />;
       case 'usa-pickleball-court': return <USAPickleballCalculator />;
       case 'usa-outdoor-kitchen': return <USAOutdoorKitchenCalculator />;
-      case 'visualizer':    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
       case "doors-windows": return <DoorsWindowsCalculator hasPaid={hasPaid} />;

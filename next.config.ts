@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/visualizer',
+        destination: '/#tools',
+        permanent: true,
+      },
+      {
+        source: '/blog/virtual-wall-paint-color-visualizer-tool',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
         source: '/calculators/:calc',
         destination: '/?region=US&calc=:calc#tools',
         permanent: true,

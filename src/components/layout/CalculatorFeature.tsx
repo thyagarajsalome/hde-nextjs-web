@@ -31,7 +31,6 @@ import USAHomeAdditionCalculator from "@/features/construction/USAHomeAdditionCa
 import USASwimmingPoolCalculator from "@/features/construction/USASwimmingPoolCalculator";
 import USAPickleballCalculator from "@/features/construction/USAPickleballCalculator";
 import USAOutdoorKitchenCalculator from "@/features/construction/USAOutdoorKitchenCalculator";
-import PaintVisualizer from "@/features/visualizer/PaintVisualizer";
 import IndiaEMICalculator from "@/features/construction/IndiaEMICalculator";
 import IndiaKitchenCalculator from "@/features/construction/IndiaKitchenCalculator";
 import IndiaBathroomCalculator from "@/features/construction/IndiaBathroomCalculator";
@@ -42,7 +41,7 @@ import { useUser } from "@/context/UserContext";
 import { useGSAPTabSwitch } from "@/hooks/useGSAP";
 import { useRegion } from "@/context/RegionContext";
 
-type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "visualizer";
+type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen";
 
 interface CalculatorFeatureProps {
   forceRegion?: "US" | "IN";
@@ -169,7 +168,6 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
       case "usa-swimming-pool": return <USASwimmingPoolCalculator />;
       case "usa-pickleball-court": return <USAPickleballCalculator />;
       case "usa-outdoor-kitchen": return <USAOutdoorKitchenCalculator />;
-      case "visualizer":    return <PaintVisualizer />;
       case "materials":     return <MaterialQuantityCalculator />;
       case "interior":      return <InteriorCalculator hasPaid={hasPaid} />;
       case "doors-windows": return <DoorsWindowsCalculator hasPaid={hasPaid} />;
