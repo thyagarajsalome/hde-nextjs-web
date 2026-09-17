@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { useUser } from "../../context/UserContext";
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
@@ -351,6 +352,29 @@ export default function IndiaBathroomCalculator() {
           </button>
         </div>
       )}
+      {/* Design Gallery Inspiration Banner */}
+      <div className="bg-gradient-to-r from-blue-500/15 via-[#0f2042]/5 to-transparent border border-blue-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+            <i className="fas fa-bath"></i>
+          </div>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block">
+              Design Inspiration &amp; Layouts
+            </span>
+            <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-zinc-100 mt-0.5">
+              Explore Wet &amp; Dry Glass Partition Layouts, Waterproofing &amp; Tile Designs with Real Photos
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/gallery/bathroom-designs"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0f2042] dark:bg-blue-600 text-white text-xs font-bold shadow-sm hover:scale-105 transition-all no-underline shrink-0 cursor-pointer"
+        >
+          <span>Browse Gallery</span>
+          <i className="fas fa-arrow-right text-[10px]"></i>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Technical Specifications & Selection (7 Cols) */}

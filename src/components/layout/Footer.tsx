@@ -44,6 +44,16 @@ export default function Footer() {
               <span className="text-gray-300">|</span>
               <Link href="/terms" className="text-gray-500 hover:text-primary transition-colors no-underline">Terms of Service</Link>
             </div>
+
+            {/* Design Galleries Quick Links */}
+            <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-3 gap-y-1 text-xs font-medium pt-1 text-gray-500">
+              <span className="text-gray-400 font-semibold uppercase tracking-wider">Galleries:</span>
+              <Link href="/gallery/kitchen-designs" className="text-primary hover:underline font-semibold">Modular Kitchen Designs</Link>
+              <span className="text-gray-300">&bull;</span>
+              <Link href="/gallery/bathroom-designs" className="text-primary hover:underline font-semibold">Modern Bathroom Designs</Link>
+              <span className="text-gray-300">&bull;</span>
+              <Link href="/plans" className="text-gray-600 hover:text-primary transition-colors">Architectural House Plans</Link>
+            </div>
           </div>
         </div>
 

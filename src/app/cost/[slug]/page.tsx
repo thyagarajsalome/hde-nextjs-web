@@ -502,6 +502,93 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
           </div>
         </section>
       )}
+
+      {/* Interior & Architectural Galleries Cross-Links */}
+      {forceRegion === 'IN' && (
+        <section className="py-12 bg-slate-50 border-t border-gray-200/70">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="text-center mb-8">
+              <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3 py-1 rounded-full">
+                Design Inspiration &amp; Estimates
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mt-3">
+                Explore Interior &amp; Floor Plan Galleries
+              </h2>
+              <p className="text-gray-500 text-sm max-w-xl mx-auto mt-1.5">
+                Planning your home construction in {cityData.cityName}? Browse verified layouts, finishes, and get instant budget estimates.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Kitchen Gallery Card */}
+              <a
+                href="/gallery/kitchen-designs"
+                className="group bg-white rounded-2xl p-6 border border-gray-200/80 shadow-xs hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between no-underline"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                    <i className="fas fa-kitchen-set"></i>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
+                    Modular Kitchen Designs
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Explore 30+ L-shape, U-shape, parallel, and island kitchen layouts with real photos, IS:710 Marine ply specs, and one-click budget pre-fills.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-primary">
+                  <span>Browse Kitchen Gallery</span>
+                  <i className="fas fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+                </div>
+              </a>
+
+              {/* Bathroom Gallery Card */}
+              <a
+                href="/gallery/bathroom-designs"
+                className="group bg-white rounded-2xl p-6 border border-gray-200/80 shadow-xs hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between no-underline"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                    <i className="fas fa-bath"></i>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
+                    Modern Bathroom Designs
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                    Browse wet &amp; dry glass partitions, premium vanity units, anti-skid vitrified tiles, and sanitaryware fixtures with instant cost calculators.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-primary">
+                  <span>Browse Bathroom Gallery</span>
+                  <i className="fas fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+                </div>
+              </a>
+
+              {/* House Plans Card */}
+              <a
+                href="/plans"
+                className="group bg-white rounded-2xl p-6 border border-gray-200/80 shadow-xs hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between no-underline"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                    <i className="fas fa-compass-drafting"></i>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">
+                    Vastu House Plans
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-2 leading-relaxed">
+                    24+ 2BHK, 3BHK, and duplex 2D CAD architectural plans with Vastu Shastra orientations, dimension schedules, and structural guides.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-primary">
+                  <span>View All House Plans</span>
+                  <i className="fas fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
       
       {/* Dynamic SEO FAQ Section */}
       <section className="py-16 bg-white border-t border-gray-100">

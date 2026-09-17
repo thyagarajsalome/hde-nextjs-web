@@ -358,6 +358,29 @@ export default function IndiaKitchenCalculator() {
           </button>
         </div>
       )}
+      {/* Design Gallery Inspiration Banner */}
+      <div className="bg-gradient-to-r from-[#c5a059]/15 via-[#0f2042]/5 to-transparent border border-[#c5a059]/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#c5a059] to-[#b38e47] text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+            <i className="fas fa-kitchen-set"></i>
+          </div>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-wider text-[#c5a059] block">
+              Design Inspiration &amp; Layouts
+            </span>
+            <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-zinc-100 mt-0.5">
+              Explore 30+ Trending L-Shape, U-Shape &amp; Parallel Kitchen Designs with Real Photos
+            </p>
+          </div>
+        </div>
+        <Link
+          href="/gallery/kitchen-designs"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0f2042] dark:bg-[#c5a059] text-white dark:text-zinc-950 text-xs font-bold shadow-sm hover:scale-105 transition-all no-underline shrink-0 cursor-pointer"
+        >
+          <span>Browse Gallery</span>
+          <i className="fas fa-arrow-right text-[10px]"></i>
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Technical Controls & Specifications (7 Cols) */}
