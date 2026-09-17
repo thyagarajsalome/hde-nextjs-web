@@ -27,26 +27,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${BASE_URL}/plans`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'daily',
+      priority: 0.9,
     },
     {
       url: `${BASE_URL}/gallery`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.95,
+      changeFrequency: 'daily',
+      priority: 1.0,
     },
     {
       url: `${BASE_URL}/gallery/kitchen-designs`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
+      changeFrequency: 'daily',
+      priority: 0.95,
     },
     {
       url: `${BASE_URL}/gallery/bathroom-designs`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
+      changeFrequency: 'daily',
+      priority: 0.95,
     },
     {
       url: `${BASE_URL}/app`,
@@ -122,6 +122,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/register-pro`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/upgrade`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -353,13 +359,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic Blog Routes
   const blogPosts = getAllPosts();
+  const PILLAR_GUIDES = [
+    'modular-kitchen-designs-cost-layouts-india',
+    'modern-bathroom-designs-india-cost-guide',
+    'house-construction-cost-in-india-2026',
+    'home-loan-emi-calculator-guide-sbi-hdfc',
+    'true-cost-of-buying-property-in-dubai-2026',
+    'backyard-pickleball-court-construction-cost',
+    'outdoor-kitchen-roi-and-costs',
+    'rent-vs-buy-a-house-in-2026'
+  ];
+
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => {
     const isValidDate = post.meta.date && !isNaN(Date.parse(post.meta.date));
+    const isPillar = PILLAR_GUIDES.includes(post.slug);
     return {
       url: `${BASE_URL}/blog/${post.slug}`,
       lastModified: isValidDate ? new Date(post.meta.date) : new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: isPillar ? 'weekly' : 'monthly',
+      priority: isPillar ? 0.9 : 0.8,
     };
   });
 
