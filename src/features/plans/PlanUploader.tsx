@@ -83,7 +83,7 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
 
     setIsUploading(true);
     setUploadProgress(10);
-    showToast("Uploading plan to Supabase Storage...", "info");
+    showToast("Uploading plan to Cloudflare R2 Storage...", "info");
 
     const progressInterval = setInterval(() => {
       setUploadProgress(prev => (prev < 85 ? prev + 12 : prev));
@@ -95,41 +95,38 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
       const cleanFileName = title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30);
       const fullPath = `full-plans/${timestamp}-${cleanFileName}.${fullExt}`;
 
-      // 1. Upload File to Supabase Storage Bucket (for mobile backwards-compatibility)
-      const { error: fullError } = await supabase.storage.from('house-plans').upload(fullPath, fullFile, {
-        cacheControl: '3600',
-        upsert: false
+      // 1. Upload File directly to Cloudflare R2 (zero-egress edge storage)
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const r2Res = await fetch('/api/gallery/upload-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          fileName: fullPath,
+          category: 'house-plans',
+          contentType: fullFile.type || 'image/webp',
+          fileSize: fullFile.size
+        })
       });
-      if (fullError) console.warn("Supabase backup upload note:", fullError.message);
 
-      // 2. Also upload to Cloudflare R2 (for zero-egress web app serving)
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        const token = session?.access_token;
-        const r2Res = await fetch('/api/gallery/upload-url', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({
-            fileName: fullPath,
-            category: 'house-plans',
-            contentType: fullFile.type || 'image/webp',
-            fileSize: fullFile.size
-          })
-        });
-        const r2Data = await r2Res.json();
-        if (r2Data.success && r2Data.uploadUrl) {
-          await fetch(r2Data.uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': fullFile.type || 'image/webp' },
-            body: fullFile
-          });
-        }
-      } catch (r2Err: any) {
-        console.warn("Cloudflare R2 sync upload notice:", r2Err?.message);
+      const r2Data = await r2Res.json();
+      if (!r2Res.ok || !r2Data.success || !r2Data.uploadUrl) {
+        throw new Error(r2Data.error || "Failed to generate Cloudflare R2 upload URL");
       }
+
+      const uploadRes = await fetch(r2Data.uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': fullFile.type || 'image/webp' },
+        body: fullFile
+      });
+
+      if (!uploadRes.ok) {
+        throw new Error("Failed to upload blueprint image to Cloudflare R2.");
+      }
+
       setUploadProgress(90);
 
       // Final formatted description

@@ -309,11 +309,22 @@ export const PlanGallery: React.FC = () => {
       if (dbError) throw dbError;
       if (!data || data.length === 0) throw new Error("Deletion blocked by Database RLS Policy.");
 
-      const getRelativePath = (url: string) => url.includes('/house-plans/') ? url.split('/house-plans/')[1].replace(/^\/+/, '') : url;
+      // Clean up asset in Cloudflare R2
       try {
-        await supabase.storage.from('house-plans').remove([getRelativePath(plan.file_url)]);
-      } catch (storageErr) {
-        console.warn("Storage removal warning:", storageErr);
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+        const cleanPath = plan.file_url.replace(/^\/+/, '');
+        const r2Key = cleanPath.startsWith('house-plans/') ? cleanPath : `house-plans/${cleanPath}`;
+        await fetch('/api/gallery/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({ key: r2Key })
+        });
+      } catch (r2DelErr) {
+        console.warn("Cloudflare R2 removal notice:", r2DelErr);
       }
       
       setDbPlans(prev => prev.filter(p => p.id !== plan.id));
