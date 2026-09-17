@@ -6,9 +6,9 @@ export default function FAQ() {
   const { region } = useRegion();
 
   return (
-    <section id="faq" className="py-16 bg-gray-50 border-t border-gray-100">
+    <section id="faq" className="pt-14 pb-8 bg-white border-t border-gray-100">
       <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl font-extrabold text-center text-secondary mb-12">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-extrabold text-center text-secondary mb-10">Frequently Asked Questions</h2>
         <div className="space-y-4">
           
           <details className="group bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden open:border-primary/30 open:ring-1 open:ring-primary/20">
