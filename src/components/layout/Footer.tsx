@@ -54,6 +54,18 @@ export default function Footer() {
               <span className="text-gray-300">&bull;</span>
               <Link href="/plans" className="text-gray-600 hover:text-primary transition-colors">Architectural House Plans</Link>
             </div>
+
+            {/* Real Estate Quick Links (India Mode) */}
+            {!isUSRoute && !isDubaiRoute && (
+              <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-3 gap-y-1 text-xs font-medium pt-1 text-gray-500">
+                <span className="text-gray-400 font-semibold uppercase tracking-wider">Real Estate:</span>
+                <Link href="/bangalore/properties" className="text-primary hover:underline font-semibold">Bangalore Properties</Link>
+                <span className="text-gray-300">&bull;</span>
+                <Link href="/bangalore/post-property" className="text-gray-600 hover:text-primary transition-colors">Post Property Free</Link>
+                <span className="text-gray-300">&bull;</span>
+                <Link href="/bangalore/faq" className="text-gray-600 hover:text-primary transition-colors">Bangalore Property FAQ</Link>
+              </div>
+            )}
           </div>
         </div>
 

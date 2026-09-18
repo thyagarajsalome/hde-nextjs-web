@@ -2,9 +2,9 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const accountId = process.env.R2_ACCOUNT_ID || 'aecd4a2eaf3342cb721dfd1717a810a2';
-const accessKeyId = process.env.R2_ACCESS_KEY_ID || '7978e1130abd87e1263f0ddb90dd8425';
-const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || '8f87c9cb66b21a20ed727253312a0bac7052802fe064987900775401b2ba10f8';
+const accountId = process.env.R2_ACCOUNT_ID || '';
+const accessKeyId = process.env.R2_ACCESS_KEY_ID || '';
+const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || '';
 export const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'hde-gallery';
 export const R2_PUBLIC_URL = (process.env.NEXT_PUBLIC_R2_PUBLIC_URL || process.env.R2_PUBLIC_URL || 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev').replace(/\/$/, '');
 
@@ -13,7 +13,7 @@ export const isR2Configured = Boolean(accountId && accessKeyId && secretAccessKe
 // Initialize S3 client configured for Cloudflare R2
 export const r2Client = new S3Client({
   region: 'auto',
-  endpoint: accountId ? `https://${accountId}.r2.cloudflarestorage.com` : 'https://aecd4a2eaf3342cb721dfd1717a810a2.r2.cloudflarestorage.com',
+  endpoint: accountId ? `https://${accountId}.r2.cloudflarestorage.com` : undefined,
   credentials: {
     accessKeyId,
     secretAccessKey,

@@ -101,6 +101,9 @@ const Header = () => {
             {/* India-only links */}
             {activeRegion.code === 'IN' && (
               <>
+                <Link href="/bangalore/properties" className={`${pathname.startsWith('/bangalore') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>
+                  Real Estate
+                </Link>
                 <Link href="/plans" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">House Plans</Link>
                 
                 {/* Gallery Dropdown */}
@@ -354,6 +357,9 @@ const Header = () => {
             {/* India-only mobile links */}
             {activeRegion.code === 'IN' && (
               <>
+                <Link href="/bangalore/properties" className={`block px-3 py-2 rounded-md text-base font-medium ${pathname.startsWith('/bangalore') ? 'text-primary font-bold bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                  Bangalore Real Estate
+                </Link>
                 <Link href="/plans" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
                   House Plans
                 </Link>
