@@ -94,7 +94,8 @@ CREATE TABLE IF NOT EXISTS public.real_estate_properties (
     views_count INTEGER DEFAULT 0,
     inquiries_count INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '30 days')
 );
 
 CREATE INDEX IF NOT EXISTS idx_re_prop_active_filter ON public.real_estate_properties (status, city, intent, category);

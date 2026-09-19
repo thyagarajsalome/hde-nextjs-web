@@ -1,9 +1,12 @@
 // src/components/real-estate/ViewNumberModal.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RealEstateProperty, BuyerTimeline } from "@/types/realEstate";
+import { openRazorpayCheckout } from "@/lib/razorpayClient";
+
+const MAX_FREE_UNLOCKS = 3;
 
 interface ViewNumberModalProps {
   property: RealEstateProperty;
@@ -26,13 +29,70 @@ export default function ViewNumberModal({
 
   const [errors, setErrors] = useState<{ name?: string; phone?: string; terms?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
+  // Freemium Buyer Quota State
+  const [unlockedProps, setUnlockedProps] = useState<string[]>([]);
+  const [hasBuyerPass, setHasBuyerPass] = useState(false);
+
   const [revealedData, setRevealedData] = useState<{
     sellerName: string;
     sellerPhone: string;
     whatsappUrl: string;
   } | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && isOpen) {
+      try {
+        const pass = localStorage.getItem("hde_buyer_pass_active") === "true";
+        setHasBuyerPass(pass);
+        const stored = localStorage.getItem("hde_buyer_unlocked_props");
+        if (stored) {
+          const list = JSON.parse(stored);
+          setUnlockedProps(Array.isArray(list) ? list : []);
+        }
+      } catch (e) {
+        console.warn("Could not read quota from localStorage", e);
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
+
+  const isAlreadyUnlocked = unlockedProps.includes(property.id);
+  const freeUnlocksUsed = unlockedProps.length;
+  const isFreeQuotaExceeded = !hasBuyerPass && !isAlreadyUnlocked && freeUnlocksUsed >= MAX_FREE_UNLOCKS;
+
+  const handleBuyPass = async () => {
+    setIsPaying(true);
+    try {
+      await openRazorpayCheckout({
+        amountInRupees: 299,
+        itemName: "HDE Direct Buyer Pass",
+        description: "30 Days Unlimited Direct Owner Contacts",
+        prefill: {
+          name: name || undefined,
+          contact: phone || undefined,
+        },
+        onSuccess: (paymentId: string) => {
+          setIsPaying(false);
+          setHasBuyerPass(true);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("hde_buyer_pass_active", "true");
+            localStorage.setItem("hde_buyer_pass_date", new Date().toISOString());
+            localStorage.setItem("hde_buyer_payment_id", paymentId);
+          }
+          alert("Payment Successful! Your Direct Buyer Pass is now active for 30 days.");
+        },
+        onFailure: () => {
+          setIsPaying(false);
+        },
+      });
+    } catch (err) {
+      console.error("Payment error:", err);
+      setIsPaying(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +148,11 @@ export default function ViewNumberModal({
           sellerPhone: data.sellerPhone || property.contact_phone,
           whatsappUrl: data.whatsappUrl,
         });
+        if (typeof window !== "undefined") {
+          const updated = Array.from(new Set([...unlockedProps, property.id]));
+          setUnlockedProps(updated);
+          localStorage.setItem("hde_buyer_unlocked_props", JSON.stringify(updated));
+        }
       } else {
         alert(data.error || "Failed to submit details. Please try again.");
       }
@@ -100,6 +165,11 @@ export default function ViewNumberModal({
         sellerPhone: property.contact_phone,
         whatsappUrl: `https://wa.me/91${sellerDigits}`,
       });
+      if (typeof window !== "undefined") {
+        const updated = Array.from(new Set([...unlockedProps, property.id]));
+        setUnlockedProps(updated);
+        localStorage.setItem("hde_buyer_unlocked_props", JSON.stringify(updated));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -114,7 +184,7 @@ export default function ViewNumberModal({
         {/* Modal Header */}
         <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <h2 className="text-base sm:text-lg font-semibold tracking-tight text-gray-900">
-            Please share your details to view number
+            {isFreeQuotaExceeded ? "Direct Buyer Pass Required" : "Please share your details to view number"}
           </h2>
           <button
             onClick={onClose}
@@ -125,7 +195,7 @@ export default function ViewNumberModal({
           </button>
         </div>
 
-        {/* Revealed State */}
+        {/* 1. Revealed State */}
         {revealedData ? (
           <div className="p-8 text-center space-y-6 bg-white">
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
@@ -179,9 +249,85 @@ export default function ViewNumberModal({
               The owner has been notified of your interest. You can reach out directly.
             </p>
           </div>
+        ) : isFreeQuotaExceeded ? (
+          /* 2. Paywall State (Quota Exceeded) */
+          <div className="p-6 sm:p-8 text-center space-y-6 bg-white">
+            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-200">
+              <i className="fas fa-lock"></i>
+            </div>
+            <div>
+              <span className="bg-amber-100 text-amber-800 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Free Quota Reached (3 of 3 Contacts Used)
+              </span>
+              <h3 className="text-xl font-bold text-gray-900 mt-2.5">
+                Upgrade to HDE Direct Buyer Pass
+              </h3>
+              <p className="text-xs text-gray-500 mt-1 max-w-md mx-auto leading-relaxed">
+                You have unlocked 3 direct owner contacts for free. To protect owners from spam and support platform maintenance, get unlimited direct access.
+              </p>
+            </div>
+
+            {/* Plan Card */}
+            <div className="bg-slate-50 border-2 border-[#4165af] rounded-2xl p-6 max-w-md mx-auto text-left shadow-xs">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#4165af]">Direct Buyer Pass</span>
+                  <div className="text-2xl font-black text-gray-900 mt-0.5">
+                    ₹299 <span className="text-xs font-normal text-gray-500">/ 30 Days</span>
+                  </div>
+                </div>
+                <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">
+                  Unlimited Access
+                </span>
+              </div>
+              <ul className="mt-4 space-y-2 text-xs text-gray-600">
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600 text-xs"></i>
+                  <span>Unlimited direct owner phone numbers &amp; WhatsApp chats</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600 text-xs"></i>
+                  <span>Zero brokerage fees &bull; 100% direct owner contact guarantee</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600 text-xs"></i>
+                  <span>Valid across all Bangalore localities for a full 30 days</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-2 max-w-md mx-auto space-y-2">
+              <button
+                type="button"
+                onClick={handleBuyPass}
+                disabled={isPaying}
+                className="w-full py-3.5 px-6 bg-[#4165af] hover:bg-[#345290] text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              >
+                <i className="fas fa-bolt text-amber-300"></i>
+                <span>{isPaying ? "Opening Payment Gateway..." : "Unlock Unlimited Access for ₹299"}</span>
+              </button>
+              <p className="text-[11px] text-gray-400 flex items-center justify-center gap-1.5">
+                <i className="fas fa-shield-alt text-emerald-600"></i>
+                <span>Secured by Razorpay &bull; UPI, Cards, NetBanking</span>
+              </p>
+            </div>
+          </div>
         ) : (
-          /* Form State (Matching Screenshot 2026-09-18 103844.png) */
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 bg-white">
+          /* 3. Form State (Under Free Quota or Has Pass) */
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 bg-white space-y-6">
+            {/* Free Quota Notice Badge */}
+            {!hasBuyerPass && (
+              <div className="bg-blue-50/80 border border-blue-100 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-[#4165af]">
+                <div className="flex items-center gap-2 font-medium">
+                  <i className="fas fa-unlock-alt"></i>
+                  <span>Free Direct Contact: <strong>{Math.min(3, freeUnlocksUsed + 1)} of 3</strong></span>
+                </div>
+                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  Zero Brokerage
+                </span>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               
               {/* LEFT COLUMN: BASIC INFORMATION */}

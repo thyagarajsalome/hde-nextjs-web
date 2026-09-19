@@ -43,11 +43,14 @@ export class RealEstateService {
       const { data, error } = await query;
 
       if (data && data.length > 0 && !error) {
-        properties = data.map((item) => ({
-          ...item,
-          images: Array.isArray(item.images) ? item.images : [],
-          connectivity: typeof item.connectivity === "object" ? item.connectivity : {},
-        }));
+        const now = new Date().toISOString();
+        properties = data
+          .filter((item) => !item.expires_at || item.expires_at > now)
+          .map((item) => ({
+            ...item,
+            images: Array.isArray(item.images) ? item.images : [],
+            connectivity: typeof item.connectivity === "object" ? item.connectivity : {},
+          }));
       }
     } catch (err) {
       console.warn("Could not query Supabase properties, falling back to local dataset:", err);
@@ -111,6 +114,7 @@ export class RealEstateService {
       status: "active",
       views_count: 0,
       inquiries_count: 0,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
     const { data, error } = await supabase

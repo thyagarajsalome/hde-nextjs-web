@@ -1,7 +1,7 @@
 // src/app/bangalore/post-property/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -17,10 +17,13 @@ import {
   PROPERTY_CATEGORIES,
   BHK_OPTIONS,
   KHATA_TYPES,
+  LOCALITY_TRANSIT_PROFILES,
 } from "@/data/bangaloreLocalities";
 import PropertyPhotoUploader from "@/components/real-estate/PropertyPhotoUploader";
 import { RealEstateService } from "@/services/realEstateService";
 import { useUser } from "@/context/UserContext";
+import { supabase } from "@/config/supabaseClient";
+import { openRazorpayCheckout } from "@/lib/razorpayClient";
 
 export default function PostPropertyPage() {
   const router = useRouter();
@@ -29,6 +32,12 @@ export default function PostPropertyPage() {
   // Step state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
+
+  // Monetization & Quota Modals
+  const [limitModalOpen, setLimitModalOpen] = useState(false);
+  const [brokerModalOpen, setBrokerModalOpen] = useState(false);
+  const [hasPaidSlot, setHasPaidSlot] = useState(false);
+  const [isPayingSlot, setIsPayingSlot] = useState(false);
 
   // Form Fields
   const [intent, setIntent] = useState<ListingIntent>("sale");
@@ -78,6 +87,23 @@ export default function PostPropertyPage() {
   const selectedLocality =
     BANGALORE_LOCALITIES.find((l) => l.id === localityId) || BANGALORE_LOCALITIES[0];
 
+  const applyLocalityTransitDefaults = (locId: string) => {
+    const profile = LOCALITY_TRANSIT_PROFILES[locId];
+    if (profile) {
+      setAirportKm(profile.airportKm);
+      setMetroName(profile.metroName);
+      setMetroKm(profile.metroKm);
+      setRailwayName(profile.railwayName);
+      setRailwayKm(profile.railwayKm);
+      setTechParkName(profile.techParkName);
+      setTechParkKm(profile.techParkKm);
+    }
+  };
+
+  useEffect(() => {
+    applyLocalityTransitDefaults(localityId);
+  }, []);
+
   const formatPricePreview = (val: number | "") => {
     if (!val || val <= 0) return "";
     if (intent === "rent") return `₹${Number(val).toLocaleString("en-IN")} / month`;
@@ -114,6 +140,38 @@ export default function PostPropertyPage() {
 
     setErrors({});
     setIsSubmitting(true);
+
+    // 0. Quota & Commercial Monetization Checks
+    if (!hasPaidSlot) {
+      try {
+        let existingActiveCount = 0;
+        if (user?.id) {
+          const userProps = await RealEstateService.getUserProperties(user.id);
+          existingActiveCount = userProps.filter((p) => p.status === "active").length;
+        } else {
+          const { count } = await supabase
+            .from("real_estate_properties")
+            .select("id", { count: "exact", head: true })
+            .eq("contact_phone", cleanContactPhone)
+            .eq("status", "active");
+          existingActiveCount = count || 0;
+        }
+
+        if (posterType === "owner" && existingActiveCount >= 1) {
+          setIsSubmitting(false);
+          setLimitModalOpen(true);
+          return;
+        }
+
+        if (posterType !== "owner") {
+          setIsSubmitting(false);
+          setBrokerModalOpen(true);
+          return;
+        }
+      } catch (checkErr) {
+        console.warn("Quota validation check warning:", checkErr);
+      }
+    }
 
     try {
       // 1. Upload photos to Cloudflare R2 via secure API route
@@ -342,7 +400,11 @@ export default function PostPropertyPage() {
                   </label>
                   <select
                     value={localityId}
-                    onChange={(e) => setLocalityId(e.target.value)}
+                    onChange={(e) => {
+                      const newId = e.target.value;
+                      setLocalityId(newId);
+                      applyLocalityTransitDefaults(newId);
+                    }}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary"
                   >
                     {BANGALORE_LOCALITIES.map((loc) => (
@@ -524,14 +586,31 @@ export default function PostPropertyPage() {
 
             {/* CARD 3: TRANSIT & KEY DISTANCES */}
             <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-xs space-y-6">
-              <div className="border-b border-gray-100 pb-3">
-                <h3 className="text-base font-black text-secondary flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs">3</span>
-                  <span>Transit &amp; Landmark Distances</span>
-                </h3>
-                <p className="text-xs text-gray-400 mt-1">
-                  Bangalore buyers check travel times first. Fill in distances to boost inquiries.
-                </p>
+              <div className="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-base font-black text-secondary flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs">3</span>
+                    <span>Transit &amp; Landmark Distances</span>
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Auto-calculated for <strong>{selectedLocality.name}</strong> to save you time (zero manual measuring required).
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-2xs">
+                    <i className="fas fa-magic text-emerald-600"></i>
+                    <span>Auto-Filled ({selectedLocality.name})</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => applyLocalityTransitDefaults(localityId)}
+                    className="text-[11px] text-[#4165af] hover:underline font-semibold cursor-pointer"
+                    title="Reset to default locality transit distances"
+                  >
+                    Reset
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -779,7 +858,9 @@ export default function PostPropertyPage() {
                     <span>Optimizing &amp; Publishing...</span>
                   </span>
                 ) : (
-                  <span>Publish Property Listing Free</span>
+                  <span>
+                    {hasPaidSlot ? "Publish Verified Listing" : posterType === "owner" ? "Publish Property Listing Free" : "Continue to Broker Verification"}
+                  </span>
                 )}
               </button>
               <p className="text-[11px] text-gray-400 mt-2">
@@ -790,6 +871,213 @@ export default function PostPropertyPage() {
           </form>
         )}
       </div>
+
+      {/* 1. Owner 1-Listing Free Quota Limit Modal */}
+      {limitModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 text-center space-y-5">
+            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-200">
+              <i className="fas fa-home"></i>
+            </div>
+            <div>
+              <span className="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                1 Free Active Listing Limit
+              </span>
+              <h3 className="text-xl font-bold text-gray-900 mt-2">
+                You Already Have an Active Listing
+              </h3>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                Genuine individual owners can list 1 property for free. To maintain high-quality listings and avoid ghost properties, choose an option:
+              </p>
+            </div>
+
+            <div className="space-y-3 text-left pt-1">
+              {/* Option A: Free Deal Closed */}
+              <div className="bg-slate-50 border border-gray-200 rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-800">Option 1: Close Previous Deal</span>
+                  <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">
+                    Free
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-500">
+                  If your previous property has been rented out or sold, mark it as "Deal Closed" to free up your listing slot.
+                </p>
+                <Link
+                  href="/bangalore/my-properties"
+                  className="block text-center py-2 px-4 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold no-underline transition"
+                >
+                  Go to My Properties &amp; Close Deal
+                </Link>
+              </div>
+
+              {/* Option B: Paid Extra Slot */}
+              <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#4165af]">Option 2: Add Extra Listing Slot</span>
+                  <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                    ₹499
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-600">
+                  Keep both listings active simultaneously for 30 days with direct buyer leads.
+                </p>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsPayingSlot(true);
+                    try {
+                      await openRazorpayCheckout({
+                        amountInRupees: 499,
+                        itemName: "Owner Extra Listing Slot",
+                        description: "Post 2nd active property listing for 30 days",
+                        prefill: {
+                          name: contactName || undefined,
+                          contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
+                        },
+                        onSuccess: () => {
+                          setIsPayingSlot(false);
+                          setHasPaidSlot(true);
+                          setLimitModalOpen(false);
+                          alert("Payment verified! Now click 'Publish Verified Listing' to submit.");
+                        },
+                        onFailure: () => setIsPayingSlot(false),
+                      });
+                    } catch (e) {
+                      setIsPayingSlot(false);
+                    }
+                  }}
+                  disabled={isPayingSlot}
+                  className="w-full py-2.5 px-4 bg-[#4165af] hover:bg-[#345290] text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-60"
+                >
+                  <i className="fas fa-bolt text-amber-300 text-xs"></i>
+                  <span>{isPayingSlot ? "Opening Razorpay..." : "Pay ₹499 for Extra Slot"}</span>
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setLimitModalOpen(false)}
+              className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer pt-2"
+            >
+              Cancel &amp; Review Listing
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Commercial Broker Pack Modal */}
+      {brokerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-gray-100 text-center space-y-5">
+            <div className="w-14 h-14 bg-[#4165af]/10 text-[#4165af] rounded-2xl flex items-center justify-center mx-auto text-2xl border border-[#4165af]/20">
+              <i className="fas fa-briefcase"></i>
+            </div>
+            <div>
+              <span className="bg-[#4165af]/10 text-[#4165af] text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                Commercial Partner Verification
+              </span>
+              <h3 className="text-xl font-bold text-gray-900 mt-2">
+                Broker &amp; Agency Listing Pack
+              </h3>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                Commercial listings (Agents &amp; Builders) require a verified listing pack to guarantee authentic listings for Bangalore homebuyers.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 text-left pt-1">
+              {/* Single Listing */}
+              <div className="bg-slate-50 border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-bold text-gray-800">Single Broker Listing</div>
+                  <div className="text-[11px] text-gray-500">1 listing &bull; 30 days validity &bull; RERA badge</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsPayingSlot(true);
+                    try {
+                      await openRazorpayCheckout({
+                        amountInRupees: 499,
+                        itemName: "Single Broker Listing",
+                        description: "1 commercial listing slot with RERA verification",
+                        prefill: {
+                          name: contactName || agencyName || undefined,
+                          contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
+                        },
+                        onSuccess: () => {
+                          setIsPayingSlot(false);
+                          setHasPaidSlot(true);
+                          setBrokerModalOpen(false);
+                          alert("Payment verified! Now click 'Publish Verified Listing' to submit.");
+                        },
+                        onFailure: () => setIsPayingSlot(false),
+                      });
+                    } catch (e) {
+                      setIsPayingSlot(false);
+                    }
+                  }}
+                  disabled={isPayingSlot}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition cursor-pointer"
+                >
+                  Pay ₹499
+                </button>
+              </div>
+
+              {/* 5-Listing Broker Pack */}
+              <div className="bg-blue-50/70 border-2 border-[#4165af] rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-gray-900">5-Listing Pro Broker Pack</span>
+                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.2 rounded">Save 40%</span>
+                  </div>
+                  <div className="text-[11px] text-gray-600">5 listings &bull; 60 days validity &bull; Direct WhatsApp leads</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsPayingSlot(true);
+                    try {
+                      await openRazorpayCheckout({
+                        amountInRupees: 1499,
+                        itemName: "5-Listing Broker Pack",
+                        description: "5 commercial listings with priority support",
+                        prefill: {
+                          name: contactName || agencyName || undefined,
+                          contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
+                        },
+                        onSuccess: () => {
+                          setIsPayingSlot(false);
+                          setHasPaidSlot(true);
+                          setBrokerModalOpen(false);
+                          alert("Payment verified! Now click 'Publish Verified Listing' to submit.");
+                        },
+                        onFailure: () => setIsPayingSlot(false),
+                      });
+                    } catch (e) {
+                      setIsPayingSlot(false);
+                    }
+                  }}
+                  disabled={isPayingSlot}
+                  className="px-4 py-2 bg-[#4165af] hover:bg-[#345290] text-white rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
+                >
+                  Pay ₹1,499
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setBrokerModalOpen(false)}
+              className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer pt-2"
+            >
+              Cancel &amp; Review Listing
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

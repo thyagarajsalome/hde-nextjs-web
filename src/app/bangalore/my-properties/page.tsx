@@ -441,11 +441,42 @@ export default function MyPropertiesPage() {
                       <span>{prop.khata_type || "A Khata"}</span>
                     </div>
 
-                    {/* Stats */}
+                    {/* Stats & Expiry Countdown */}
                     <div className="flex items-center gap-4 text-[11px] text-gray-400 pt-1">
                       <span><i className="fas fa-eye text-blue-500 mr-1"></i> {prop.views_count || 0} Views</span>
                       <span><i className="fas fa-envelope text-indigo-500 mr-1"></i> {prop.inquiries_count || 0} Leads</span>
                     </div>
+
+                    {prop.expires_at && (
+                      <div className="text-[11px] text-amber-800 bg-amber-50/80 px-2.5 py-1.5 rounded-lg flex items-center justify-between border border-amber-200 mt-1">
+                        <span>
+                          <i className="far fa-clock mr-1 text-amber-600"></i>
+                          {new Date(prop.expires_at) > new Date()
+                            ? `Active for ${Math.max(1, Math.ceil((new Date(prop.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} more days`
+                            : "30-day period expired"}
+                        </span>
+                        {new Date(prop.expires_at) <= new Date() && (
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              try {
+                                const next30 = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+                                await RealEstateService.updateProperty(prop.id, { expires_at: next30, status: "active" });
+                                setProperties((prev) =>
+                                  prev.map((p) => (p.id === prop.id ? { ...p, expires_at: next30, status: "active" } : p))
+                                );
+                                alert("Listing renewed for 30 days for free!");
+                              } catch (err: any) {
+                                alert("Failed to renew listing: " + err.message);
+                              }
+                            }}
+                            className="text-[10px] font-bold text-blue-700 hover:text-blue-900 underline cursor-pointer"
+                          >
+                            Renew 30 Days (Free)
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
