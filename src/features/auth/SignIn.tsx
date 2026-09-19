@@ -47,13 +47,6 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="text-3xl font-extrabold text-secondary flex justify-center items-center gap-2">
-          <i className="fas fa-home text-primary"></i> 
-          <span>HDE</span>
-        </Link>
-      </div>
-
       <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-zinc-100 mb-6">Sign In to your account</h2>
       
       <button

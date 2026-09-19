@@ -128,13 +128,6 @@ const SignUp = () => {
 
   return (
     <>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="text-3xl font-extrabold text-secondary flex justify-center items-center gap-2">
-          <i className="fas fa-home text-primary"></i> 
-          <span>HDE</span>
-        </Link>
-      </div>
-
       <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-zinc-100 mb-2">Create a free account</h2>
       <p className="text-center text-xs text-gray-500 dark:text-zinc-400 mb-6">
         Get accurate construction calculators, BOQ materials &amp; floor plan updates
