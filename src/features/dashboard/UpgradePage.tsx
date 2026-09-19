@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "../../config/supabaseClient";
 import { useUser } from "../../context/UserContext";
 import { useToast } from "../../context/ToastContext";
@@ -469,6 +470,30 @@ const COMPARISON_ROWS_BY_REGION: Record<string, { heading: string; subheading: s
         freeClass: "text-gray-400",
         pro: "👑 Priority VIP Support",
         proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
+      },
+      {
+        title: "Real Estate: Direct Buyer Contact Unlocks",
+        desc: "Direct owner phone numbers & WhatsApp chats with zero brokerage",
+        free: "3 Contacts Free",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "✅ Unlimited Access (Direct Buyer Pass)",
+        proClass: "text-emerald-600 dark:text-emerald-400 font-black"
+      },
+      {
+        title: "Real Estate: Owner Listing Slots",
+        desc: "Publish properties for sale or rent with verified direct buyer leads",
+        free: "1 Free Active Listing",
+        freeClass: "text-emerald-600 font-bold",
+        pro: "✅ Multi-Listing Slots Included (Standard & Pro)",
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
+      },
+      {
+        title: "Real Estate: Commercial Broker & Agency Packs",
+        desc: "RERA verified listing pack with WhatsApp leads and priority ranking",
+        free: "❌ Paid per listing (₹349)",
+        freeClass: "text-gray-400",
+        pro: "✅ Included in Pro Tier (5-Listing Pack Value)",
+        proClass: "text-[#0f2042] dark:text-[#c5a059] font-black"
       }
     ]
   },
@@ -588,6 +613,14 @@ const FAQS_BY_REGION: Record<string, { question: string; answer: string }[]> = {
     {
       question: "Do purchased project credits ever expire?",
       answer: "No. Your purchased credits never expire. They stay in your account balance until you choose to save a project or generate an export."
+    },
+    {
+      question: "What real estate marketplace services are 100% free?",
+      answer: "Browsing Bangalore property listings, viewing high-resolution photos, checking automated transit distance profiles (airport, metro, railway, tech parks), and filtering by BHK/budget are completely free. Individual homeowners can also post 1 active property listing for free for 30 days, and buyers receive 3 free direct owner contact reveals with zero brokerage commission."
+    },
+    {
+      question: "What are the paid real estate services and how do they work?",
+      answer: "To prevent spam and keep listings authentic, buyers who need more than 3 direct owner contacts can purchase a Direct Buyer Pass for ₹199 (Basic Tier, 30 days unlimited access). Owners who want multiple active listings simultaneously can add an Extra Listing Slot for ₹349 (Standard Tier). Commercial brokers and builders can buy single verified listings (₹349) or a 5-Listing Pro Broker Pack for ₹999 (Pro Tier, 60 days validity). All active subscribers to our Standard and Pro plans get these real estate upgrades included automatically."
     }
   ],
   AE: [
@@ -890,6 +923,237 @@ const UpgradePage = () => {
             );
           })}
         </div>
+
+        {/* --- REAL ESTATE MARKETPLACE: WHAT IS FREE VS PAID SERVICES --- */}
+        {(currentRegion === "IN" || !currentRegion) && (
+          <div className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-200/80 dark:border-zinc-800 shadow-sm">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#4165af] bg-[#4165af]/10 px-3.5 py-1.5 rounded-full border border-[#4165af]/20">
+                Bangalore Real Estate Marketplace
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-zinc-100 mt-3">
+                Transparent Overview: Free vs. Paid Real Estate Services
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-2 leading-relaxed">
+                Home Design English is a zero-brokerage marketplace. Review exactly what is 100% free forever for buyers and homeowners, and which optional paid services support verified listings and anti-spam protection.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+              {/* COLUMN 1: 100% FREE MARKETPLACE SERVICES */}
+              <div className="bg-emerald-50/40 dark:bg-emerald-950/15 border-2 border-emerald-500/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-xs">
+                        <i className="fas fa-gift"></i>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-slate-900 dark:text-zinc-100">
+                          100% Free Marketplace Services
+                        </h3>
+                        <span className="text-emerald-700 dark:text-emerald-400 text-xs font-bold">
+                          Always Available &bull; No Hidden Brokerage
+                        </span>
+                      </div>
+                    </div>
+                    <span className="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                      Free ₹0
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                    Everything you need to discover homes, review verified photos, and connect directly with genuine Bangalore property owners without paying any middleman commission.
+                  </p>
+
+                  <ul className="space-y-4 text-xs sm:text-sm text-slate-700 dark:text-zinc-300">
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">Unlimited Property Browsing &amp; Search:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">Filter plots, flats, and villas across all 24 Bangalore localities by price, BHK, and furnishing.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">Full Photo Galleries &amp; Specifications:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">High-resolution compressed photos, super built-up sqft, facing direction, and Khata verification are public.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">Automated Transit Distance Engine:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">Instant automated distances to Kempegowda Airport, Namma Metro, railway stations, and IT tech parks.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">1 Free Active Listing for Individual Owners:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">Publish your property for 30 days with direct verified buyer leads. 100% free forever for homeowners.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">First 3 Direct Contact Unlocks:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">Every buyer can reveal up to 3 owner phone numbers and WhatsApp chats with zero brokerage commission.</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <i className="fas fa-check-circle text-emerald-500 text-base mt-0.5 shrink-0"></i>
+                      <div>
+                        <strong className="text-slate-900 dark:text-white">Free 30-Day Listing Renewals:</strong>
+                        <span className="text-gray-500 dark:text-zinc-400 block text-xs mt-0.5">Renew your listing with a single click or mark "Deal Closed" in My Properties to recycle your listing slot.</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-emerald-200/60 dark:border-emerald-900/30 flex items-center justify-between flex-wrap gap-3">
+                  <span className="text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                    Ready to explore or list your property?
+                  </span>
+                  <div className="flex gap-2">
+                    <Link
+                      href="/bangalore/properties"
+                      className="px-3.5 py-2 bg-white dark:bg-zinc-900 hover:bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-800 shadow-xs transition"
+                    >
+                      Browse Listings
+                    </Link>
+                    <Link
+                      href="/bangalore/post-property"
+                      className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs transition"
+                    >
+                      Post Free Property
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* COLUMN 2: PAID SERVICES & VALUE-ADDED UPGRADES */}
+              <div className="bg-slate-50/70 dark:bg-zinc-800/30 border-2 border-[#4165af]/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-2xl bg-[#4165af] text-white flex items-center justify-center text-xl shadow-xs">
+                        <i className="fas fa-shield-alt"></i>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-black text-slate-900 dark:text-zinc-100">
+                          Paid Services &amp; Anti-Spam Upgrades
+                        </h3>
+                        <span className="text-[#4165af] dark:text-blue-400 text-xs font-bold">
+                          Strictly Aligned with Platform Upgrade Tiers
+                        </span>
+                      </div>
+                    </div>
+                    <span className="bg-blue-100 dark:bg-blue-950/60 text-[#4165af] dark:text-blue-300 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                      From ₹199
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-gray-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                    Reasonable micro-fees designed to prevent spam scrapers, authenticate commercial brokers, and fund fast, ad-free platform hosting with verified leads.
+                  </p>
+
+                  <div className="space-y-3.5">
+                    {/* Service Card 1: Direct Buyer Pass */}
+                    <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-[#4165af] flex items-center justify-center text-xs font-black">
+                            1
+                          </span>
+                          <strong className="text-xs sm:text-sm text-slate-900 dark:text-white">Direct Buyer Pass (Basic Tier)</strong>
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-xs sm:text-sm font-black text-[#4165af]">₹199</span>
+                          <span className="text-[10px] text-gray-400 line-through">₹249</span>
+                          <span className="text-[10px] text-gray-500">/ 30 Days</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                        Unlocked after using 3 free contacts. Gives <strong>unlimited direct owner phone numbers &amp; WhatsApp chats</strong> for 30 days with zero brokerage. Included free for all paid subscribers.
+                      </p>
+                    </div>
+
+                    {/* Service Card 2: Owner Extra Listing Slot */}
+                    <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/50 text-amber-700 flex items-center justify-center text-xs font-black">
+                            2
+                          </span>
+                          <strong className="text-xs sm:text-sm text-slate-900 dark:text-white">Owner Extra Listing Slot (Standard Tier)</strong>
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-xs sm:text-sm font-black text-amber-600">₹349</span>
+                          <span className="text-[10px] text-gray-400 line-through">₹499</span>
+                          <span className="text-[10px] text-gray-500">/ 30 Days</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                        For owners with multiple properties who want 2 or more active listings simultaneously. <strong>Included free of charge</strong> for all Standard &amp; Pro plan members.
+                      </p>
+                    </div>
+
+                    {/* Service Card 3: Single Commercial Broker Listing */}
+                    <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-zinc-800 text-slate-700 flex items-center justify-center text-xs font-black">
+                            3
+                          </span>
+                          <strong className="text-xs sm:text-sm text-slate-900 dark:text-white">Single Commercial Broker Listing</strong>
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-xs sm:text-sm font-black text-slate-800 dark:text-zinc-200">₹349</span>
+                          <span className="text-[10px] text-gray-500">/ 30 Days</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                        Commercial agents &amp; brokers posting 1 verified listing. Includes verified RERA badge and direct buyer inquiries.
+                      </p>
+                    </div>
+
+                    {/* Service Card 4: 5-Listing Pro Broker Pack */}
+                    <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-xs">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-lg bg-purple-100 dark:bg-purple-900/50 text-purple-700 flex items-center justify-center text-xs font-black">
+                            4
+                          </span>
+                          <strong className="text-xs sm:text-sm text-slate-900 dark:text-white">5-Listing Pro Broker Pack (Pro Tier)</strong>
+                        </div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-xs sm:text-sm font-black text-purple-600">₹999</span>
+                          <span className="text-[10px] text-gray-400 line-through">₹1,427</span>
+                          <span className="text-[10px] text-gray-500">/ 60 Days</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
+                        For high-volume property managers &amp; developers: 5 commercial slots, 60 days validity, direct WhatsApp buyer routing. <strong>Included in the ₹999 Pro Subscription</strong> (which also gives 100 cloud construction credits).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-5 border-t border-gray-200/80 dark:border-zinc-800 flex items-center justify-between flex-wrap gap-2 text-xs text-gray-500 dark:text-zinc-400">
+                  <span className="flex items-center gap-1.5">
+                    <i className="fas fa-lock text-emerald-600"></i>
+                    <span>Secure Razorpay Payments &bull; UPI, Cards, NetBanking</span>
+                  </span>
+                  <span className="text-[11px] font-bold text-[#4165af]">
+                    Auto-applied to your logged-in account
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* --- FREE VS PRO DETAILED COMPARISON TABLE --- */}
         <div id="compare" className="mt-16 bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm scroll-mt-24">
