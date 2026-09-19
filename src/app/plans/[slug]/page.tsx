@@ -285,16 +285,17 @@ export default async function HousePlanSeoPage({ params }: Props) {
         </header>
 
         {/* Interactive Cost Estimator Strip */}
-        <section className="bg-gradient-to-br from-[#0f2042] via-[#1a3360] to-[#0f2042] border border-[#c5a059]/30 rounded-3xl p-6 sm:p-8 text-white shadow-lg space-y-4">
+        <section className="bg-white dark:bg-zinc-900 border border-gray-200/80 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-black uppercase tracking-widest bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/30 px-3 py-1 rounded-full">
-                Live Calculator Integration
+              <span className="text-xs font-black uppercase tracking-widest bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+                <i className="fas fa-bolt text-amber-500 text-[10px]"></i>
+                <span>Live Calculator Integration</span>
               </span>
-              <h2 className="text-xl sm:text-2xl font-black mt-2">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 mt-2.5">
                 Estimate Exact Building Cost for {data.dimensions} ({data.plotAreaSqft} sq ft)
               </h2>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 max-w-2xl mt-1 leading-relaxed">
                 Calculate total cement, steel (TMT), bricks, sand, and labor costs for this exact floor area using our free India Construction Estimator.
               </p>
             </div>
@@ -302,37 +303,40 @@ export default async function HousePlanSeoPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 href={`/?calc=construction&area=${data.builtUpAreaSqft}#tools`}
-                className="px-5 py-3 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-extrabold text-xs shadow-md transition no-underline flex items-center gap-2 border border-[#b38e47]/30"
+                className="px-5 py-3 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-slate-950 font-extrabold text-xs shadow-xs transition no-underline flex items-center gap-2"
               >
-                <i className="fas fa-calculator text-[#0f2042]"></i>
+                <i className="fas fa-calculator text-slate-950"></i>
                 <span>Open Construction Calculator</span>
               </Link>
               <Link
                 href="/?calc=india-emi#tools"
-                className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-extrabold text-xs transition no-underline flex items-center gap-2 border border-white/20"
+                className="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-200 font-extrabold text-xs transition no-underline flex items-center gap-2 border border-gray-200 dark:border-zinc-700"
               >
-                <i className="fas fa-university text-[#c5a059]"></i>
+                <i className="fas fa-university text-amber-600 dark:text-amber-400"></i>
                 <span>Calculate Home Loan EMI</span>
               </Link>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-white/20 text-xs">
-            <div className="bg-white/10 backdrop-blur-sm p-3.5 rounded-xl">
-              <span className="font-semibold text-amber-100 block">Basic Construction (~₹1,750/sqft)</span>
-              <p className="text-base font-black mt-0.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 border-t border-gray-100 dark:border-zinc-800 text-xs">
+            <div className="bg-gray-50 dark:bg-zinc-800/40 p-4 rounded-2xl border border-gray-200/70 dark:border-zinc-700/60">
+              <span className="font-semibold text-gray-500 dark:text-zinc-400 block text-xs">Basic Construction (~₹1,750/sqft)</span>
+              <p className="text-lg font-black text-slate-900 dark:text-zinc-100 mt-1">
                 ₹{((data.builtUpAreaSqft * 1750) / 100000).toFixed(1)} Lakhs
               </p>
             </div>
-            <div className="bg-white/20 backdrop-blur-sm p-3.5 rounded-xl border border-white/30">
-              <span className="font-semibold text-white block">Standard Construction (~₹2,200/sqft)</span>
-              <p className="text-base font-black mt-0.5">
+            <div className="bg-amber-50/70 dark:bg-amber-950/20 p-4 rounded-2xl border-2 border-amber-400/80 dark:border-amber-500/50 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-950 dark:text-amber-300 block text-xs">Standard Construction (~₹2,200/sqft)</span>
+                <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-amber-500 text-white">Popular</span>
+              </div>
+              <p className="text-lg font-black text-amber-800 dark:text-amber-400 mt-1">
                 ₹{((data.builtUpAreaSqft * 2200) / 100000).toFixed(1)} Lakhs
               </p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm p-3.5 rounded-xl">
-              <span className="font-semibold text-amber-100 block">Premium Luxury (~₹3,000/sqft)</span>
-              <p className="text-base font-black mt-0.5">
+            <div className="bg-gray-50 dark:bg-zinc-800/40 p-4 rounded-2xl border border-gray-200/70 dark:border-zinc-700/60">
+              <span className="font-semibold text-gray-500 dark:text-zinc-400 block text-xs">Premium Luxury (~₹3,000/sqft)</span>
+              <p className="text-lg font-black text-slate-900 dark:text-zinc-100 mt-1">
                 ₹{((data.builtUpAreaSqft * 3000) / 100000).toFixed(1)} Lakhs
               </p>
             </div>
