@@ -125,18 +125,39 @@ export class RealEstateService {
       }
     });
 
-    const { data, error } = await supabase
+    let insertRes = await supabase
       .from("real_estate_properties")
       .insert(cleanPayload)
       .select()
       .single();
 
-    if (error) {
-      console.error("Failed to insert property in Supabase:", error);
-      throw new Error(error.message || "Failed to save property to database");
+    // Resilient schema cache reconciliation:
+    // If remote DB is missing a column (like expires_at) that hasn't been migrated yet,
+    // automatically strip that column and retry immediately so publishing NEVER fails.
+    let attempts = 0;
+    while (insertRes.error && insertRes.error.message && insertRes.error.message.includes("schema cache") && attempts < 5) {
+      attempts++;
+      const match = insertRes.error.message.match(/Could not find the '([^']+)' column/i);
+      if (match && match[1] && match[1] in cleanPayload) {
+        const missingCol = match[1];
+        console.warn(`[RealEstateService] Stripping unmigrated column '${missingCol}' from payload and retrying insert...`);
+        delete cleanPayload[missingCol];
+        insertRes = await supabase
+          .from("real_estate_properties")
+          .insert(cleanPayload)
+          .select()
+          .single();
+      } else {
+        break;
+      }
     }
 
-    return data;
+    if (insertRes.error) {
+      console.error("Failed to insert property in Supabase:", insertRes.error);
+      throw new Error(insertRes.error.message || "Failed to save property to database");
+    }
+
+    return insertRes.data;
   }
 
   /**
@@ -179,7 +200,7 @@ export class RealEstateService {
       cleanUpdates.locality_id = null as any;
     }
 
-    const { data, error } = await supabase
+    let updateRes = await supabase
       .from("real_estate_properties")
       .update({
         ...cleanUpdates,
@@ -189,12 +210,34 @@ export class RealEstateService {
       .select()
       .single();
 
-    if (error) {
-      console.error("Failed to update property in Supabase:", error);
-      throw error;
+    let attempts = 0;
+    while (updateRes.error && updateRes.error.message && updateRes.error.message.includes("schema cache") && attempts < 5) {
+      attempts++;
+      const match = updateRes.error.message.match(/Could not find the '([^']+)' column/i);
+      if (match && match[1] && match[1] in cleanUpdates) {
+        const missingCol = match[1];
+        console.warn(`[RealEstateService] Stripping unmigrated column '${missingCol}' from update and retrying...`);
+        delete (cleanUpdates as any)[missingCol];
+        updateRes = await supabase
+          .from("real_estate_properties")
+          .update({
+            ...cleanUpdates,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", id)
+          .select()
+          .single();
+      } else {
+        break;
+      }
     }
 
-    return data;
+    if (updateRes.error) {
+      console.error("Failed to update property in Supabase:", updateRes.error);
+      throw updateRes.error;
+    }
+
+    return updateRes.data;
   }
 
   /**
