@@ -64,7 +64,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 opacity-40 scale-105">
             <Image 
-              src={banners[0].image_url} 
+              src={banners[0]?.image_url || "/images/hero/hero-india.jpg"} 
               alt="Hero" 
               fill 
               priority 
@@ -120,7 +120,12 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
   }
 
   // STANDARD HERO (If region is selected)
-  const displayBanner = region === 'AE' ? { image_url: '/images/dubai-skyline.jpg' } : (region === 'US' && banners.length > 1 ? banners[1] : banners[0]);
+  const heroImageUrl =
+    region === "AE"
+      ? "/images/hero/hero-uae.jpg"
+      : region === "US"
+      ? "/images/hero/hero-usa.jpg"
+      : "/images/hero/hero-india.jpg";
 
   return (
     <section 
@@ -131,12 +136,12 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
       <div className="absolute inset-0">
         <div className="absolute inset-0 opacity-100 scale-100">
           <Image 
-            src={displayBanner.image_url} 
-            alt="Hero" 
+            src={heroImageUrl} 
+            alt={`Home Design English - ${region || "India"} Mode`} 
             fill 
             priority 
             sizes="100vw"
-            quality={75}
+            quality={85}
             className="object-cover" 
           />
           {/* Dark overlay only needed for AE region with buttons */}
