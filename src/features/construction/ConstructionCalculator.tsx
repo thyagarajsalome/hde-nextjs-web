@@ -964,27 +964,48 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                   }
 
                   return (
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-zinc-900 rounded-xl p-3 border border-slate-200/80 dark:border-zinc-700 text-xs">
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide">
-                          Recommended Blueprint: {recDim}
-                        </span>
-                        <p className="font-bold text-slate-900 dark:text-zinc-100">
-                          {recTitle}
-                        </p>
+                    <div className="space-y-2.5">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-zinc-900 rounded-xl p-3 border border-slate-200/80 dark:border-zinc-700 text-xs">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide">
+                            Recommended Blueprint: {recDim}
+                          </span>
+                          <p className="font-bold text-slate-900 dark:text-zinc-100">
+                            {recTitle}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Link
+                            href={`/plans/${recSlug}`}
+                            className="px-3 py-1.5 rounded-lg bg-[#4165AF] hover:bg-[#355393] text-white font-bold text-[11px] transition text-center shadow-xs"
+                          >
+                            Explore Plan →
+                          </Link>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+
+                      {/* Real Estate & Loan EMI Quick Links */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                         <Link
-                          href={`/plans/${recSlug}`}
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-200 border border-slate-300 dark:border-zinc-600 font-bold text-[11px] transition text-center shadow-2xs"
+                          href="/bangalore/properties?category=plot"
+                          className="p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-900/40 text-[#4165AF] dark:text-blue-300 font-bold hover:bg-blue-100/70 transition flex items-center justify-between gap-2"
                         >
-                          Specs &amp; Bylaws →
+                          <span className="flex items-center gap-1.5 text-[11px]">
+                            <i className="fas fa-map-marker-alt text-xs"></i>
+                            <span>Find Bangalore Plots</span>
+                          </span>
+                          <i className="fas fa-arrow-right text-[10px]"></i>
                         </Link>
+
                         <Link
-                          href="/plans"
-                          className="px-3 py-1.5 rounded-lg bg-[#0f2042] hover:bg-[#1a3360] text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white font-bold text-[11px] transition text-center shadow-xs"
+                          href={`/?calc=india-emi&amount=${Math.round(finalTotalCost * 0.8)}#tools`}
+                          className="p-2.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40 text-emerald-700 dark:text-emerald-300 font-bold hover:bg-emerald-100/70 transition flex items-center justify-between gap-2"
                         >
-                          View Blueprints
+                          <span className="flex items-center gap-1.5 text-[11px]">
+                            <i className="fas fa-university text-xs"></i>
+                            <span>Construction Loan EMI</span>
+                          </span>
+                          <i className="fas fa-arrow-right text-[10px]"></i>
                         </Link>
                       </div>
                     </div>

@@ -11,6 +11,7 @@ import ViewNumberModal from "@/components/real-estate/ViewNumberModal";
 import CrossSellBanner from "@/components/real-estate/CrossSellBanner";
 import AdminModerationBar from "@/components/real-estate/AdminModerationBar";
 import ReportListingModal from "@/components/real-estate/ReportListingModal";
+import PropertyIntegrationsWidget from "@/components/real-estate/PropertyIntegrationsWidget";
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -346,11 +347,10 @@ export default function PropertyDetailPage() {
           </p>
         </div>
 
-        {/* Contextual Cross-Sell Banners for House Plans & Construction */}
-        <CrossSellBanner
-          category={property.category}
-          localityName={property.locality_name}
-        />
+        {/* Real Estate Deep Integrations: Blueprints, Construction BOM & EMI */}
+        <div className="mb-8">
+          <PropertyIntegrationsWidget property={property} />
+        </div>
 
         {/* RERA Intermediary Safe Harbor Disclaimer */}
         <div className="mt-8 p-5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-500 leading-relaxed">

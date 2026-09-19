@@ -343,6 +343,32 @@ export default async function HousePlanSeoPage({ params }: Props) {
           </div>
         </section>
 
+        {/* Real Estate Cross-Flow: Find Plots in Bangalore for this House Plan */}
+        <section className="bg-gradient-to-r from-blue-50/70 via-white to-amber-50/40 dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-900 rounded-3xl p-6 sm:p-8 border border-blue-200/80 dark:border-zinc-800 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+          <div className="space-y-1.5 max-w-xl">
+            <span className="text-[11px] font-bold uppercase tracking-wider bg-blue-100/70 dark:bg-blue-950/40 text-[#4165AF] dark:text-blue-300 border border-[#4165AF]/20 px-3 py-0.5 rounded-full inline-flex items-center gap-1.5">
+              <i className="fas fa-map-marker-alt text-[10px]"></i>
+              <span>Available Bangalore Plots</span>
+            </span>
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-zinc-100">
+              Need a {data.dimensions} Plot to Build this Plan?
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 leading-relaxed">
+              Explore verified A Khata &amp; BDA/BMRDA sanctioned plots (around {data.plotAreaSqft} sq ft) for sale directly from owners and registered agents in Bangalore.
+            </p>
+          </div>
+
+          <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
+            <Link
+              href="/bangalore/properties?category=plot"
+              className="px-5 py-3 rounded-xl bg-[#4165AF] hover:bg-[#355393] text-white font-extrabold text-xs shadow-xs transition no-underline flex items-center justify-center gap-2"
+            >
+              <i className="fas fa-search-location"></i>
+              <span>View Matching Plots in Bangalore</span>
+            </Link>
+          </div>
+        </section>
+
         {/* Room by Room Architectural Dimensions */}
         <section className="bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-zinc-800 shadow-sm space-y-6">
           <div>
