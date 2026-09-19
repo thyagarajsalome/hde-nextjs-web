@@ -428,7 +428,7 @@ const UAE_QUICK_TOOLS: QuickTool[] = [
 ];
 
 export default function Dashboard() {
-  const { user, hasPaid, role, credits, planTier, loading } = useUser();
+  const { user, hasPaid, role, credits, planTier, loading, whatsappNumber, updateWhatsAppNumber } = useUser();
   const { region, setRegion } = useRegion();
   const { showToast } = useToast();
   const router = useRouter();
@@ -440,6 +440,9 @@ export default function Dashboard() {
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [waInput, setWaInput] = useState("");
+  const [savingWa, setSavingWa] = useState(false);
+  const [showWaPrompt, setShowWaPrompt] = useState(true);
 
   const isIndiaMode = region === "IN" || !region;
 
@@ -605,17 +608,73 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-slate-50/60 dark:bg-zinc-950 py-8">
       <div className="container mx-auto px-4 max-w-7xl space-y-8 animate-fade-in">
+        {/* WhatsApp Connect Banner (for users who have not yet added WhatsApp) */}
+        {!whatsappNumber && showWaPrompt && (
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xl shadow-md">
+                <i className="fab fa-whatsapp"></i>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100">
+                  Receive Project Estimates on WhatsApp
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-zinc-400 mt-0.5">
+                  Connect your WhatsApp number to receive PDF calculation summaries, BOQs, and floor plan updates directly.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:self-center">
+              <input
+                type="tel"
+                placeholder={region === 'AE' ? '+971 50 123 4567' : region === 'US' ? '+1 (555) 123-4567' : '+91 98765 43210'}
+                value={waInput}
+                onChange={(e) => setWaInput(e.target.value)}
+                className="px-3 py-1.5 text-xs rounded-lg border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 w-44 sm:w-52"
+              />
+              <button
+                onClick={async () => {
+                  if (!waInput.trim()) return;
+                  setSavingWa(true);
+                  const ok = await updateWhatsAppNumber(waInput);
+                  setSavingWa(false);
+                  if (ok) {
+                    showToast("WhatsApp number connected successfully!", "success");
+                  }
+                }}
+                disabled={savingWa || !waInput.trim()}
+                className="px-3.5 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer"
+              >
+                {savingWa ? "Saving..." : "Connect"}
+              </button>
+              <button
+                onClick={() => setShowWaPrompt(false)}
+                className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 text-xs"
+                title="Dismiss"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Top Header & Context Bar */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6 sm:p-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-zinc-800">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-0.5 rounded-full border border-emerald-200/60">
                   {isIndiaMode ? "🇮🇳 India Builder Workspace" : `${region} Workspace`}
                 </span>
                 <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
                   Tier: {planTier.toUpperCase()}
                 </span>
+                {whatsappNumber && (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+                    <i className="fab fa-whatsapp text-emerald-500"></i>
+                    <span>{whatsappNumber}</span>
+                  </span>
+                )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-zinc-100 tracking-tight">
                 Project Dashboard &amp; Estimator Hub

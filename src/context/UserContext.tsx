@@ -66,7 +66,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('has_paid, plan_tier, role, credits') // Added credits to selection
+          .select('has_paid, plan_tier, role, credits, whatsapp_number')
           .eq('id', userId)
           .maybeSingle(); 
         
@@ -78,6 +78,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setHasPaid(isPaid);
         setPlanTier(resolvedTier);
         setRole(data?.role || 'user');
+        if (data?.whatsapp_number) {
+          setWhatsappNumber(data.whatsapp_number);
+        }
 
         // Credit allocation:
         // - If credits exist in DB, respect the exact balance.
