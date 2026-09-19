@@ -120,50 +120,67 @@ export default function DubaiPropertyPage() {
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      {/* Hero Section */}
-      <section className="relative text-white py-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/hero/hero-uae.webp" 
-            alt="Dubai Luxury Property Investment & Buying Cost Advisory" 
-            fill 
-            className="object-cover"
-            priority
-            quality={85}
-          />
-          <div className="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/80"></div>
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-md">Find the Dubai Property That Fits Your Goals</h1>
-          <p className="text-lg md:text-xl text-white mb-10 drop-shadow">
+      {/* Hero Visual Banner (Completely Unobstructed Panoramic View) */}
+      <section className="relative w-full h-[32vh] sm:h-[45vh] md:h-[55vh] lg:h-[65vh] bg-slate-950 overflow-hidden">
+        <Image 
+          src="/images/hero/hero-uae.webp" 
+          alt="Dubai Luxury Property Investment & Buying Cost Advisory" 
+          fill 
+          className="object-cover object-center"
+          priority
+          quality={90}
+          sizes="100vw"
+        />
+      </section>
+
+      {/* Hero Content Section - Positioned below banner so view is 100% unobstructed */}
+      <section className="bg-white dark:bg-zinc-950 py-10 px-4 sm:px-6 lg:px-8 border-b border-gray-100 dark:border-zinc-800 shadow-sm">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#4165AF]/10 text-[#4165AF] dark:text-[#688ed8] font-bold text-xs uppercase tracking-wider mb-4">
+            <i className="fas fa-building"></i>
+            <span>Dubai Real Estate &amp; Advisory</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-zinc-100 mb-4 tracking-tight">
+            Find the Dubai Property That Fits Your Goals
+          </h1>
+          <p className="text-base sm:text-lg text-slate-600 dark:text-zinc-400 mb-8 max-w-2xl mx-auto leading-relaxed">
             Compare areas, understand costs, and make informed decisions — whether you're investing from India, UK, or anywhere in the world.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3.5 mb-8">
             <a 
               href="#tools" 
-              className="w-full sm:w-auto bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black py-3.5 px-6 rounded-xl transition-all inline-flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="w-full sm:w-auto bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black py-3 px-6 rounded-xl transition-all inline-flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
               <i className="fas fa-calculator text-[#0f2042]"></i>
               <span>Open Buying Calculator</span>
             </a>
             <a 
               href="#areas" 
-              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-bold py-3.5 px-6 rounded-xl transition-all inline-block text-center hover:-translate-y-0.5 shadow-sm"
+              className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 border border-slate-300 dark:border-zinc-700 font-bold py-3 px-6 rounded-xl transition-all inline-block text-center hover:-translate-y-0.5 shadow-sm"
             >
               Explore Dubai Areas
             </a>
             <a 
               href="#tools" 
-              className="w-full sm:w-auto bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold py-3.5 px-6 rounded-xl border border-[#c5a059]/60 transition-all inline-flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="w-full sm:w-auto bg-[#4165AF] hover:bg-[#345391] text-white font-bold py-3 px-6 rounded-xl transition-all inline-flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
               <i className="fas fa-user-shield text-[#c5a059]"></i>
               <span>Connect with Verified Expert</span>
             </a>
           </div>
-          <div className="flex flex-wrap justify-center gap-6 text-sm font-medium">
-            <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">15+ Areas Covered</span>
-            <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">Free Cost Calculator</span>
-            <span className="flex items-center gap-2 bg-white/10 py-2 px-4 rounded-full">Verified RERA Specialists</span>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium text-slate-600 dark:text-zinc-400">
+            <span className="flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 py-1.5 px-3.5 rounded-full">
+              <i className="fas fa-map-marker-alt text-[#4165AF]"></i>
+              15+ Areas Covered
+            </span>
+            <span className="flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 py-1.5 px-3.5 rounded-full">
+              <i className="fas fa-percent text-[#4165AF]"></i>
+              Free Cost Calculator
+            </span>
+            <span className="flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 py-1.5 px-3.5 rounded-full">
+              <i className="fas fa-certificate text-[#4165AF]"></i>
+              Verified RERA Specialists
+            </span>
           </div>
         </div>
       </section>

@@ -7,21 +7,10 @@ import { useRegion } from "../../context/RegionContext";
 
 export default function Hero({ initialBanners }: { initialBanners: any[] }) {
   const [banners, setBanners] = useState<HeroBanner[]>(initialBanners);
-  const [isMobile, setIsMobile] = useState(false);
   const { region, setRegion, isReady } = useRegion();
 
   // Parallax effect for the container and content
   useGSAPHeroParallax("#home", ".hero-content");
-
-  useEffect(() => {
-    // Detect mobile screens dynamically for optimized asset loading
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     const loadBanners = async () => {
@@ -39,19 +28,6 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
     };
     loadBanners();
   }, []);
-
-  const scrollToTools = () => {
-    const toolsSection = document.getElementById("tools");
-    if (toolsSection) toolsSection.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const scrollToAreas = (e: React.MouseEvent) => {
-    const areasSection = document.getElementById("areas");
-    if (areasSection) {
-      e.preventDefault();
-      areasSection.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   if (!isReady || banners.length === 0) {
     return null;
@@ -144,41 +120,8 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
             quality={85}
             className="object-cover" 
           />
-          {/* Dark overlay only needed for AE region with buttons */}
-          {region === 'AE' && (
-            <div className={`absolute inset-0 ${isMobile ? "bg-black/35" : "bg-black/20"}`}></div>
-          )}
         </div>
       </div>
-
-      {/* Button Content - Only for UAE region if applicable */}
-      {region === 'AE' && (
-        <div className="hero-content relative z-10 container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            onClick={scrollToTools}
-            className="inline-flex items-center justify-center gap-2 md:gap-3 bg-primary hover:bg-primary-hover text-white font-bold 
-                       py-3 px-8 text-base w-full sm:w-auto
-                       md:py-4 md:px-10 md:text-lg 
-                       rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-          >
-            <span>🇦🇪</span>
-            Calculate Buying Cost
-            <i className="fas fa-arrow-down text-sm"></i>
-          </button>
-          
-          <a
-            href="/dubai-property#areas"
-            onClick={scrollToAreas}
-            className="inline-flex items-center justify-center gap-2 md:gap-3 bg-white/20 hover:bg-white/90 text-white hover:text-secondary border-2 border-white font-bold 
-                       py-2.5 px-8 text-base w-full sm:w-auto
-                       md:py-3.5 md:px-10 md:text-lg no-underline
-                       rounded-full shadow-2xl transform hover:-translate-y-1 transition-all duration-300 backdrop-blur-md cursor-pointer"
-          >
-            Explore Dubai Areas
-            <i className="fas fa-compass text-sm"></i>
-          </a>
-        </div>
-      )}
     </section>
   );
 }
