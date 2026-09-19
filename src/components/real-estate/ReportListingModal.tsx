@@ -11,8 +11,9 @@ interface ReportListingModalProps {
 }
 
 const REPORT_REASONS = [
-  "Inappropriate, offensive, or adult photos",
+  "Fake or invalid K-RERA registration number",
   "Scam, fraudulent broker, or fake listing",
+  "Inappropriate, offensive, or adult photos",
   "Property is already sold or rented out",
   "Incorrect price or misleading details",
   "Unauthorized use / copyright of my photos",

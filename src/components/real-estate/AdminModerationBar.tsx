@@ -22,6 +22,7 @@ export default function AdminModerationBar({
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(property.status);
+  const [isReraVerified, setIsReraVerified] = useState(Boolean(property.is_rera_verified));
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -40,6 +41,21 @@ export default function AdminModerationBar({
       setMessage(`Status updated to: ${status.toUpperCase()}`);
     } catch (err: any) {
       alert("Failed to update status: " + (err.message || "Unknown error"));
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleToggleRera = async () => {
+    try {
+      setIsProcessing(true);
+      setMessage(null);
+      const nextVal = !isReraVerified;
+      await RealEstateService.updateProperty(property.id, { is_rera_verified: nextVal });
+      setIsReraVerified(nextVal);
+      setMessage(nextVal ? "RERA badge VERIFIED!" : "RERA badge revoked.");
+    } catch (err: any) {
+      alert("Failed to update RERA verification: " + (err.message || "Unknown error"));
     } finally {
       setIsProcessing(false);
     }
@@ -103,6 +119,36 @@ export default function AdminModerationBar({
               <i className="fas fa-check"></i>
               Approve / Make Active
             </button>
+          )}
+
+          {/* K-RERA Verification Actions for Admin */}
+          {property.rera_id && (
+            <div className="flex items-center gap-1.5 border-l border-slate-700 pl-2">
+              <a
+                href="https://rera.karnataka.gov.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-slate-800 hover:bg-slate-700 text-amber-300 font-medium px-2.5 py-1 rounded text-xs transition flex items-center gap-1 border border-amber-500/30"
+                title={`Search ${property.rera_id} on official Karnataka RERA portal`}
+              >
+                <i className="fas fa-external-link-alt text-[10px]"></i>
+                <span>Gov Portal ({property.rera_id.slice(0, 12)}...)</span>
+              </a>
+
+              <button
+                onClick={handleToggleRera}
+                disabled={isProcessing}
+                className={`font-medium px-2.5 py-1 rounded text-xs transition flex items-center gap-1.5 ${
+                  isReraVerified
+                    ? "bg-emerald-700 hover:bg-emerald-800 text-white"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
+                title={isReraVerified ? "Click to revoke verified badge" : "Click to award green verified checkmark"}
+              >
+                <i className={`fas ${isReraVerified ? "fa-check-double text-emerald-200" : "fa-certificate"}`}></i>
+                <span>{isReraVerified ? "RERA Verified" : "Verify RERA"}</span>
+              </button>
+            </div>
           )}
 
           {!confirmDelete ? (

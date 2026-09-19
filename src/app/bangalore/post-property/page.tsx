@@ -128,10 +128,28 @@ export default function PostPropertyPage() {
     ) {
       newErrors.contactPhone = "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9";
     }
-    if ((posterType === "agent" || posterType === "builder") && !reraId.trim()) {
-      newErrors.reraId = posterType === "agent"
-        ? "Karnataka RERA registration number is required for agents & brokers"
-        : "Karnataka RERA project registration number is required for builders & developers";
+    if (posterType === "agent" || posterType === "builder") {
+      const cleanRera = reraId.trim().toUpperCase();
+      if (!cleanRera) {
+        newErrors.reraId =
+          posterType === "agent"
+            ? "Karnataka RERA registration number is required for agents & brokers"
+            : "Karnataka RERA project registration number is required for builders & developers";
+      } else if (
+        cleanRera.length < 10 ||
+        !cleanRera.includes("RERA") ||
+        !(
+          cleanRera.startsWith("PRM") ||
+          cleanRera.startsWith("AG") ||
+          cleanRera.startsWith("ACK") ||
+          cleanRera.startsWith("KA") ||
+          cleanRera.includes("/KA/") ||
+          cleanRera.includes("KA/RERA")
+        )
+      ) {
+        newErrors.reraId =
+          "Invalid format. Must follow official Karnataka RERA format (e.g. PRM/KA/RERA/1251/... or AG/KA/RERA/...)";
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -252,9 +270,9 @@ export default function PostPropertyPage() {
         contact_name: contactName,
         contact_phone: contactPhone,
         contact_whatsapp: contactWhatsapp || contactPhone,
-        rera_id: reraId || undefined,
-        agency_name: agencyName || undefined,
-        is_rera_verified: Boolean(reraId),
+        rera_id: reraId ? reraId.trim().toUpperCase() : undefined,
+        agency_name: agencyName ? agencyName.trim() : undefined,
+        is_rera_verified: false, // Must be verified against rera.karnataka.gov.in by Admin
         status: "active",
       });
 
@@ -872,6 +890,9 @@ export default function PostPropertyPage() {
                       {errors.reraId && (
                         <span className="text-[11px] text-red-500 block mt-1">{errors.reraId}</span>
                       )}
+                      <p className="text-[10px] text-gray-500 mt-1">
+                        Format: <code className="text-gray-700">PRM/KA/RERA/...</code> or <code className="text-gray-700">AG/KA/RERA/...</code>. Verified against <a href="https://rera.karnataka.gov.in" target="_blank" rel="noopener noreferrer" className="text-primary underline">rera.karnataka.gov.in</a> before receiving the Verified badge.
+                      </p>
                     </div>
                     <div>
                       <label className="text-[11px] font-bold text-gray-700 block mb-1">

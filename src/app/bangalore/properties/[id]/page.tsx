@@ -216,19 +216,50 @@ export default function PropertyDetailPage() {
                       <i className="fas fa-user-check text-[11px]"></i>
                       <span>Individual Owner</span>
                     </span>
+                  ) : property.is_rera_verified ? (
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold flex items-center gap-1 border border-emerald-200">
+                      <i className="fas fa-certificate text-emerald-600 text-[11px]"></i>
+                      <span>
+                        {property.poster_type === "builder" ? "K-RERA Verified Developer" : "K-RERA Verified Broker"}
+                      </span>
+                    </span>
                   ) : (
-                    <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-medium flex items-center gap-1">
-                      <i className="fas fa-certificate text-[11px]"></i>
-                      <span>K-RERA Registered Broker</span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 text-xs font-medium flex items-center gap-1 border border-amber-200">
+                      <i className="fas fa-clock text-amber-600 text-[11px]"></i>
+                      <span>
+                        {property.poster_type === "builder" ? "Developer (RERA Declared)" : "Broker (RERA Declared)"}
+                      </span>
                     </span>
                   )}
                 </div>
 
                 {property.rera_id && (
-                  <div className="text-[11px] text-gray-500 bg-gray-50 p-2.5 rounded-lg border border-gray-100 mt-3">
-                    <span className="font-semibold block text-gray-700">RERA Registration:</span>
-                    <code className="text-primary font-medium">{property.rera_id}</code>
-                    {property.agency_name && <span className="block mt-0.5">{property.agency_name}</span>}
+                  <div className="text-[11px] text-gray-600 bg-gray-50 p-2.5 rounded-lg border border-gray-200 mt-3 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-gray-700">RERA Registration:</span>
+                      {property.is_rera_verified ? (
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded flex items-center gap-1">
+                          <i className="fas fa-check-circle"></i> Verified
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-amber-700 bg-amber-100/80 px-1.5 py-0.5 rounded">
+                          Self-Declared
+                        </span>
+                      )}
+                    </div>
+                    <code className="text-primary font-mono font-medium block break-all">{property.rera_id}</code>
+                    {property.agency_name && <span className="block text-gray-500">{property.agency_name}</span>}
+                    <div className="pt-1.5 border-t border-gray-200 flex items-center justify-between">
+                      <span className="text-[10px] text-gray-400">Government Portal:</span>
+                      <a
+                        href="https://rera.karnataka.gov.in/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 hover:underline"
+                      >
+                        Verify on K-RERA <i className="fas fa-external-link-alt text-[9px]"></i>
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>
