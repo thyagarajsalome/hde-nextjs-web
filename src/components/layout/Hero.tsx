@@ -64,7 +64,7 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 opacity-40 scale-105">
             <Image 
-              src={banners[0]?.image_url || "/images/hero/hero-india.jpg"} 
+              src={banners[0]?.image_url || "/images/hero/hero-india.webp"} 
               alt="Hero" 
               fill 
               priority 
@@ -122,10 +122,10 @@ export default function Hero({ initialBanners }: { initialBanners: any[] }) {
   // STANDARD HERO (If region is selected)
   const heroImageUrl =
     region === "AE"
-      ? "/images/hero/hero-uae.jpg"
+      ? "/images/hero/hero-uae.webp"
       : region === "US"
-      ? "/images/hero/hero-usa.jpg"
-      : "/images/hero/hero-india.jpg";
+      ? "/images/hero/hero-usa.webp"
+      : "/images/hero/hero-india.webp";
 
   return (
     <section 
