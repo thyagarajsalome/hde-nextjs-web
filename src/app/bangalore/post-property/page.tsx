@@ -27,7 +27,7 @@ import { openRazorpayCheckout } from "@/lib/razorpayClient";
 
 export default function PostPropertyPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useUser();
+  const { user, planTier, hasPaid, loading: authLoading } = useUser();
 
   // Step state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,6 +149,9 @@ export default function PostPropertyPage() {
     }
 
     // 0. Quota & Commercial Monetization Checks
+    const isStandardOrPro = Boolean(user && (planTier === "standard" || planTier === "pro" || hasPaid));
+    const isPro = Boolean(user && planTier === "pro");
+
     if (!hasPaidSlot) {
       try {
         let existingActiveCount = 0;
@@ -164,13 +167,15 @@ export default function PostPropertyPage() {
           existingActiveCount = count || 0;
         }
 
-        if (posterType === "owner" && existingActiveCount >= 1) {
+        // Owner rule: 1 Free active listing. Standard/Pro tier users get extra listing slots included.
+        if (posterType === "owner" && existingActiveCount >= 1 && !isStandardOrPro) {
           setIsSubmitting(false);
           setLimitModalOpen(true);
           return;
         }
 
-        if (posterType !== "owner") {
+        // Broker rule: Commercial listings require Pro tier or paid pack.
+        if (posterType !== "owner" && !isPro) {
           setIsSubmitting(false);
           setBrokerModalOpen(true);
           return;
@@ -992,10 +997,17 @@ export default function PostPropertyPage() {
               {/* Option B: Paid Extra Slot */}
               <div className="bg-blue-50/60 border border-blue-200 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#4165af]">Option 2: Add Extra Listing Slot</span>
-                  <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">
-                    ₹499
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-[#4165af]">Option 2: Add Extra Listing Slot</span>
+                    <span className="bg-blue-100 text-[#4165af] text-[10px] font-bold px-1.5 py-0.2 rounded">Standard Tier</span>
+                  </div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-sm font-black text-gray-900">₹349</span>
+                    <span className="text-[11px] text-gray-400 line-through">₹499</span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.2 rounded">
+                      Save 30%
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[11px] text-gray-600">
                   Keep both listings active simultaneously for 30 days with direct buyer leads.
@@ -1006,9 +1018,9 @@ export default function PostPropertyPage() {
                     setIsPayingSlot(true);
                     try {
                       await openRazorpayCheckout({
-                        amountInRupees: 499,
-                        itemName: "Owner Extra Listing Slot",
-                        description: "Post 2nd active property listing for 30 days",
+                        amountInRupees: 349,
+                        itemName: "Owner Extra Listing Slot (Standard Tier)",
+                        description: "Post 2nd active property listing for 30 days (₹349 Standard Tier)",
                         prefill: {
                           name: contactName || undefined,
                           contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
@@ -1029,8 +1041,16 @@ export default function PostPropertyPage() {
                   className="w-full py-2.5 px-4 bg-[#4165af] hover:bg-[#345290] text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-60"
                 >
                   <i className="fas fa-bolt text-amber-300 text-xs"></i>
-                  <span>{isPayingSlot ? "Opening Razorpay..." : "Pay ₹499 for Extra Slot"}</span>
+                  <span>{isPayingSlot ? "Opening Razorpay..." : "Pay ₹349 for Extra Slot"}</span>
                 </button>
+                <div className="text-center pt-1">
+                  <Link
+                    href="/upgrade"
+                    className="text-[11px] text-[#4165af] hover:underline font-semibold"
+                  >
+                    Or upgrade your account to Standard / Pro &rarr;
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -1068,8 +1088,11 @@ export default function PostPropertyPage() {
               {/* Single Listing */}
               <div className="bg-slate-50 border border-gray-200 rounded-xl p-4 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-bold text-gray-800">Single Broker Listing</div>
-                  <div className="text-[11px] text-gray-500">1 listing &bull; 30 days validity &bull; RERA badge</div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="text-xs font-bold text-gray-800">Single Broker Listing</div>
+                    <span className="bg-blue-100 text-[#4165af] text-[9px] font-bold px-1.5 py-0.2 rounded">Standard Tier</span>
+                  </div>
+                  <div className="text-[11px] text-gray-500">1 listing &bull; 30 days &bull; RERA badge</div>
                 </div>
                 <button
                   type="button"
@@ -1077,9 +1100,9 @@ export default function PostPropertyPage() {
                     setIsPayingSlot(true);
                     try {
                       await openRazorpayCheckout({
-                        amountInRupees: 499,
-                        itemName: "Single Broker Listing",
-                        description: "1 commercial listing slot with RERA verification",
+                        amountInRupees: 349,
+                        itemName: "Single Broker Listing (Standard Tier)",
+                        description: "1 commercial listing slot with RERA verification (₹349)",
                         prefill: {
                           name: contactName || agencyName || undefined,
                           contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
@@ -1099,7 +1122,7 @@ export default function PostPropertyPage() {
                   disabled={isPayingSlot}
                   className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition cursor-pointer"
                 >
-                  Pay ₹499
+                  Pay ₹349
                 </button>
               </div>
 
@@ -1107,10 +1130,14 @@ export default function PostPropertyPage() {
               <div className="bg-blue-50/70 border-2 border-[#4165af] rounded-xl p-4 flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-gray-900">5-Listing Pro Broker Pack</span>
-                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.2 rounded">Save 40%</span>
+                    <span className="text-xs font-bold text-gray-900">5-Listing Pro Pack</span>
+                    <span className="bg-blue-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded">Pro Tier</span>
+                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.2 rounded">Save 30%</span>
                   </div>
-                  <div className="text-[11px] text-gray-600">5 listings &bull; 60 days validity &bull; Direct WhatsApp leads</div>
+                  <div className="text-[11px] text-gray-600">5 listings &bull; 60 days &bull; WhatsApp leads</div>
+                  <div className="text-xs font-bold text-gray-900 mt-0.5">
+                    ₹999 <span className="text-[10px] text-gray-400 font-normal line-through">₹1,427</span>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -1118,9 +1145,9 @@ export default function PostPropertyPage() {
                     setIsPayingSlot(true);
                     try {
                       await openRazorpayCheckout({
-                        amountInRupees: 1499,
-                        itemName: "5-Listing Broker Pack",
-                        description: "5 commercial listings with priority support",
+                        amountInRupees: 999,
+                        itemName: "5-Listing Broker Pack (Pro Tier)",
+                        description: "5 commercial listings with priority support (₹999 Pro Tier)",
                         prefill: {
                           name: contactName || agencyName || undefined,
                           contact: contactPhone.replace(/[^0-9]/g, "") || undefined,
@@ -1140,15 +1167,24 @@ export default function PostPropertyPage() {
                   disabled={isPayingSlot}
                   className="px-4 py-2 bg-[#4165af] hover:bg-[#345290] text-white rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
                 >
-                  Pay ₹1,499
+                  Pay ₹999
                 </button>
               </div>
+            </div>
+
+            <div className="pt-1">
+              <Link
+                href="/upgrade"
+                className="text-xs text-[#4165af] hover:underline font-semibold block"
+              >
+                Need 100 project credits &amp; civil contractor tools? View full Pro Plan &rarr;
+              </Link>
             </div>
 
             <button
               type="button"
               onClick={() => setBrokerModalOpen(false)}
-              className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer pt-2"
+              className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer pt-1"
             >
               Cancel &amp; Review Listing
             </button>

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RealEstateProperty, BuyerTimeline } from "@/types/realEstate";
 import { openRazorpayCheckout } from "@/lib/razorpayClient";
+import { useUser } from "@/context/UserContext";
 
 const MAX_FREE_UNLOCKS = 3;
 
@@ -19,6 +20,7 @@ export default function ViewNumberModal({
   isOpen,
   onClose,
 }: ViewNumberModalProps) {
+  const { user, planTier, hasPaid } = useUser();
   const [isDealer, setIsDealer] = useState<boolean>(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,15 +63,18 @@ export default function ViewNumberModal({
 
   const isAlreadyUnlocked = unlockedProps.includes(property.id);
   const freeUnlocksUsed = unlockedProps.length;
-  const isFreeQuotaExceeded = !hasBuyerPass && !isAlreadyUnlocked && freeUnlocksUsed >= MAX_FREE_UNLOCKS;
+  // Subscribers on Basic, Standard, or Pro tier automatically bypass the paywall
+  const isSubscriber = Boolean(user && (planTier !== "free" || hasPaid));
+  const effectiveHasBuyerPass = hasBuyerPass || isSubscriber;
+  const isFreeQuotaExceeded = !effectiveHasBuyerPass && !isAlreadyUnlocked && freeUnlocksUsed >= MAX_FREE_UNLOCKS;
 
   const handleBuyPass = async () => {
     setIsPaying(true);
     try {
       await openRazorpayCheckout({
-        amountInRupees: 299,
-        itemName: "HDE Direct Buyer Pass",
-        description: "30 Days Unlimited Direct Owner Contacts",
+        amountInRupees: 199,
+        itemName: "HDE Direct Buyer Pass (Basic)",
+        description: "30 Days Unlimited Direct Owner Contacts (₹199 Basic Tier)",
         prefill: {
           name: name || undefined,
           contact: phone || undefined,
@@ -271,9 +276,16 @@ export default function ViewNumberModal({
             <div className="bg-slate-50 border-2 border-[#4165af] rounded-2xl p-6 max-w-md mx-auto text-left shadow-xs">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#4165af]">Direct Buyer Pass</span>
-                  <div className="text-2xl font-black text-gray-900 mt-0.5">
-                    ₹299 <span className="text-xs font-normal text-gray-500">/ 30 Days</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4165af]">Direct Buyer Pass</span>
+                    <span className="bg-blue-100 text-[#4165af] text-[10px] font-bold px-1.5 py-0.5 rounded">Basic Tier</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <div className="text-2xl font-black text-gray-900">
+                      ₹199 <span className="text-xs font-normal text-gray-500">/ 30 Days</span>
+                    </div>
+                    <span className="text-xs text-gray-400 line-through">₹249</span>
+                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.2 rounded">Save 20%</span>
                   </div>
                 </div>
                 <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md">
@@ -304,19 +316,28 @@ export default function ViewNumberModal({
                 className="w-full py-3.5 px-6 bg-[#4165af] hover:bg-[#345290] text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 <i className="fas fa-bolt text-amber-300"></i>
-                <span>{isPaying ? "Opening Payment Gateway..." : "Unlock Unlimited Access for ₹299"}</span>
+                <span>{isPaying ? "Opening Payment Gateway..." : "Unlock Unlimited Access for ₹199"}</span>
               </button>
               <p className="text-[11px] text-gray-400 flex items-center justify-center gap-1.5">
                 <i className="fas fa-shield-alt text-emerald-600"></i>
                 <span>Secured by Razorpay &bull; UPI, Cards, NetBanking</span>
               </p>
+              <div className="pt-1">
+                <Link
+                  href="/upgrade"
+                  className="text-xs text-[#4165af] hover:underline font-semibold flex items-center justify-center gap-1"
+                >
+                  <span>Need full construction &amp; BOQ project tools? View all plans</span>
+                  <i className="fas fa-arrow-right text-[10px]"></i>
+                </Link>
+              </div>
             </div>
           </div>
         ) : (
           /* 3. Form State (Under Free Quota or Has Pass) */
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 bg-white space-y-6">
             {/* Free Quota Notice Badge */}
-            {!hasBuyerPass && (
+            {!effectiveHasBuyerPass ? (
               <div className="bg-blue-50/80 border border-blue-100 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-[#4165af]">
                 <div className="flex items-center gap-2 font-medium">
                   <i className="fas fa-unlock-alt"></i>
@@ -324,6 +345,16 @@ export default function ViewNumberModal({
                 </div>
                 <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                   Zero Brokerage
+                </span>
+              </div>
+            ) : (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-emerald-800">
+                <div className="flex items-center gap-2 font-semibold">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span>{isSubscriber ? `Verified ${planTier.toUpperCase()} Subscriber Access` : "Direct Buyer Pass Active"}</span>
+                </div>
+                <span className="text-[10px] font-bold bg-emerald-200/70 text-emerald-900 px-2 py-0.5 rounded">
+                  Unlimited Contacts
                 </span>
               </div>
             )}

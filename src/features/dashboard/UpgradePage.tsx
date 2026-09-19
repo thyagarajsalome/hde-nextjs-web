@@ -40,6 +40,7 @@ const plans = {
       "Itemized PDF Quotes (Bank & Contractor Ready)",
       "Full House Plan & CAD Gallery Access",
       "Material & Room Cost Breakdown Spreadsheets",
+      "Direct Buyer Pass: Unlimited Owner Contacts (30 Days)",
       "Credits never expire"
     ],
     color: "blue",
@@ -60,6 +61,7 @@ const plans = {
       "Detailed Multi-Trade PDF Reports (Plumbing, Electrical, Flooring)",
       "Doors & Windows Schedule PDF Exports",
       "Side-by-side Project Scenario Tracking",
+      "Real Estate Extra Listing Slots Included",
       "Priority Customer Support",
       "Everything in Basic"
     ],
@@ -81,6 +83,7 @@ const plans = {
       "Complete 7-Phase Material BOQ (Bill of Quantities)",
       "Exact Cement, Steel & Masonry Brand Schedules",
       "Contractor-grade Client PDF & Excel Exports",
+      "Commercial Agent / Builder Listing Pack Included",
       "10 Daily Save Limit (Anti-Bot Protection)",
       "Priority VIP Support"
     ],
