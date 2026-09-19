@@ -108,8 +108,9 @@ export class RealEstateService {
       typeof val === "string" &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
 
-    const payload: any = {
+    const cleanPayload: Record<string, any> = {
       ...property,
+      user_id: isUuid(property.user_id) ? property.user_id : null,
       locality_id: isUuid(property.locality_id) ? property.locality_id : null,
       status: "active",
       views_count: 0,
@@ -117,15 +118,22 @@ export class RealEstateService {
       expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
+    // Remove any undefined keys so PostgREST doesn't reject with 400
+    Object.keys(cleanPayload).forEach((key) => {
+      if (cleanPayload[key] === undefined) {
+        delete cleanPayload[key];
+      }
+    });
+
     const { data, error } = await supabase
       .from("real_estate_properties")
-      .insert(payload)
+      .insert(cleanPayload)
       .select()
       .single();
 
     if (error) {
       console.error("Failed to insert property in Supabase:", error);
-      throw error;
+      throw new Error(error.message || "Failed to save property to database");
     }
 
     return data;

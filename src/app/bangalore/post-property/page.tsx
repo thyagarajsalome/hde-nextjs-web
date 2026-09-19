@@ -141,6 +141,13 @@ export default function PostPropertyPage() {
     setErrors({});
     setIsSubmitting(true);
 
+    if (!user) {
+      setIsSubmitting(false);
+      alert("Sign-in required: Please sign in or create an account to publish your property listing.");
+      router.push("/signin");
+      return;
+    }
+
     // 0. Quota & Commercial Monetization Checks
     if (!hasPaidSlot) {
       try {
@@ -250,7 +257,10 @@ export default function PostPropertyPage() {
       }, 2000);
     } catch (err: any) {
       console.error("Submission failed:", err);
-      alert(err?.message || "Could not publish listing. Please try again.");
+      const msg =
+        err?.message ||
+        (typeof err === "string" ? err : "Could not publish listing. Please check your details and try again.");
+      alert(`Could not publish listing: ${msg}`);
     } finally {
       setIsSubmitting(false);
     }
