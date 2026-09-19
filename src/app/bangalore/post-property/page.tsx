@@ -27,7 +27,7 @@ import { openRazorpayCheckout } from "@/lib/razorpayClient";
 
 export default function PostPropertyPage() {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, loading: authLoading } = useUser();
 
   // Step state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -255,6 +255,74 @@ export default function PostPropertyPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] py-24 text-center">
+        <i className="fas fa-circle-notch fa-spin text-4xl text-[#4165af] mb-3"></i>
+        <p className="text-sm font-semibold text-gray-500">Checking account status...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] py-16 px-4">
+        <div className="max-w-md mx-auto bg-white rounded-2xl p-8 border border-gray-200/80 shadow-md text-center space-y-4">
+          <div className="w-16 h-16 bg-blue-50 text-[#4165af] rounded-2xl flex items-center justify-center mx-auto text-3xl">
+            <i className="fas fa-user-shield"></i>
+          </div>
+          <div>
+            <span className="bg-blue-100 text-[#4165af] text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+              Verified Owner Access
+            </span>
+            <h2 className="text-2xl font-black text-gray-900 mt-2">
+              Sign In to Post Your Property
+            </h2>
+            <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
+              To keep our marketplace 100% spam-free, verify seller identity, and let you manage your listings and direct buyer inquiries, please sign in or create a free account.
+            </p>
+          </div>
+
+          <div className="bg-slate-50 border border-gray-100 rounded-xl p-4 text-left text-xs space-y-2 text-gray-700">
+            <div className="flex items-center gap-2 font-bold text-gray-900">
+              <i className="fas fa-check-circle text-emerald-600"></i>
+              <span>100% Free Listing for Individual Owners</span>
+            </div>
+            <div className="flex items-center gap-2 font-bold text-gray-900">
+              <i className="fas fa-check-circle text-emerald-600"></i>
+              <span>Manage &amp; Close Deals in "My Properties"</span>
+            </div>
+            <div className="flex items-center gap-2 font-bold text-gray-900">
+              <i className="fas fa-check-circle text-emerald-600"></i>
+              <span>Receive Direct Verified Buyer Inquiries</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2.5 pt-2">
+            <Link
+              href="/signin"
+              className="w-full py-3.5 bg-[#4165af] hover:bg-[#345290] text-white font-bold text-sm rounded-xl no-underline transition shadow-sm"
+            >
+              Sign In to Your Account
+            </Link>
+            <Link
+              href="/signup"
+              className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl no-underline transition shadow-sm"
+            >
+              Create Free Account
+            </Link>
+            <Link
+              href="/bangalore/properties"
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl no-underline transition"
+            >
+              Browse Marketplace First
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] py-12">
