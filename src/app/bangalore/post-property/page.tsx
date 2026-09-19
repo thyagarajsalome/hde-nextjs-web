@@ -128,8 +128,10 @@ export default function PostPropertyPage() {
     ) {
       newErrors.contactPhone = "Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9";
     }
-    if (posterType === "agent" && !reraId.trim()) {
-      newErrors.reraId = "Karnataka RERA registration number is required for agents";
+    if ((posterType === "agent" || posterType === "builder") && !reraId.trim()) {
+      newErrors.reraId = posterType === "agent"
+        ? "Karnataka RERA registration number is required for agents & brokers"
+        : "Karnataka RERA project registration number is required for builders & developers";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -843,17 +845,22 @@ export default function PostPropertyPage() {
                 </div>
               </div>
 
-              {/* Conditional RERA Fields for Dealers */}
-              {posterType === "agent" && (
+              {/* Conditional RERA Fields for Brokers and Builders */}
+              {(posterType === "agent" || posterType === "builder") && (
                 <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 space-y-3">
                   <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
                     <i className="fas fa-certificate text-primary"></i>
-                    <span>Karnataka RERA Registration (Required for Brokers)</span>
+                    <span>
+                      {posterType === "agent"
+                        ? "Karnataka RERA Registration (Required for Brokers & Dealers)"
+                        : "Karnataka RERA Project Registration (Required for Builders & Developers)"}
+                    </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-[11px] font-bold text-gray-700 block mb-1">
-                        K-RERA Agent Number <span className="text-red-500">*</span>
+                        {posterType === "agent" ? "K-RERA Agent / Broker Number" : "K-RERA Project Number"}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -868,13 +875,17 @@ export default function PostPropertyPage() {
                     </div>
                     <div>
                       <label className="text-[11px] font-bold text-gray-700 block mb-1">
-                        Agency / Firm Name
+                        {posterType === "agent" ? "Agency / Firm Name" : "Developer / Company Name"}
                       </label>
                       <input
                         type="text"
                         value={agencyName}
                         onChange={(e) => setAgencyName(e.target.value)}
-                        placeholder="e.g. Bangalore Prime Realty"
+                        placeholder={
+                          posterType === "agent"
+                            ? "e.g. Bangalore Prime Realty"
+                            : "e.g. Prestige Estates / Sobha Ltd"
+                        }
                         className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-primary"
                       />
                     </div>
