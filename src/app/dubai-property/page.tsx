@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     url: 'https://www.homedesignenglish.com/dubai-property',
     siteName: 'Home Design English',
     type: 'website',
-    images: [{ url: '/images/dubai-skyline.jpg', width: 1200, height: 630, alt: 'Dubai Property Investment Guide' }],
+    images: [{ url: '/images/hero/hero-uae.webp', width: 1200, height: 630, alt: 'Dubai Property Investment Guide' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Dubai Property Advisor | HDE',
     description: 'Free Dubai property buying cost calculator and area guides.',
-    images: ['/images/dubai-skyline.jpg'],
+    images: ['/images/hero/hero-uae.webp'],
   },
 };
 
@@ -124,11 +124,12 @@ export default function DubaiPropertyPage() {
       <section className="relative text-white py-24 px-6 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/images/dubai-skyline.jpg" 
-            alt="Dubai Skyline" 
+            src="/images/hero/hero-uae.webp" 
+            alt="Dubai Luxury Property Investment & Buying Cost Advisory" 
             fill 
             className="object-cover"
             priority
+            quality={85}
           />
           <div className="absolute inset-0 bg-slate-900/60 dark:bg-slate-900/80"></div>
         </div>
