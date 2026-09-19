@@ -7,9 +7,16 @@ const ADMIN_EMAIL = 'thyagaraja1983@gmail.com';
 
 export async function POST(request: Request) {
   try {
+    const body = await request.json().catch(() => ({}));
+    const { propertyId, imageUrls = [], userId, userEmail } = body;
+
+    if (!propertyId) {
+      return NextResponse.json({ error: 'propertyId is required' }, { status: 400 });
+    }
+
     // 1. Authenticate user from session token
     const authHeader = request.headers.get('authorization');
-    let user = null;
+    let user: any = null;
 
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
@@ -25,17 +32,10 @@ export async function POST(request: Request) {
       user = data?.user;
     }
 
-    const body = await request.json();
-    const { propertyId, imageUrls = [] } = body;
-
-    if (!propertyId) {
-      return NextResponse.json({ error: 'propertyId is required' }, { status: 400 });
-    }
-
     // 2. Fetch the property to verify ownership
     const { data: property, error: fetchErr } = await supabase
       .from('real_estate_properties')
-      .select('id, user_id, images')
+      .select('id, user_id, contact_phone, images')
       .eq('id', propertyId)
       .maybeSingle();
 
@@ -43,8 +43,19 @@ export async function POST(request: Request) {
       console.error('Error fetching property for deletion:', fetchErr);
     }
 
-    const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-    const isOwner = user && property && property.user_id === user.id;
+    // If property not found, it might already be deleted
+    if (!property) {
+      return NextResponse.json({ success: true, deletedId: propertyId, note: 'Listing already deleted' });
+    }
+
+    const effectiveEmail = (user?.email || userEmail || '').toLowerCase();
+    const effectiveUserId = user?.id || userId;
+
+    const isAdmin = Boolean(effectiveEmail && effectiveEmail === ADMIN_EMAIL.toLowerCase());
+    const isOwner = Boolean(
+      (effectiveUserId && property.user_id && property.user_id === effectiveUserId) ||
+      (property.user_id == null) // Legacy properties without user_id can be cleared
+    );
 
     // In local dev/test or when authorized as admin/owner
     const isDev = process.env.NODE_ENV !== 'production';

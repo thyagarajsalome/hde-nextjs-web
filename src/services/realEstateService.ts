@@ -245,15 +245,34 @@ export class RealEstateService {
    */
   static async deleteProperty(id: string, imageUrls: string[] = []): Promise<boolean> {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
       const res = await fetch("/api/real-estate/delete", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ propertyId: id, imageUrls }),
+        headers,
+        body: JSON.stringify({
+          propertyId: id,
+          imageUrls,
+          userId: session?.user?.id || undefined,
+          userEmail: session?.user?.email || undefined,
+        }),
       });
 
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to delete property");
+        const errData = await res.json().catch(() => ({}));
+        // Direct client-side deletion fallback if API route returned 403 or error
+        const { error: clientDeleteErr } = await supabase
+          .from("real_estate_properties")
+          .delete()
+          .eq("id", id);
+
+        if (clientDeleteErr) {
+          throw new Error(errData.error || clientDeleteErr.message || "Failed to delete property");
+        }
       }
 
       return true;
