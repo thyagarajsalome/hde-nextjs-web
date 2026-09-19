@@ -12,6 +12,8 @@ interface UserContextType {
   planTier: PlanTier;
   tierValue: number;
   credits: number; // Added credits field
+  whatsappNumber: string | null;
+  updateWhatsAppNumber: (num: string) => Promise<boolean>;
   setHasPaid: (status: boolean) => void;
   loading: boolean;
   installPrompt: any;
@@ -29,6 +31,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [hasPaid, setHasPaid] = useState(false);
   const [planTier, setPlanTier] = useState<PlanTier>('free');
   const [credits, setCredits] = useState<number>(0); // Added credits state
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [markup, setMarkup] = useState(0);
@@ -102,6 +105,34 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return promise;
   };
 
+  const updateWhatsAppNumber = async (num: string): Promise<boolean> => {
+    try {
+      const cleaned = num.trim();
+      setWhatsappNumber(cleaned);
+
+      const { error: authErr } = await supabase.auth.updateUser({
+        data: { whatsapp_number: cleaned, phone: cleaned }
+      });
+      if (authErr) console.warn("Could not update auth user_metadata:", authErr);
+
+      if (user?.id) {
+        try {
+          await supabase.from('profiles').upsert({
+            id: user.id,
+            whatsapp_number: cleaned,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'id' });
+        } catch (dbErr) {
+          console.warn("Could not update profiles table:", dbErr);
+        }
+      }
+      return true;
+    } catch (err) {
+      console.error("Error updating whatsapp number:", err);
+      return false;
+    }
+  };
+
   useEffect(() => {
     let active = true;
 
@@ -113,9 +144,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           setUser(session.user);
+          const metaPhone = session.user.user_metadata?.whatsapp_number || session.user.user_metadata?.phone || null;
+          setWhatsappNumber(metaPhone);
           await fetchProfile(session.user.id);
         } else {
           setUser(null);
+          setWhatsappNumber(null);
         }
       } catch (err) {
         console.error("Auth initialization error:", err);
@@ -135,6 +169,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(sessionUser);
 
         if (sessionUser) {
+          const metaPhone = sessionUser.user_metadata?.whatsapp_number || sessionUser.user_metadata?.phone || null;
+          setWhatsappNumber(metaPhone);
           // Shared promise logic ensures we don't trigger a secondary profile request in parallel
           await fetchProfile(sessionUser.id);
         } else {
@@ -144,6 +180,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setPlanTier('free');
           setRole('user');
           setCredits(0); // Reset credits on logout
+          setWhatsappNumber(null);
         }
       } catch (err) {
         console.error("onAuthStateChange error:", err);
@@ -172,6 +209,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setPlanTier('free');
     setRole('user');
     setCredits(0);
+    setWhatsappNumber(null);
     fetchedUserIdRef.current = null;
 
     try {
@@ -195,7 +233,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <UserContext.Provider value={{ 
-      user, role, hasPaid, planTier, tierValue, credits, // Exposed credits to the app
+      user, role, hasPaid, planTier, tierValue, credits, whatsappNumber, updateWhatsAppNumber,
       setHasPaid, loading, installPrompt, markup, setMarkup, 
       refreshProfile: handleManualRefresh,
       signOut: handleSignOut
