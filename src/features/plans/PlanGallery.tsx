@@ -386,10 +386,24 @@ export const PlanGallery: React.FC = () => {
     }, 200);
 
     try {
-      const downloadUrl = getImageUrl(plan.file_url);
+      const originalFileUrl = getImageUrl(plan.file_url);
 
-      const res = await fetch(downloadUrl);
-      if (!res.ok) throw new Error("Could not download blueprint file.");
+      // Route through same-origin server proxy to completely bypass browser CORS restrictions
+      const proxyDownloadUrl = `/api/plans/download?url=${encodeURIComponent(originalFileUrl)}&title=${encodeURIComponent(plan.title)}`;
+
+      const res = await fetch(proxyDownloadUrl);
+      if (!res.ok) {
+        // Direct browser navigation fallback triggers the download header natively
+        window.location.href = proxyDownloadUrl;
+        clearInterval(interval);
+        setDownloadProgress(100);
+        showToast("High-resolution blueprint downloaded!", "success");
+        setTimeout(() => {
+          setDownloadingId(null);
+          setDownloadProgress(0);
+        }, 800);
+        return;
+      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -410,8 +424,16 @@ export const PlanGallery: React.FC = () => {
         setDownloadProgress(0);
       }, 600);
     } catch (err: any) {
+      console.warn("Proxy blob download failed, falling back to direct navigation download:", err);
+      try {
+        const originalFileUrl = getImageUrl(plan.file_url);
+        const proxyDownloadUrl = `/api/plans/download?url=${encodeURIComponent(originalFileUrl)}&title=${encodeURIComponent(plan.title)}`;
+        window.location.href = proxyDownloadUrl;
+        showToast("High-resolution blueprint downloaded!", "success");
+      } catch (fallbackErr) {
+        showToast("Download failed. Please try again.", "error");
+      }
       clearInterval(interval);
-      showToast("Download failed.", "error");
       setDownloadingId(null);
       setDownloadProgress(0);
     }
