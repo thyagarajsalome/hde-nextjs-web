@@ -516,24 +516,25 @@ export default async function BangaloreProgrammaticPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Construction & Loan EMI Cross-Sell Banners */}
+          {/* Construction & Loan EMI Cross-Sell Banners (Clean White Theme) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
             {/* Construction Cost Banner */}
-            <div className="bg-gradient-to-br from-slate-900 to-[#0f2042] text-white p-7 rounded-2xl shadow-md flex flex-col justify-between">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
               <div>
-                <span className="inline-block px-3 py-1 bg-amber-400/20 text-amber-300 font-bold text-[11px] uppercase tracking-wider rounded-md mb-3 border border-amber-400/30">
-                  Building in {locality.name}?
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-800 font-bold text-[11px] uppercase tracking-wider rounded-full mb-3 border border-amber-200/80">
+                  <i className="fas fa-hammer text-amber-600"></i>
+                  <span>Building in {locality.name}?</span>
                 </span>
-                <h3 className="text-xl font-black mb-2">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
                   Bengaluru House Construction Estimator
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
                   Planning to build on a plot in {locality.name}? Calculate exact material quantities (cement, steel, sand, labor) at standard Bangalore rates (₹1,920 – ₹2,400/sq.ft).
                 </p>
               </div>
               <Link
                 href="/cost/construction-in-bengaluru"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs rounded-xl transition-all no-underline w-fit"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl transition-all shadow-xs no-underline w-fit"
               >
                 <span>Calculate Bengaluru Construction Cost</span>
                 <i className="fas fa-arrow-right text-[10px]"></i>
@@ -541,21 +542,22 @@ export default async function BangaloreProgrammaticPage({ params }: PageProps) {
             </div>
 
             {/* Home Loan EMI Banner */}
-            <div className="bg-gradient-to-br from-[#4165af] to-[#2b4478] text-white p-7 rounded-2xl shadow-md flex flex-col justify-between">
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
               <div>
-                <span className="inline-block px-3 py-1 bg-white/20 text-white font-bold text-[11px] uppercase tracking-wider rounded-md mb-3">
-                  Budget &amp; Financing
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-[#4165af] font-bold text-[11px] uppercase tracking-wider rounded-full mb-3 border border-blue-100">
+                  <i className="fas fa-calculator text-[#4165af]"></i>
+                  <span>Budget &amp; Financing</span>
                 </span>
-                <h3 className="text-xl font-black mb-2">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-2">
                   SBI &amp; HDFC Home Loan EMI Calculator
                 </h3>
-                <p className="text-xs sm:text-sm text-blue-100 leading-relaxed mb-4">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
                   Check your monthly EMI for properties in {locality.name}. Compare interest rates from SBI (8.40%), HDFC (8.70%), and ICICI with an instant 5-year amortization schedule.
                 </p>
               </div>
               <Link
                 href="/#india-emi"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-white hover:bg-blue-50 text-[#4165af] font-extrabold text-xs rounded-xl transition-all no-underline w-fit"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl transition-all shadow-xs no-underline w-fit"
               >
                 <span>Open Home Loan EMI Calculator</span>
                 <i className="fas fa-calculator text-[10px]"></i>
