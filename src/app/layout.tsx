@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import '../styles/global.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -39,6 +40,26 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossOrigin="anonymous" referrerPolicy="no-referrer" precedence="default" />
       </head>
       <body className="bg-background text-zinc-900 min-h-screen flex flex-col font-sans">
+        {/* Google tag (gtag.js) GA4 */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-NEWK4NXEVD"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-NEWK4NXEVD', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+
         <ToastProvider>
           <UserProvider>
             <RegionProvider>
