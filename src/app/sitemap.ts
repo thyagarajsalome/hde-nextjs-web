@@ -5,6 +5,8 @@ import { supabase } from '@/config/supabaseClient';
 import { TOP_CONVERSION_PAIRS } from '@/data/landUnits';
 import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
 import { PARTNER_SEO_SLUGS } from '@/data/dubaiPartnerSeoData';
+import { BANGALORE_LOCALITIES } from '@/data/bangaloreLocalities';
+import { TARGET_CATEGORY_TEMPLATES } from '@/data/bangaloreMarketData';
 
 const BASE_URL = 'https://www.homedesignenglish.com';
 
@@ -131,6 +133,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/bangalore/properties`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/bangalore/post-property`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     }
   ];
 
@@ -450,6 +464,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Bangalore Real Estate Programmatic Routes (24 localities x 6 templates + bare locality)
+  const bangaloreRoutes: MetadataRoute.Sitemap = [];
+  BANGALORE_LOCALITIES.forEach((loc) => {
+    TARGET_CATEGORY_TEMPLATES.forEach((tmpl) => {
+      bangaloreRoutes.push({
+        url: `${BASE_URL}/bangalore/${tmpl.prefix}${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.85,
+      });
+    });
+    bangaloreRoutes.push({
+      url: `${BASE_URL}/bangalore/${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    });
+  });
+
   return [
     ...staticRoutes,
     ...cityRoutes,
@@ -458,6 +491,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dubaiRoutes,
     ...dubaiPartnerRoutes,
     ...landConverterRoutes,
-    ...housePlanRoutes
+    ...housePlanRoutes,
+    ...bangaloreRoutes,
   ];
 }

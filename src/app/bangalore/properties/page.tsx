@@ -8,6 +8,7 @@ import { RealEstateService } from "@/services/realEstateService";
 import PropertyCard from "@/components/real-estate/PropertyCard";
 import RealEstateFilterBar from "@/components/real-estate/RealEstateFilterBar";
 import CrossSellBanner from "@/components/real-estate/CrossSellBanner";
+import { BANGALORE_LOCALITIES } from "@/data/bangaloreLocalities";
 import { useUser } from "@/context/UserContext";
 
 export default function BangalorePropertiesPage() {
@@ -182,6 +183,59 @@ export default function BangalorePropertiesPage() {
           category={category === "all" ? "plot" : category}
           localityName={locality || "Bangalore"}
         />
+
+        {/* Popular Bangalore Real Estate Corridors (pSEO Hub Grid) */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-xs mt-12">
+          <div className="max-w-2xl mb-6">
+            <span className="text-xs font-bold text-[#4165af] uppercase tracking-wider">
+              Local Market &amp; Transit Guides
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-1">
+              Explore Top Bangalore Localities
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Direct access to price per sq.ft benchmarks, A-Khata checklists, airport/metro transit, and zero-spam listings.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {BANGALORE_LOCALITIES.map((loc) => (
+              <div
+                key={loc.id}
+                className="p-3 bg-slate-50 hover:bg-blue-50/60 rounded-xl border border-slate-200/70 hover:border-blue-200 transition-all text-center flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-[10px] font-bold text-gray-400 block uppercase tracking-wider">
+                    {loc.zone.replace(" Bangalore", "")}
+                  </span>
+                  <Link
+                    href={`/bangalore/properties-in-${loc.slug}`}
+                    className="text-xs font-extrabold text-slate-900 hover:text-[#4165af] transition-colors block mt-0.5 no-underline"
+                  >
+                    {loc.name}
+                  </Link>
+                </div>
+                <div className="mt-2.5 pt-2 border-t border-slate-200/50 flex items-center justify-center gap-2 text-[11px]">
+                  <Link
+                    href={`/bangalore/flats-for-sale-in-${loc.slug}`}
+                    className="text-slate-500 hover:text-[#4165af] font-medium"
+                    title={`Flats in ${loc.name}`}
+                  >
+                    Flats
+                  </Link>
+                  <span className="text-gray-300">&bull;</span>
+                  <Link
+                    href={`/bangalore/plots-for-sale-in-${loc.slug}`}
+                    className="text-slate-500 hover:text-[#4165af] font-medium"
+                    title={`Plots in ${loc.name}`}
+                  >
+                    Plots
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Bangalore Real Estate FAQ */}
         <div className="bg-white rounded-2xl p-8 border border-gray-200/80 shadow-xs mt-12">
