@@ -392,10 +392,19 @@ export default function PostReferralPage() {
 
             {/* Card 4: Referrer (Your) Contact & UPI Details */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#4165af] uppercase tracking-wider">
-                <i className="fas fa-user-check"></i>
-                <span>4. Your Contact &amp; Settlement Info</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#4165af] uppercase tracking-wider">
+                  <i className="fas fa-user-check"></i>
+                  <span>4. Your Contact &amp; Settlement Info</span>
+                </div>
+                <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-100 flex items-center gap-1">
+                  <i className="fas fa-shield-halved"></i>
+                  100% Confidential
+                </span>
               </div>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Your name and mobile number are kept private and confidential. They are never published openly on search engines or public listing cards.
+              </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>

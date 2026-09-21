@@ -384,9 +384,9 @@ export default function BangaloreReferralBoardPage() {
 
                   {/* Referrer Info */}
                   <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-gray-100">
-                    <span className="flex items-center gap-1.5">
-                      <i className="fas fa-user text-slate-400"></i>
-                      <span>Referred by {lead.scout_name}</span>
+                    <span className="flex items-center gap-1.5 font-medium text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md border border-emerald-100">
+                      <i className="fas fa-shield-halved text-emerald-600 text-[11px]"></i>
+                      <span>Verified Community Referrer</span>
                     </span>
                     <span className="text-[10px] text-gray-400">
                       {new Date(lead.created_at).toLocaleDateString("en-IN", {
@@ -442,8 +442,8 @@ export default function BangaloreReferralBoardPage() {
                       onClick={() => handleOpenContact(lead)}
                       className="w-full py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
                     >
-                      <i className="fas fa-unlock text-[10px]"></i>
-                      <span>Connect with Referrer ({lead.scout_name})</span>
+                      <i className="fas fa-phone text-[10px]"></i>
+                      <span>Connect with Referrer</span>
                     </button>
                   )}
                 </div>
@@ -509,18 +509,18 @@ export default function BangaloreReferralBoardPage() {
                 {/* Direct WhatsApp Call CTA */}
                 <a
                   href={`https://wa.me/91${activeLead.scout_phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                    `Hi ${activeLead.scout_name}, I saw the property you referred on HDE (${activeLead.property_category} in ${activeLead.locality_name}). I would like to coordinate, inspect it, and discuss the referral reward.`
+                    `Hi, I saw the property you referred on HDE (${activeLead.property_category} in ${activeLead.locality_name}). I would like to coordinate, inspect it, and discuss the referral reward.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 no-underline shadow-xs transition"
                 >
                   <i className="fab fa-whatsapp text-sm"></i>
-                  <span>Message {activeLead.scout_name} on WhatsApp</span>
+                  <span>Message Referrer on WhatsApp</span>
                 </a>
 
                 <div className="p-3 bg-slate-50 border border-gray-200 rounded-xl text-[11px] text-gray-600 leading-relaxed">
-                  <strong>Direct Settlement Reminder:</strong> HDE only connects you. Settle the agreed referral reward (₹{activeLead.expected_finders_fee.toLocaleString("en-IN")}) directly with {activeLead.scout_name} (via UPI or cash) only after your rental agreement or property deal is finalized.
+                  <strong>Direct Settlement Reminder:</strong> HDE only connects you. Settle the agreed referral reward (₹{activeLead.expected_finders_fee.toLocaleString("en-IN")}) directly with the referrer (via UPI or cash) only after your rental agreement or property deal is finalized.
                 </div>
               </div>
             ) : (
@@ -530,10 +530,10 @@ export default function BangaloreReferralBoardPage() {
                     <i className="fas fa-lock"></i>
                   </div>
                   <h4 className="text-base font-bold text-slate-900">
-                    Unlock Direct Contact for {activeLead.scout_name}
+                    Unlock Direct Referrer &amp; Property Contact
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Choose an access pass to reveal direct contact numbers for property referrers and verified owners across Bangalore.
+                    Referrer identity and owner contact numbers are protected. Choose an access pass to unlock direct coordination details.
                   </p>
                 </div>
 
