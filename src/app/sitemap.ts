@@ -145,6 +145,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/bangalore/referrals`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/bangalore/post-referral`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
     }
   ];
 

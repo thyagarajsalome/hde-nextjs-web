@@ -92,6 +92,14 @@ export default function BangalorePropertiesPage() {
               )}
 
               <Link
+                href="/bangalore/referrals"
+                className="inline-flex items-center gap-1.5 px-4 py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 transition-all no-underline"
+              >
+                <i className="fas fa-handshake text-emerald-600"></i>
+                <span>Referral Board (Earn ₹)</span>
+              </Link>
+
+              <Link
                 href="/bangalore/post-property"
                 className="inline-flex items-center gap-2 px-5 py-3 bg-[#4165af] hover:bg-[#355393] text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-md hover:shadow-lg hover:scale-102 no-underline"
               >

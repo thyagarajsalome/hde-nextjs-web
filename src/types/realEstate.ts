@@ -104,3 +104,24 @@ export interface PropertyFilterState {
   posterType?: PosterRole | 'all';
   searchQuery?: string;
 }
+
+export interface PropertyScoutLead {
+  id: string;
+  user_id?: string;
+  locality_name: string;
+  property_category: 'flat' | 'plot' | 'villa' | 'shop' | 'independent_house';
+  intent: 'rent' | 'sale';
+  approx_price_or_rent?: number;
+  expected_finders_fee: number;
+  finders_fee_type: 'fixed_amount' | 'percent_split';
+  board_photo_url?: string;
+  property_address_hint: string;
+  owner_name?: string;
+  owner_phone: string;
+  scout_name: string;
+  scout_phone: string;
+  scout_upi_id?: string;
+  status: 'active' | 'deal_in_progress' | 'deal_closed';
+  views_count: number;
+  created_at: string;
+}

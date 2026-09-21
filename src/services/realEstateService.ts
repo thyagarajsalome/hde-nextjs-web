@@ -1,6 +1,6 @@
 // src/services/realEstateService.ts
 import { supabase } from "@/config/supabaseClient";
-import { RealEstateProperty, PropertyFilterState } from "@/types/realEstate";
+import { RealEstateProperty, PropertyFilterState, PropertyScoutLead } from "@/types/realEstate";
 import { SAMPLE_BANGALORE_PROPERTIES } from "@/data/sampleProperties";
 
 export class RealEstateService {
@@ -304,6 +304,75 @@ export class RealEstateService {
       }));
     } catch (err) {
       console.error("getAllPropertiesForAdmin error:", err);
+      return [];
+    }
+  }
+
+  /**
+   * Community Scout & Referral Tips
+   */
+  static async getScoutLeads(locality?: string, category?: string, intent?: string): Promise<PropertyScoutLead[]> {
+    try {
+      let query = supabase
+        .from("property_scout_leads")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (locality) {
+        query = query.ilike("locality_name", `%${locality}%`);
+      }
+      if (category && category !== "all") {
+        query = query.eq("property_category", category);
+      }
+      if (intent && intent !== "all") {
+        query = query.eq("intent", intent);
+      }
+
+      const { data, error } = await query;
+      if (error) {
+        console.warn("getScoutLeads query warning:", error.message);
+        return [];
+      }
+
+      return data || [];
+    } catch (err) {
+      console.error("getScoutLeads error:", err);
+      return [];
+    }
+  }
+
+  static async createScoutLead(lead: Partial<PropertyScoutLead>): Promise<PropertyScoutLead> {
+    try {
+      const { data, error } = await supabase
+        .from("property_scout_leads")
+        .insert([lead])
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    } catch (err) {
+      console.error("createScoutLead error:", err);
+      throw err;
+    }
+  }
+
+  static async getUserScoutLeads(userId: string): Promise<PropertyScoutLead[]> {
+    try {
+      const { data, error } = await supabase
+        .from("property_scout_leads")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error("getUserScoutLeads error:", err);
       return [];
     }
   }

@@ -337,6 +337,14 @@ export default async function BangaloreProgrammaticPage({ params }: PageProps) {
                 </a>
 
                 <Link
+                  href="/bangalore/referrals"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 transition-all no-underline text-center"
+                >
+                  <i className="fas fa-handshake text-emerald-600"></i>
+                  <span>Spot a House &amp; Earn Fee</span>
+                </Link>
+
+                <Link
                   href="/bangalore/properties"
                   className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-all no-underline text-center"
                 >
