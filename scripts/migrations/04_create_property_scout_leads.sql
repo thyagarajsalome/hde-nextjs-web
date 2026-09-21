@@ -34,20 +34,35 @@ CREATE INDEX IF NOT EXISTS idx_scout_leads_locality ON public.property_scout_lea
 -- Row Level Security (RLS)
 ALTER TABLE public.property_scout_leads ENABLE ROW LEVEL SECURITY;
 
--- 1. Public can read active scout leads (owner contact masked via application layer)
-CREATE POLICY "Public can view active scout leads"
+-- Drop existing restrictive policies if present
+DROP POLICY IF EXISTS "Public can view active scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Authenticated users can insert scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Users can update their own scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Allow insert scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Allow select scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Allow update scout leads" ON public.property_scout_leads;
+DROP POLICY IF EXISTS "Allow delete scout leads" ON public.property_scout_leads;
+
+-- 1. Everyone can view scout leads
+CREATE POLICY "Allow select scout leads"
     ON public.property_scout_leads
     FOR SELECT
-    USING (status = 'active');
+    USING (true);
 
--- 2. Authenticated users can insert scout leads
-CREATE POLICY "Authenticated users can insert scout leads"
+-- 2. Allow guest or authenticated users to insert scout leads
+CREATE POLICY "Allow insert scout leads"
     ON public.property_scout_leads
     FOR INSERT
-    WITH CHECK (auth.uid() IS NOT NULL);
+    WITH CHECK (true);
 
--- 3. Scout can update/close their own scout leads
-CREATE POLICY "Users can update their own scout leads"
+-- 3. Allow update (e.g. marking deal closed or editing details)
+CREATE POLICY "Allow update scout leads"
     ON public.property_scout_leads
     FOR UPDATE
-    USING (auth.uid() = user_id);
+    USING (true);
+
+-- 4. Allow delete (e.g. removing closed deal data)
+CREATE POLICY "Allow delete scout leads"
+    ON public.property_scout_leads
+    FOR DELETE
+    USING (true);

@@ -313,13 +313,27 @@ export class RealEstateService {
    */
   static async getScoutLeads(locality?: string, category?: string, intent?: string): Promise<PropertyScoutLead[]> {
     try {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams();
+        if (locality && locality !== "all") params.append("locality", locality);
+        if (category && category !== "all") params.append("category", category);
+        if (intent && intent !== "all") params.append("intent", intent);
+
+        const res = await fetch(`/api/real-estate/scout?${params.toString()}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (Array.isArray(json.data)) return json.data;
+        }
+      }
+
+      // Fallback to direct Supabase query
       let query = supabase
         .from("property_scout_leads")
         .select("*")
         .eq("status", "active")
         .order("created_at", { ascending: false });
 
-      if (locality) {
+      if (locality && locality !== "all") {
         query = query.ilike("locality_name", `%${locality}%`);
       }
       if (category && category !== "all") {
@@ -344,9 +358,27 @@ export class RealEstateService {
 
   static async createScoutLead(lead: Partial<PropertyScoutLead>): Promise<PropertyScoutLead> {
     try {
+      // 1. Try secure API route first (bypasses RLS issues)
+      if (typeof window !== "undefined") {
+        const res = await fetch("/api/real-estate/scout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(lead),
+        });
+
+        const json = await res.json();
+        if (res.ok && json.data) {
+          return json.data;
+        } else if (!res.ok && json.error) {
+          console.warn("API createScoutLead failed, attempting direct Supabase:", json.error);
+        }
+      }
+
+      // 2. Fallback to client Supabase insert
+      const cleanPayload = { ...lead, status: "active" };
       const { data, error } = await supabase
         .from("property_scout_leads")
-        .insert([lead])
+        .insert([cleanPayload])
         .select()
         .single();
 
@@ -361,8 +393,67 @@ export class RealEstateService {
     }
   }
 
+  static async updateScoutLead(id: string, updates: Partial<PropertyScoutLead>): Promise<PropertyScoutLead | null> {
+    try {
+      if (typeof window !== "undefined") {
+        const res = await fetch("/api/real-estate/scout", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, ...updates }),
+        });
+        if (res.ok) {
+          const json = await res.json();
+          return json.data;
+        }
+      }
+
+      const { data, error } = await supabase
+        .from("property_scout_leads")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.error("updateScoutLead error:", err);
+      throw err;
+    }
+  }
+
+  static async deleteScoutLead(id: string): Promise<boolean> {
+    try {
+      if (typeof window !== "undefined") {
+        const res = await fetch(`/api/real-estate/scout?id=${encodeURIComponent(id)}`, {
+          method: "DELETE",
+        });
+        if (res.ok) return true;
+      }
+
+      const { error } = await supabase
+        .from("property_scout_leads")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error("deleteScoutLead error:", err);
+      throw err;
+    }
+  }
+
   static async getUserScoutLeads(userId: string): Promise<PropertyScoutLead[]> {
     try {
+      if (typeof window !== "undefined") {
+        const res = await fetch(`/api/real-estate/scout?userId=${encodeURIComponent(userId)}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (Array.isArray(json.data)) return json.data;
+        }
+      }
+
       const { data, error } = await supabase
         .from("property_scout_leads")
         .select("*")

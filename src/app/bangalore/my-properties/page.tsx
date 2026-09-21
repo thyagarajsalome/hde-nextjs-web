@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { RealEstateProperty } from "@/types/realEstate";
+import { RealEstateProperty, PropertyScoutLead } from "@/types/realEstate";
 import { RealEstateService } from "@/services/realEstateService";
 import { useUser } from "@/context/UserContext";
 import { compressToWebP } from "@/utils/imageCompressor";
@@ -14,6 +14,20 @@ export default function MyPropertiesPage() {
   const [properties, setProperties] = useState<RealEstateProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"all" | "active" | "sold">("all");
+
+  // Section: "properties" (Seller / Landlord) vs "scouts" (Ramu Referrer)
+  const [activeSection, setActiveSection] = useState<"properties" | "scouts">("properties");
+  const [scoutLeads, setScoutLeads] = useState<PropertyScoutLead[]>([]);
+
+  // Scout CRUD Modals
+  const [editingScout, setEditingScout] = useState<PropertyScoutLead | null>(null);
+  const [editScoutAddress, setEditScoutAddress] = useState("");
+  const [editScoutPrice, setEditScoutPrice] = useState<number | "">("");
+  const [editScoutFee, setEditScoutFee] = useState<number>(2000);
+  const [editScoutPhone, setEditScoutPhone] = useState("");
+  const [editScoutUpi, setEditScoutUpi] = useState("");
+  const [dealClosedScout, setDealClosedScout] = useState<PropertyScoutLead | null>(null);
+  const [deletingScoutId, setDeletingScoutId] = useState<string | null>(null);
 
   // Edit Modal State
   const [editingProp, setEditingProp] = useState<RealEstateProperty | null>(null);
@@ -50,11 +64,105 @@ export default function MyPropertiesPage() {
     }
   };
 
+  const fetchUserScoutLeads = async () => {
+    try {
+      let leads: PropertyScoutLead[] = [];
+      if (user?.id) {
+        leads = await RealEstateService.getUserScoutLeads(user.id);
+      }
+      // Also check local storage IDs
+      if (typeof window !== "undefined") {
+        try {
+          const localIds: string[] = JSON.parse(localStorage.getItem("hde_my_scout_ids") || "[]");
+          if (localIds.length > 0) {
+            const allScout = await RealEstateService.getScoutLeads();
+            const matched = allScout.filter((l) => localIds.includes(l.id));
+            const existingIds = new Set(leads.map((l) => l.id));
+            matched.forEach((m) => {
+              if (!existingIds.has(m.id)) leads.push(m);
+            });
+          }
+        } catch (e) {}
+      }
+      setScoutLeads(leads);
+    } catch (err) {
+      console.error("Failed to load scout leads:", err);
+    }
+  };
+
   useEffect(() => {
     if (!authLoading) {
       fetchUserProperties();
+      fetchUserScoutLeads();
     }
   }, [user, authLoading]);
+
+  // Scout CRUD Handlers
+  const handleOpenEditScout = (scout: PropertyScoutLead) => {
+    setEditingScout(scout);
+    setEditScoutAddress(scout.property_address_hint);
+    setEditScoutPrice(scout.approx_price_or_rent || "");
+    setEditScoutFee(scout.expected_finders_fee);
+    setEditScoutPhone(scout.scout_phone);
+    setEditScoutUpi(scout.scout_upi_id || "");
+  };
+
+  const handleSaveScoutEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingScout) return;
+    setIsSaving(true);
+    try {
+      const updated = await RealEstateService.updateScoutLead(editingScout.id, {
+        property_address_hint: editScoutAddress,
+        approx_price_or_rent: editScoutPrice ? Number(editScoutPrice) : undefined,
+        expected_finders_fee: Number(editScoutFee),
+        scout_phone: editScoutPhone,
+        scout_upi_id: editScoutUpi,
+      });
+      if (updated) {
+        setScoutLeads((prev) =>
+          prev.map((s) => (s.id === editingScout.id ? { ...s, ...updated } : s))
+        );
+      }
+      setEditingScout(null);
+    } catch (err: any) {
+      alert("Failed to save changes: " + (err.message || "Unknown error"));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleConfirmScoutDealClosed = async () => {
+    if (!dealClosedScout) return;
+    setIsClosingDeal(true);
+    try {
+      // Remove data permanently once deal is closed so nobody calls anymore
+      await RealEstateService.deleteScoutLead(dealClosedScout.id);
+      setScoutLeads((prev) => prev.filter((s) => s.id !== dealClosedScout.id));
+      setClosedDealSuccess(
+        `Deal closed successfully! The scout referral for ${dealClosedScout.property_category} in ${dealClosedScout.locality_name} has been removed from the public board.`
+      );
+      setDealClosedScout(null);
+    } catch (err: any) {
+      alert("Failed to close deal: " + (err.message || "Unknown error"));
+    } finally {
+      setIsClosingDeal(false);
+    }
+  };
+
+  const handleDeleteScout = async () => {
+    if (!deletingScoutId) return;
+    setIsDeleting(true);
+    try {
+      await RealEstateService.deleteScoutLead(deletingScoutId);
+      setScoutLeads((prev) => prev.filter((s) => s.id !== deletingScoutId));
+      setDeletingScoutId(null);
+    } catch (err: any) {
+      alert("Failed to delete scout lead: " + (err.message || "Unknown error"));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Status toggle handler
   const handleToggleStatus = async (prop: RealEstateProperty) => {
@@ -306,28 +414,74 @@ export default function MyPropertiesPage() {
           </div>
         </div>
 
-        {/* Metric Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-          <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
-            <div className="text-[11px] text-gray-500 font-medium">Total Listings</div>
-            <div className="text-2xl font-black text-gray-900 mt-1">{properties.length}</div>
+        {/* Deal Closed Success Banner */}
+        {closedDealSuccess && (
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <span className="w-7 h-7 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-xs shrink-0">
+                <i className="fas fa-check"></i>
+              </span>
+              <span className="font-semibold">{closedDealSuccess}</span>
+            </div>
+            <button
+              onClick={() => setClosedDealSuccess(null)}
+              className="text-emerald-700 hover:text-emerald-950 font-bold px-2 py-1 cursor-pointer"
+            >
+              ✕
+            </button>
           </div>
-          <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
-            <div className="text-[11px] text-gray-500 font-medium">Active Listings</div>
-            <div className="text-2xl font-black text-emerald-600 mt-1">{activeCount}</div>
-          </div>
-          <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
-            <div className="text-[11px] text-gray-500 font-medium">Total Views</div>
-            <div className="text-2xl font-black text-blue-600 mt-1">{totalViews}</div>
-          </div>
-          <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
-            <div className="text-[11px] text-gray-500 font-medium">Buyer Inquiries</div>
-            <div className="text-2xl font-black text-indigo-600 mt-1">{totalInquiries}</div>
-          </div>
+        )}
+
+        {/* Section Switcher: My Properties vs My Scout Referrals */}
+        <div className="flex items-center gap-2 p-1.5 bg-white rounded-2xl w-fit border border-gray-200/80 shadow-2xs">
+          <button
+            onClick={() => setActiveSection("properties")}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeSection === "properties"
+                ? "bg-[#4165af] text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <i className="fas fa-home mr-1.5"></i>
+            <span>My Properties ({properties.length})</span>
+          </button>
+          <button
+            onClick={() => setActiveSection("scouts")}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeSection === "scouts"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <i className="fas fa-handshake mr-1.5"></i>
+            <span>My Scout Referrals ({scoutLeads.length})</span>
+          </button>
         </div>
 
-        {/* Tab Filters */}
-        <div className="flex items-center gap-2 border-b border-gray-200 pb-2">
+        {activeSection === "properties" ? (
+          <>
+            {/* Metric Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
+                <div className="text-[11px] text-gray-500 font-medium">Total Listings</div>
+                <div className="text-2xl font-black text-gray-900 mt-1">{properties.length}</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
+                <div className="text-[11px] text-gray-500 font-medium">Active Listings</div>
+                <div className="text-2xl font-black text-emerald-600 mt-1">{activeCount}</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
+                <div className="text-[11px] text-gray-500 font-medium">Total Views</div>
+                <div className="text-2xl font-black text-blue-600 mt-1">{totalViews}</div>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-gray-200/80 shadow-xs">
+                <div className="text-[11px] text-gray-500 font-medium">Buyer Inquiries</div>
+                <div className="text-2xl font-black text-indigo-600 mt-1">{totalInquiries}</div>
+              </div>
+            </div>
+
+            {/* Tab Filters */}
+            <div className="flex items-center gap-2 border-b border-gray-200 pb-2">
           <button
             onClick={() => setActiveTab("all")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
@@ -532,7 +686,170 @@ export default function MyPropertiesPage() {
             ))}
           </div>
         )}
+      </>
+    ) : (
+      /* Scout Referrals View (activeSection === "scouts") */
+      <div className="space-y-6">
+        {/* Scout Info Banner */}
+        <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-5 shadow-2xs space-y-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-8 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-xs">
+                <i className="fas fa-binoculars"></i>
+              </span>
+              <div>
+                <h3 className="text-sm font-black text-emerald-950">
+                  Community Scout &amp; Referral Dashboard
+                </h3>
+                <p className="text-[11px] text-emerald-800">
+                  Track the properties you spotted, update your finder&apos;s fee &amp; UPI ID, or remove closed deals.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/bangalore/post-referral"
+              className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl no-underline transition flex items-center gap-1.5 shadow-xs"
+            >
+              <i className="fas fa-plus text-[10px]"></i>
+              <span>Post New Scout Referral</span>
+            </Link>
+          </div>
+
+          <div className="pt-2 border-t border-emerald-200/60 text-[11px] text-emerald-900 flex items-center gap-1.5">
+            <i className="fas fa-info-circle text-emerald-600"></i>
+            <span>
+              <strong>Data Removal Policy:</strong> When a tenant or buyer closes a deal with your referral, click <strong>&quot;Deal Closed (Remove)&quot;</strong> to immediately wipe this listing from the board so users stop calling you.
+            </span>
+          </div>
+        </div>
+
+        {/* Scout Leads List */}
+        {scoutLeads.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center border border-gray-200/80 shadow-xs space-y-4">
+            <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+              <i className="fas fa-handshake"></i>
+            </div>
+            <h3 className="text-base font-bold text-gray-900">No Scout Referrals Yet</h3>
+            <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
+              Did you spot a &quot;To-Let&quot; board, vacant house, flat, plot, or shop for rent/sale in your neighborhood? Post it on the Community Scout board to earn finder&apos;s referral fees from interested buyers or registered brokers!
+            </p>
+            <Link
+              href="/bangalore/post-referral"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl no-underline transition shadow-xs"
+            >
+              <i className="fas fa-plus text-[10px]"></i>
+              <span>Post Your First Referral Lead</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {scoutLeads.map((scout) => (
+              <div
+                key={scout.id}
+                className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 flex flex-col justify-between hover:border-gray-300 transition space-y-4"
+              >
+                <div>
+                  {/* Badges */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider bg-emerald-600 text-white">
+                        For {scout.intent}
+                      </span>
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider bg-slate-100 text-slate-700">
+                        {scout.property_category}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+                      Fee: ₹{scout.expected_finders_fee.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  {/* Locality & Address */}
+                  <h4 className="text-base font-black text-gray-900 mb-1 flex items-center gap-1.5">
+                    <i className="fas fa-location-dot text-rose-500 text-sm"></i>
+                    <span>{scout.locality_name}</span>
+                  </h4>
+                  <p className="text-xs text-gray-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-3">
+                    {scout.property_address_hint}
+                  </p>
+
+                  {/* Details Grid */}
+                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-700 bg-gray-50/70 p-3 rounded-xl border border-gray-100">
+                    <div>
+                      <span className="text-[10px] text-gray-400 block font-medium">Approx Price / Rent:</span>
+                      <span className="font-bold text-gray-900">
+                        {scout.approx_price_or_rent
+                          ? `₹${scout.approx_price_or_rent.toLocaleString("en-IN")}`
+                          : "Contact for Rate"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-400 block font-medium">Your Scout Mobile:</span>
+                      <span className="font-bold text-gray-900">{scout.scout_phone}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-400 block font-medium">Your UPI ID:</span>
+                      <span className="font-semibold text-gray-800 truncate block">
+                        {scout.scout_upi_id || "Not specified"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-400 block font-medium">Views / Inquiries:</span>
+                      <span className="font-bold text-emerald-700">
+                        {scout.views_count || 0} views
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CRUD Actions */}
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <Link
+                      href="/bangalore/scout-board"
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 no-underline transition flex items-center gap-1"
+                      title="View public scout board"
+                    >
+                      <i className="fas fa-external-link-alt text-[10px]"></i>
+                      <span>Public Board</span>
+                    </Link>
+
+                    <button
+                      onClick={() => handleOpenEditScout(scout)}
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-[#4165af] transition flex items-center gap-1 cursor-pointer"
+                      title="Edit referral details, fee, phone, UPI"
+                    >
+                      <i className="fas fa-pen text-[10px]"></i>
+                      <span>Edit</span>
+                    </button>
+
+                    {/* Deal Closed & Data Removal Button */}
+                    <button
+                      onClick={() => setDealClosedScout(scout)}
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition flex items-center gap-1 cursor-pointer shadow-2xs"
+                      title="Deal is done — remove this referral data"
+                    >
+                      <i className="fas fa-handshake text-[10px]"></i>
+                      <span>Deal Closed (Remove)</span>
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setDeletingScoutId(scout.id)}
+                    className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition flex items-center gap-1 cursor-pointer"
+                    title="Delete this scout referral"
+                  >
+                    <i className="fas fa-trash text-[10px]"></i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+    )}
+  </div>
 
       {/* Quick Edit Modal */}
       {editingProp && (
@@ -765,6 +1082,216 @@ export default function MyPropertiesPage() {
               <button
                 type="button"
                 onClick={handleConfirmDealClosed}
+                disabled={isClosingDeal}
+                className="w-full sm:w-auto px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i className="fas fa-check"></i>
+                <span>{isClosingDeal ? "Closing Deal..." : "YES, Deal Closed — Remove Old Data"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scout Lead Edit Modal */}
+      {editingScout && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                <i className="fas fa-pen text-emerald-600"></i>
+                <span>Edit Scout Referral Lead</span>
+              </h3>
+              <button
+                onClick={() => setEditingScout(null)}
+                className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveScoutEdit} className="space-y-4 mt-4 text-xs">
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">
+                  Locality Name:
+                </label>
+                <input
+                  type="text"
+                  value={editingScout.locality_name}
+                  disabled
+                  className="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">
+                  Property Address / Landmark Hint:
+                </label>
+                <textarea
+                  rows={2}
+                  value={editScoutAddress}
+                  onChange={(e) => setEditScoutAddress(e.target.value)}
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Approx Price / Rent (₹):
+                  </label>
+                  <input
+                    type="number"
+                    value={editScoutPrice}
+                    onChange={(e) => setEditScoutPrice(e.target.value ? Number(e.target.value) : "")}
+                    placeholder="e.g. 25000"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your Expected Finder&apos;s Fee (₹):
+                  </label>
+                  <input
+                    type="number"
+                    value={editScoutFee}
+                    onChange={(e) => setEditScoutFee(Number(e.target.value))}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your Contact Mobile:
+                  </label>
+                  <input
+                    type="tel"
+                    value={editScoutPhone}
+                    onChange={(e) => setEditScoutPhone(e.target.value)}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your UPI ID (For Direct Payout):
+                  </label>
+                  <input
+                    type="text"
+                    value={editScoutUpi}
+                    onChange={(e) => setEditScoutUpi(e.target.value)}
+                    placeholder="e.g. name@okhdfcbank"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingScout(null)}
+                  className="px-4 py-2 font-semibold text-gray-600 hover:text-gray-800 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold rounded-xl transition cursor-pointer"
+                >
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Scout Lead Delete Confirmation Modal */}
+      {deletingScoutId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4">
+            <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto text-xl">
+              <i className="fas fa-trash-alt"></i>
+            </div>
+            <h3 className="text-base font-bold text-gray-900">Delete Scout Referral?</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Are you sure? This referral lead will be removed from the community scout board.
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeletingScoutId(null)}
+                className="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-gray-800 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteScout}
+                disabled={isDeleting}
+                className="px-4 py-2 text-xs bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-bold rounded-xl transition cursor-pointer"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scout Lead Deal Closed & Data Removal Modal */}
+      {dealClosedScout && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-emerald-500/40 text-center space-y-4">
+            <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-xs">
+              <i className="fas fa-handshake"></i>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-black text-gray-900">
+                Deal Closed &amp; Finder&apos;s Fee Finalized?
+              </h3>
+              <p className="text-xs text-gray-500 mt-1">
+                Referral: <strong className="text-gray-800">{dealClosedScout.property_category} in {dealClosedScout.locality_name}</strong>
+              </p>
+            </div>
+
+            {/* Critical Alert Notice Box */}
+            <div className="bg-amber-50 border border-amber-200/90 rounded-xl p-4 text-left text-xs space-y-2">
+              <div className="flex items-center gap-2 font-black text-amber-900">
+                <i className="fas fa-triangle-exclamation text-amber-600 text-sm"></i>
+                <span>DATA REMOVAL AFTER DEAL CLOSURE:</span>
+              </div>
+              <p className="leading-relaxed text-[11px] text-amber-900 font-medium">
+                Congratulations on facilitating this connection! As agreed: <strong>Once the deal is closed, this old listing has NO USE and must be removed</strong>.
+              </p>
+              <ul className="list-disc list-inside text-[11px] space-y-1 text-amber-800 font-medium">
+                <li>Permanently stops brokers and buyers from calling your phone.</li>
+                <li>Protects your privacy and removes your address hint and UPI ID.</li>
+                <li>Ensures the community scout board only contains fresh, active leads.</li>
+              </ul>
+            </div>
+
+            <p className="text-xs font-semibold text-gray-700">
+              Confirm deal closure to permanently remove this lead from the board?
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDealClosedScout(null)}
+                disabled={isClosingDeal}
+                className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer"
+              >
+                No, Keep Active
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmScoutDealClosed}
                 disabled={isClosingDeal}
                 className="w-full sm:w-auto px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >

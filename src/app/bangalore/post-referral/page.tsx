@@ -88,7 +88,7 @@ export default function PostReferralPage() {
     }
 
     try {
-      await RealEstateService.createScoutLead({
+      const created = await RealEstateService.createScoutLead({
         user_id: user?.id,
         locality_name: selectedLocality.name,
         property_category: propertyCategory,
@@ -104,6 +104,17 @@ export default function PostReferralPage() {
         scout_upi_id: scoutUpi || undefined,
         status: "active",
       });
+
+      if (typeof window !== "undefined" && created?.id) {
+        try {
+          const existingIds = JSON.parse(localStorage.getItem("hde_my_scout_ids") || "[]");
+          if (!existingIds.includes(created.id)) {
+            existingIds.push(created.id);
+            localStorage.setItem("hde_my_scout_ids", JSON.stringify(existingIds));
+          }
+          localStorage.setItem("hde_last_scout_phone", cleanScoutPhone);
+        } catch (storageErr) {}
+      }
 
       setSuccess(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -161,9 +172,17 @@ export default function PostReferralPage() {
             </p>
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
-                href="/bangalore/referrals"
-                className="w-full sm:w-auto px-6 py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl no-underline transition"
+                href="/bangalore/my-properties"
+                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl no-underline transition flex items-center justify-center gap-1.5 shadow-xs"
               >
+                <i className="fas fa-handshake text-[11px]"></i>
+                <span>Manage / Close Deal (My Properties)</span>
+              </Link>
+              <Link
+                href="/bangalore/referrals"
+                className="w-full sm:w-auto px-6 py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl no-underline transition flex items-center justify-center gap-1.5"
+              >
+                <i className="fas fa-list text-[11px]"></i>
                 <span>View Bangalore Referral Board</span>
               </Link>
               <button
