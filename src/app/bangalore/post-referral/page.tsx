@@ -336,9 +336,18 @@ export default function PostReferralPage() {
                     className="w-full px-3.5 py-2.5 text-sm font-extrabold text-slate-900 focus:outline-none bg-transparent"
                   />
                 </div>
-                <p className="text-[11px] text-gray-500 mt-1.5">
-                  💡 This is the referral tip you receive directly via UPI/cash once the tenant or buyer finalizes their agreement. (Typical range: ₹1,500 – ₹3,000 for rent; ₹5,000 – ₹25,000 for sale).
-                </p>
+                <div className="mt-2.5 p-3.5 bg-amber-50/90 border border-amber-200/80 rounded-xl text-xs text-amber-950 space-y-1 leading-relaxed">
+                  <p className="font-bold flex items-center gap-1.5 text-amber-900">
+                    <i className="fas fa-info-circle text-amber-600"></i>
+                    <span>Direct Settlement Notice (Not from HDE):</span>
+                  </p>
+                  <p className="text-[11px] text-amber-900">
+                    This variable reward is <strong>not paid by HDE</strong>. You are supposed to receive this directly from the property owner or tenant/buyer upon a successful deal or finalized rental agreement. Kindly discuss and coordinate this mutually with the individual.
+                  </p>
+                  <p className="text-[10px] text-amber-800 font-semibold pt-0.5">
+                    💡 Typical community benchmarks: ₹1,500 – ₹3,000 for rent; ₹5,000 – ₹25,000 for property sale.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -470,21 +479,21 @@ export default function PostReferralPage() {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-3 flex justify-center">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-sm rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
+                className="px-7 py-2.5 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-sm hover:shadow-md disabled:opacity-60 cursor-pointer inline-flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
-                    <i className="fas fa-circle-notch fa-spin"></i>
-                    <span>Publishing Scout Lead...</span>
+                    <i className="fas fa-circle-notch fa-spin text-xs"></i>
+                    <span>Submitting Referral...</span>
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-paper-plane"></i>
-                    <span>Publish Scout Tip Free</span>
+                    <i className="fas fa-paper-plane text-xs"></i>
+                    <span>Submit Referral Free</span>
                   </>
                 )}
               </button>
@@ -537,7 +546,7 @@ export default function PostReferralPage() {
                         setIsPaying(false);
                         setHasPaidSlot(true);
                         setLimitModalOpen(false);
-                        alert("Payment verified! Now click 'Publish Scout Tip Free' to submit.");
+                        alert("Payment verified! Now click 'Submit Referral Free' to submit.");
                       },
                       onFailure: () => setIsPaying(false),
                     });
