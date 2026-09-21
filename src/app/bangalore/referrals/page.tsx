@@ -19,6 +19,109 @@ export default function BangaloreReferralBoardPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedIntent, setSelectedIntent] = useState("all");
 
+  // User's own leads identification
+  const [myStoredIds, setMyStoredIds] = useState<string[]>([]);
+  const [myStoredPhone, setMyStoredPhone] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const ids = JSON.parse(localStorage.getItem("hde_my_scout_ids") || "[]");
+        setMyStoredIds(ids);
+        const phone = localStorage.getItem("hde_last_scout_phone") || "";
+        setMyStoredPhone(phone);
+      } catch (e) {}
+    }
+  }, []);
+
+  const isMyLead = (lead: PropertyScoutLead) => {
+    if (user && lead.user_id && user.id === lead.user_id) return true;
+    if (myStoredIds.includes(lead.id)) return true;
+    if (myStoredPhone && lead.scout_phone === myStoredPhone) return true;
+    return false;
+  };
+
+  // CRUD State
+  const [editingLead, setEditingLead] = useState<PropertyScoutLead | null>(null);
+  const [editAddress, setEditAddress] = useState("");
+  const [editPrice, setEditPrice] = useState<number | "">("");
+  const [editFee, setEditFee] = useState<number>(2000);
+  const [editPhone, setEditPhone] = useState("");
+  const [editUpi, setEditUpi] = useState("");
+  const [deletingLeadId, setDeletingLeadId] = useState<string | null>(null);
+  const [dealClosedLead, setDealClosedLead] = useState<PropertyScoutLead | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isClosingDeal, setIsClosingDeal] = useState(false);
+  const [dealSuccessMsg, setDealSuccessMsg] = useState<string | null>(null);
+
+  const handleOpenEdit = (lead: PropertyScoutLead) => {
+    setEditingLead(lead);
+    setEditAddress(lead.property_address_hint);
+    setEditPrice(lead.approx_price_or_rent || "");
+    setEditFee(lead.expected_finders_fee);
+    setEditPhone(lead.scout_phone);
+    setEditUpi(lead.scout_upi_id || "");
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingLead) return;
+    setIsSaving(true);
+    try {
+      const updated = await RealEstateService.updateScoutLead(editingLead.id, {
+        property_address_hint: editAddress,
+        approx_price_or_rent: editPrice ? Number(editPrice) : undefined,
+        expected_finders_fee: Number(editFee),
+        scout_phone: editPhone,
+        scout_upi_id: editUpi,
+      });
+      if (updated) {
+        setLeads((prev) =>
+          prev.map((l) => (l.id === editingLead.id ? { ...l, ...updated } : l))
+        );
+      }
+      setEditingLead(null);
+    } catch (err: any) {
+      alert("Failed to save changes: " + (err.message || "Unknown error"));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deletingLeadId) return;
+    setIsDeleting(true);
+    try {
+      await RealEstateService.deleteScoutLead(deletingLeadId);
+      setLeads((prev) => prev.filter((l) => l.id !== deletingLeadId));
+      setMyStoredIds((prev) => prev.filter((id) => id !== deletingLeadId));
+      setDeletingLeadId(null);
+    } catch (err: any) {
+      alert("Failed to delete referral: " + (err.message || "Unknown error"));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleConfirmDealClosed = async () => {
+    if (!dealClosedLead) return;
+    setIsClosingDeal(true);
+    try {
+      await RealEstateService.deleteScoutLead(dealClosedLead.id);
+      setLeads((prev) => prev.filter((l) => l.id !== dealClosedLead.id));
+      setMyStoredIds((prev) => prev.filter((id) => id !== dealClosedLead.id));
+      setDealSuccessMsg(
+        `Deal Closed! Your referral for ${dealClosedLead.property_category} in ${dealClosedLead.locality_name} has been removed from the board so you stop receiving calls.`
+      );
+      setDealClosedLead(null);
+    } catch (err: any) {
+      alert("Failed to close deal: " + (err.message || "Unknown error"));
+    } finally {
+      setIsClosingDeal(false);
+    }
+  };
+
   // Unlock Modal
   const [activeLead, setActiveLead] = useState<PropertyScoutLead | null>(null);
   const [isUnlocking, setIsUnlocking] = useState(false);
@@ -101,11 +204,18 @@ export default function BangaloreReferralBoardPage() {
                 <span>Refer a House &amp; Earn Reward</span>
               </Link>
               <Link
+                href="/bangalore/my-properties"
+                className="inline-flex items-center gap-2 px-4 py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs sm:text-sm rounded-xl transition-all no-underline border border-emerald-200 shadow-2xs"
+              >
+                <i className="fas fa-user-check text-emerald-600"></i>
+                <span>Manage My Referrals</span>
+              </Link>
+              <Link
                 href="/bangalore/properties"
                 className="inline-flex items-center gap-2 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition-all no-underline border border-slate-200"
               >
                 <i className="fas fa-building text-[#4165af]"></i>
-                <span>Main Properties Feed</span>
+                <span>Marketplace</span>
               </Link>
             </div>
           </div>
@@ -113,6 +223,24 @@ export default function BangaloreReferralBoardPage() {
       </div>
 
       <div className="container mx-auto px-4 max-w-7xl mt-8">
+        {/* Deal Closed Success Banner */}
+        {dealSuccessMsg && (
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-xs mb-6 animate-fade-in">
+            <div className="flex items-center gap-2.5">
+              <span className="w-7 h-7 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-xs shrink-0">
+                <i className="fas fa-check"></i>
+              </span>
+              <span className="font-semibold">{dealSuccessMsg}</span>
+            </div>
+            <button
+              onClick={() => setDealSuccessMsg(null)}
+              className="text-emerald-700 hover:text-emerald-950 font-bold px-2 py-1 cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Commission & Safe-Harbor Information Notice */}
         <div className="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200/80 shadow-xs mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -269,15 +397,55 @@ export default function BangaloreReferralBoardPage() {
                   </div>
                 </div>
 
-                {/* Connect Action Button */}
+                {/* Connect / Manage Action Buttons */}
                 <div className="mt-5 pt-3 border-t border-gray-100">
-                  <button
-                    onClick={() => handleOpenContact(lead)}
-                    className="w-full py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
-                  >
-                    <i className="fas fa-unlock text-[10px]"></i>
-                    <span>Connect with Referrer ({lead.scout_name})</span>
-                  </button>
+                  {isMyLead(lead) ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                        <span className="flex items-center gap-1.5">
+                          <i className="fas fa-user-check text-emerald-600"></i>
+                          <span>Your Posted Referral</span>
+                        </span>
+                        <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded font-extrabold">Active</span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 pt-0.5">
+                        <button
+                          onClick={() => handleOpenEdit(lead)}
+                          className="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-[#4165af] text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 cursor-pointer border border-blue-200"
+                          title="Edit referral details"
+                        >
+                          <i className="fas fa-pen text-[10px]"></i>
+                          <span>Edit</span>
+                        </button>
+
+                        <button
+                          onClick={() => setDealClosedLead(lead)}
+                          className="flex-[1.6] py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 cursor-pointer shadow-xs"
+                          title="Deal completed — remove this listing"
+                        >
+                          <i className="fas fa-handshake text-[10px]"></i>
+                          <span>Deal Closed (Remove)</span>
+                        </button>
+
+                        <button
+                          onClick={() => setDeletingLeadId(lead.id)}
+                          className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition flex items-center justify-center text-xs cursor-pointer border border-rose-200"
+                          title="Delete this referral"
+                        >
+                          <i className="fas fa-trash text-[11px]"></i>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleOpenContact(lead)}
+                      className="w-full py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                    >
+                      <i className="fas fa-unlock text-[10px]"></i>
+                      <span>Connect with Referrer ({lead.scout_name})</span>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -414,6 +582,215 @@ export default function BangaloreReferralBoardPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Edit Referral Modal */}
+      {editingLead && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-100">
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+                <i className="fas fa-pen text-[#4165af]"></i>
+                <span>Edit Your Referral Details</span>
+              </h3>
+              <button
+                onClick={() => setEditingLead(null)}
+                className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEdit} className="space-y-4 mt-4 text-xs">
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">
+                  Locality Name:
+                </label>
+                <input
+                  type="text"
+                  value={editingLead.locality_name}
+                  disabled
+                  className="w-full p-2.5 border border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-gray-700 mb-1">
+                  Approx Location / Society / Landmark Hint:
+                </label>
+                <textarea
+                  rows={2}
+                  value={editAddress}
+                  onChange={(e) => setEditAddress(e.target.value)}
+                  className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4165af] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Approx {editingLead.intent === "rent" ? "Rent" : "Price"} (₹):
+                  </label>
+                  <input
+                    type="number"
+                    value={editPrice}
+                    onChange={(e) => setEditPrice(e.target.value ? Number(e.target.value) : "")}
+                    placeholder={editingLead.intent === "rent" ? "e.g. 25000" : "e.g. 7500000"}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4165af] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your Referral Reward (₹):
+                  </label>
+                  <input
+                    type="number"
+                    value={editFee}
+                    onChange={(e) => setEditFee(Number(e.target.value))}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4165af] focus:outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your Contact Mobile:
+                  </label>
+                  <input
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4165af] focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-gray-700 mb-1">
+                    Your UPI ID (For Direct Payout):
+                  </label>
+                  <input
+                    type="text"
+                    value={editUpi}
+                    onChange={(e) => setEditUpi(e.target.value)}
+                    placeholder="e.g. name@okhdfcbank"
+                    className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4165af] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingLead(null)}
+                  className="px-4 py-2 font-semibold text-gray-600 hover:text-gray-800 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="px-4 py-2 bg-[#4165af] hover:bg-[#345290] disabled:opacity-50 text-white font-semibold rounded-xl transition cursor-pointer"
+                >
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingLeadId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 text-center space-y-4">
+            <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto text-xl">
+              <i className="fas fa-trash-alt"></i>
+            </div>
+            <h3 className="text-base font-bold text-gray-900">Delete This Referral?</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Are you sure? This referral post will be permanently deleted and removed from the public board.
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeletingLeadId(null)}
+                className="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-gray-800 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 text-xs bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-bold rounded-xl transition cursor-pointer"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Deal Closed Confirmation Modal */}
+      {dealClosedLead && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-emerald-500/40 text-center space-y-4">
+            <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-xs">
+              <i className="fas fa-handshake"></i>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-black text-gray-900">
+                Deal Closed &amp; Reward Finalized?
+              </h3>
+              <p className="text-xs text-gray-500 mt-1">
+                Referral: <strong className="text-gray-800">{dealClosedLead.property_category} in {dealClosedLead.locality_name}</strong>
+              </p>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200/90 rounded-xl p-4 text-left text-xs space-y-2">
+              <div className="flex items-center gap-2 font-black text-amber-900">
+                <i className="fas fa-triangle-exclamation text-amber-600 text-sm"></i>
+                <span>DATA REMOVAL AFTER DEAL CLOSURE:</span>
+              </div>
+              <p className="leading-relaxed text-[11px] text-amber-900 font-medium">
+                Congratulations on facilitating this connection! As agreed: <strong>Once the deal is closed, this old listing has NO USE and must be removed</strong>.
+              </p>
+              <ul className="list-disc list-inside text-[11px] space-y-1 text-amber-800 font-medium">
+                <li>Permanently stops brokers and buyers from calling your phone.</li>
+                <li>Protects your privacy and removes your address hint and UPI ID.</li>
+                <li>Ensures the community referral board only contains fresh, active leads.</li>
+              </ul>
+            </div>
+
+            <p className="text-xs font-semibold text-gray-700">
+              Confirm deal closure to permanently remove this lead from the board?
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDealClosedLead(null)}
+                disabled={isClosingDeal}
+                className="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer"
+              >
+                No, Keep Active
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDealClosed}
+                disabled={isClosingDeal}
+                className="w-full sm:w-auto px-5 py-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <i className="fas fa-check"></i>
+                <span>{isClosingDeal ? "Closing Deal..." : "YES, Deal Closed — Remove Data"}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
