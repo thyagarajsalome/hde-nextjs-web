@@ -132,13 +132,13 @@ export default function PostReferralPage() {
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-3 border border-emerald-100">
             <i className="fas fa-handshake"></i>
-            <span>Community Scout &amp; Referral Program</span>
+            <span>Community Property Referral Program</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Spot a House &amp; Earn a Finder&apos;s Fee
+            Refer a House &amp; Earn a Referral Reward
           </h1>
           <p className="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
-            Saw a &ldquo;To-Let&rdquo; board, a vacant flat, plot, or commercial space in your neighborhood? Post it here for free. When an independent broker, tenant, or buyer connects with you and closes the deal, earn your finder&apos;s fee directly via UPI.
+            Saw a &ldquo;To-Let&rdquo; board, a vacant flat, plot, or commercial space in your neighborhood? Post the reference here for free. When an independent broker, tenant, or buyer connects with you and closes the deal, earn your referral reward directly via UPI.
           </p>
 
           <div className="mt-4 flex items-center gap-4 text-xs font-semibold text-slate-500 flex-wrap">
@@ -165,10 +165,10 @@ export default function PostReferralPage() {
               <i className="fas fa-check"></i>
             </div>
             <h2 className="text-2xl font-black text-slate-900">
-              Scout Tip Published Successfully!
+              Property Referral Published Successfully!
             </h2>
             <p className="text-slate-600 text-sm max-w-lg mx-auto leading-relaxed">
-              Your property referral tip in <strong>{selectedLocality.name}</strong> is now live on the Bangalore Referral Board. Independent agents and buyers searching in your area can now contact you to coordinate and pay your finder&apos;s fee.
+              Your property referral in <strong>{selectedLocality.name}</strong> is now live on the Bangalore Referral Board. Independent agents, tenants, and buyers searching in your area can now contact you directly to inspect the property and settle your referral reward.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
@@ -323,19 +323,21 @@ export default function PostReferralPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Expected Fee Amount (₹) *
+                  Your Expected Referral Reward / Finder&apos;s Tip (₹) *
                 </label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-2.5 text-xs font-bold text-gray-500">₹</span>
+                <div className="flex rounded-xl border border-gray-300 focus-within:ring-2 focus-within:ring-[#4165af] focus-within:border-[#4165af] overflow-hidden bg-white shadow-2xs">
+                  <span className="inline-flex items-center px-4 bg-slate-100 text-slate-700 font-extrabold text-sm border-r border-gray-200 select-none">
+                    ₹
+                  </span>
                   <input
                     type="number"
                     value={expectedFee}
                     onChange={(e) => setExpectedFee(Number(e.target.value))}
-                    className="w-full pl-8 pr-3.5 py-2.5 rounded-xl border border-gray-300 text-sm font-extrabold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4165af]"
+                    className="w-full px-3.5 py-2.5 text-sm font-extrabold text-slate-900 focus:outline-none bg-transparent"
                   />
                 </div>
                 <p className="text-[11px] text-gray-500 mt-1.5">
-                  💡 Standard Bangalore market benchmarks: ₹1,500 – ₹3,000 for rental homes; ₹5,000 – ₹25,000 for property sales.
+                  💡 This is the referral tip you receive directly via UPI/cash once the tenant or buyer finalizes their agreement. (Typical range: ₹1,500 – ₹3,000 for rent; ₹5,000 – ₹25,000 for sale).
                 </p>
               </div>
             </div>

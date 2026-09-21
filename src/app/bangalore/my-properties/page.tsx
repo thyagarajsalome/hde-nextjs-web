@@ -690,19 +690,19 @@ export default function MyPropertiesPage() {
     ) : (
       /* Scout Referrals View (activeSection === "scouts") */
       <div className="space-y-6">
-        {/* Scout Info Banner */}
+        {/* Referral Info Banner */}
         <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-5 shadow-2xs space-y-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <span className="w-8 h-8 bg-emerald-600 text-white rounded-xl flex items-center justify-center text-sm font-bold shadow-xs">
-                <i className="fas fa-binoculars"></i>
+                <i className="fas fa-handshake"></i>
               </span>
               <div>
                 <h3 className="text-sm font-black text-emerald-950">
-                  Community Scout &amp; Referral Dashboard
+                  Community Referral Dashboard
                 </h3>
                 <p className="text-[11px] text-emerald-800">
-                  Track the properties you spotted, update your finder&apos;s fee &amp; UPI ID, or remove closed deals.
+                  Track the properties you referred, update your reward &amp; UPI ID, or remove closed deals.
                 </p>
               </div>
             </div>
@@ -711,7 +711,7 @@ export default function MyPropertiesPage() {
               className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl no-underline transition flex items-center gap-1.5 shadow-xs"
             >
               <i className="fas fa-plus text-[10px]"></i>
-              <span>Post New Scout Referral</span>
+              <span>Post New Referral</span>
             </Link>
           </div>
 
@@ -723,22 +723,22 @@ export default function MyPropertiesPage() {
           </div>
         </div>
 
-        {/* Scout Leads List */}
+        {/* Referrals List */}
         {scoutLeads.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center border border-gray-200/80 shadow-xs space-y-4">
             <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
               <i className="fas fa-handshake"></i>
             </div>
-            <h3 className="text-base font-bold text-gray-900">No Scout Referrals Yet</h3>
+            <h3 className="text-base font-bold text-gray-900">No Property Referrals Yet</h3>
             <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed">
-              Did you spot a &quot;To-Let&quot; board, vacant house, flat, plot, or shop for rent/sale in your neighborhood? Post it on the Community Scout board to earn finder&apos;s referral fees from interested buyers or registered brokers!
+              Did you spot a &quot;To-Let&quot; board, vacant house, flat, plot, or shop for rent/sale in your neighborhood? Post it on the Community Referral board to earn direct referral rewards when deals close!
             </p>
             <Link
               href="/bangalore/post-referral"
               className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl no-underline transition shadow-xs"
             >
               <i className="fas fa-plus text-[10px]"></i>
-              <span>Post Your First Referral Lead</span>
+              <span>Post Your First Referral</span>
             </Link>
           </div>
         ) : (

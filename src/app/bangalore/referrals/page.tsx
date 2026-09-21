@@ -81,14 +81,14 @@ export default function BangaloreReferralBoardPage() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-3 border border-emerald-100">
-                <i className="fas fa-binoculars"></i>
-                <span>Bangalore Community Property Scout</span>
+                <i className="fas fa-handshake"></i>
+                <span>Bangalore Community Property Referrals</span>
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
-                Property Scout &amp; Referral Board
+                Property Referrals &amp; Finder Board
               </h1>
               <p className="text-slate-600 text-sm sm:text-base mt-2 max-w-2xl leading-relaxed">
-                Off-market houses, plots, and commercial spaces spotted by local Bangalore residents and scouts. Connect directly with the referrer, inspect the property, and settle mutual finder&apos;s fees.
+                Direct property leads and vacant homes spotted by local Bangalore neighbors and referrers. Connect directly with the person who found the property, inspect it, and pay them their referral tip when your deal is finalized.
               </p>
             </div>
 
@@ -98,7 +98,7 @@ export default function BangaloreReferralBoardPage() {
                 className="inline-flex items-center gap-2 px-5 py-3.5 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-md hover:shadow-lg no-underline"
               >
                 <i className="fas fa-plus"></i>
-                <span>Spot a House &amp; Earn Fee</span>
+                <span>Refer a House &amp; Earn Reward</span>
               </Link>
               <Link
                 href="/bangalore/properties"
@@ -119,10 +119,10 @@ export default function BangaloreReferralBoardPage() {
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
                 <i className="fas fa-scale-balanced text-[#4165af]"></i>
-                <span>Transparent Bangalore Commission &amp; Finder Fee Benchmarks</span>
+                <span>Transparent Bangalore Commission &amp; Referral Tip Benchmarks</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
-                <strong>Rental Homes:</strong> Standard 1 month brokerage; scout finder&apos;s fee typically ₹1,500 – ₹3,000 upon lease signing. &bull; <strong>Property Sales:</strong> 1% – 2% broker commission; scout finder&apos;s fee typically ₹5,000 – ₹25,000. All payments are strictly private settlements between parties. HDE facilitates connections and holds no escrow.
+                <strong>Rental Homes:</strong> Standard 1 month brokerage; referrer tip typically ₹1,500 – ₹3,000 upon lease signing. &bull; <strong>Property Sales:</strong> 1% – 2% broker commission; referrer tip typically ₹5,000 – ₹25,000. All payments are strictly private settlements between parties. HDE facilitates connections and holds no escrow.
               </p>
             </div>
             <div className="flex-shrink-0 bg-blue-50 text-[#4165af] text-[11px] font-bold px-3 py-1.5 rounded-lg border border-blue-100">
@@ -133,50 +133,49 @@ export default function BangaloreReferralBoardPage() {
 
         {/* Filter Bar */}
         <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs mb-8 flex flex-wrap items-center gap-3">
-          {/* Locality */}
-          <div className="flex-1 min-w-[180px]">
-            <select
-              value={selectedLocality}
-              onChange={(e) => setSelectedLocality(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#4165af]"
-            >
-              <option value="all">All Bangalore Localities</option>
-              {BANGALORE_LOCALITIES.map((loc) => (
-                <option key={loc.id} value={loc.name}>
-                  {loc.name} ({loc.zone.replace(" Bangalore", "")})
-                </option>
-              ))}
-            </select>
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 mr-2">
+            <i className="fas fa-filter text-[#4165af]"></i>
+            <span>Filter Referrals:</span>
           </div>
+
+          {/* Locality */}
+          <select
+            value={selectedLocality}
+            onChange={(e) => setSelectedLocality(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4165af]"
+          >
+            <option value="all">All Bangalore Localities</option>
+            {BANGALORE_LOCALITIES.map((loc) => (
+              <option key={loc.id} value={loc.name}>
+                {loc.name}
+              </option>
+            ))}
+          </select>
 
           {/* Category */}
-          <div className="w-full sm:w-auto min-w-[150px]">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#4165af]"
-            >
-              <option value="all">All Property Types</option>
-              <option value="flat">Flats / Apartments</option>
-              <option value="independent_house">Independent Houses</option>
-              <option value="villa">Villas / Row Houses</option>
-              <option value="plot">Plots / Land Sites</option>
-              <option value="shop">Commercial Shops / Office</option>
-            </select>
-          </div>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4165af]"
+          >
+            <option value="all">All Property Types</option>
+            <option value="flat">Flat / Apartment</option>
+            <option value="independent_house">Independent House</option>
+            <option value="villa">Villa</option>
+            <option value="plot">Plot / Site</option>
+            <option value="shop">Commercial Shop</option>
+          </select>
 
           {/* Intent */}
-          <div className="w-full sm:w-auto min-w-[130px]">
-            <select
-              value={selectedIntent}
-              onChange={(e) => setSelectedIntent(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-slate-800 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#4165af]"
-            >
-              <option value="all">Rent &amp; Sale</option>
-              <option value="rent">For Rent</option>
-              <option value="sale">For Sale</option>
-            </select>
-          </div>
+          <select
+            value={selectedIntent}
+            onChange={(e) => setSelectedIntent(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-gray-200 text-xs font-semibold bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#4165af]"
+          >
+            <option value="all">Rent &amp; Sale</option>
+            <option value="rent">For Rent</option>
+            <option value="sale">For Sale</option>
+          </select>
 
           {(selectedLocality !== "all" || selectedCategory !== "all" || selectedIntent !== "all") && (
             <button
@@ -185,18 +184,18 @@ export default function BangaloreReferralBoardPage() {
                 setSelectedCategory("all");
                 setSelectedIntent("all");
               }}
-              className="text-xs font-bold text-red-600 hover:underline px-2 py-1 cursor-pointer"
+              className="text-xs text-rose-600 font-semibold hover:underline ml-auto"
             >
               Reset Filters
             </button>
           )}
         </div>
 
-        {/* Scout Leads Grid */}
+        {/* Referral Leads Grid */}
         {loading ? (
-          <div className="py-24 text-center">
-            <i className="fas fa-circle-notch fa-spin text-3xl text-[#4165af] mb-3"></i>
-            <p className="text-xs font-semibold text-gray-500">Loading scout tips...</p>
+          <div className="py-20 text-center space-y-3">
+            <i className="fas fa-circle-notch fa-spin text-3xl text-[#4165af]"></i>
+            <p className="text-xs font-semibold text-gray-500">Loading referral tips...</p>
           </div>
         ) : leads.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -206,27 +205,28 @@ export default function BangaloreReferralBoardPage() {
                 className="bg-white rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all p-6 flex flex-col justify-between"
               >
                 <div>
-                  {/* Top Badges */}
+                  {/* Category & Intent Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-[#4165af] border border-blue-100 uppercase tracking-wider">
-                      <i className="fas fa-map-pin text-[9px]"></i>
-                      <span>{lead.locality_name}</span>
+                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md bg-[#4165af]/10 text-[#4165af] tracking-wider">
+                      For {lead.intent}
                     </span>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider bg-slate-100 text-slate-700">
-                      {lead.intent === "rent" ? "For Rent" : "For Sale"}
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                      {lead.property_category.replace("_", " ")}
                     </span>
                   </div>
 
-                  {/* Property Category & Landmark */}
-                  <h3 className="text-base font-extrabold text-slate-900 capitalize mb-1">
-                    {lead.property_category.replace("_", " ")}
+                  {/* Locality */}
+                  <h3 className="text-lg font-black text-slate-900 mb-1 flex items-center gap-1.5">
+                    <i className="fas fa-location-dot text-rose-500 text-sm"></i>
+                    <span>{lead.locality_name}</span>
                   </h3>
-                  <p className="text-xs text-slate-600 mb-3 flex items-start gap-1.5">
-                    <i className="fas fa-location-dot text-slate-400 mt-0.5 text-xs"></i>
-                    <span>{lead.property_address_hint}</span>
+
+                  {/* Address Hint */}
+                  <p className="text-xs text-slate-600 mb-4 font-medium line-clamp-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    {lead.property_address_hint}
                   </p>
 
-                  {/* Pricing / Approx Rent */}
+                  {/* Pricing Details */}
                   {lead.approx_price_or_rent && (
                     <div className="p-2.5 bg-slate-50 rounded-xl mb-3 flex items-center justify-between text-xs">
                       <span className="text-gray-500">Approx {lead.intent === "rent" ? "Rent" : "Price"}:</span>
@@ -238,27 +238,27 @@ export default function BangaloreReferralBoardPage() {
                     </div>
                   )}
 
-                  {/* Finder Fee Badge */}
+                  {/* Referral Reward Badge */}
                   <div className="p-3 bg-amber-50/80 border border-amber-200/70 rounded-xl mb-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-amber-900 flex items-center gap-1">
+                      <span className="text-[11px] font-bold text-amber-900 flex items-center gap-1.5">
                         <i className="fas fa-hand-holding-dollar text-amber-700"></i>
-                        <span>Expected Finder&apos;s Fee:</span>
+                        <span>Referral Reward for Referrer:</span>
                       </span>
                       <span className="text-sm font-black text-amber-950">
                         ₹{lead.expected_finders_fee.toLocaleString("en-IN")}
                       </span>
                     </div>
-                    <span className="text-[10px] text-amber-800/80 block mt-0.5">
-                      Payable directly to scout upon agreement signing
+                    <span className="text-[10px] text-amber-900/90 block mt-1 font-medium">
+                      Pay directly to the person who referred this house only after you finalize the deal or rental agreement.
                     </span>
                   </div>
 
-                  {/* Scout Info */}
+                  {/* Referrer Info */}
                   <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-gray-100">
                     <span className="flex items-center gap-1.5">
                       <i className="fas fa-user text-slate-400"></i>
-                      <span>Spotted by {lead.scout_name}</span>
+                      <span>Referred by {lead.scout_name}</span>
                     </span>
                     <span className="text-[10px] text-gray-400">
                       {new Date(lead.created_at).toLocaleDateString("en-IN", {
@@ -273,9 +273,9 @@ export default function BangaloreReferralBoardPage() {
                 <div className="mt-5 pt-3 border-t border-gray-100">
                   <button
                     onClick={() => handleOpenContact(lead)}
-                    className="w-full py-2.5 px-4 bg-[#4165af] hover:bg-[#325291] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    className="w-full py-3 bg-[#4165af] hover:bg-[#325291] text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
                   >
-                    <i className="fas fa-phone-volume"></i>
+                    <i className="fas fa-unlock text-[10px]"></i>
                     <span>Connect with Referrer ({lead.scout_name})</span>
                   </button>
                 </div>
@@ -323,7 +323,7 @@ export default function BangaloreReferralBoardPage() {
               <div className="space-y-4">
                 <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-emerald-900">Scout Name:</span>
+                    <span className="text-xs font-bold text-emerald-900">Referrer (Found this house):</span>
                     <span className="text-xs font-extrabold text-slate-900">{activeLead.scout_name}</span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -332,7 +332,7 @@ export default function BangaloreReferralBoardPage() {
                   </div>
                   {activeLead.scout_upi_id && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-900">UPI ID:</span>
+                      <span className="text-xs font-bold text-emerald-900">Referrer UPI ID:</span>
                       <span className="text-xs font-mono font-bold text-slate-900">{activeLead.scout_upi_id}</span>
                     </div>
                   )}
@@ -341,7 +341,7 @@ export default function BangaloreReferralBoardPage() {
                 {/* Direct WhatsApp Call CTA */}
                 <a
                   href={`https://wa.me/91${activeLead.scout_phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                    `Hi ${activeLead.scout_name}, I saw your scout tip on HDE for the ${activeLead.property_category} in ${activeLead.locality_name}. I would like to coordinate and discuss the finder's fee.`
+                    `Hi ${activeLead.scout_name}, I saw the property you referred on HDE (${activeLead.property_category} in ${activeLead.locality_name}). I would like to coordinate, inspect it, and discuss the referral reward.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -351,8 +351,8 @@ export default function BangaloreReferralBoardPage() {
                   <span>Message {activeLead.scout_name} on WhatsApp</span>
                 </a>
 
-                <div className="p-3 bg-slate-50 border border-gray-200 rounded-xl text-[11px] text-gray-500 leading-relaxed">
-                  <strong>Settlement Reminder:</strong> HDE is not an escrow agent. Settle the agreed finder&apos;s fee (₹{activeLead.expected_finders_fee}) directly with {activeLead.scout_name} upon signing agreement.
+                <div className="p-3 bg-slate-50 border border-gray-200 rounded-xl text-[11px] text-gray-600 leading-relaxed">
+                  <strong>Direct Settlement Reminder:</strong> HDE only connects you. Settle the agreed referral reward (₹{activeLead.expected_finders_fee.toLocaleString("en-IN")}) directly with {activeLead.scout_name} (via UPI or cash) only after your rental agreement or property deal is finalized.
                 </div>
               </div>
             ) : (
@@ -365,7 +365,7 @@ export default function BangaloreReferralBoardPage() {
                     Unlock Direct Contact for {activeLead.scout_name}
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Choose an access plan to reveal verified contacts for scouts and property owners across Bangalore without broker call-center spam.
+                    Choose an access pass to reveal direct contact numbers for property referrers and verified owners across Bangalore.
                   </p>
                 </div>
 
