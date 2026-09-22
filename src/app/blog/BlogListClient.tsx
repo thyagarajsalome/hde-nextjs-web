@@ -118,32 +118,30 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
 
       {/* Featured Cornerstone Article Card */}
       {featuredPost && (
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-[#1e3a5f] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden group">
-          <div className="absolute right-0 top-0 translate-x-12 -translate-y-8 w-64 h-64 bg-[#4165af]/20 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="relative z-10 max-w-2xl space-y-4">
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200/90 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
+          <div className="relative z-10 max-w-3xl space-y-4">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-[11px] font-extrabold uppercase tracking-wider border border-amber-400/30">
-                <i className="fas fa-star text-[10px]"></i>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-extrabold uppercase tracking-wider border border-amber-200">
+                <i className="fas fa-star text-amber-500 text-[10px]"></i>
                 Featured Flagship Guide
               </span>
-              <span className="text-xs text-slate-300 font-medium">
-                <i className="far fa-clock mr-1"></i>
+              <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                <i className="far fa-clock text-[11px]"></i>
                 {featuredPost.meta.readingTime}
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white group-hover:text-blue-200 transition-colors leading-snug">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-[#4165af] transition-colors leading-snug">
               <Link href={`/blog/${featuredPost.slug}`} className="no-underline text-inherit">
                 {featuredPost.meta.title}
               </Link>
             </h2>
 
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3">
               {featuredPost.meta.description}
             </p>
 
-            <div className="flex items-center justify-between pt-2 flex-wrap gap-4">
+            <div className="flex items-center justify-between pt-3 border-t border-gray-100 flex-wrap gap-4">
               <div className="flex items-center gap-3 text-xs text-slate-400">
                 <span><i className="far fa-calendar-alt mr-1.5"></i>{featuredPost.meta.date}</span>
                 <span>&bull;</span>
@@ -152,7 +150,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
 
               <Link
                 href={`/blog/${featuredPost.slug}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#4165af] hover:bg-[#325291] text-white text-xs font-extrabold rounded-xl transition shadow-md no-underline"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#4165af] hover:bg-[#325291] text-white text-xs font-extrabold rounded-xl transition shadow-xs hover:shadow-md no-underline"
               >
                 <span>Read Complete Guide</span>
                 <i className="fas fa-arrow-right text-[11px]"></i>
