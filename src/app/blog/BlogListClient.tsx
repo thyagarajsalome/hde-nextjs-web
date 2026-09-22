@@ -9,38 +9,57 @@ interface BlogListClientProps {
   posts: BlogPost[];
 }
 
-const CATEGORIES = [
+const ALL_CATEGORIES = [
   { id: 'all', label: 'All Guides', icon: 'fas fa-layer-group' },
-  { id: 'construction', label: 'Construction & Cost', match: ['Construction', 'Budgeting'], icon: 'fas fa-trowel-bricks' },
-  { id: 'loans', label: 'Home Loans & EMI', match: ['Home Loans', 'Finance', 'EMI'], icon: 'fas fa-calculator' },
+  { id: 'construction', label: 'Construction & Cost', match: ['Construction', 'Budgeting', 'Roof', 'Block', 'Brick'], icon: 'fas fa-trowel-bricks' },
+  { id: 'loans', label: 'Home Loans & EMI', match: ['Home Loans', 'Finance', 'EMI', 'Salary'], icon: 'fas fa-calculator' },
   { id: 'kitchen', label: 'Kitchen & Interior', match: ['Kitchen', 'Interior'], icon: 'fas fa-kitchen-set' },
   { id: 'bathroom', label: 'Bathroom & Remodel', match: ['Bathroom', 'Renovation', 'Remodel'], icon: 'fas fa-bath' },
-  { id: 'real-estate', label: 'Real Estate & Renting', match: ['Real Estate', 'Rent'], icon: 'fas fa-house-chimney' },
-  { id: 'luxury', label: 'Luxury Upgrades', match: ['Luxury'], icon: 'fas fa-gem' },
+  { id: 'real-estate', label: 'Real Estate & Renting', match: ['Real Estate', 'Rent', 'Property', 'Dubai'], icon: 'fas fa-house-chimney' },
+  { id: 'luxury', label: 'Luxury Upgrades', match: ['Luxury', 'Pickleball', 'Pool'], icon: 'fas fa-gem' },
 ];
 
 export default function BlogListClient({ posts }: BlogListClientProps) {
-  const { region } = useRegion();
+  const { region, setRegion } = useRegion();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
-  // Region filtering
+  // Strict region isolation (IN, US, or AE)
+  const activeRegion = region === 'US' ? 'US' : region === 'AE' ? 'AE' : 'IN';
+
+  // Strict region filtering - NEVER mix India, USA, and Dubai articles
   const regionalPosts = useMemo(() => {
     return posts.filter((post) => {
-      if (region === 'US') {
-        return post.meta.region === 'US' || post.meta.region === 'Global';
-      }
-      // Default India mode (show everything except strictly US-only)
-      return post.meta.region !== 'US';
+      const pRegion = post.meta.region?.toUpperCase();
+      if (pRegion === 'GLOBAL') return true;
+      if (activeRegion === 'US') return pRegion === 'US';
+      if (activeRegion === 'AE') return pRegion === 'AE';
+      // Default India mode (IN): ONLY return India articles
+      return pRegion === 'IN';
     });
-  }, [posts, region]);
+  }, [posts, activeRegion]);
 
-  // Search & category filtering
+  // Dynamically show only category pills that actually exist for the active region
+  const visibleCategories = useMemo(() => {
+    return ALL_CATEGORIES.filter((cat) => {
+      if (cat.id === 'all') return true;
+      if (!cat.match) return false;
+      return regionalPosts.some((post) =>
+        cat.match!.some(
+          (m) =>
+            post.meta.category.toLowerCase().includes(m.toLowerCase()) ||
+            post.slug.toLowerCase().includes(m.toLowerCase())
+        )
+      );
+    });
+  }, [regionalPosts]);
+
+  // Search & category filtering within the active region
   const filteredPosts = useMemo(() => {
     return regionalPosts.filter((post) => {
       // Category match
       if (activeCategory !== 'all') {
-        const catConfig = CATEGORIES.find((c) => c.id === activeCategory);
+        const catConfig = ALL_CATEGORIES.find((c) => c.id === activeCategory);
         if (catConfig && catConfig.match) {
           const matches = catConfig.match.some(
             (m) =>
@@ -64,21 +83,96 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
     });
   }, [regionalPosts, activeCategory, searchQuery]);
 
-  // Featured post: top post when on 'all' and no active search
+  // Featured flagship post strictly from the current region
   const isShowingAllDefault = activeCategory === 'all' && !searchQuery.trim();
-  const featuredPost = isShowingAllDefault ? regionalPosts[0] : null;
-  const standardPosts = isShowingAllDefault ? filteredPosts.slice(1) : filteredPosts;
+  const featuredPost = isShowingAllDefault
+    ? regionalPosts.find((p) => p.meta.featured) || regionalPosts[0]
+    : null;
+  const standardPosts = isShowingAllDefault
+    ? regionalPosts.filter((p) => p.slug !== featuredPost?.slug)
+    : filteredPosts;
+
+  const regionNames: Record<string, { label: string; flag: string }> = {
+    IN: { label: 'India Mode', flag: '🇮🇳' },
+    US: { label: 'USA Mode', flag: '🇺🇸' },
+    AE: { label: 'Dubai / UAE Mode', flag: '🇦🇪' },
+  };
 
   return (
     <div className="space-y-8">
-      {/* Search Bar & Category Navigation */}
+      {/* Region Status & Search Bar */}
       <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200/90 shadow-xs space-y-4">
+        {/* Region Indicator and Switcher */}
+        <div className="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <span>{regionNames[activeRegion]?.flag}</span>
+              <span>Showing <strong>{regionNames[activeRegion]?.label}</strong> Guides</span>
+            </span>
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">
+              {regionalPosts.length} guides
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-xs font-bold">
+            <span className="text-slate-400 font-medium text-[11px] mr-1">Switch Region:</span>
+            <button
+              onClick={() => {
+                setRegion('IN');
+                setActiveCategory('all');
+                setSearchQuery('');
+              }}
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                activeRegion === 'IN'
+                  ? 'bg-emerald-600 text-white shadow-2xs'
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-gray-200'
+              }`}
+            >
+              🇮🇳 India
+            </button>
+            <button
+              onClick={() => {
+                setRegion('US');
+                setActiveCategory('all');
+                setSearchQuery('');
+              }}
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                activeRegion === 'US'
+                  ? 'bg-blue-600 text-white shadow-2xs'
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-gray-200'
+              }`}
+            >
+              🇺🇸 USA
+            </button>
+            <button
+              onClick={() => {
+                setRegion('AE');
+                setActiveCategory('all');
+                setSearchQuery('');
+              }}
+              className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
+                activeRegion === 'AE'
+                  ? 'bg-amber-600 text-white shadow-2xs'
+                  : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border border-gray-200'
+              }`}
+            >
+              🇦🇪 Dubai
+            </button>
+          </div>
+        </div>
+
         {/* Search Input */}
         <div className="relative">
           <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
           <input
             type="text"
-            placeholder="Search guides by keyword (e.g. modular kitchen, cement rates, home loan EMI, bathroom, rent vs buy)..."
+            placeholder={`Search ${regionNames[activeRegion]?.label} guides (e.g. ${
+              activeRegion === 'IN'
+                ? 'modular kitchen, cement rates, home loan EMI, brick vs block'
+                : activeRegion === 'US'
+                ? 'pickleball court, rent vs buy, outdoor kitchen, permit'
+                : 'DLD fees, service charge, off-plan'
+            })...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-10 py-3 bg-slate-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-medium text-slate-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4165af] focus:bg-white transition"
@@ -94,9 +188,9 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
           )}
         </div>
 
-        {/* Category Pills */}
+        {/* Category Pills (Strictly for active region) */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {CATEGORIES.map((cat) => {
+          {visibleCategories.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
               <button
@@ -116,14 +210,14 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
         </div>
       </div>
 
-      {/* Featured Cornerstone Article Card */}
+      {/* Featured Cornerstone Article Card (White Background, Pure Regional) */}
       {featuredPost && (
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200/90 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-extrabold uppercase tracking-wider border border-amber-200">
                 <i className="fas fa-star text-amber-500 text-[10px]"></i>
-                Featured Flagship Guide
+                Featured {regionNames[activeRegion]?.label} Guide
               </span>
               <span className="text-xs text-slate-500 font-medium flex items-center gap-1">
                 <i className="far fa-clock text-[11px]"></i>
@@ -160,11 +254,11 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
         </div>
       )}
 
-      {/* Results Count & Current Filter Label */}
+      {/* Results Count & Reset */}
       <div className="flex items-center justify-between text-xs text-slate-500 px-1">
         <span>
           Showing <strong>{filteredPosts.length}</strong> {filteredPosts.length === 1 ? 'guide' : 'guides'}
-          {activeCategory !== 'all' && ` in ${CATEGORIES.find((c) => c.id === activeCategory)?.label}`}
+          {activeCategory !== 'all' && ` in ${ALL_CATEGORIES.find((c) => c.id === activeCategory)?.label}`}
           {searchQuery && ` matching "${searchQuery}"`}
         </span>
         {(searchQuery || activeCategory !== 'all') && (
@@ -180,7 +274,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
         )}
       </div>
 
-      {/* Standard Post Cards Grid */}
+      {/* Regional Post Cards Grid */}
       {standardPosts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {standardPosts.map((post) => (
@@ -231,7 +325,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
           </div>
           <h4 className="text-base font-bold text-slate-900">No matching guides found</h4>
           <p className="text-xs text-slate-500 leading-relaxed">
-            We couldn&apos;t find any guides matching &quot;{searchQuery}&quot;. Try different keywords or reset your filters.
+            No guides found matching &quot;{searchQuery}&quot; for {regionNames[activeRegion]?.label}. Try a different keyword or reset filters.
           </p>
           <button
             onClick={() => {
@@ -240,7 +334,7 @@ export default function BlogListClient({ posts }: BlogListClientProps) {
             }}
             className="px-4 py-2 bg-[#4165af] text-white text-xs font-bold rounded-xl hover:bg-[#325291] transition cursor-pointer"
           >
-            Show All Guides
+            Show All {regionNames[activeRegion]?.label} Guides
           </button>
         </div>
       )}
