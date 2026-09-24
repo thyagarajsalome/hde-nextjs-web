@@ -1334,42 +1334,42 @@ export const PlanGallery: React.FC = () => {
                   <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-500 flex items-center justify-center border border-blue-100 dark:border-blue-900/40"><i className="fas fa-bed"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 font-bold uppercase">Bedrooms</p>
-                    {isEditing ? <input type="number" value={editData.bedrooms} onChange={e=>setEditData({...editData, bedrooms: parseInt(e.target.value)||0})} className="w-16 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.bedrooms} BHK</p>}
+                    {isEditing ? <input type="number" value={editData.bedrooms} onChange={e=>setEditData({...editData, bedrooms: parseInt(e.target.value)||0})} className="w-20 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.bedrooms} BHK</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-500 flex items-center justify-center border border-cyan-100 dark:border-cyan-900/40"><i className="fas fa-bath"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 font-bold uppercase">Bathrooms</p>
-                    {isEditing ? <input type="number" value={editData.bathrooms} onChange={e=>setEditData({...editData, bathrooms: parseInt(e.target.value)||0})} className="w-16 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.bathrooms}</p>}
+                    {isEditing ? <input type="number" value={editData.bathrooms} onChange={e=>setEditData({...editData, bathrooms: parseInt(e.target.value)||0})} className="w-20 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.bathrooms}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-500 flex items-center justify-center border border-purple-100 dark:border-purple-900/40"><i className="fas fa-layer-group"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 font-bold uppercase">Floors</p>
-                    {isEditing ? <input type="text" value={editData.floors} onChange={e=>setEditData({...editData, floors: e.target.value})} className="w-16 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.floors}</p>}
+                    {isEditing ? <input type="text" value={editData.floors} onChange={e=>setEditData({...editData, floors: e.target.value})} className="w-32 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" placeholder="e.g. Ground Only" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.floors}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-950/40 text-green-500 flex items-center justify-center border border-green-100 dark:border-green-900/40"><i className="fas fa-car"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 font-bold uppercase">Parking</p>
-                    {isEditing ? <input type="text" value={editData.parking} onChange={e=>setEditData({...editData, parking: e.target.value})} className="w-24 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.parking}</p>}
+                    {isEditing ? <input type="text" value={editData.parking} onChange={e=>setEditData({...editData, parking: e.target.value})} className="w-28 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" placeholder="e.g. 1 Car" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.parking}</p>}
                   </div>
                 </div>
                  <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-zinc-50 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 flex items-center justify-center border border-zinc-100 dark:border-zinc-700"><i className="fas fa-kitchen-set"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 dark:text-zinc-500 font-bold uppercase">Kitchen</p>
-                    {isEditing ? <input type="text" value={editData.kitchen_info} onChange={e=>setEditData({...editData, kitchen_info: e.target.value})} className="w-24 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.kitchen_info || '1'}</p>}
+                    {isEditing ? <input type="text" value={editData.kitchen_info} onChange={e=>setEditData({...editData, kitchen_info: e.target.value})} className="w-28 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" placeholder="e.g. 1 Modular" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.kitchen_info || '1'}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-500 flex items-center justify-center border border-pink-100 dark:border-pink-900/40"><i className="fas fa-couch"></i></div>
                   <div>
                     <p className="text-[10px] text-gray-500 font-bold uppercase">Living Hall</p>
-                    {isEditing ? <input type="text" value={editData.living_hall_info} onChange={e=>setEditData({...editData, living_hall_info: e.target.value})} className="w-24 border rounded text-sm dark:bg-zinc-800" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.living_hall_info || '1'}</p>}
+                    {isEditing ? <input type="text" value={editData.living_hall_info} onChange={e=>setEditData({...editData, living_hall_info: e.target.value})} className="w-28 border border-gray-300 dark:border-zinc-700 rounded-lg px-2 py-1 text-sm bg-white dark:bg-zinc-800 focus:border-primary outline-none" placeholder="e.g. 1 Spacious" /> : <p className="font-bold text-gray-800 dark:text-zinc-200">{selectedPlan.living_hall_info || '1'}</p>}
                   </div>
                 </div>
               </div>
@@ -1602,18 +1602,34 @@ export const PlanGallery: React.FC = () => {
               })()}
 
               {(selectedPlan.description || isEditing) && (
-                <>
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 dark:border-zinc-800 pb-2 mb-3">Detailed Description</h4>
+                <div className="mb-6">
+                  <div className="flex items-center justify-between border-b border-gray-100 dark:border-zinc-800 pb-2 mb-3">
+                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Detailed Description</h4>
+                    {isEditing && (
+                      <span className="text-[10px] text-[#c5a059] font-bold flex items-center gap-1">
+                        <i className="fas fa-arrows-alt-v text-[9px]"></i>
+                        Adjustable Box
+                      </span>
+                    )}
+                  </div>
                   {isEditing ? (
-                    <textarea 
-                      value={editData.description} 
-                      onChange={e => setEditData({...editData, description: e.target.value})}
-                      className="w-full h-24 border border-primary rounded p-2 text-sm text-gray-600 dark:text-zinc-300 mb-6 resize-none outline-none bg-gray-50 dark:bg-zinc-800"
-                    />
+                    <div className="space-y-1.5">
+                      <textarea 
+                        value={editData.description || ""} 
+                        onChange={e => setEditData({...editData, description: e.target.value})}
+                        rows={6}
+                        placeholder="Enter detailed architectural specifications, room dimensions, ventilation, layout notes..."
+                        className="w-full min-h-[160px] p-3.5 rounded-xl border-2 border-primary/40 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm text-gray-800 dark:text-zinc-100 outline-none bg-white dark:bg-zinc-800 transition-all resize-y shadow-xs font-normal leading-relaxed"
+                      />
+                      <div className="flex items-center justify-between text-[10px] text-gray-400 px-1">
+                        <span><i className="fas fa-info-circle mr-1 text-[#c5a059]"></i>Click &amp; drag bottom-right corner (⇲) to expand as large as needed</span>
+                        <span>{(editData.description || "").length} characters</span>
+                      </div>
+                    </div>
                   ) : (
-                    <p className="text-sm text-gray-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap mb-6 flex-grow">{selectedPlan.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap flex-grow">{selectedPlan.description}</p>
                   )}
-                </>
+                </div>
               )}
 
               <div className="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-xl p-3.5 mb-6">
