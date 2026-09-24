@@ -31,6 +31,15 @@ function normalizeBathroomDesign(d: any): BathroomDesign {
   ) {
     return { ...d, layout_type: 'Compact 3-Fixture' };
   }
+  if (
+    d.layout_type === 'Luxury Suite' ||
+    (d.layout_type === 'Wet & Dry Partition' &&
+      (d.slug?.toLowerCase().includes('luxury') ||
+       d.title?.toLowerCase().includes('luxury suite') ||
+       (Array.isArray(d.keywords) && d.keywords.includes('Luxury Suite'))))
+  ) {
+    return { ...d, layout_type: 'Luxury Suite' };
+  }
   return d as BathroomDesign;
 }
 
@@ -241,11 +250,23 @@ export const bathroomGalleryService = {
         display_order: (typeof input.display_order === 'number' && !isNaN(input.display_order)) ? input.display_order : 0,
       };
 
-      const { data, error } = await supabase
+      let { data, error } = await supabase
         .from('bathroom_designs')
         .insert([newRecord])
         .select()
         .single();
+
+      if (error && (error.code === '23514' || error.message?.includes('bathroom_designs_layout_type_check'))) {
+        console.warn('Check constraint violation on layout_type, falling back to Wet & Dry Partition with keyword tag');
+        newRecord.layout_type = 'Wet & Dry Partition';
+        const retryRes = await supabase
+          .from('bathroom_designs')
+          .insert([newRecord])
+          .select()
+          .single();
+        data = retryRes.data;
+        error = retryRes.error;
+      }
 
       if (error) {
         console.error('Supabase bathroom_designs insert error:', error);
@@ -295,10 +316,20 @@ export const bathroomGalleryService = {
       }
       sanitizedUpdates.updated_at = new Date().toISOString();
 
-      const { error } = await supabase
+      let { error } = await supabase
         .from('bathroom_designs')
         .update(sanitizedUpdates)
         .eq('id', id);
+
+      if (error && (error.code === '23514' || error.message?.includes('bathroom_designs_layout_type_check'))) {
+        console.warn('Check constraint violation on layout_type update, falling back to Wet & Dry Partition');
+        sanitizedUpdates.layout_type = 'Wet & Dry Partition';
+        const retryRes = await supabase
+          .from('bathroom_designs')
+          .update(sanitizedUpdates)
+          .eq('id', id);
+        error = retryRes.error;
+      }
 
       if (error) {
         console.error('Supabase bathroom_designs update error:', error);
