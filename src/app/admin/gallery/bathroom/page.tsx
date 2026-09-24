@@ -365,7 +365,21 @@ export default function AdminBathroomGalleryPage() {
 
   const filteredDesigns = filterType === 'All'
     ? designs
-    : designs.filter(d => d.layout_type === filterType);
+    : designs.filter(d => {
+        if (filterType === 'Compact 3-Fixture') {
+          return d.layout_type === 'Compact 3-Fixture' ||
+            d.slug?.toLowerCase().includes('3-fixture') ||
+            d.title?.toLowerCase().includes('3-fixture') ||
+            (Array.isArray(d.keywords) && d.keywords.includes('Compact 3-Fixture'));
+        }
+        if (filterType === 'Wet & Dry Partition') {
+          return d.layout_type === 'Wet & Dry Partition' &&
+            !d.slug?.toLowerCase().includes('3-fixture') &&
+            !d.title?.toLowerCase().includes('3-fixture') &&
+            !(Array.isArray(d.keywords) && d.keywords.includes('Compact 3-Fixture'));
+        }
+        return d.layout_type === filterType;
+      });
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-10 px-4 sm:px-6 lg:px-8">

@@ -15,6 +15,25 @@ async function loadFallbackDesigns(): Promise<BathroomDesign[]> {
   return mod.default;
 }
 
+// ── Layout Normalizer & Sanitizer ──────────────────────────────────────────
+// Supabase live database check constraint currently allows:
+// ('Master Bathroom', 'Wet & Dry Partition', 'Powder Room', 'Luxury Suite')
+// 'Compact 3-Fixture' is safely stored as 'Wet & Dry Partition' with the 'Compact 3-Fixture' keyword,
+// and transparently restored to 'Compact 3-Fixture' on read so the UI always has the right layout.
+function normalizeBathroomDesign(d: any): BathroomDesign {
+  if (!d) return d;
+  if (
+    d.layout_type === 'Compact 3-Fixture' ||
+    (d.layout_type === 'Wet & Dry Partition' &&
+      (d.slug?.toLowerCase().includes('3-fixture') ||
+       d.title?.toLowerCase().includes('3-fixture') ||
+       (Array.isArray(d.keywords) && d.keywords.includes('Compact 3-Fixture'))))
+  ) {
+    return { ...d, layout_type: 'Compact 3-Fixture' };
+  }
+  return d as BathroomDesign;
+}
+
 export const bathroomGalleryService = {
   /**
    * Fetch active bathroom designs for the public gallery grid (lightweight card columns only)
@@ -29,7 +48,13 @@ export const bathroomGalleryService = {
         .order('created_at', { ascending: false });
 
       if (layoutType) {
-        query = query.eq('layout_type', layoutType);
+        if (layoutType === 'Compact 3-Fixture') {
+          query = query.in('layout_type', ['Wet & Dry Partition', 'Compact 3-Fixture']);
+        } else if (layoutType === 'Wet & Dry Partition') {
+          query = query.eq('layout_type', 'Wet & Dry Partition');
+        } else {
+          query = query.eq('layout_type', layoutType);
+        }
       }
 
       const { data, error } = await query;
@@ -41,7 +66,11 @@ export const bathroomGalleryService = {
         return fallback;
       }
 
-      return data as BathroomDesign[];
+      let normalized = data.map(normalizeBathroomDesign);
+      if (layoutType) {
+        normalized = normalized.filter(d => d.layout_type === layoutType);
+      }
+      return normalized;
     } catch {
       let fallback = await loadFallbackDesigns();
       fallback = fallback.filter(d => d.is_active);
@@ -66,7 +95,7 @@ export const bathroomGalleryService = {
         return fallback.find(d => d.id === id) || null;
       }
 
-      return data as BathroomDesign;
+      return normalizeBathroomDesign(data);
     } catch {
       const fallback = await loadFallbackDesigns();
       return fallback.find(d => d.id === id) || null;
@@ -89,7 +118,7 @@ export const bathroomGalleryService = {
         return fallback.find(d => d.slug === slug) || null;
       }
 
-      return data as BathroomDesign;
+      return normalizeBathroomDesign(data);
     } catch {
       const fallback = await loadFallbackDesigns();
       return fallback.find(d => d.slug === slug) || null;
@@ -112,7 +141,7 @@ export const bathroomGalleryService = {
         return await loadFallbackDesigns();
       }
 
-      return data as BathroomDesign[];
+      return data.map(normalizeBathroomDesign);
     } catch {
       return await loadFallbackDesigns();
     }
@@ -124,27 +153,31 @@ export const bathroomGalleryService = {
   async createDesign(input: CreateBathroomDesignInput): Promise<{ success: boolean; data?: BathroomDesign; error?: string }> {
     try {
       // 1. Sanitize Layout to strictly match SQL check constraint
-      const VALID_LAYOUTS = [
-        'Master Bathroom',
-        'Wet & Dry Partition',
-        'Compact 3-Fixture',
-        'Powder Room',
-        'Luxury Suite'
-      ];
-      let layoutType = input.layout_type || 'Wet & Dry Partition';
-      const exactMatch = VALID_LAYOUTS.find(l => l.toLowerCase() === layoutType.toLowerCase());
-      if (exactMatch) {
-        layoutType = exactMatch as any;
-      } else if (layoutType.toLowerCase().includes('master')) {
-        layoutType = 'Master Bathroom' as any;
-      } else if (layoutType.toLowerCase().includes('powder')) {
-        layoutType = 'Powder Room' as any;
-      } else if (layoutType.toLowerCase().includes('luxury') || layoutType.toLowerCase().includes('suite')) {
-        layoutType = 'Luxury Suite' as any;
-      } else if (layoutType.toLowerCase().includes('compact') || layoutType.toLowerCase().includes('3-fixture')) {
-        layoutType = 'Compact 3-Fixture' as any;
+      const isCompact = input.layout_type === 'Compact 3-Fixture' ||
+        input.layout_type?.toLowerCase().includes('compact') ||
+        input.layout_type?.toLowerCase().includes('3-fixture');
+
+      let dbLayoutType: string;
+      if (isCompact) {
+        // Supabase DB check constraint currently restricts layout_type to:
+        // ('Master Bathroom', 'Wet & Dry Partition', 'Powder Room', 'Luxury Suite')
+        // We safely store as 'Wet & Dry Partition' with 'Compact 3-Fixture' keyword tag
+        dbLayoutType = 'Wet & Dry Partition';
+      } else if (input.layout_type?.toLowerCase().includes('master')) {
+        dbLayoutType = 'Master Bathroom';
+      } else if (input.layout_type?.toLowerCase().includes('powder')) {
+        dbLayoutType = 'Powder Room';
+      } else if (input.layout_type?.toLowerCase().includes('luxury') || input.layout_type?.toLowerCase().includes('suite')) {
+        dbLayoutType = 'Luxury Suite';
       } else {
-        layoutType = 'Wet & Dry Partition' as any;
+        dbLayoutType = 'Wet & Dry Partition';
+      }
+
+      const keywords = Array.isArray(input.keywords) && input.keywords.length > 0
+        ? [...input.keywords]
+        : ['bathroom design india', 'modern bathroom cost'];
+      if (isCompact && !keywords.includes('Compact 3-Fixture')) {
+        keywords.push('Compact 3-Fixture');
       }
 
       // 2. Generate clean, unique slug
@@ -185,8 +218,8 @@ export const bathroomGalleryService = {
         slug: generatedSlug,
         meta_title: input.meta_title || `${input.title || 'Modern Bathroom'} | HDE Bathroom Gallery`,
         meta_description: input.meta_description || `View specs and approximate cost for ${input.title || 'this bathroom design'}.`,
-        alt_text: (input.alt_text && input.alt_text.trim()) || `${input.title || 'Modern'} - ${layoutType} bathroom design`,
-        layout_type: layoutType,
+        alt_text: (input.alt_text && input.alt_text.trim()) || `${input.title || 'Modern'} - ${input.layout_type || 'Modern'} bathroom design`,
+        layout_type: dbLayoutType,
         dimensions: (input.dimensions && input.dimensions.trim()) || '8 ft × 6 ft (48 sq ft)',
         tile_concept: (input.tile_concept && input.tile_concept.trim()) || 'Vitrified Matte (2x4 ft) + Accent Highlighter',
         vanity_type: (input.vanity_type && input.vanity_type.trim()) || 'Wall-Hung Floating Vanity with Quartz Top',
@@ -202,7 +235,7 @@ export const bathroomGalleryService = {
         file_name: input.file_name || `${generatedSlug}.webp`,
         aspect_ratio: input.aspect_ratio || '9:16',
         file_size_kb: (typeof input.file_size_kb === 'number' && !isNaN(input.file_size_kb)) ? input.file_size_kb : 80,
-        keywords: Array.isArray(input.keywords) && input.keywords.length > 0 ? input.keywords : ['bathroom design india', 'modern bathroom cost'],
+        keywords: keywords,
         is_featured: input.is_featured ?? false,
         is_active: input.is_active ?? true,
         display_order: (typeof input.display_order === 'number' && !isNaN(input.display_order)) ? input.display_order : 0,
@@ -219,7 +252,7 @@ export const bathroomGalleryService = {
         return { success: false, error: `${error.message} (${error.code || '400'})` };
       }
 
-      return { success: true, data: data as BathroomDesign };
+      return { success: true, data: normalizeBathroomDesign(data) };
     } catch (err: any) {
       console.error('BathroomGalleryService createDesign exception:', err);
       return { success: false, error: err.message || 'Failed to create bathroom design' };
@@ -233,15 +266,26 @@ export const bathroomGalleryService = {
     try {
       const sanitizedUpdates: any = { ...updates };
       if (sanitizedUpdates.layout_type) {
-        const VALID_LAYOUTS = [
-          'Master Bathroom',
-          'Wet & Dry Partition',
-          'Compact 3-Fixture',
-          'Powder Room',
-          'Luxury Suite'
-        ];
-        const match = VALID_LAYOUTS.find(l => l.toLowerCase() === sanitizedUpdates.layout_type.toLowerCase());
-        if (match) sanitizedUpdates.layout_type = match;
+        const isCompact = sanitizedUpdates.layout_type === 'Compact 3-Fixture' ||
+          sanitizedUpdates.layout_type.toLowerCase().includes('compact') ||
+          sanitizedUpdates.layout_type.toLowerCase().includes('3-fixture');
+
+        if (isCompact) {
+          sanitizedUpdates.layout_type = 'Wet & Dry Partition';
+          const keywords = Array.isArray(sanitizedUpdates.keywords) ? [...sanitizedUpdates.keywords] : [];
+          if (!keywords.includes('Compact 3-Fixture')) {
+            keywords.push('Compact 3-Fixture');
+          }
+          sanitizedUpdates.keywords = keywords;
+        } else if (sanitizedUpdates.layout_type.toLowerCase().includes('master')) {
+          sanitizedUpdates.layout_type = 'Master Bathroom';
+        } else if (sanitizedUpdates.layout_type.toLowerCase().includes('powder')) {
+          sanitizedUpdates.layout_type = 'Powder Room';
+        } else if (sanitizedUpdates.layout_type.toLowerCase().includes('luxury') || sanitizedUpdates.layout_type.toLowerCase().includes('suite')) {
+          sanitizedUpdates.layout_type = 'Luxury Suite';
+        } else {
+          sanitizedUpdates.layout_type = 'Wet & Dry Partition';
+        }
       }
       if (sanitizedUpdates.min_cost !== undefined) {
         sanitizedUpdates.min_cost = Number(sanitizedUpdates.min_cost) || 120000;

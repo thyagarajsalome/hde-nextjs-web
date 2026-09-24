@@ -197,7 +197,21 @@ export default function BathroomGalleryPage() {
 
   const filteredDesigns = selectedType === 'All'
     ? designs
-    : designs.filter(d => d.layout_type === selectedType);
+    : designs.filter(d => {
+        if (selectedType === 'Compact 3-Fixture') {
+          return d.layout_type === 'Compact 3-Fixture' ||
+            d.slug?.toLowerCase().includes('3-fixture') ||
+            d.title?.toLowerCase().includes('3-fixture') ||
+            (Array.isArray(d.keywords) && d.keywords.includes('Compact 3-Fixture'));
+        }
+        if (selectedType === 'Wet & Dry Partition') {
+          return d.layout_type === 'Wet & Dry Partition' &&
+            !d.slug?.toLowerCase().includes('3-fixture') &&
+            !d.title?.toLowerCase().includes('3-fixture') &&
+            !(Array.isArray(d.keywords) && d.keywords.includes('Compact 3-Fixture'));
+        }
+        return d.layout_type === selectedType;
+      });
 
   const handleOpenCalculator = (design: BathroomDesign) => {
     if (!isUserPaid) {
