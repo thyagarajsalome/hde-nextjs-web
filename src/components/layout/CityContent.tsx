@@ -183,34 +183,34 @@ export default function CityContent({ cityData, toolType = 'construction' }: Cit
   return (
     <>
       {/* Localized SEO Banner/Heading Section */}
-      <section className="bg-gradient-to-br from-secondary via-zinc-950 to-secondary text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-primary/20">
+      <section className="bg-white dark:bg-zinc-950 text-gray-900 dark:text-white py-12 sm:py-14 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-6">
-            <div>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 mb-4 uppercase tracking-wider">
+            <div className="flex-1 min-w-[280px]">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 mb-4 uppercase tracking-wider">
                 Localized Building Cost Guide
               </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-100 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-zinc-100 tracking-tight">
                 {getToolTitle()}
               </h1>
-              <p className="mt-3 text-stone-300 max-w-3xl text-sm sm:text-base leading-relaxed">
+              <p className="mt-3 text-gray-600 dark:text-zinc-400 max-w-3xl text-sm sm:text-base leading-relaxed">
                 {getToolSubtext()}
               </p>
             </div>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl max-w-sm w-full shadow-xl">
+            <div className="bg-gray-50 dark:bg-zinc-900/90 border border-gray-200 dark:border-zinc-800 p-6 rounded-2xl max-w-sm w-full shadow-sm">
               <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3">⚡ Quick Stats for {cityName}</p>
-              <ul className="space-y-2.5 text-xs text-stone-300">
-                <li className="flex justify-between border-b border-white/10 pb-1.5">
+              <ul className="space-y-2.5 text-xs text-gray-600 dark:text-zinc-400">
+                <li className="flex justify-between border-b border-gray-200 dark:border-zinc-800 pb-1.5">
                   <span>Basic Rate:</span>
-                  <span className="font-bold text-stone-200">{basicRate}</span>
+                  <span className="font-bold text-gray-900 dark:text-zinc-100">{basicRate}</span>
                 </li>
-                <li className="flex justify-between border-b border-white/10 pb-1.5">
+                <li className="flex justify-between border-b border-gray-200 dark:border-zinc-800 pb-1.5">
                   <span>Standard Rate:</span>
-                  <span className="font-bold text-stone-200">{standardRate}</span>
+                  <span className="font-bold text-gray-900 dark:text-zinc-100">{standardRate}</span>
                 </li>
-                <li className="flex justify-between border-b border-white/10 pb-1.5">
+                <li className="flex justify-between border-b border-gray-200 dark:border-zinc-800 pb-1.5">
                   <span>Premium Rate:</span>
-                  <span className="font-bold text-stone-200">{premiumRate}</span>
+                  <span className="font-bold text-gray-900 dark:text-zinc-100">{premiumRate}</span>
                 </li>
                 <li className="flex justify-between">
                   <span>Soil Condition:</span>
