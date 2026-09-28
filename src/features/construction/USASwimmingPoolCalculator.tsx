@@ -29,10 +29,6 @@ const USASwimmingPoolCalculator: React.FC = () => {
   const [hasDecking, setHasDecking] = useState(true);
   const [hasHotTub, setHasHotTub] = useState(false);
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="usa-swimming-pool" />;
-  }
-
   const parsedArea = parseFloat(area) || 0;
 
   const breakdown = useMemo(() => {
@@ -78,6 +74,10 @@ const USASwimmingPoolCalculator: React.FC = () => {
     ];
     downloadSpreadsheetPDF(`SwimmingPool-${area}sqft`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-swimming-pool" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

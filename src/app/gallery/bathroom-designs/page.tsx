@@ -109,10 +109,8 @@ export default function BathroomGalleryPage() {
   };
 
   useEffect(() => {
-    let progressTimer: NodeJS.Timeout;
-
     // Smooth incremental progress counter while fetching data
-    progressTimer = setInterval(() => {
+    const progressTimer = setInterval(() => {
       setLoadingProgress((prev) => {
         if (prev < 42) {
           setLoadingStage('Connecting to bathroom design catalog...');

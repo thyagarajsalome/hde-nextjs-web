@@ -92,10 +92,6 @@ export default function IndiaBathroomCalculator() {
   const [widthFt, setWidthFt] = useState("6");
   const [areaSqFt, setAreaSqFt] = useState("48");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="india-bathroom" />;
-  }
-
   const [bathType, setBathType] = useState<keyof typeof BATHROOM_TYPES>("wetdry");
   const [tier, setTier] = useState<keyof typeof FIXTURE_TIERS>("premium");
   const [partition, setPartition] = useState<keyof typeof PARTITION_OPTIONS>("glass");
@@ -325,6 +321,10 @@ export default function IndiaBathroomCalculator() {
       formatCurrency(breakdown.totalCost)
     );
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="india-bathroom" />;
+  }
 
   return (
     <div className="space-y-6">

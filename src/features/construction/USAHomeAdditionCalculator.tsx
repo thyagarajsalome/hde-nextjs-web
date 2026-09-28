@@ -32,10 +32,6 @@ const USAHomeAdditionCalculator: React.FC = () => {
   const [type, setType] = useState<keyof typeof ADDITION_TYPES>("bedroom");
   const [quality, setQuality] = useState<keyof typeof QUALITY_LEVELS>("standard");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="usa-home-addition" />;
-  }
-
   const parsedArea = parseFloat(area) || 0;
 
   const breakdown = useMemo(() => {
@@ -71,6 +67,10 @@ const USAHomeAdditionCalculator: React.FC = () => {
     ];
     downloadSpreadsheetPDF(`Home-Addition-${area}sqft`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-home-addition" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

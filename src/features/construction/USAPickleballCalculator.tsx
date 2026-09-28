@@ -39,10 +39,6 @@ const USAPickleballCalculator: React.FC = () => {
   const [fencingType, setFencingType] = useState<keyof typeof FENCING_TYPES>("chainlink");
   const [hasLighting, setHasLighting] = useState(false);
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="usa-pickleball-court" />;
-  }
-
   const parsedLength = parseFloat(length) || 0;
   const parsedWidth = parseFloat(width) || 0;
 
@@ -83,6 +79,10 @@ const USAPickleballCalculator: React.FC = () => {
     ];
     downloadSpreadsheetPDF(`PickleballCourt-${length}x${width}`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-pickleball-court" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

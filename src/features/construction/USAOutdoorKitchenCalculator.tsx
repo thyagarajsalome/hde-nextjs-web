@@ -53,10 +53,6 @@ const USAOutdoorKitchenCalculator: React.FC = () => {
   const [utilities, setUtilities] = useState<keyof typeof UTILITIES>("electricGas");
   const [structure, setStructure] = useState<keyof typeof OVERHEAD_STRUCTURES>("pergola");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="usa-outdoor-kitchen" />;
-  }
-
   const parsedFeet = parseFloat(linearFeet) || 0;
 
   const breakdown = useMemo(() => {
@@ -89,6 +85,10 @@ const USAOutdoorKitchenCalculator: React.FC = () => {
     ];
     downloadSpreadsheetPDF(`OutdoorKitchen-${linearFeet}LF`, ["Component", "Details", "Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="usa-outdoor-kitchen" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

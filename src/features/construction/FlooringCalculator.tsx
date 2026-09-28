@@ -52,10 +52,6 @@ const FlooringCalculator: React.FC = () => {
   const [includeSkirting,setIncludeSkirting]= useState(true);
   const [activeInfo,     setActiveInfo]     = useState<"specs"|"pattern"|"rooms">("specs");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="flooring" />;
-  }
-
   useEffect(() => {
     const state = (location.state as any)?.projectData;
     if (state?.flooringType) {
@@ -113,6 +109,10 @@ const FlooringCalculator: React.FC = () => {
     if (breakdown.polishing > 0) rows.push(["Grinding & Polishing", `${parsedArea} sqft`, formatCurrency(breakdown.polishing)]);
     downloadSpreadsheetPDF(`Flooring-Estimate-${area}sqft`, ["Component","Details","Cost"], rows, "TOTAL ESTIMATE", formatCurrency(breakdown.totalCost));
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="flooring" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

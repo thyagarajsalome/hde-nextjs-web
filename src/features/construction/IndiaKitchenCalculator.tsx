@@ -121,10 +121,6 @@ export default function IndiaKitchenCalculator() {
   const [widthFt, setWidthFt] = useState("10");
   const [areaSqFt, setAreaSqFt] = useState("120");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="india-kitchen" />;
-  }
-
   const [layout, setLayout] = useState<keyof typeof KITCHEN_LAYOUTS>("lshape");
   const [carcass, setCarcass] = useState<keyof typeof CARCASS_MATERIALS>("bwp");
   const [finish, setFinish] = useState<keyof typeof SHUTTER_FINISHES>("acrylic");
@@ -331,6 +327,10 @@ export default function IndiaKitchenCalculator() {
       formatCurrency(breakdown.totalCost)
     );
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="india-kitchen" />;
+  }
 
   return (
     <div className="space-y-6">

@@ -53,10 +53,6 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
   const [area, setArea] = useState("1200");
   const [quality, setQuality] = useState<keyof typeof QUALITY_RATES>("standard");
 
-  if (!isUserPaid) {
-    return <ProCalculatorGate calculatorId="interior" />;
-  }
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
@@ -97,6 +93,10 @@ const InteriorCalculator: React.FC<InteriorCalculatorProps> = ({ hasPaid }) => {
       formatCurrency(totalCost)
     );
   };
+
+  if (!isUserPaid) {
+    return <ProCalculatorGate calculatorId="interior" />;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

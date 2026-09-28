@@ -163,7 +163,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic City SEO Routes from Supabase
   const { data: locations } = await supabase.from('pseo_locations').select('slug, country');
   let cityRoutes: MetadataRoute.Sitemap = [];
-  let realEstateRoutes: MetadataRoute.Sitemap = [];
+  const realEstateRoutes: MetadataRoute.Sitemap = [];
   
   if (locations && locations.length > 0) {
     cityRoutes = locations.flatMap((loc: any) => [
