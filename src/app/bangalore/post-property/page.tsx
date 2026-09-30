@@ -150,7 +150,10 @@ export default function PostPropertyPage() {
     }
     if (!price || price <= 0) newErrors.price = "Valid price in Rupees is required";
     if (!contactName.trim()) newErrors.contactName = "Contact name is required";
-    const cleanContactPhone = contactPhone.replace(/[^0-9]/g, "");
+    let cleanContactPhone = contactPhone.replace(/[^0-9]/g, "");
+    if (cleanContactPhone.length === 12 && cleanContactPhone.startsWith("91")) {
+      cleanContactPhone = cleanContactPhone.slice(2);
+    }
     if (
       !cleanContactPhone ||
       cleanContactPhone.length !== 10 ||
