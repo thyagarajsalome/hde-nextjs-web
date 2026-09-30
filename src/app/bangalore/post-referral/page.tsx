@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BANGALORE_LOCALITIES } from "@/data/bangaloreLocalities";
+import { BANGALORE_LOCALITIES, getBangaloreLocalitiesByZone } from "@/data/bangaloreLocalities";
 import { RealEstateService } from "@/services/realEstateService";
 import { useUser } from "@/context/UserContext";
 import { openRazorpayCheckout } from "@/lib/razorpayClient";
@@ -219,11 +219,41 @@ export default function PostReferralPage() {
                     onChange={(e) => setLocalityId(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#4165af]"
                   >
-                    {BANGALORE_LOCALITIES.map((loc) => (
-                      <option key={loc.id} value={loc.id}>
-                        {loc.name} ({loc.zone})
-                      </option>
-                    ))}
+                    <optgroup label="📍 Bangalore North">
+                      {getBangaloreLocalitiesByZone()["North Bangalore"].map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="📍 Bangalore South">
+                      {getBangaloreLocalitiesByZone()["South Bangalore"].map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="📍 Bangalore East">
+                      {getBangaloreLocalitiesByZone()["East Bangalore"].map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="📍 Bangalore West">
+                      {getBangaloreLocalitiesByZone()["West Bangalore"].map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="📍 Central Bangalore">
+                      {getBangaloreLocalitiesByZone()["Central Bangalore"].map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.name}
+                        </option>
+                      ))}
+                    </optgroup>
                   </select>
                 </div>
 

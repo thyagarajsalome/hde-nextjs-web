@@ -1,9 +1,14 @@
 // src/components/real-estate/RealEstateFilterBar.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { ListingIntent, PropertyCategory, BhkType } from "@/types/realEstate";
-import { BANGALORE_LOCALITIES, PROPERTY_CATEGORIES, BHK_OPTIONS } from "@/data/bangaloreLocalities";
+import {
+  BANGALORE_LOCALITIES,
+  PROPERTY_CATEGORIES,
+  BHK_OPTIONS,
+  getBangaloreLocalitiesByZone,
+} from "@/data/bangaloreLocalities";
 
 interface RealEstateFilterBarProps {
   intent: ListingIntent;
@@ -28,6 +33,13 @@ export default function RealEstateFilterBar({
   onLocalityChange,
   onReset,
 }: RealEstateFilterBarProps) {
+  const [isCustomSearch, setIsCustomSearch] = useState(false);
+  const localitiesByZone = getBangaloreLocalitiesByZone();
+
+  const handleReset = () => {
+    setIsCustomSearch(false);
+    onReset();
+  };
   return (
     <div className="bg-white rounded-2xl p-5 border border-gray-200/80 shadow-xs space-y-4 mb-8">
       {/* Top Row: Intent Tabs (Buy vs Rent) and Locality Dropdown */}
@@ -60,26 +72,93 @@ export default function RealEstateFilterBar({
 
         {/* Locality Quick Selector */}
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <div className="relative w-full md:w-72">
-            <i className="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
-            <select
-              value={locality}
-              onChange={(e) => onLocalityChange(e.target.value)}
-              className="w-full pl-9 pr-8 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer transition-all"
-            >
-              <option value="">All Bangalore Localities</option>
-              {BANGALORE_LOCALITIES.map((loc) => (
-                <option key={loc.id} value={loc.name}>
-                  {loc.name} ({loc.zone})
-                </option>
-              ))}
-            </select>
-            <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none"></i>
-          </div>
+          {isCustomSearch ? (
+            <div className="relative w-full md:w-80 flex items-center gap-1.5">
+              <div className="relative flex-1">
+                <i className="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-primary text-xs pointer-events-none"></i>
+                <input
+                  type="text"
+                  autoFocus
+                  value={locality}
+                  onChange={(e) => onLocalityChange(e.target.value)}
+                  placeholder="Type specific area (e.g. Puttenahalli, Rajankunte)..."
+                  className="w-full pl-9 pr-3 py-2 bg-white border-2 border-primary/40 focus:border-primary rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-gray-400"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCustomSearch(false);
+                  onLocalityChange("");
+                }}
+                className="px-2.5 py-2 text-[11px] font-bold text-gray-600 hover:text-primary bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors whitespace-nowrap cursor-pointer"
+                title="Switch back to regional dropdown"
+              >
+                List
+              </button>
+            </div>
+          ) : (
+            <div className="relative w-full md:w-72">
+              <i className="fas fa-map-pin absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4165af] text-xs pointer-events-none"></i>
+              <select
+                value={locality}
+                onChange={(e) => {
+                  if (e.target.value === "__custom_search__") {
+                    setIsCustomSearch(true);
+                    onLocalityChange("");
+                  } else {
+                    onLocalityChange(e.target.value);
+                  }
+                }}
+                className="w-full pl-9 pr-8 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 appearance-none cursor-pointer transition-all"
+              >
+                <option value="">All Bangalore Localities</option>
+                <optgroup label="📍 Bangalore North">
+                  {localitiesByZone["North Bangalore"].map((loc) => (
+                    <option key={loc.id} value={loc.name}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="📍 Bangalore South">
+                  {localitiesByZone["South Bangalore"].map((loc) => (
+                    <option key={loc.id} value={loc.name}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="📍 Bangalore East">
+                  {localitiesByZone["East Bangalore"].map((loc) => (
+                    <option key={loc.id} value={loc.name}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="📍 Bangalore West">
+                  {localitiesByZone["West Bangalore"].map((loc) => (
+                    <option key={loc.id} value={loc.name}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="📍 Central Bangalore">
+                  {localitiesByZone["Central Bangalore"].map((loc) => (
+                    <option key={loc.id} value={loc.name}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="➕ Custom Area">
+                  <option value="__custom_search__">Other Area (Type custom locality)...</option>
+                </optgroup>
+              </select>
+              <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none"></i>
+            </div>
+          )}
 
           {(locality || category !== "all" || bhk !== "all") && (
             <button
-              onClick={onReset}
+              onClick={handleReset}
               className="px-3 py-2.5 text-xs text-gray-400 hover:text-red-500 font-semibold transition-colors flex items-center gap-1 cursor-pointer"
               title="Reset all filters"
             >

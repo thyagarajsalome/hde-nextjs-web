@@ -14,10 +14,14 @@ import {
 } from "@/types/realEstate";
 import {
   BANGALORE_LOCALITIES,
+  BANGALORE_ZONES,
+  BangaloreZone,
   PROPERTY_CATEGORIES,
   BHK_OPTIONS,
   KHATA_TYPES,
   LOCALITY_TRANSIT_PROFILES,
+  ZONE_TRANSIT_DEFAULTS,
+  getBangaloreLocalitiesByZone,
 } from "@/data/bangaloreLocalities";
 import PropertyPhotoUploader from "@/components/real-estate/PropertyPhotoUploader";
 import { RealEstateService } from "@/services/realEstateService";
@@ -44,6 +48,8 @@ export default function PostPropertyPage() {
   const [category, setCategory] = useState<PropertyCategory>("flat");
   const [bhk, setBhk] = useState<BhkType>("2BHK");
   const [localityId, setLocalityId] = useState(BANGALORE_LOCALITIES[0].id);
+  const [customLocalityName, setCustomLocalityName] = useState("");
+  const [customZone, setCustomZone] = useState<BangaloreZone>("North Bangalore");
   const [subLocality, setSubLocality] = useState("");
 
   const [sqft, setSqft] = useState<number | "">("");
@@ -84,10 +90,33 @@ export default function PostPropertyPage() {
   // Errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const selectedLocality =
-    BANGALORE_LOCALITIES.find((l) => l.id === localityId) || BANGALORE_LOCALITIES[0];
+  const localitiesByZone = getBangaloreLocalitiesByZone();
 
-  const applyLocalityTransitDefaults = (locId: string) => {
+  const selectedLocality =
+    localityId === "other"
+      ? {
+          id: "other",
+          city: "Bangalore",
+          name: customLocalityName.trim() || "Custom Locality",
+          slug: "other",
+          zone: customZone,
+        }
+      : BANGALORE_LOCALITIES.find((l) => l.id === localityId) || BANGALORE_LOCALITIES[0];
+
+  const applyLocalityTransitDefaults = (locId: string, zoneOverride?: BangaloreZone) => {
+    if (locId === "other") {
+      const activeZone = zoneOverride || customZone;
+      const zoneProfile = ZONE_TRANSIT_DEFAULTS[activeZone] || ZONE_TRANSIT_DEFAULTS["North Bangalore"];
+      setAirportKm(zoneProfile.airportKm);
+      setMetroName(zoneProfile.metroName);
+      setMetroKm(zoneProfile.metroKm);
+      setRailwayName(zoneProfile.railwayName);
+      setRailwayKm(zoneProfile.railwayKm);
+      setTechParkName(zoneProfile.techParkName);
+      setTechParkKm(zoneProfile.techParkKm);
+      return;
+    }
+
     const profile = LOCALITY_TRANSIT_PROFILES[locId];
     if (profile) {
       setAirportKm(profile.airportKm);
@@ -116,6 +145,9 @@ export default function PostPropertyPage() {
     const newErrors: Record<string, string> = {};
 
     if (!title.trim()) newErrors.title = "Property title is required";
+    if (localityId === "other" && !customLocalityName.trim()) {
+      newErrors.customLocalityName = "Please enter the locality or area name";
+    }
     if (!price || price <= 0) newErrors.price = "Valid price in Rupees is required";
     if (!contactName.trim()) newErrors.contactName = "Contact name is required";
     const cleanContactPhone = contactPhone.replace(/[^0-9]/g, "");
@@ -511,40 +543,131 @@ export default function PostPropertyPage() {
               )}
 
               {/* Bangalore Locality */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1.5">
-                    Bangalore Locality <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    value={localityId}
-                    onChange={(e) => {
-                      const newId = e.target.value;
-                      setLocalityId(newId);
-                      applyLocalityTransitDefaults(newId);
-                    }}
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary"
-                  >
-                    {BANGALORE_LOCALITIES.map((loc) => (
-                      <option key={loc.id} value={loc.id}>
-                        {loc.name} ({loc.zone})
-                      </option>
-                    ))}
-                  </select>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1.5">
+                      Bangalore Locality <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={localityId}
+                      onChange={(e) => {
+                        const newId = e.target.value;
+                        setLocalityId(newId);
+                        applyLocalityTransitDefaults(newId);
+                      }}
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary"
+                    >
+                      <optgroup label="📍 Bangalore North">
+                        {localitiesByZone["North Bangalore"].map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="📍 Bangalore South">
+                        {localitiesByZone["South Bangalore"].map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="📍 Bangalore East">
+                        {localitiesByZone["East Bangalore"].map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="📍 Bangalore West">
+                        {localitiesByZone["West Bangalore"].map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="📍 Central Bangalore">
+                        {localitiesByZone["Central Bangalore"].map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="➕ Unlisted / Custom Area">
+                        <option value="other">Other Area (Specify Name &amp; Zone below)...</option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1.5">
+                      Landmark / Sub-locality
+                    </label>
+                    <input
+                      type="text"
+                      value={subLocality}
+                      onChange={(e) => setSubLocality(e.target.value)}
+                      placeholder="e.g. Near Nexus Mall, Sector 2"
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-primary"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold text-gray-700 block mb-1.5">
-                    Landmark / Sub-locality
-                  </label>
-                  <input
-                    type="text"
-                    value={subLocality}
-                    onChange={(e) => setSubLocality(e.target.value)}
-                    placeholder="e.g. Near Nexus Mall, Sector 2"
-                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-primary"
-                  />
-                </div>
+                {/* If 'Other Area' is chosen, show Custom Locality and Zone Inputs */}
+                {localityId === "other" && (
+                  <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
+                      <i className="fas fa-location-crosshairs text-amber-600"></i>
+                      <span>Enter Specific Area &amp; Regional Zone</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-gray-700 block mb-1.5">
+                          Bangalore Regional Zone <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={customZone}
+                          onChange={(e) => {
+                            const newZone = e.target.value as BangaloreZone;
+                            setCustomZone(newZone);
+                            applyLocalityTransitDefaults("other", newZone);
+                          }}
+                          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary cursor-pointer"
+                        >
+                          {BANGALORE_ZONES.map((z) => (
+                            <option key={z} value={z}>
+                              {z}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="text-[11px] text-gray-500 mt-1 block">
+                          Used to auto-estimate regional Airport &amp; Transit distances.
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="text-xs font-bold text-gray-700 block mb-1.5">
+                          Specific Locality / Area Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={customLocalityName}
+                          onChange={(e) => setCustomLocalityName(e.target.value)}
+                          placeholder="e.g. Rajankunte Phase 2, Puttenahalli Lake Road"
+                          className={`w-full px-4 py-2.5 bg-white border ${
+                            errors.customLocalityName ? "border-red-500" : "border-gray-200"
+                          } rounded-xl text-xs font-semibold text-gray-800 focus:outline-none focus:border-primary`}
+                        />
+                        {errors.customLocalityName && (
+                          <span className="text-[11px] text-red-500 block mt-1">
+                            {errors.customLocalityName}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -711,18 +834,24 @@ export default function PostPropertyPage() {
                     <span>Transit &amp; Landmark Distances</span>
                   </h3>
                   <p className="text-xs text-gray-400 mt-1">
-                    Auto-calculated for <strong>{selectedLocality.name}</strong> to save you time (zero manual measuring required).
+                    {localityId === "other"
+                      ? `Auto-estimated for ${customZone} — you can customize and adjust any distance below for your specific location.`
+                      : `Auto-calculated for ${selectedLocality.name} to save you time (zero manual measuring required).`}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
                   <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-2xs">
                     <i className="fas fa-magic text-emerald-600"></i>
-                    <span>Auto-Filled ({selectedLocality.name})</span>
+                    <span>
+                      {localityId === "other"
+                        ? `Auto-Filled (${customZone} Estimate)`
+                        : `Auto-Filled (${selectedLocality.name})`}
+                    </span>
                   </span>
                   <button
                     type="button"
-                    onClick={() => applyLocalityTransitDefaults(localityId)}
+                    onClick={() => applyLocalityTransitDefaults(localityId, customZone)}
                     className="text-[11px] text-[#4165af] hover:underline font-semibold cursor-pointer"
                     title="Reset to default locality transit distances"
                   >
