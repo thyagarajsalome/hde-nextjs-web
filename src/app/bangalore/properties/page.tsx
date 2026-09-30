@@ -81,15 +81,13 @@ export default function BangalorePropertiesPage() {
                 </Link>
               )}
 
-              {user && (
-                <Link
-                  href="/bangalore/my-properties"
-                  className="inline-flex items-center gap-1.5 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all no-underline"
-                >
-                  <i className="fas fa-list-check text-[#4165af]"></i>
-                  <span>My Listings</span>
-                </Link>
-              )}
+              <Link
+                href="/bangalore/my-properties"
+                className="inline-flex items-center gap-1.5 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all no-underline"
+              >
+                <i className="fas fa-list-check text-[#4165af]"></i>
+                <span>My Listings</span>
+              </Link>
 
               <Link
                 href="/bangalore/referrals"
@@ -178,12 +176,36 @@ export default function BangalorePropertiesPage() {
             </div>
           </div>
         ) : (
-          /* Properties Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((prop) => (
-              <PropertyCard key={prop.id} property={prop} />
-            ))}
-          </div>
+          <>
+            {/* Owner Helper Prompt Banner */}
+            <div className="mb-6 bg-blue-50/70 border border-blue-200/80 rounded-2xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 text-blue-900">
+                <i className="fas fa-house-user text-[#4165af] text-sm shrink-0"></i>
+                <span>
+                  <strong>Posted a rental or sale home?</strong> You can <strong>Edit details</strong>, <strong>Delete</strong>, or mark <strong>Deal Done</strong> directly on your listing card below, or manage all from{" "}
+                  <Link href="/bangalore/my-properties" className="underline font-bold text-[#4165af]">My Listings</Link>.
+                </span>
+              </div>
+              <Link
+                href="/bangalore/my-properties"
+                className="shrink-0 font-bold px-3 py-1.5 bg-[#4165af] hover:bg-[#355393] text-white rounded-lg transition-colors no-underline text-center"
+              >
+                Manage My Listings &rarr;
+              </Link>
+            </div>
+
+            {/* Properties Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((prop) => (
+                <PropertyCard
+                  key={prop.id}
+                  property={prop}
+                  onDeleted={(deletedId) => setProperties((prev) => prev.filter((p) => p.id !== deletedId))}
+                  onUpdated={(updated) => setProperties((prev) => prev.map((p) => p.id === updated.id ? updated : p))}
+                />
+              ))}
+            </div>
+          </>
         )}
 
         {/* Cross-Sell Banners to House Plans & Construction Calculator */}

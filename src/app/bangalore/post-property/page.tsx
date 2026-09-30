@@ -235,7 +235,7 @@ export default function PostPropertyPage() {
       }
 
       // 2. Insert property via RealEstateService
-      await RealEstateService.createProperty({
+      const createdProp = await RealEstateService.createProperty({
         user_id: user?.id,
         intent,
         category,
@@ -276,10 +276,25 @@ export default function PostPropertyPage() {
         status: "active",
       });
 
+      // Save ID to localStorage for instant owner management recognition on this device
+      if (createdProp && createdProp.id && typeof window !== "undefined") {
+        try {
+          const localIds: string[] = JSON.parse(
+            localStorage.getItem("hde_my_property_ids") || "[]"
+          );
+          if (!localIds.includes(createdProp.id)) {
+            localIds.push(createdProp.id);
+            localStorage.setItem("hde_my_property_ids", JSON.stringify(localIds));
+          }
+        } catch (storageErr) {
+          console.warn("Could not save property ID to localStorage:", storageErr);
+        }
+      }
+
       setSuccessMessage(true);
       setTimeout(() => {
         router.push("/bangalore/properties");
-      }, 2000);
+      }, 4000);
     } catch (err: any) {
       console.error("Submission failed:", err);
       const msg =

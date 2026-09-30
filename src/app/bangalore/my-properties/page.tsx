@@ -49,13 +49,32 @@ export default function MyPropertiesPage() {
   const [closedDealSuccess, setClosedDealSuccess] = useState<string | null>(null);
 
   const fetchUserProperties = async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
-      const data = await RealEstateService.getUserProperties(user.id);
+      let data: RealEstateProperty[] = [];
+      if (user?.id) {
+        data = await RealEstateService.getUserProperties(user.id);
+      }
+
+      // Check browser local storage fallback (so guest posters can also manage their listings)
+      if (typeof window !== "undefined") {
+        try {
+          const localIds: string[] = JSON.parse(
+            localStorage.getItem("hde_my_property_ids") || "[]"
+          );
+          if (localIds.length > 0) {
+            const allProps = await RealEstateService.getProperties({});
+            const matched = allProps.filter((p) => localIds.includes(p.id));
+            const existingIds = new Set(data.map((p) => p.id));
+            matched.forEach((m) => {
+              if (!existingIds.has(m.id)) data.push(m);
+            });
+          }
+        } catch (storageErr) {
+          console.warn("Could not check local property IDs:", storageErr);
+        }
+      }
+
       setProperties(data);
     } catch (err) {
       console.error("Failed to load user properties:", err);
@@ -320,8 +339,8 @@ export default function MyPropertiesPage() {
     );
   }
 
-  // Not logged in view
-  if (!user) {
+  // Not logged in view (only show sign-in prompt if no properties or scout leads exist on this device)
+  if (!user && properties.length === 0 && scoutLeads.length === 0) {
     return (
       <div className="min-h-screen bg-[#f8fafc] py-16 px-4">
         <div className="max-w-md mx-auto bg-white rounded-2xl p-8 border border-gray-200 shadow-sm text-center">
@@ -392,7 +411,7 @@ export default function MyPropertiesPage() {
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              Logged in as <strong className="text-gray-700">{user.email}</strong> • Manage your listings, track views, and update prices.
+              Logged in as <strong className="text-gray-700">{user?.email || "Listing Owner"}</strong> • Manage your listings, track views, and update prices.
             </p>
           </div>
 

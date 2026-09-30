@@ -12,6 +12,7 @@ import CrossSellBanner from "@/components/real-estate/CrossSellBanner";
 import AdminModerationBar from "@/components/real-estate/AdminModerationBar";
 import ReportListingModal from "@/components/real-estate/ReportListingModal";
 import PropertyIntegrationsWidget from "@/components/real-estate/PropertyIntegrationsWidget";
+import PropertyOwnerActions from "@/components/real-estate/PropertyOwnerActions";
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -109,6 +110,16 @@ export default function PropertyDetailPage() {
       </div>
 
       <div className="container mx-auto px-4 max-w-6xl pt-6">
+        {/* Owner Controls (Edit / Deal Closed / Delete) */}
+        <PropertyOwnerActions
+          property={property}
+          layout="detail"
+          onDeleted={() => {
+            router.push("/bangalore/properties");
+          }}
+          onUpdated={(updated) => setProperty(updated)}
+        />
+
         {/* Top Header Row */}
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
           <div>

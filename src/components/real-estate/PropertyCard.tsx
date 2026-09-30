@@ -6,12 +6,18 @@ import Link from "next/link";
 import { RealEstateProperty } from "@/types/realEstate";
 import ViewNumberModal from "./ViewNumberModal";
 import TransitDistancesWidget from "./TransitDistancesWidget";
+import PropertyOwnerActions from "./PropertyOwnerActions";
 
 export default function PropertyCard({
   property,
+  onDeleted,
+  onUpdated,
 }: {
   property: RealEstateProperty;
+  onDeleted?: (id: string) => void;
+  onUpdated?: (updated: RealEstateProperty) => void;
 }) {
+  const [propData, setPropData] = useState<RealEstateProperty>(property);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -115,34 +121,45 @@ export default function PropertyCard({
             </div>
           </div>
 
+          {/* Owner Actions Bar (Visible if viewer is owner/admin) */}
+          <PropertyOwnerActions
+            property={propData}
+            layout="card"
+            onDeleted={onDeleted}
+            onUpdated={(updated) => {
+              setPropData(updated);
+              onUpdated?.(updated);
+            }}
+          />
+
           {/* Card Body */}
           <div className="p-4 sm:p-5">
             {/* Price and Core Specs */}
             <div className="flex items-baseline justify-between gap-2 mb-1.5">
               <span className="text-lg sm:text-xl font-semibold text-secondary tracking-tight">
-                {formatPrice(property.price, property.intent)}
+                {formatPrice(propData.price, propData.intent)}
               </span>
-              {property.bhk && property.bhk !== "NA_PLOT" && (
+              {propData.bhk && propData.bhk !== "NA_PLOT" && (
                 <span className="px-2 py-0.5 rounded-md bg-primary/10 text-primary font-medium text-xs">
-                  {property.bhk}
+                  {propData.bhk}
                 </span>
               )}
             </div>
 
             {/* Title */}
             <Link
-              href={`/bangalore/properties/${property.id}`}
+              href={`/bangalore/properties/${propData.id}`}
               className="text-sm font-medium text-gray-800 group-hover:text-primary transition-colors line-clamp-2 mb-2 leading-snug no-underline"
             >
-              {property.title}
+              {propData.title}
             </Link>
 
             {/* Location */}
             <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
               <i className="fas fa-location-dot text-gray-400 text-[11px]"></i>
-              <span className="font-medium text-gray-600">{property.locality_name}</span>
-              {property.sub_locality && (
-                <span className="text-gray-400 font-light truncate">&bull; {property.sub_locality}</span>
+              <span className="font-medium text-gray-600">{propData.locality_name}</span>
+              {propData.sub_locality && (
+                <span className="text-gray-400 font-light truncate">&bull; {propData.sub_locality}</span>
               )}
             </div>
 
@@ -151,25 +168,25 @@ export default function PropertyCard({
               <div>
                 <span className="text-[10px] uppercase font-normal text-gray-400 block tracking-wider">Area</span>
                 <span className="font-medium text-gray-700 text-xs">
-                  {property.super_builtup_sqft || property.plot_area_sqft || property.carpet_area_sqft || "—"} sqft
+                  {propData.super_builtup_sqft || propData.plot_area_sqft || propData.carpet_area_sqft || "—"} sqft
                 </span>
               </div>
               <div>
                 <span className="text-[10px] uppercase font-normal text-gray-400 block tracking-wider">Facing</span>
                 <span className="font-medium text-gray-700 text-xs">
-                  {property.facing || "—"}
+                  {propData.facing || "—"}
                 </span>
               </div>
               <div>
                 <span className="text-[10px] uppercase font-normal text-gray-400 block tracking-wider">Type</span>
                 <span className="font-medium text-gray-700 text-xs capitalize">
-                  {property.category.replace("_", " ")}
+                  {propData.category.replace("_", " ")}
                 </span>
               </div>
             </div>
 
             {/* Compact Transit Distances */}
-            <TransitDistancesWidget connectivity={property.connectivity} compact={true} />
+            <TransitDistancesWidget connectivity={propData.connectivity} compact={true} />
           </div>
         </div>
 
@@ -184,7 +201,7 @@ export default function PropertyCard({
           </button>
 
           <Link
-            href={`/bangalore/properties/${property.id}`}
+            href={`/bangalore/properties/${propData.id}`}
             className="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-gray-700 font-medium text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center no-underline"
           >
             <span>Details</span>
@@ -195,7 +212,7 @@ export default function PropertyCard({
 
       {/* Lead & Anti-Spam View Number Modal */}
       <ViewNumberModal
-        property={property}
+        property={propData}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
       />
