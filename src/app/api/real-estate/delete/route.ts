@@ -48,20 +48,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, deletedId: propertyId, note: 'Listing already deleted' });
     }
 
-    const effectiveEmail = (user?.email || userEmail || '').toLowerCase();
-    const effectiveUserId = user?.id || userId;
-
-    const isAdmin = Boolean(effectiveEmail && effectiveEmail === ADMIN_EMAIL.toLowerCase());
-    const isOwner = Boolean(
-      (effectiveUserId && property.user_id && property.user_id === effectiveUserId) ||
-      (property.user_id == null) // Legacy properties without user_id can be cleared
-    );
-
-    // In local dev/test or when authorized as admin/owner
-    const isDev = process.env.NODE_ENV !== 'production';
-    if (!isAdmin && !isOwner && !isDev) {
+    // Security Check: User MUST be authenticated
+    if (!user) {
       return NextResponse.json(
-        { error: 'Unauthorized: Only the property owner or administrator can delete this listing' },
+        { error: 'Unauthorized: You must be signed in to delete a property listing' },
+        { status: 401 }
+      );
+    }
+
+    const effectiveEmail = (user.email || '').toLowerCase();
+    const isAdmin = Boolean(effectiveEmail && effectiveEmail === ADMIN_EMAIL.toLowerCase());
+    const isOwner = Boolean(property.user_id && user.id === property.user_id);
+
+    if (!isAdmin && !isOwner) {
+      return NextResponse.json(
+        { error: 'Forbidden: Only the authenticated property owner or administrator can delete this listing' },
         { status: 403 }
       );
     }

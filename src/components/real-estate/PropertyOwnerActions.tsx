@@ -41,31 +41,20 @@ export default function PropertyOwnerActions({
 
   useEffect(() => {
     setMounted(true);
-    let owner = false;
 
-    // Check Supabase user id match
-    if (user && property.user_id && user.id === property.user_id) {
-      owner = true;
-    }
-    // Check Admin rights
-    if (isAdmin) {
-      owner = true;
-    }
-    // Check browser local storage fallback (for anonymous / guest posters)
-    if (typeof window !== "undefined") {
-      try {
-        const localIds: string[] = JSON.parse(
-          localStorage.getItem("hde_my_property_ids") || "[]"
-        );
-        if (localIds.includes(property.id)) {
-          owner = true;
-        }
-      } catch (e) {
-        // ignore
-      }
+    // Security Guard: Strictly require user to be signed in
+    if (!user) {
+      setIsOwner(false);
+      return;
     }
 
-    setIsOwner(owner);
+    // Strictly check if logged-in user is the property owner or platform admin
+    const isPropertyOwner = Boolean(property.user_id && user.id === property.user_id);
+    if (isPropertyOwner || isAdmin) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
   }, [user, isAdmin, property.id, property.user_id]);
 
   if (!mounted || !isOwner) {
