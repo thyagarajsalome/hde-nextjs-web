@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Home Construction Cost Estimator, 2D Floor Plans &amp; House Design | HDE</title>
+  <meta name="description" content="Free online house construction cost calculator, 2D architectural concept floor plans, interior renovation budgets, and real estate tools for India, USA, and UAE. Accurate 2026 rates.">
+  <meta name="keywords" content="house construction cost calculator, home construction cost estimator, building cost per sq ft india 2026, 2d house plans, home loan emi calculator, interior design budget calculator, house plans india, floor plans bangalore, homedesignenglish">
+  <link rel="canonical" href="https://www.homedesignenglish.com/home-planning">
+  
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.homedesignenglish.com/home-planning">
+  <meta property="og:title" content="Home Construction Cost Estimator, 2D Floor Plans &amp; House Design | HDE">
+  <meta property="og:description" content="Free house construction cost calculator, 2D floor plans, renovation tools, and real estate resources with accurate 2026 rates.">
+  <meta property="og:image" content="https://www.homedesignenglish.com/concept/assets/home-blue-hour.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <link rel="icon" type="image/png" href="/concept/assets/hde-logo.png">
+  <link rel="stylesheet" href="/concept/styles.css">
+  
+  <!-- JSON-LD Structured Data for Google Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.homedesignenglish.com/#website",
+        "url": "https://www.homedesignenglish.com/",
+        "name": "Home Design English",
+        "description": "Dream home construction cost estimation, 2D floor plans, and real estate planning platform.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.homedesignenglish.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "HDE Home Construction & Planning Suite",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, Android",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "350"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.homedesignenglish.com"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Home Planning & Estimator",
+            "item": "https://www.homedesignenglish.com/home-planning"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the average house construction cost per sq ft in India in 2026?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In 2026, average residential construction costs in major Indian metros (Bengaluru, Mumbai, Delhi NCR, Hyderabad) range from ₹1,600 to ₹2,200 per sq ft for Basic finish, ₹2,200 to ₹3,200 per sq ft for Standard finish, and ₹3,200 to ₹4,500+ per sq ft for Premium luxury finishes, excluding land cost."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does HDE estimate building material quantities for a new home?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "HDE's construction calculators use empirical IS-code engineering benchmarks to calculate cement bags, steel tonnage, sand/M-sand truckloads, aggregate, red clay bricks, or AAC blocks based on your exact built-up area and structural specifications."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I build directly from HDE conceptual 2D house plans?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "HDE house plans provide architectural spatial layout studies optimized for standard Indian plot dimensions (20x30, 30x40, 30x50, 40x60). They serve as ideal starting points. Final construction drawings, structural load calculations, and municipal sanction approvals must be certified by a licensed structural engineer and architect."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can home owners post properties for rent or sale for free on HDE?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Individual home owners and verified landlords can list their flats, independent houses, or plots in Bangalore for free with 0% brokerage. Landlords retain complete control to edit details, delete listings, or mark 'Deal Done' once rented."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What international regional modes does HDE support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "HDE offers three dedicated localized estimation suites: India (INR, Lakhs/Crores, Guntha/Ankanam), USA (USD, Sq Ft, Remodel ROI, Property Taxes, Swimming Pool, Pickleball), and UAE (AED, DLD fees, Golden Visa thresholds, Service Charges)."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script src="/concept/vendor/gsap.min.js" defer></script>
+  <script src="/concept/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="/concept/script.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Header -->
+  <header>
+    <a class="brand" href="https://www.homedesignenglish.com/" aria-label="Home Design English home">
+      <img class="brand-logo" src="/concept/assets/hde-logo.png" alt="HDE Logo" width="46" height="46">
+      <span class="brand-lockup">
+        <strong>HDE</strong>
+        <span>Home Design &amp; Real Estate</span>
+      </span>
+    </a>
+    <nav aria-label="Main navigation" id="navigation">
+      <a href="https://www.homedesignenglish.com/bangalore/properties">Real Estate &amp; Rent</a>
+      <a href="https://www.homedesignenglish.com/plans">House Plans</a>
+      <a href="https://www.homedesignenglish.com/gallery/kitchen-designs">Gallery</a>
+      <a href="https://www.homedesignenglish.com/app">HDE App</a>
+      <a href="https://www.homedesignenglish.com/blog">Guides</a>
+    </nav>
+    <a class="button nav-cta" href="https://www.homedesignenglish.com/upgrade">♛ &nbsp; Go Pro</a>
+    <a class="sign-in" href="https://www.homedesignenglish.com/signin">Sign In</a>
+    <button class="menu-button" aria-expanded="false" aria-controls="navigation" aria-label="Open navigation">Menu</button>
+  </header>
+
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-media">
+        <img src="/concept/assets/home-blue-hour.webp" alt="Contemporary Indian residential architecture at blue hour with timber screens and lush tropical landscaping" width="1672" height="941" fetchpriority="high" class="hero-image">
+      </div>
+      <div class="hero-shade"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-copy wrap">
+        <p class="eyebrow hero-eyebrow">
+          <span class="line"></span> HOME DESIGN ENGLISH / 2026 ARCHITECTURE &amp; PLANNING SUITE
+        </p>
+        <h1 id="hero-title">
+          <span class="hero-line"><span>Dream it.</span></span>
+          <span class="hero-line"><span>Plan it. <em>Live it.</em></span></span>
+        </h1>
+        <p class="hero-description">
+          A beautiful home begins with a clearer plan.<br>
+          Accurate construction budgets, architectural 2D floor plans, renovation calculators, and verified direct-owner real estate.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="https://www.homedesignenglish.com/#tools">
+            <span>Start planning your home</span>
+          </a>
+          <a class="hero-secondary" href="#journey">Explore the possibilities</a>
+        </div>
+      </div>
+      <a class="hero-project-card" href="#budget">
+        <div class="project-card-top">
+          <span>THE FIRST STEP</span>
+          <span class="project-card-symbol">⌂</span>
+        </div>
+        <p>Big dreams.<br>A clearer budget.</p>
+        <div class="project-card-bottom">
+          <span>Try the budget preview</span>
+          <span>01 / 03</span>
+        </div>
+      </a>
+      <div class="hero-bottom wrap">
+        <a href="#journey" class="scroll-cue">
+          <span class="scroll-track"></span> SCROLL TO DISCOVER
+        </a>
+        <span>BUILD. RENOVATE. FIND YOUR PLACE.</span>
+        <span>ILLUSTRATIVE ARCHITECTURE / INDIA &bull; USA &bull; UAE</span>
+      </div>
+    </section>
+
+    <!-- Intro Strip Metrics -->
+    <section class="intro-strip wrap">
+      <p>One platform.<br><strong>Every step closer to home.</strong></p>
+      <div><strong>11</strong><span>India planning tools</span></div>
+      <div><strong>3</strong><span>Regional modes (IN &bull; US &bull; AE)</span></div>
+      <div><strong>2D</strong><span>Concept house plans</span></div>
+    </section>
+
+    <!-- Brand Manifesto -->
+    <section class="manifesto wrap">
+      <p class="eyebrow">A LITTLE CLARITY CHANGES EVERYTHING</p>
+      <h2 class="manifesto-text">
+        Your home is a big idea.<br>
+        Let’s give it <em>a thoughtful beginning.</em>
+      </h2>
+      <p class="manifesto-sub">
+        Construction costs. Floor plans. Material quantities. Finishing touches.<br>
+        One unified place to connect the dots, before you commit your hard-earned capital.
+      </p>
+    </section>
+
+    <!-- 3-Chapter Interactive Architectural Story -->
+    <section id="journey" class="journey">
+      <div class="journey-stage">
+        <div class="journey-image-wrap">
+          <img src="/concept/assets/home-blue-hour.webp" width="1672" height="941" alt="Contemporary home exterior" class="journey-image" data-scene="0">
+          <img src="/concept/assets/living-kitchen.webp" width="1536" height="1024" alt="Sunlit modern living room and open modular kitchen" class="journey-image" data-scene="1">
+          <img src="/concept/assets/courtyard-house.webp" width="1536" height="1024" alt="Timber and white-plaster courtyard residence" class="journey-image" data-scene="2">
+        </div>
+        <div class="journey-overlay"></div>
+        <div class="journey-top">
+          <span>ONE PLATFORM. EVERY POSSIBILITY.</span>
+          <span class="journey-counter">01 / 03</span>
+        </div>
+        <div class="journey-content">
+          <article class="journey-scene" data-scene="0">
+            <p class="eyebrow">01 / BUILD WITH CONFIDENCE</p>
+            <h2>From a little idea.<br>To <em>your own address.</em></h2>
+            <p>Understand your construction budget. Explore material quantities and the core trades behind your future home.</p>
+            <a class="button" href="https://www.homedesignenglish.com/#tools">Explore building tools</a>
+          </article>
+          <article class="journey-scene" data-scene="1">
+            <p class="eyebrow">02 / MAKE ROOM FOR YOU</p>
+            <h2>A fresh perspective.<br>A space that <em>feels like you.</em></h2>
+            <p>Bring kitchens, bathrooms, flooring, and interiors into focus. Make informed choices about every finishing touch.</p>
+            <a class="button" href="https://www.homedesignenglish.com/#tools">Explore renovation tools</a>
+          </article>
+          <article class="journey-scene" data-scene="2">
+            <p class="eyebrow">03 / EXPLORE WHAT’S POSSIBLE</p>
+            <h2>The right space.<br>For <em>your next chapter.</em></h2>
+            <p>Find a conceptual house plan or explore HDE’s direct-owner property marketplace. Your next move begins with a better picture.</p>
+            <div class="journey-actions">
+              <a class="button" href="https://www.homedesignenglish.com/plans">Explore house plans</a>
+              <a class="hero-secondary" href="https://www.homedesignenglish.com/bangalore/properties">Browse properties</a>
+            </div>
+          </article>
+        </div>
+        <div class="journey-pagination" aria-label="Planning chapters">
+          <a href="#tools" class="chapter active"><span>01</span><strong>Build</strong><i></i></a>
+          <a href="#budget" class="chapter"><span>02</span><strong>Renovate</strong><i></i></a>
+          <a href="#plans" class="chapter"><span>03</span><strong>Explore</strong><i></i></a>
+        </div>
+        <div class="journey-note">
+          <span>YOUR NEXT CHAPTER</span>
+          <strong>A place to call <em>your own.</em></strong>
+          <span>Ideas &rarr; decisions &rarr; possibilities</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planning Tools Suite -->
+    <section id="tools" class="section wrap">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">01 / FIND YOUR STARTING POINT</p>
+          <h2>Big decisions.<br><em>Better tools.</em></h2>
+        </div>
+        <p>Building from scratch or renovating a space? Find the right starting point for what comes next.</p>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filter planning tools">
+        <button class="filter active" data-filter="all" aria-pressed="true">All tools</button>
+        <button class="filter" data-filter="build" aria-pressed="false">Build a home</button>
+        <button class="filter" data-filter="renovate" aria-pressed="false">Renovate a space</button>
+        <button class="filter" data-filter="finance" aria-pressed="false">Plan your finances</button>
+      </div>
+
+      <div class="tool-grid">
+        <!-- Tool 1 -->
+        <a class="tool-card featured" href="https://www.homedesignenglish.com/#tools" data-category="build">
+          <div class="card-top">
+            <span class="tool-icon">⌂</span>
+            <span class="badge">START HERE</span>
+          </div>
+          <div class="card-preview cost-preview" aria-hidden="true">
+            <span>ILLUSTRATIVE BUDGET</span>
+            <strong>₹36<span> lakh</span></strong>
+            <div class="mini-bars"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <h3>Construction cost</h3>
+          <p>Turn your built-up area and finish choices into a preliminary home-building budget with 2026 rates.</p>
+          <span class="card-link">Explore the calculator <span>↗</span></span>
+        </a>
+
+        <!-- Tool 2 -->
+        <a class="tool-card" href="https://www.homedesignenglish.com/#tools" data-category="build">
+          <div class="card-top">
+            <span class="tool-icon">▦</span>
+            <span class="badge">BUILD</span>
+          </div>
+          <div class="card-preview material-preview" aria-hidden="true">
+            <div><span>Cement</span><i style="--bar:77%"></i></div>
+            <div><span>Steel</span><i style="--bar:94%"></i></div>
+            <div><span>Masonry</span><i style="--bar:60%"></i></div>
+            <span>KNOW WHAT GOES INTO YOUR BUILD</span>
+          </div>
+          <h3>Materials &amp; core trades</h3>
+          <p>Calculate cement bags, steel tonnage, sand loads, brick counts, plumbing, and electrical requirements.</p>
+          <span class="card-link">Explore building tools <span>↗</span></span>
+        </a>
+
+        <!-- Tool 3 -->
+        <a class="tool-card" href="https://www.homedesignenglish.com/#tools" data-category="renovate">
+          <div class="card-top">
+            <span class="tool-icon">▤</span>
+            <span class="badge">RENOVATE</span>
+          </div>
+          <div class="card-preview interior-preview">
+            <img src="/concept/assets/living-kitchen.webp" alt="Modern home interiors modular kitchen inspiration" width="1536" height="1024" loading="lazy">
+            <span>KITCHENS / FINISHES / SPACES</span>
+          </div>
+          <h3>Interiors &amp; renovation</h3>
+          <p>Estimate modular kitchens, luxury bathroom fittings, flooring types, wall painting, and custom woodwork.</p>
+          <span class="card-link">Explore renovation tools <span>↗</span></span>
+        </a>
+
+        <!-- Tool 4 -->
+        <a class="tool-card" href="https://www.homedesignenglish.com/#tools" data-category="finance">
+          <div class="card-top">
+            <span class="tool-icon">₹</span>
+            <span class="badge">FINANCE</span>
+          </div>
+          <div class="card-preview finance-preview" aria-hidden="true">
+            <span>SEE THE LONGER VIEW</span>
+            <div class="finance-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span>Plan today. Look ahead.</span>
+          </div>
+          <h3>Home loan planning</h3>
+          <p>Calculate monthly EMI, compare SBI &amp; HDFC bank interest rates, and analyze your 5-year repayment schedule.</p>
+          <span class="card-link">Explore the EMI tool <span>↗</span></span>
+        </a>
+      </div>
+
+      <p class="section-caption">
+        Also in your toolkit: 
+        <a href="https://www.homedesignenglish.com/land-converter">Regional land area converter</a> <span>/</span> 
+        <a href="https://www.homedesignenglish.com/blog">Practical construction guides</a> <span>/</span> 
+        <a href="https://www.homedesignenglish.com/gallery/kitchen-designs">Kitchen &amp; bath gallery</a>
+      </p>
+    </section>
+
+    <!-- Budget Estimator & 2026 Crawlable Benchmark Matrix -->
+    <section id="budget" class="budget-section">
+      <div class="wrap budget-layout">
+        <div class="budget-copy">
+          <p class="eyebrow">02 / PUT A NUMBER TO THE POSSIBILITIES</p>
+          <h2>Less guesswork.<br><em>More perspective.</em></h2>
+          <p>A beautiful home begins with a realistic budget. Get a quick sense of scale, then explore the detailed HDE calculator to refine your project.</p>
+          <ul class="clean-list">
+            <li>Compare basic, standard, and premium architectural finishes</li>
+            <li>See how city benchmarks in Bengaluru, Mumbai, and Delhi affect your budget</li>
+            <li>Start informed, confident conversations with your civil contractor</li>
+          </ul>
+          <a class="text-link" href="https://www.homedesignenglish.com/#tools">Open the full HDE calculator <span>↗</span></a>
+        </div>
+
+        <div class="budget-panel">
+          <div class="panel-heading">
+            <span>YOUR HOME, IN NUMBERS</span>
+            <span class="badge">QUICK PREVIEW</span>
+          </div>
+          <div class="input-row">
+            <label for="city">City
+              <select id="city" aria-label="City">
+                <option value="bengaluru">Bengaluru</option>
+                <option value="mumbai">Mumbai</option>
+                <option value="delhi">Delhi NCR</option>
+                <option value="chennai">Chennai</option>
+                <option value="hyderabad">Hyderabad</option>
+                <option value="pune">Pune</option>
+                <option value="tier2">Tier-2 city</option>
+              </select>
+            </label>
+            <label for="area">Built-up area <span class="unit">sq ft</span>
+              <input id="area" type="number" min="100" max="50000" step="any" value="1500" inputmode="numeric" required>
+            </label>
+          </div>
+          <fieldset class="quality-picker">
+            <legend>Choose your finish level</legend>
+            <label><input type="radio" name="quality" value="0"><span>Basic</span></label>
+            <label><input type="radio" name="quality" value="1" checked><span>Standard</span></label>
+            <label><input type="radio" name="quality" value="2"><span>Premium</span></label>
+          </fieldset>
+          <div class="estimate-output" aria-live="polite" aria-atomic="true">
+            <p>Indicative construction budget</p>
+            <strong id="estimate">₹36.00 lakh</strong>
+            <span id="rate-note">1,500 sq ft &times; ₹2,400 / sq ft</span>
+          </div>
+          <p class="budget-disclaimer">
+            Illustrative preview using HDE’s published 2026 city benchmarks. Excludes land acquisition, municipal plan approval fees, and movable furniture.
+          </p>
+          <a class="button" href="https://www.homedesignenglish.com/#tools">Build a detailed estimate</a>
+        </div>
+
+        <!-- 2026 CRAWLABLE RATE BENCHMARK TABLE (HIGH-RANKING SEO CONTENT) -->
+        <div class="benchmark-card">
+          <div class="benchmark-header">
+            <div>
+              <span class="eyebrow" style="color:var(--gold-dark);margin-bottom:6px;">2026 MARKET BENCHMARKS</span>
+              <h3>City Construction Cost per Sq.Ft Matrix</h3>
+            </div>
+            <p>Updated quarterly based on wholesale cement, TATA steel &amp; regional labor indices.</p>
+          </div>
+
+          <div class="benchmark-table-wrapper">
+            <table class="benchmark-table">
+              <thead>
+                <tr>
+                  <th>City / Region</th>
+                  <th>Basic Quality</th>
+                  <th>Standard Quality</th>
+                  <th>Premium Finish</th>
+                  <th>1,500 Sq.Ft Standard Home</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="city-name">Bengaluru (Karnataka)</td>
+                  <td>₹1,700 / sq.ft</td>
+                  <td class="cost-std">₹2,400 / sq.ft</td>
+                  <td>₹3,500 / sq.ft</td>
+                  <td><strong>₹36.0 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Mumbai &amp; MMR (Maharashtra)</td>
+                  <td>₹2,200 / sq.ft</td>
+                  <td class="cost-std">₹3,200 / sq.ft</td>
+                  <td>₹4,500 / sq.ft</td>
+                  <td><strong>₹48.0 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Delhi NCR &amp; Gurgaon</td>
+                  <td>₹1,800 / sq.ft</td>
+                  <td class="cost-std">₹2,600 / sq.ft</td>
+                  <td>₹3,800 / sq.ft</td>
+                  <td><strong>₹39.0 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Hyderabad (Telangana)</td>
+                  <td>₹1,700 / sq.ft</td>
+                  <td class="cost-std">₹2,400 / sq.ft</td>
+                  <td>₹3,400 / sq.ft</td>
+                  <td><strong>₹36.0 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Chennai (Tamil Nadu)</td>
+                  <td>₹1,600 / sq.ft</td>
+                  <td class="cost-std">₹2,200 / sq.ft</td>
+                  <td>₹3,200 / sq.ft</td>
+                  <td><strong>₹33.0 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Pune (Maharashtra)</td>
+                  <td>₹1,900 / sq.ft</td>
+                  <td class="cost-std">₹2,700 / sq.ft</td>
+                  <td>₹3,800 / sq.ft</td>
+                  <td><strong>₹40.5 Lakhs</strong></td>
+                </tr>
+                <tr>
+                  <td class="city-name">Tier-2 Cities (Mysuru, Jaipur, Kochi)</td>
+                  <td>₹1,400 / sq.ft</td>
+                  <td class="cost-std">₹1,900 / sq.ft</td>
+                  <td>₹2,700 / sq.ft</td>
+                  <td><strong>₹28.5 Lakhs</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="benchmark-footer">
+            <span>* Includes RCC structure, masonry, standard plastering, vitrified flooring, wiring &amp; CP fittings.</span>
+            <a href="https://www.homedesignenglish.com/#tools" class="text-link">Calculate with custom specifications &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how" class="section wrap">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">03 / A CLEARER WAY FORWARD</p>
+          <h2>From “what if”<br>to <em>“what’s next.”</em></h2>
+        </div>
+        <p>You don’t need every answer to begin. Just an idea, a few details, and a little curiosity.</p>
+      </div>
+      <div class="steps">
+        <article>
+          <span>01</span>
+          <h3>Bring your idea</h3>
+          <p>Choose a construction, renovation, or finance tool that matches your exact project scope.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Make it your own</h3>
+          <p>Add your built-up area, explore structural materials, and adjust specifications to suit your budget.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>See the bigger picture</h3>
+          <p>Review your itemized estimate. Explore Pro when you’re ready to save projects or export PDF reports.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- House Plans Studio -->
+    <section id="plans" class="plans-section wrap">
+      <div class="plan-visual">
+        <img class="plan-background" src="/concept/assets/courtyard-house.webp" alt="A modern courtyard home to inspire your house-planning journey" width="1536" height="1024" loading="lazy">
+        <div class="plan-top">
+          <span>SPACE, WITH PURPOSE</span>
+          <span>CONCEPT STUDY / 01</span>
+        </div>
+        <div class="plan-sheet">
+          <span class="sheet-label">A LITTLE SPACE. A LOT OF POSSIBILITY.</span>
+          <div class="floor-plan" role="img" aria-label="Illustrative floor-plan diagram with two bedrooms, kitchen, living and dining area, bath and entry; not a construction drawing">
+            <div class="room bed-one"><span>BEDROOM 01</span></div>
+            <div class="room bed-two"><span>BEDROOM 02</span></div>
+            <div class="room bath"><span>BATH</span></div>
+            <div class="room kitchen"><span>KITCHEN</span></div>
+            <div class="room living"><span>LIVING &amp; DINING</span></div>
+            <div class="room entry"><span>ENTRY</span></div>
+          </div>
+        </div>
+        <div class="plan-bottom">
+          <span>ROOM TO IMAGINE</span>
+          <span>Illustrative layout &bull; not to scale</span>
+        </div>
+      </div>
+
+      <div class="plans-copy">
+        <p class="eyebrow">04 / IMAGINE LIFE INSIDE</p>
+        <h2>Find a plan.<br><em>Make room for life.</em></h2>
+        <p>
+          Explore residential floor plans optimized for familiar Indian plot sizes. Filter by plot area, facing direction (North, East, South, West Vastu), and bedrooms to discover a starting point for your home.
+        </p>
+        <div class="plot-sizes">
+          <a href="https://www.homedesignenglish.com/plans">20 &times; 30 ft (600 sq ft)</a>
+          <a href="https://www.homedesignenglish.com/plans">30 &times; 40 ft (1,200 sq ft)</a>
+          <a href="https://www.homedesignenglish.com/plans">30 &times; 50 ft (1,500 sq ft)</a>
+          <a href="https://www.homedesignenglish.com/plans">40 &times; 60 ft (2,400 sq ft)</a>
+        </div>
+        <a class="button" href="https://www.homedesignenglish.com/plans">Explore house plans library</a>
+        <p class="fine-print">
+          Concept plans provide spatial layout guidance. Work with a licensed structural engineer and architect for site-specific drawings and BBMP/BDA plan sanctions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Regional Modes & Bangalore Portal -->
+    <section id="regions" class="section wrap">
+      <div class="region-layout">
+        <div>
+          <p class="eyebrow">05 / DIFFERENT PLACES. DIFFERENT POSSIBILITIES.</p>
+          <h2>Local context.<br><em>Clearer decisions.</em></h2>
+          <p class="region-intro">
+            HDE offers dedicated regional modes because construction practices, building codes, currencies, and property costs change from place to place.
+          </p>
+        </div>
+        <div class="region-panel">
+          <div class="region-tabs" role="tablist" aria-label="Regional tools">
+            <button role="tab" aria-selected="true" aria-controls="region-content" id="tab-india" data-region="india">India <span>INR</span></button>
+            <button role="tab" aria-selected="false" aria-controls="region-content" id="tab-usa" data-region="usa" tabindex="-1">USA <span>USD</span></button>
+            <button role="tab" aria-selected="false" aria-controls="region-content" id="tab-uae" data-region="uae" tabindex="-1">UAE <span>AED</span></button>
+          </div>
+          <div id="region-content" role="tabpanel" aria-labelledby="tab-india">
+            <span class="region-number">IN / 01</span>
+            <h3>Build with a local perspective.</h3>
+            <p>Construction budgets, interiors, material quantities, home loan EMI, and regional land conversions.</p>
+            <a class="text-link" href="https://www.homedesignenglish.com/">Explore HDE’s regional tools <span>↗</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-banner">
+        <div>
+          <span class="eyebrow">LOOKING FOR A PLACE IN BENGALURU?</span>
+          <h3>Your next chapter might already be built.</h3>
+          <p>Explore verified flats, independent houses for rent, and plots with 0% brokerage directly from owners.</p>
+        </div>
+        <a class="button light-button" href="https://www.homedesignenglish.com/bangalore/properties">Browse Bangalore Rentals &amp; Properties</a>
+      </div>
+    </section>
+
+    <!-- HDE Pro Workspace -->
+    <section id="pro" class="pro-section">
+      <div class="wrap">
+        <div class="pro-header">
+          <p class="eyebrow">06 / TAKE YOUR PLANS FURTHER</p>
+          <span class="pro-word">HDE <em>Pro.</em></span>
+          <div class="pro-orbit" aria-hidden="true">
+            <span>PLAN</span>
+            <span>SAVE</span>
+            <span>SHARE</span>
+          </div>
+          <h2>A workspace for<br><em>what comes next.</em></h2>
+          <p>Keep your projects close. Explore credit plans for cloud saves, itemized PDF reports, and detailed project planning.</p>
+        </div>
+
+        <div class="pro-benefits">
+          <article>
+            <span>01 / SAVE</span>
+            <h3>Ideas worth keeping.</h3>
+            <p>Store estimates securely in your cloud workspace and return to your project as your architectural plans evolve.</p>
+          </article>
+          <article>
+            <span>02 / SHARE</span>
+            <h3>Details worth discussing.</h3>
+            <p>Export itemized PDF reports and material quantity breakdowns for transparent conversations with contractors.</p>
+          </article>
+          <article>
+            <span>03 / PLAN</span>
+            <h3>Room to think bigger.</h3>
+            <p>Choose a flexible credit bundle for a single dream home or multiple professional client projects.</p>
+          </article>
+        </div>
+
+        <div class="pro-bottom">
+          <div>
+            <strong>Plans from ₹199</strong>
+            <span>One-time credit bundles. Purchased credits never expire.</span>
+          </div>
+          <a class="button lime-button" href="https://www.homedesignenglish.com/upgrade#compare">Compare HDE plans</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section wrap faq-layout">
+      <div>
+        <p class="eyebrow">A LITTLE MORE CLARITY</p>
+        <h2>Good questions.<br><em>Helpful answers.</em></h2>
+        <p>
+          Have questions about planning your build or listing a property?<br>
+          <a class="text-link" href="https://www.homedesignenglish.com/contact">Get in touch with HDE <span>↗</span></a>
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <details open>
+          <summary>What is Home Design English?</summary>
+          <p>
+            HDE is a comprehensive home-planning platform offering residential construction cost calculators, 2D architectural concept floor plans, interior renovation estimators, and a zero-brokerage Bangalore property discovery portal.
+          </p>
+        </details>
+        <details>
+          <summary>What is the average house construction cost per sq ft in India in 2026?</summary>
+          <p>
+            In 2026, standard residential home construction in major cities like Bengaluru, Mumbai, Delhi, Hyderabad, and Pune ranges from ₹1,700 to ₹2,400 per sq ft for standard quality, and ₹3,200 to ₹4,500+ per sq ft for luxury finishes.
+          </p>
+        </details>
+        <details>
+          <summary>How accurate are HDE’s construction cost estimates?</summary>
+          <p>
+            HDE’s estimates use empirical building material ratios (IS 456 standards) and current wholesale market indices. While actual quotes vary by soil condition, elevation design, and local labor rates, HDE typically provides estimates within 5–8% of actual turnkey contractor bids.
+          </p>
+        </details>
+        <details>
+          <summary>Can I build directly from an HDE house plan?</summary>
+          <p>
+            HDE house plans are conceptual architectural layout studies designed for standard Indian plot sizes (20x30, 30x40, 30x50, 40x60). They must be detailed into structural working drawings and certified by a registered local structural engineer for municipal sanction.
+          </p>
+        </details>
+        <details>
+          <summary>Can home owners list their property for rent or sale for free on HDE?</summary>
+          <p>
+            Yes! Individual owners and verified landlords can post flats, houses for rent, and plots for free with 0% brokerage. Owners retain complete control to edit details, delete listings, or mark "Deal Done" once a tenant is finalized.
+          </p>
+        </details>
+        <details>
+          <summary>Can I use HDE calculators without paying?</summary>
+          <p>
+            Yes! All live calculation tools and estimates across India, USA, and UAE modes are 100% free to explore. Premium credits are only required when saving projects to your cloud dashboard or exporting formal PDF reports.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Final CTA Banner -->
+    <section class="final-cta wrap">
+      <div>
+        <p class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+        <h2>Make space for<br><em>something wonderful.</em></h2>
+      </div>
+      <div>
+        <p>Your idea deserves a thoughtful beginning.<br>Let’s put a clear plan behind it.</p>
+        <a class="button" href="https://www.homedesignenglish.com/#tools">Start planning your home</a>
+      </div>
+      <span class="cta-motif" aria-hidden="true">✳</span>
+    </section>
+
+    <!-- Footer -->
+    <footer class="wrap">
+      <div class="footer-statement" aria-hidden="true">A place. <em>A possibility.</em></div>
+      <div class="footer-main">
+        <div>
+          <a class="brand" href="https://www.homedesignenglish.com/">
+            <img class="brand-logo" src="/concept/assets/hde-logo.png" alt="HDE Logo" width="46" height="46">
+            <span class="brand-lockup">
+              <strong>HDE</strong>
+              <span>Home Design &amp; Real Estate</span>
+            </span>
+          </a>
+          <p>A clearer plan for the place you call home.</p>
+        </div>
+        <div>
+          <span class="footer-title">EXPLORE</span>
+          <a href="https://www.homedesignenglish.com/#tools">Planning tools</a>
+          <a href="https://www.homedesignenglish.com/plans">House plans</a>
+          <a href="https://www.homedesignenglish.com/gallery/kitchen-designs">Design gallery</a>
+        </div>
+        <div>
+          <span class="footer-title">GO FURTHER</span>
+          <a href="https://www.homedesignenglish.com/bangalore/properties">Real estate &amp; rent</a>
+          <a href="https://www.homedesignenglish.com/blog">Blog &amp; guides</a>
+          <a href="https://www.homedesignenglish.com/upgrade">HDE Pro</a>
+        </div>
+        <div>
+          <span class="footer-title">HOME DESIGN ENGLISH</span>
+          <a href="https://www.homedesignenglish.com/about">About HDE</a>
+          <a href="https://www.homedesignenglish.com/contact">Contact</a>
+          <a href="https://www.homedesignenglish.com/app">HDE App</a>
+        </div>
+      </div>
+      <p class="footer-disclaimer">
+        Estimates are approximate preliminary guidance. Confirm physical costs and structural designs with licensed local professionals. Architectural imagery and floor-plan layout studies on this page are illustrative.
+      </p>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Home Design English. All rights reserved.</span>
+        <div>
+          <a href="https://www.homedesignenglish.com/privacy">Privacy</a>
+          <a href="https://www.homedesignenglish.com/terms">Terms</a>
+          <a href="https://www.homedesignenglish.com/disclaimer">Disclaimer</a>
+        </div>
+        <a href="#">Back to top &uarr;</a>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

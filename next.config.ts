@@ -40,6 +40,38 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/home-planning',
+        destination: '/concept/index.html',
+      },
+      {
+        source: '/concept',
+        destination: '/concept/index.html',
+      },
+      {
+        source: '/home-planning-concept',
+        destination: '/concept/index.html',
+      },
+      {
+        source: '/styles.css',
+        destination: '/concept/styles.css',
+      },
+      {
+        source: '/script.js',
+        destination: '/concept/script.js',
+      },
+      {
+        source: '/vendor/:path*',
+        destination: '/concept/vendor/:path*',
+      },
+      {
+        source: '/assets/:path*',
+        destination: '/concept/assets/:path*',
+      },
+    ];
+  },
   async headers() {
     return [
       {

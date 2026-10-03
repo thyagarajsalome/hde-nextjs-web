@@ -30,6 +30,8 @@ export default function Footer() {
             
             {/* Quick Links Horizontally */}
             <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-3 gap-y-1 text-sm font-medium pt-1">
+              <Link href="/home-planning" className="text-primary font-semibold hover:underline">Home Planning Guide</Link>
+              <span className="text-gray-300">|</span>
               <Link href="/blog" className="text-gray-500 hover:text-primary transition-colors no-underline">Blog & Guides</Link>
               <span className="text-gray-300">|</span>
               <Link href="/land-converter" className="text-gray-500 hover:text-primary transition-colors no-underline">Land Area Converter</Link>
