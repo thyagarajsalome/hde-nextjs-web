@@ -80,8 +80,8 @@ export default function PropertyCard({
             )}
 
             {/* Badges on Top Bar */}
-            <div className="absolute top-3 inset-x-3 flex items-start justify-between gap-2 z-10 pointer-events-none">
-              <div className="flex flex-wrap items-center gap-1.5 max-w-[68%]">
+            <div className="absolute top-2.5 sm:top-3 inset-x-2.5 sm:inset-x-3 flex flex-wrap items-center justify-between gap-1.5 z-10 pointer-events-none">
+              <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 min-w-0">
                 <span className="px-2 py-0.5 rounded-md bg-[#4165af]/95 backdrop-blur-md text-white text-[10px] font-medium uppercase tracking-wide whitespace-nowrap">
                   {property.intent === "sale" ? "For Sale" : "For Rent"}
                 </span>
@@ -101,19 +101,19 @@ export default function PropertyCard({
               </div>
 
               {/* Owner vs RERA Agent Badge */}
-              <div className="shrink-0">
+              <div className="shrink-0 ml-auto">
                 {property.poster_type === "owner" ? (
-                  <span className="px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-gray-800 text-[10px] font-medium shadow-xs flex items-center gap-1 whitespace-nowrap">
+                  <span className="px-2 sm:px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-gray-800 text-[10px] font-medium shadow-xs flex items-center gap-1 whitespace-nowrap">
                     <i className="fas fa-user-check text-emerald-600 text-[10px]"></i>
-                    <span>Individual Owner</span>
+                    <span><span className="hidden sm:inline">Individual </span>Owner</span>
                   </span>
                 ) : property.is_rera_verified ? (
-                  <span className="px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-primary text-[10px] font-medium shadow-xs flex items-center gap-1 whitespace-nowrap">
+                  <span className="px-2 sm:px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-primary text-[10px] font-medium shadow-xs flex items-center gap-1 whitespace-nowrap">
                     <i className="fas fa-certificate text-primary text-[10px]"></i>
-                    <span>K-RERA Verified</span>
+                    <span><span className="hidden sm:inline">K-RERA </span>Verified</span>
                   </span>
                 ) : (
-                  <span className="px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-gray-600 text-[10px] font-medium shadow-xs whitespace-nowrap">
+                  <span className="px-2 sm:px-2.5 py-0.5 rounded-md bg-white/95 backdrop-blur-md text-gray-600 text-[10px] font-medium shadow-xs whitespace-nowrap">
                     Agent
                   </span>
                 )}

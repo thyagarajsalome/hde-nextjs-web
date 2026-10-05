@@ -279,15 +279,15 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
                           activeCalculator === calc.id ? "bg-primary/10" : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
                         }`}
                       >
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center gap-3">
-                            <i className={`${calc.icon} ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
-                            <div>
-                              <span className={`text-xs block ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
+                        <div className="flex items-center justify-between w-full gap-2">
+                          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                            <i className={`${calc.icon} shrink-0 text-sm ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
+                            <div className="min-w-0 flex-1">
+                              <span className={`text-xs block truncate ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
                                 {calc.name}
                               </span>
                               {calc.tagline && (
-                                <span className="text-[10px] text-gray-400 block leading-tight">{calc.tagline}</span>
+                                <span className="text-[10px] text-gray-400 block leading-tight truncate">{calc.tagline}</span>
                               )}
                             </div>
                           </div>

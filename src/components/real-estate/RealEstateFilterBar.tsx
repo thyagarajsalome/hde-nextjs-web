@@ -45,10 +45,10 @@ export default function RealEstateFilterBar({
       {/* Top Row: Intent Tabs (Buy vs Rent) and Locality Dropdown */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-100">
         {/* Buy / Rent Switch */}
-        <div className="inline-flex p-1 bg-gray-100 rounded-xl">
+        <div className="inline-flex p-1 bg-gray-100 rounded-xl w-full sm:w-auto">
           <button
             onClick={() => onIntentChange("sale")}
-            className={`px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap text-center ${
               intent === "sale"
                 ? "bg-white text-secondary shadow-xs font-black"
                 : "text-gray-500 hover:text-gray-900"
@@ -59,7 +59,7 @@ export default function RealEstateFilterBar({
           </button>
           <button
             onClick={() => onIntentChange("rent")}
-            className={`px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap text-center ${
               intent === "rent"
                 ? "bg-white text-secondary shadow-xs font-black"
                 : "text-gray-500 hover:text-gray-900"

@@ -87,7 +87,7 @@ const Header = () => {
                 <span className="text-primary font-black text-lg sm:text-xl leading-none tracking-tight">
                   HDE
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-semibold text-gray-500 dark:text-zinc-400 tracking-tight leading-none mt-0.5 whitespace-nowrap">
+                <span className="hidden sm:inline text-[9px] sm:text-[10px] font-semibold text-gray-500 dark:text-zinc-400 tracking-tight leading-none mt-0.5 whitespace-nowrap">
                   Home Design &amp; Real Estate
                 </span>
               </div>
