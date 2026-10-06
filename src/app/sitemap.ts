@@ -482,7 +482,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // Bangalore Real Estate Programmatic Routes (24 localities x 6 templates + bare locality)
+  // Bangalore Real Estate Programmatic Routes (24 localities x 6 templates)
   const bangaloreRoutes: MetadataRoute.Sitemap = [];
   BANGALORE_LOCALITIES.forEach((loc) => {
     TARGET_CATEGORY_TEMPLATES.forEach((tmpl) => {
@@ -492,12 +492,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'daily',
         priority: 0.85,
       });
-    });
-    bangaloreRoutes.push({
-      url: `${BASE_URL}/bangalore/${loc.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.8,
     });
   });
 

@@ -71,61 +71,100 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* City/Area links - dynamic based on route */}
-        {isDubaiRoute ? (
-          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Dubai Property Guides By Area</p>
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
-              <Link href="/dubai-property/areas/dubai-marina" className="text-gray-500 hover:text-primary transition-colors no-underline">Dubai Marina</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/dubai-property/areas/downtown-dubai" className="text-gray-500 hover:text-primary transition-colors no-underline">Downtown Dubai</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/dubai-property/areas/business-bay" className="text-gray-500 hover:text-primary transition-colors no-underline">Business Bay</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/dubai-property/areas/jvc" className="text-gray-500 hover:text-primary transition-colors no-underline">JVC</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/dubai-property/areas/dubai-hills" className="text-gray-500 hover:text-primary transition-colors no-underline">Dubai Hills</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/dubai-property/areas/palm-jumeirah" className="text-gray-500 hover:text-primary transition-colors no-underline">Palm Jumeirah</Link>
+        {/* Regional Portals & Calculators Mesh (Always statically crawlable for Google bot) */}
+        <div className="border-t border-gray-100 pt-5 mt-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+            {/* India Real Estate & Construction */}
+            <div className="space-y-2">
+              <p className="font-bold text-gray-900 uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                <span>🇮🇳</span>
+                <span>India Construction &amp; Real Estate</span>
+              </p>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
+                <Link href="/bangalore/properties" className="hover:text-primary transition-colors">Bangalore Properties</Link>
+                <span>&bull;</span>
+                <Link href="/bangalore/house-for-rent-in-whitefield" className="hover:text-primary transition-colors">Whitefield Rent</Link>
+                <span>&bull;</span>
+                <Link href="/bangalore/house-for-rent-in-hsr-layout" className="hover:text-primary transition-colors">HSR Layout</Link>
+                <span>&bull;</span>
+                <Link href="/bangalore/house-for-rent-in-indiranagar" className="hover:text-primary transition-colors">Indiranagar</Link>
+                <span>&bull;</span>
+                <Link href="/bangalore/house-for-rent-in-electronic-city" className="hover:text-primary transition-colors">Electronic City</Link>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
+                <Link href="/cost/construction-in-bengaluru" className="hover:text-primary transition-colors">Bengaluru Rates</Link>
+                <span>&bull;</span>
+                <Link href="/cost/construction-in-mumbai" className="hover:text-primary transition-colors">Mumbai</Link>
+                <span>&bull;</span>
+                <Link href="/cost/construction-in-delhi-ncr" className="hover:text-primary transition-colors">Delhi NCR</Link>
+                <span>&bull;</span>
+                <Link href="/cost/construction-in-hyderabad" className="hover:text-primary transition-colors">Hyderabad</Link>
+                <span>&bull;</span>
+                <Link href="/cost/construction-in-chennai" className="hover:text-primary transition-colors">Chennai</Link>
+                <span>&bull;</span>
+                <Link href="/cost/construction-in-pune" className="hover:text-primary transition-colors">Pune</Link>
+              </div>
+            </div>
+
+            {/* USA Real Estate Calculators */}
+            <div className="space-y-2">
+              <p className="font-bold text-gray-900 uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                <span>🇺🇸</span>
+                <span>USA Real Estate Tools</span>
+              </p>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
+                <Link href="/real-estate/texas" className="hover:text-primary font-semibold">Texas Hub</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/florida" className="hover:text-primary font-semibold">Florida Hub</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/california" className="hover:text-primary font-semibold">California Hub</Link>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
+                <Link href="/real-estate/rent-vs-buy-in-austin-texas" className="hover:text-primary transition-colors">Austin</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/property-tax-in-dallas-texas" className="hover:text-primary transition-colors">Dallas</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/salary-needed-to-buy-in-houston-texas" className="hover:text-primary transition-colors">Houston</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/rent-vs-buy-in-los-angeles-california" className="hover:text-primary transition-colors">Los Angeles</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/property-tax-in-chicago-illinois" className="hover:text-primary transition-colors">Chicago</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" className="hover:text-primary transition-colors">Miami</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/rent-vs-buy-in-seattle-washington" className="hover:text-primary transition-colors">Seattle</Link>
+              </div>
+            </div>
+
+            {/* Dubai Property Guides */}
+            <div className="space-y-2">
+              <p className="font-bold text-gray-900 uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                <span>🇦🇪</span>
+                <span>Dubai Property Advisor</span>
+              </p>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
+                <Link href="/dubai-property" className="hover:text-primary font-semibold">Dubai Overview</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/calculator" className="hover:text-primary font-semibold">Buying Cost Calculator</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/partners" className="hover:text-primary font-semibold">Partner Agents</Link>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
+                <Link href="/dubai-property/areas/dubai-marina" className="hover:text-primary transition-colors">Dubai Marina</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/areas/downtown-dubai" className="hover:text-primary transition-colors">Downtown Dubai</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/areas/business-bay" className="hover:text-primary transition-colors">Business Bay</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/areas/jvc" className="hover:text-primary transition-colors">JVC</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/areas/palm-jumeirah" className="hover:text-primary transition-colors">Palm Jumeirah</Link>
+                <span>&bull;</span>
+                <Link href="/dubai-property/areas/dubai-hills" className="hover:text-primary transition-colors">Dubai Hills</Link>
+              </div>
             </div>
           </div>
-        ) : !isUSRoute ? (
-          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">House Construction Costs By City</p>
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
-              <Link href="/cost/construction-in-mumbai" className="text-gray-500 hover:text-primary transition-colors no-underline">Mumbai</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/cost/construction-in-bengaluru" className="text-gray-500 hover:text-primary transition-colors no-underline">Bengaluru</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/cost/construction-in-delhi-ncr" className="text-gray-500 hover:text-primary transition-colors no-underline">Delhi NCR</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/cost/construction-in-chennai" className="text-gray-500 hover:text-primary transition-colors no-underline">Chennai</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/cost/construction-in-hyderabad" className="text-gray-500 hover:text-primary transition-colors no-underline">Hyderabad</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/cost/construction-in-pune" className="text-gray-500 hover:text-primary transition-colors no-underline">Pune</Link>
-            </div>
-          </div>
-        ) : (
-          <div className="border-t border-gray-100 pt-4 mt-4 mb-4">
-            <p className="font-bold text-gray-800 mb-2 uppercase text-xs tracking-widest text-center">Real Estate Calculators By City</p>
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 text-sm font-medium">
-              <Link href="/real-estate/rent-vs-buy-in-austin-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Austin</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/property-tax-in-dallas-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Dallas</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/salary-needed-to-buy-in-houston-texas" className="text-gray-500 hover:text-primary transition-colors no-underline">Houston</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/rent-vs-buy-in-los-angeles-california" className="text-gray-500 hover:text-primary transition-colors no-underline">Los Angeles</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/property-tax-in-chicago-illinois" className="text-gray-500 hover:text-primary transition-colors no-underline">Chicago</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" className="text-gray-500 hover:text-primary transition-colors no-underline">Miami</Link>
-              <span className="hidden md:inline text-gray-300">|</span>
-              <Link href="/real-estate/rent-vs-buy-in-new-york-city" className="text-gray-500 hover:text-primary transition-colors no-underline">New York</Link>
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Disclaimer & Copyright */}
         <div className="border-t border-gray-100 pt-4 text-center max-w-4xl mx-auto">

@@ -1,6 +1,6 @@
 // src/app/bangalore/[slug]/page.tsx
 import React from "react";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -37,13 +37,10 @@ function parseBangaloreSlug(slug: string) {
     }
   }
 
-  // Also support bare locality slug (e.g., /bangalore/whitefield) -> default to properties-in- template
+  // Also support bare locality slug (e.g., /bangalore/whitefield) -> 301 redirect to canonical /bangalore/properties-in-whitefield
   const bareLocality = BANGALORE_LOCALITIES.find((l) => l.slug === slug);
   if (bareLocality) {
-    const defaultTemplate = TARGET_CATEGORY_TEMPLATES.find((t) => t.prefix === "properties-in-")!;
-    const marketData = BANGALORE_LOCALITY_MARKET_DATA[bareLocality.slug];
-    const transit = LOCALITY_TRANSIT_PROFILES[bareLocality.id];
-    return { template: defaultTemplate, locality: bareLocality, marketData, transit, slug };
+    return { shouldRedirect: true, redirectTarget: `/bangalore/properties-in-${bareLocality.slug}` };
   }
 
   return null;
@@ -59,10 +56,6 @@ export async function generateStaticParams() {
         slug: `${template.prefix}${locality.slug}`,
       });
     }
-    // Also include the bare locality slug
-    params.push({
-      slug: locality.slug,
-    });
   }
 
   return params;
@@ -80,7 +73,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const { template, locality, marketData } = parsed;
+  // If this is a bare locality, point canonical to properties-in-
+  if ('shouldRedirect' in parsed && parsed.shouldRedirect) {
+    return {
+      alternates: {
+        canonical: `https://www.homedesignenglish.com${parsed.redirectTarget}`,
+      },
+    };
+  }
+
+  const { template, locality, marketData } = parsed as any;
   const isRent = (template.intent as string) === "rent";
   const currentPrice =
     template.category === "plot"
@@ -193,7 +195,11 @@ export default async function BangaloreProgrammaticPage({ params }: PageProps) {
     notFound();
   }
 
-  const { template, locality, marketData, transit } = parsed;
+  if ('shouldRedirect' in parsed && parsed.shouldRedirect) {
+    permanentRedirect(parsed.redirectTarget);
+  }
+
+  const { template, locality, marketData, transit } = parsed as any;
   const isRent = (template.intent as string) === "rent";
 
   // Filter properties from Supabase / Dataset
