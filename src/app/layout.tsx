@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.homedesignenglish.com'),
   verification: {
     google: 'j0tDFreq7BZOn79uEWGW5K_70WrkdIr8GCnJRcC57MA',
+    other: {
+      'msvalidate.01': '7BE3F5092496F607BD8EB7753CD93E8C',
+    },
   },
   openGraph: {
     title: 'HDE - Dream Home Construction & Interior Cost Calculator',
