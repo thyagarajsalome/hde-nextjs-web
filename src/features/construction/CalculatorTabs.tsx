@@ -84,7 +84,6 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   const { region } = useRegion();
   const { planTier, role } = useUser();
   const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const CALCULATORS = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
@@ -120,11 +119,8 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
     }
   }, [region, activeCalculator, setActiveCalculator]);
 
-  const currentCalc = CALCULATORS.find(c => c.id === activeCalculator) || CALCULATORS[0];
-
   const handleTabClick = (id: CalculatorType) => {
     setActiveCalculator(id);
-    setIsDropdownOpen(false);
 
     // If active calculator is selected outside the currently filtered category, align category filter
     const list = region === 'US' ? USA_CALCULATORS : INDIA_CALCULATORS;
@@ -242,79 +238,8 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
         })}
       </div>
 
-      {/* MOBILE DROPDOWN (Visible only on <768px) */}
-      <div className="md:hidden relative">
-        <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="w-full flex items-center justify-between px-4 py-4 bg-white dark:bg-zinc-900 border-2 border-gray-100 dark:border-zinc-800 rounded-2xl shadow-sm text-secondary dark:text-zinc-100 font-bold"
-        >
-          <div className="flex items-center gap-3">
-            <i className={`${currentCalc.icon} text-primary`}></i>
-            <div className="text-left">
-              <span className="block">{currentCalc.name}</span>
-              {currentCalc.tagline && (
-                <span className="text-[10px] text-gray-400 block font-normal">{currentCalc.tagline}</span>
-              )}
-            </div>
-          </div>
-          <i className={`fas fa-chevron-${isDropdownOpen ? 'up' : 'down'} text-gray-400 dark:text-zinc-500`}></i>
-        </button>
-
-        {isDropdownOpen && (
-          <div className="absolute z-50 w-full mt-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden max-h-[70vh] overflow-y-auto">
-            <div className="divide-y divide-gray-100 dark:divide-zinc-800">
-              {CATEGORIES.filter(c => c.id !== 'all').map((cat) => {
-                const items = CALCULATORS.filter(c => c.category === cat.id);
-                if (items.length === 0) return null;
-                return (
-                  <div key={cat.id} className="p-2">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-3 py-1 block">
-                      {cat.name}
-                    </span>
-                    {items.map((calc) => (
-                      <button
-                        key={calc.id}
-                        onClick={() => handleTabClick(calc.id as CalculatorType)}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors cursor-pointer text-left ${
-                          activeCalculator === calc.id ? "bg-primary/10" : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between w-full gap-2">
-                          <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                            <i className={`${calc.icon} shrink-0 text-sm ${activeCalculator === calc.id ? 'text-primary' : 'text-gray-400'}`}></i>
-                            <div className="min-w-0 flex-1">
-                              <span className={`text-xs block truncate ${activeCalculator === calc.id ? 'font-bold text-primary' : 'font-semibold text-gray-800 dark:text-zinc-200'}`}>
-                                {calc.name}
-                              </span>
-                              {calc.tagline && (
-                                <span className="text-[10px] text-gray-400 block leading-tight truncate">{calc.tagline}</span>
-                              )}
-                            </div>
-                          </div>
-                          {!isUserPaid && calc.reqTier > 0 ? (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 shrink-0 border border-amber-500/20">
-                              <i className="fas fa-lock text-[8px]"></i>
-                              <span>PRO</span>
-                            </span>
-                          ) : calc.reqTier === 0 ? (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 shrink-0 border border-emerald-500/25 tracking-wider">
-                              <i className="fas fa-check text-[8px]"></i>
-                              <span>FREE</span>
-                            </span>
-                          ) : null}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* TABLET & DESKTOP GRID (Categorized, clean, balanced columns) */}
-      <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      {/* CALCULATOR CARDS GRID (Visible on all devices - 2 cols on mobile, 4-5 on desktop) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3">
         {displayedCalculators.map(({ id, name, icon, tagline, reqTier }) => {
           const isActive = activeCalculator === id;
 
@@ -322,38 +247,38 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
             <button
               key={id}
               onClick={() => handleTabClick(id as CalculatorType)}
-              className={`flex flex-col items-start p-3.5 rounded-2xl text-left transition-all duration-200 border-2 cursor-pointer
+              className={`flex flex-col items-start p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl text-left transition-all duration-200 border-2 cursor-pointer
                 ${isActive 
                   ? "bg-white dark:bg-zinc-900 border-primary shadow-md scale-[1.02]" 
                   : "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 hover:border-primary/40 hover:bg-primary/5 dark:hover:bg-zinc-800/40"}`}
             >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2.5">
-                  <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm ${
+              <div className="flex items-center justify-between w-full gap-1.5">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-sm shrink-0 ${
                     isActive ? "bg-primary text-white" : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400"
                   }`}>
                     <i className={icon}></i>
                   </span>
-                  <span className={`text-xs font-bold leading-tight ${
+                  <span className={`text-[11px] sm:text-xs font-bold leading-tight line-clamp-1 sm:line-clamp-2 ${
                     isActive ? "text-secondary dark:text-zinc-100" : "text-gray-800 dark:text-zinc-300"
                   }`}>
                     {name}
                   </span>
                 </div>
                 {!isUserPaid && reqTier > 0 ? (
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-1 border border-amber-500/20 shrink-0">
-                    <i className="fas fa-lock text-[8px]"></i>
+                  <span className="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.5 rounded-md bg-amber-500/15 text-amber-700 dark:text-amber-400 font-extrabold flex items-center gap-0.5 sm:gap-1 border border-amber-500/20 shrink-0">
+                    <i className="fas fa-lock text-[7px] sm:text-[8px]"></i>
                     <span>PRO</span>
                   </span>
                 ) : reqTier === 0 ? (
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-1 border border-emerald-500/25 shrink-0 tracking-wider">
-                    <i className="fas fa-check text-[8px]"></i>
+                  <span className="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-black flex items-center gap-0.5 sm:gap-1 border border-emerald-500/25 shrink-0 tracking-wider">
+                    <i className="fas fa-check text-[7px] sm:text-[8px]"></i>
                     <span>FREE</span>
                   </span>
                 ) : null}
               </div>
               {tagline && (
-                <span className="text-[10px] text-gray-400 dark:text-zinc-500 mt-1.5 line-clamp-1">
+                <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-zinc-500 mt-1 sm:mt-1.5 line-clamp-1">
                   {tagline}
                 </span>
               )}
