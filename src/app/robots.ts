@@ -7,6 +7,10 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/dashboard/', '/upgrade/', '/signin/', '/signup/', '/dev-links/', '/admin/'],
     },
-    sitemap: 'https://www.homedesignenglish.com/sitemap.xml',
+    sitemap: [
+      'https://www.homedesignenglish.com/sitemap.xml',
+      'https://us.homedesignenglish.com/sitemap.xml',
+      'https://dubai.homedesignenglish.com/sitemap.xml',
+    ],
   };
 }

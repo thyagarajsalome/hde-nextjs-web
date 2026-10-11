@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Florida Real Estate Calculators & City Directory | HDE',
   description: 'Free Florida real estate calculators across major cities. Compare rent vs. buy, property taxes, home remodel, pool costs, and salary requirements.',
   alternates: {
-    canonical: 'https://www.homedesignenglish.com/real-estate/florida',
+    canonical: '/real-estate/florida',
   },
 };
 

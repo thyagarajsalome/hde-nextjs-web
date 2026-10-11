@@ -74,6 +74,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/real-estate`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.95,
+    },
+    {
       url: `${BASE_URL}/real-estate/texas`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -514,6 +520,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1.0,
+      },
+      {
+        url: `${BASE_URL}/real-estate`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.98,
       },
       {
         url: `${BASE_URL}/real-estate/texas`,

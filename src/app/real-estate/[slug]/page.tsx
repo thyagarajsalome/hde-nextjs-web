@@ -294,13 +294,145 @@ function getSampleCalculation(toolType: string, cityName: string, stateName: str
   }
 }
 
+function getLocalGuideContent(toolType: string, cityName: string, stateName: string) {
+  const toolDetails: Record<string, {
+    title: string;
+    summary: string;
+    costFactors: { factor: string; detail: string }[];
+    permitInsight: string;
+    roiTakeaway: string;
+  }> = {
+    'rent-vs-buy': {
+      title: `Understanding Homeownership vs. Renting Economics in ${cityName}`,
+      summary: `In ${cityName}, ${stateName}, deciding whether to purchase real estate or continue leasing involves analyzing several critical financial variables beyond the initial listing price. Mortgage interest rates, local property tax assessments, homeowner insurance premiums, and municipal transfer fees all influence your break-even horizon. Typically, homeowners in ${cityName} reach positive net equity payoff between 4 to 6 years of consistent occupancy.`,
+      costFactors: [
+        { factor: 'Mortgage Principal & Interest', detail: `Current prevailing fixed rates shape your monthly amortization schedule. Early payments are predominantly interest-heavy, building equity faster in later years.` },
+        { factor: 'Property Tax Escrow', detail: `Local ${stateName} taxing authorities periodically re-evaluate property market values, making annual escrow adjustment a key budgeting factor.` },
+        { factor: 'Maintenance & HOA Overhead', detail: `Budget 1% to 1.5% of total home value annually for preventive structural, mechanical, and roofing maintenance.` },
+        { factor: 'Opportunity Cost of Capital', detail: `Compare your down payment equity growth in residential property against traditional liquid index funds.` },
+      ],
+      permitInsight: `When purchasing existing properties in ${cityName}, ensure all previous room additions, garage conversions, and sheds have closed municipal permits on file with the local building department.`,
+      roiTakeaway: `Long-term homeownership in ${cityName} historically outpaces rent inflation by shielding families from sudden annual lease increases while building tax-advantaged equity.`,
+    },
+    'property-tax': {
+      title: `Navigating County Assessments and Escrow in ${cityName}, ${stateName}`,
+      summary: `Property tax bills in ${cityName} fund essential local services including ISD public schools, police and fire emergency services, local road infrastructure, and county civil administration. Because ${stateName} tax assessors periodically re-assess residential market values, understanding local assessment schedules is vital to preventing sudden escrow shortfalls.`,
+      costFactors: [
+        { factor: 'Assessed Value vs. Market Value', detail: `Taxing districts evaluate property values using mass-appraisal models which may differ from current active market sales transactions.` },
+        { factor: 'School District (ISD) Millage Rates', detail: `School districts generally constitute 50% or more of total annual tax liabilities in the ${cityName} area.` },
+        { factor: 'Homestead & Veteran Exemptions', detail: `Owner-occupants should immediately file for general homestead exemptions to cap annual assessed value growth.` },
+        { factor: 'Appraisal Protest Rights', detail: `Homeowners possess statutory rights each spring to formally protest inflated property value valuations before the county appraisal review board.` },
+      ],
+      permitInsight: `Unpermitted renovations or additions identified by county aerial surveys or permit filings can trigger reassessment adjustments in ${cityName}.`,
+      roiTakeaway: `Filing your statutory exemptions on time in ${stateName} can save thousands of dollars annually and directly reduces your monthly mortgage escrow obligation.`,
+    },
+    'salary-needed-to-buy': {
+      title: `Income Thresholds & Debt-to-Income Guidelines for ${cityName} Buyers`,
+      summary: `Mortgage underwriters in ${cityName}, ${stateName} adhere strictly to qualifying debt-to-income (DTI) metrics. The standard benchmark is the 28/36 rule: your principal, interest, taxes, and insurance (PITI) should not exceed 28% of your gross monthly earnings, and total debt obligations (including student loans, auto financing, and credit cards) must remain under 36% to 43%.`,
+      costFactors: [
+        { factor: 'Gross Annual Household Income', detail: `W-2 wages, verified self-employment income (2-year average), and guaranteed bonus structures recognized by mortgage lenders.` },
+        { factor: 'Revolving and Installment Debt', detail: `Monthly auto loans, minimum credit card payments, and student loan balances reduce your maximum borrowing ceiling dollar-for-dollar.` },
+        { factor: 'Down Payment Percentage', detail: `Putting down 20% eliminates costly Private Mortgage Insurance (PMI), dramatically lowering the required qualifying income.` },
+        { factor: 'Credit Score Tiers', detail: `FICO scores above 740 secure the most competitive interest rates, directly expanding your purchasing power in ${cityName}.` },
+      ],
+      permitInsight: `Ensure your debt verification includes realistic property insurance quotes, as premiums have adjusted upward across ${stateName}.`,
+      roiTakeaway: `Improving your credit score by 40 points or eliminating a $400/month car payment often provides more home-buying leverage in ${cityName} than a $10,000 salary bump.`,
+    },
+    'remodel-roi': {
+      title: `Maximizing Home Renovation Equity and Resale Value in ${cityName}`,
+      summary: `Not all home improvement projects return equal value at resale. In ${cityName}, ${stateName}, strategic interior and exterior upgrades deliver predictable Return on Investment (ROI) by aligning your home with current neighborhood buyer expectations and recent comparable sales (comps).`,
+      costFactors: [
+        { factor: 'Minor Kitchen Upgrades', detail: `Refacing cabinets, upgrading to solid quartz countertops, and installing modern appliances historically recoups 75% to 85% at resale.` },
+        { factor: 'Bathroom Modernization', detail: `Replacing aging tubs with walk-in tile showers, modern double vanities, and low-flow plumbing recovers 65% to 75% of project cost.` },
+        { factor: 'Curb Appeal & Exterior Upgrades', detail: `Modern garage doors, fresh exterior siding, and manufactured stone veneers frequently return 90%+ in market value.` },
+        { factor: 'Avoid Over-Improving for the Neighborhood', detail: `Keep your finished valuation within 10% to 15% of median home values on your immediate street to protect liquidity.` },
+      ],
+      permitInsight: `Remodels completed without required municipal permits in ${cityName} must often be retroactively inspected or opened up during buyer home inspections, destroying profit margins.`,
+      roiTakeaway: `Focus remodel dollars on functional daily touchpoints—kitchens, bathrooms, and energy-efficient HVAC—where ${cityName} buyers are willing to pay a premium.`,
+    },
+    'kitchen-remodel': {
+      title: `Kitchen Remodeling Costs, Trade Labor & Permitting in ${cityName}`,
+      summary: `A kitchen renovation represents the most complex interior project in any ${cityName} residence due to the dense intersection of electrical wiring, plumbing rough-ins, mechanical venting, and structural framing. Proper space planning and material selection ensure longevity and high daily satisfaction.`,
+      costFactors: [
+        { factor: 'Cabinetry (30% to 40% of Budget)', detail: `Semi-custom solid wood boxes with soft-close hardware offer the best durability-to-cost ratio for ${cityName} homeowners.` },
+        { factor: 'Countertop Materials', detail: `Engineered quartz ($60-$120/sq ft installed) provides non-porous stain resistance superior to natural marble or low-end laminate.` },
+        { factor: 'Licensed Electrical & Plumbing Labor', detail: `Dedicated 20-amp small appliance circuits, GFCI protection, and island sink rough-ins require certified master trades.` },
+        { factor: 'Appliance Packages', detail: `Energy Star certified induction cooktops and counter-depth refrigeration enhance ergonomics and resale interest.` },
+      ],
+      permitInsight: `In ${cityName}, permits are mandatory whenever relocating water supply lines, drain stacks, gas pipes, or adding electrical circuits to kitchen layouts.`,
+      roiTakeaway: `Allocate 15% of your total kitchen remodel budget as an uncommitted contingency fund to absorb unexpected subfloor leveling or behind-wall pipe replacement.`,
+    },
+    'bathroom-remodel': {
+      title: `Bathroom Renovation Guidelines, Tile Sourcing & Budgeting in ${cityName}`,
+      summary: `Remodeling a primary bathroom or powder room in ${cityName}, ${stateName} transforms home comfort while preventing moisture-induced drywall degradation. Modernizing waterproof membranes, ventilation CFM exhaust capacity, and designer tile layouts produces lasting aesthetic and financial value.`,
+      costFactors: [
+        { factor: 'Waterproofing Membranes', detail: `Utilizing bonded sheet membranes (Schluter Kerdi or RedGard) inside shower enclosures prevents catastrophic framing rot.` },
+        { factor: 'Tile Selection & Installation', detail: `Large-format porcelain tiles minimize grout lines, reducing maintenance while providing high scratch and water resistance.` },
+        { factor: 'Plumbing Fixtures & Valves', detail: `Pressure-balanced thermostatic shower valves and dual-flush water-efficient toilets comply with municipal conservation codes.` },
+        { factor: 'Vanity & Storage Solutions', detail: `Floating vanities with under-cabinet LED kick lighting visually enlarge modest bathroom footprints.` },
+      ],
+      permitInsight: `Replacing shower pans, moving toilet flanges, or adding dedicated 20-amp GFCI bathroom receptacles requires standard trade permits in ${cityName}.`,
+      roiTakeaway: `Prioritize high-quality waterproofing and ventilation over cosmetic gold fixtures—hidden moisture issues represent the #1 risk in ${cityName} bathrooms.`,
+    },
+    'home-addition': {
+      title: `Home Expansion & Square Footage Addition Planning in ${cityName}`,
+      summary: `Building an addition—whether expanding a ground-floor master suite, adding a sunroom, or raising a second story—requires meticulous structural integration with your existing home in ${cityName}, ${stateName}. Local zoning setbacks, lot coverage limits, and foundation tie-ins dictate feasibility.`,
+      costFactors: [
+        { factor: 'Foundation Engineering', detail: `Monolithic concrete slab-on-grade or crawlspace piers must match local ${cityName} soil mechanics and frost depth.` },
+        { factor: 'Structural Framing & Trusses', detail: `Dimensional lumber, engineered LVL beams, and roof truss tie-ins require stamped structural engineering calculations.` },
+        { factor: 'HVAC Sizing & Duct Extension', detail: `Evaluate whether your current central HVAC capacity can condition additional square footage or if a dedicated mini-split is needed.` },
+        { factor: 'Exterior Envelope & Roofing', detail: `Seamlessly matching brick masonry, fiber cement siding, and roof shingles preserves cohesive curb appeal.` },
+      ],
+      permitInsight: `Home additions in ${cityName} require full architectural plan reviews, zoning variance approvals (if near property lines), and multiple milestone inspections.`,
+      roiTakeaway: `Adding legal, permitted square footage in high-demand ${cityName} neighborhoods directly boosts your home's total appraised market value.`,
+    },
+    'swimming-pool-cost': {
+      title: `Residential Swimming Pool Construction & Site Engineering in ${cityName}`,
+      summary: `Installing a swimming pool in ${cityName}, ${stateName} creates a private backyard oasis. Choosing between pneumatically placed gunite (shotcrete), prefabricated fiberglass, or vinyl liners depends on your backyard topography, soil geology, and long-term maintenance preferences.`,
+      costFactors: [
+        { factor: 'Excavation & Soil Conditions', detail: `Rock excavation or high water tables significantly increase digging and grading machinery hours.` },
+        { factor: 'Gunite vs. Fiberglass Shells', detail: `Gunite offers infinite custom shapes and deep-end configurations; fiberglass installs faster and uses fewer sanitizing chemicals.` },
+        { factor: 'Pumps, Filtration & Automation', detail: `Variable-speed pumps and salt-chlorine generators cut monthly utility bills by up to 60% compared to single-speed systems.` },
+        { factor: 'Decking, Coping & Safety Barriers', detail: `Travertine pavers, poured cantilever concrete, and required child-safety barrier fencing.` },
+      ],
+      permitInsight: `Every municipality in ${stateName} enforces strict swimming pool safety codes, including minimum 48-inch self-closing fencing and door alarm sensors.`,
+      roiTakeaway: `In warm climates like ${stateName}, well-designed swimming pools with functional patio decking deliver strong lifestyle utility and solid buyer appeal.`,
+    },
+    'pickleball-court-cost': {
+      title: `Backyard Pickleball Court Construction & Engineering in ${cityName}`,
+      summary: `Pickleball is the fastest-growing recreational sport in America, and private residential courts are becoming premier amenities in ${cityName}, ${stateName}. Ensuring a crack-resistant sub-base, tournament-grade surfacing, and proper orientation is crucial for playable court longevity.`,
+      costFactors: [
+        { factor: 'Post-Tension Concrete Slab', detail: `Post-tensioned concrete slabs (4 inches thick) withstand ground movement and thermal expansion without unsightly cracking.` },
+        { factor: 'Cushioned Acrylic Surfacing', detail: `Multi-coat 100% acrylic latex sport surfacing with non-skid silica sand delivers consistent ball bounce and player comfort.` },
+        { factor: 'Court Orientation (North-South)', detail: `Orienting the long court axis north-to-south prevents sunrise and sunset solar glare into players' eyes.` },
+        { factor: 'Lighting & Containment Fencing', detail: `Dark sky compliant LED sports fixtures and 10-foot black vinyl-coated chain-link perimeter fencing.` },
+      ],
+      permitInsight: `Check ${cityName} zoning laws regarding impervious surface ratios (maximum lot coverage) and noise ordinances before breaking ground on court lighting.`,
+      roiTakeaway: `A dedicated pickleball court adds exceptional recreational utility and sets luxury residential properties apart in the competitive ${cityName} market.`,
+    },
+    'outdoor-kitchen-cost': {
+      title: `Outdoor Kitchen Design, Masonry & Utility Trenching in ${cityName}`,
+      summary: `An outdoor kitchen expands your living space into the open air, creating an entertainment hub in ${cityName}, ${stateName}. Designing for outdoor durability requires marine-grade 304 stainless steel appliances, weather-resistant stone masonry, and professionally trenched utilities.`,
+      costFactors: [
+        { factor: 'Masonry Substructure & Cladding', detail: `Concrete block (CMU) masonry faced with natural stacked stone or stucco withstands sun, humidity, and rain.` },
+        { factor: '304 Stainless Steel Appliances', detail: `Drop-in gas grills, sealed outdoor refrigerators, and side burners built from heavy-gauge stainless resist outdoor corrosion.` },
+        { factor: 'Countertop Materials', detail: `Leathered granite, poured concrete, or sintered stone (Dekton) resist UV rays and high grill heat without cracking.` },
+        { factor: 'Underground Utilities', detail: `Trenching dedicated natural gas lines, exterior electrical subpanels, and hot/cold water supply with winterization shutoffs.` },
+      ],
+      permitInsight: `Connecting gas lines and underground high-voltage circuits in ${cityName} legally requires licensed trade permits and pressure tests prior to burial.`,
+      roiTakeaway: `Outdoor kitchens routinely return over 70% of their investment while creating the ultimate gathering space for family and guests in ${cityName}.`,
+    },
+  };
+
+  return toolDetails[toolType] || toolDetails['rent-vs-buy'];
+}
+
 export default async function RealEstateToolPage({ params }: PageProps) {
   const resolvedParams = await params;
   const parsed = parseSlug(resolvedParams.slug);
   if (!parsed) notFound();
 
   const { toolType, citySlug } = parsed;
-
 
   let location = null;
   const { data: dbLoc } = await supabase
@@ -451,19 +583,51 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     });
   }
 
+  const guide = getLocalGuideContent(toolType, location.city_name, location.state_name);
+
+  let stateHubLink = '/real-estate';
+  const stateLower = location.state_name.toLowerCase();
+  if (stateLower === 'texas') stateHubLink = '/real-estate/texas';
+  else if (stateLower === 'florida') stateHubLink = '/real-estate/florida';
+  else if (stateLower === 'california') stateHubLink = '/real-estate/california';
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": `${toolName} - ${location.city_name}`,
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Any",
-      "description": `Use our free ${toolName.toLowerCase()} for ${location.city_name}, ${location.state_name}.`,
+      "@type": "WebApplication",
+      "name": `${toolName} - ${location.city_name}, ${location.state_name}`,
+      "applicationCategory": "RealEstateApplication",
+      "operatingSystem": "All",
+      "description": `Free 2026 ${toolName.toLowerCase()} for ${location.city_name}, ${location.state_name}. Accurate local labor, material, and financial projections.`,
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.homedesignenglish.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "USA Real Estate",
+          "item": "https://www.homedesignenglish.com/real-estate"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": `${location.city_name}, ${location.state_name}`,
+          "item": `https://www.homedesignenglish.com/real-estate/${resolvedParams.slug}`
+        }
+      ]
     },
     {
       "@context": "https://schema.org",
@@ -480,25 +644,42 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 text-slate-800">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="bg-slate-900 border-b border-slate-800 text-xs text-slate-400 py-3 px-4">
+        <div className="max-w-4xl mx-auto flex items-center gap-2 flex-wrap">
+          <a href="/" className="hover:text-white transition-colors">Home</a>
+          <span>/</span>
+          <a href="/real-estate" className="hover:text-white transition-colors">USA Real Estate</a>
+          <span>/</span>
+          <a href={stateHubLink} className="hover:text-white transition-colors">{location.state_name}</a>
+          <span>/</span>
+          <span className="text-primary-300 font-semibold">{toolName} in {location.city_name}</span>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <div className="bg-primary text-white py-16 px-4">
+      <div className="bg-gradient-to-br from-slate-900 via-primary-900 to-slate-900 text-white py-14 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-800/80 border border-primary-600/50 text-primary-200 text-xs font-semibold mb-4">
+            <span>🇺🇸</span> Localized 2026 Housing &amp; Construction Data
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight">
             {toolName} for {location.city_name}, {location.state_name}
           </h1>
-          <p className="text-xl text-primary-50">
-            Make informed decisions about real estate in {location.city_name} with our precise calculator tools.
+          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            Transparent, contractor-accurate calculations tailored for homeowners and buyers in {location.city_name}.
           </p>
         </div>
       </div>
 
       {/* Calculator Container */}
-      <div className="max-w-4xl mx-auto py-12 px-4">
+      <div className="max-w-4xl mx-auto py-10 px-4">
         {CalculatorComponent && <CalculatorComponent />}
       </div>
 
@@ -507,60 +688,148 @@ export default async function RealEstateToolPage({ params }: PageProps) {
         const sample = getSampleCalculation(toolType, location.city_name, location.state_name);
         if (!sample) return null;
         return (
-          <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Sample {toolName} for {location.city_name}, {location.state_name}
+          <div className="max-w-4xl mx-auto py-10 px-4 border-t border-slate-200">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
+              Sample {toolName} Breakdown for {location.city_name}, {location.state_name}
             </h2>
-            <p className="text-gray-700 mb-8 leading-relaxed text-lg">
+            <p className="text-slate-600 mb-6 leading-relaxed">
               {sample.description}
             </p>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
                 {sample.data.map((item, idx) => (
                   <div key={idx} className="p-4 flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">{item.label}</span>
-                    <span className="text-gray-900 font-bold">{item.value}</span>
+                    <span className="text-slate-600 font-medium text-sm">{item.label}</span>
+                    <span className="text-slate-900 font-bold">{item.value}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <p className="text-primary-700 font-semibold text-lg">
+            <p className="text-primary-700 font-semibold bg-primary-50 p-4 rounded-xl border border-primary-200">
+              <i className="fas fa-lightbulb text-primary-600 mr-2"></i>
               {sample.verdict}
             </p>
           </div>
         );
       })()}
 
+      {/* Deep Local Market & Cost Factors Guide (Pillar SEO Content) */}
+      <div className="max-w-4xl mx-auto py-12 px-4 border-t border-slate-200">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
+            {guide.title}
+          </h2>
+          <p className="text-slate-700 leading-relaxed mb-8 text-base sm:text-lg">
+            {guide.summary}
+          </p>
+
+          <h3 className="text-xl font-bold text-slate-900 mb-4">
+            Key Cost Drivers in {location.city_name}, {location.state_name}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {guide.costFactors.map((item, idx) => (
+              <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary-600"></span>
+                  {item.factor}
+                </div>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-4 mb-8">
+            <div className="p-5 rounded-xl bg-amber-50/70 border border-amber-200">
+              <div className="font-bold text-amber-900 text-sm mb-1 flex items-center gap-2">
+                <i className="fas fa-shield-alt text-amber-600"></i>
+                Permits &amp; Municipal Code Compliance
+              </div>
+              <p className="text-amber-800 text-xs sm:text-sm leading-relaxed">
+                {guide.permitInsight}
+              </p>
+            </div>
+
+            <div className="p-5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+              <div className="font-bold text-emerald-900 text-sm mb-1 flex items-center gap-2">
+                <i className="fas fa-chart-line text-emerald-600"></i>
+                Financial Takeaway &amp; Resale Value
+              </div>
+              <p className="text-emerald-800 text-xs sm:text-sm leading-relaxed">
+                {guide.roiTakeaway}
+              </p>
+            </div>
+          </div>
+
+          {/* Homeowner Action Checklist */}
+          <div className="border-t border-slate-200 pt-6">
+            <h4 className="text-lg font-bold text-slate-900 mb-4">
+              Homeowner Best Practices Checklist for {location.city_name}
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-700">
+              <li className="flex items-start gap-2.5">
+                <i className="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                <span><strong>Always Obtain 3 Written Bids:</strong> Compare itemized material and labor quotes rather than lump-sum figures.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <i className="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                <span><strong>Verify State Contractor Licensing:</strong> Check active general liability and workers&apos; compensation policies before signing contracts in {location.state_name}.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <i className="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                <span><strong>Maintain a 15% Contingency Buffer:</strong> Keep an unallocated cash reserve to cover unforeseen framing, electrical, or plumbing upgrades during construction.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <i className="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                <span><strong>Require Milestone Payments:</strong> Never pay more than 10% to 15% upfront; tie subsequent payments to passed municipal building inspections.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {/* Related Tools Cross-Linking Section */}
-      <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200 bg-gray-50">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+      <div className="max-w-4xl mx-auto py-12 px-4 border-t border-slate-200">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-8 text-center">
           More Real Estate Tools for {location.city_name}, {location.state_name}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           {ALL_TOOLS.filter(t => t.id !== toolType).map(tool => (
             <a 
               key={tool.id} 
               href={`/real-estate/${tool.id}-in-${citySlug}`}
-              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-200 transition-all flex items-center gap-4 group"
+              className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-primary-400 transition-all flex items-center gap-3.5 group"
             >
-              <span className="text-3xl group-hover:scale-110 transition-transform">{tool.icon}</span>
-              <span className="font-semibold text-gray-800 group-hover:text-primary-600 transition-colors">
+              <span className="text-2xl group-hover:scale-110 transition-transform">{tool.icon}</span>
+              <span className="font-semibold text-slate-800 group-hover:text-primary-600 transition-colors text-sm">
                 {tool.name}
               </span>
             </a>
           ))}
         </div>
+
+        <div className="text-center">
+          <a
+            href={stateHubLink}
+            className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 font-semibold text-sm hover:underline"
+          >
+            Explore all {location.state_name} Cities &amp; Real Estate Guides &rarr;
+          </a>
+        </div>
       </div>
 
       {/* Dynamic FAQ Section */}
       {faqs.length > 0 && (
-        <div className="max-w-4xl mx-auto py-12 px-4 border-t border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
-          <div className="space-y-6">
+        <div className="max-w-4xl mx-auto py-12 px-4 border-t border-slate-200">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-8 text-center">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{faq.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{faq.question}</h3>
+                <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{faq.answer}</p>
               </div>
             ))}
           </div>

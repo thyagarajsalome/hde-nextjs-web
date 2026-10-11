@@ -193,6 +193,7 @@ const Header = () => {
             {/* USA-only links */}
             {activeRegion.code === 'US' && (
               <>
+                <Link href="/real-estate" className={`${pathname === '/real-estate' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>All Calculators</Link>
                 <Link href="/real-estate/texas" className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
                 <Link href="/real-estate/florida" className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
                 <Link href="/real-estate/california" className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
@@ -445,6 +446,9 @@ const Header = () => {
             {/* USA-only mobile links */}
             {activeRegion.code === 'US' && (
               <>
+                <Link href="/real-estate" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                  All Real Estate Calculators
+                </Link>
                 <Link href="/real-estate/texas" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Texas Real Estate Hub
                 </Link>
