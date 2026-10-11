@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { headers } from 'next/headers';
 import { CITIES_DATA } from '@/components/layout/CityContent';
 import { getAllPosts } from '@/lib/mdx';
 import { supabase } from '@/config/supabaseClient';
@@ -8,8 +9,6 @@ import { PARTNER_SEO_SLUGS } from '@/data/dubaiPartnerSeoData';
 import { BANGALORE_LOCALITIES } from '@/data/bangaloreLocalities';
 import { TARGET_CATEGORY_TEMPLATES } from '@/data/bangaloreMarketData';
 
-const BASE_URL = 'https://www.homedesignenglish.com';
-
 const USA_CITIES_FALLBACK = [
   'dallas-texas', 'miami-florida', 'atlanta-georgia', 'seattle-washington',
   'phoenix-arizona', 'chicago-illinois', 'denver-colorado', 'charlotte-north-carolina',
@@ -18,6 +17,18 @@ const USA_CITIES_FALLBACK = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || 'www.homedesignenglish.com';
+
+  const isUS = host.startsWith('us.');
+  const isDubai = host.startsWith('dubai.');
+
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const BASE_URL = isUS 
+    ? `${protocol}://us.homedesignenglish.com` 
+    : isDubai 
+    ? `${protocol}://dubai.homedesignenglish.com` 
+    : `${protocol}://www.homedesignenglish.com`;
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -495,6 +506,67 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
+  // On US subdomain (us.homedesignenglish.com), serve US-focused sitemap
+  if (isUS) {
+    return [
+      {
+        url: BASE_URL,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 1.0,
+      },
+      {
+        url: `${BASE_URL}/real-estate/texas`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/real-estate/florida`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/real-estate/california`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/land-converter`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+      },
+      {
+        url: `${BASE_URL}/blog`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.85,
+      },
+      ...realEstateRoutes,
+      ...landConverterRoutes,
+      ...blogRoutes,
+    ];
+  }
+
+  // On Dubai subdomain (dubai.homedesignenglish.com), serve Dubai-focused sitemap
+  if (isDubai) {
+    return [
+      {
+        url: BASE_URL,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 1.0,
+      },
+      ...dubaiRoutes,
+      ...dubaiPartnerRoutes,
+      ...blogRoutes,
+    ];
+  }
+
+  // Default Main Domain (www.homedesignenglish.com) serves full master index
   return [
     ...staticRoutes,
     ...cityRoutes,
