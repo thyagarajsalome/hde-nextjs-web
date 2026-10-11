@@ -16,6 +16,8 @@ const USA_CITIES_FALLBACK = [
   'raleigh-north-carolina', 'salt-lake-city-utah', 'san-diego-california'
 ];
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headerList = await headers();
   const host = headerList.get('host')?.toLowerCase() || 'www.homedesignenglish.com';
@@ -32,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static Routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
+      url: `${BASE_URL}/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,
@@ -516,7 +518,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isUS) {
     return [
       {
-        url: BASE_URL,
+        url: `${BASE_URL}/`,
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1.0,
@@ -567,7 +569,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isDubai) {
     return [
       {
-        url: BASE_URL,
+        url: `${BASE_URL}/`,
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 1.0,

@@ -116,7 +116,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-3 xl:space-x-6 text-sm">
+          <nav className="hidden lg:flex items-center space-x-2 xl:space-x-4 text-sm">
             <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap">Home</Link>
             
             {/* India-only links */}
@@ -224,22 +224,22 @@ const Header = () => {
 
             {user ? (
                <>
-                <Link href="/dashboard" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Dashboard</Link>
-                <button onClick={handleLogout} className="px-4 py-2 text-sm font-medium text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer">
+                <Link href="/dashboard" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap shrink-0">Dashboard</Link>
+                <button onClick={handleLogout} className="px-4 py-2 text-sm font-medium text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer whitespace-nowrap shrink-0">
                   Sign Out
                 </button>
               </>
             ) : (
-              <Link href="/signin" className="px-5 py-2 text-sm font-medium text-white dark:text-zinc-950 bg-primary rounded-full shadow-md hover:shadow-lg transition-all no-underline">
+              <Link href="/signin" className="px-5 py-2 text-sm font-medium text-white dark:text-zinc-950 bg-primary rounded-full shadow-md hover:shadow-lg transition-all no-underline whitespace-nowrap shrink-0">
                 Sign In
               </Link>
             )}
             
             {/* Region Selector — Amazon-style dropdown */}
-            <div className="relative ml-4" ref={dropdownRef}>
+            <div className="relative ml-2 xl:ml-3 shrink-0" ref={dropdownRef}>
               <button 
                 onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 hover:border-primary dark:hover:border-primary transition-all cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 hover:border-primary dark:hover:border-primary transition-all cursor-pointer whitespace-nowrap shrink-0"
               >
                 <img 
                   src={`https://flagcdn.com/w20/${activeRegion.flag}.png`} 
