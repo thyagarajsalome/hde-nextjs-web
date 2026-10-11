@@ -8,7 +8,8 @@ import { useRegion } from "../../context/RegionContext";
 export default function Footer() {
   const { region } = useRegion();
   const pathname = usePathname() || "";
-  const isUSRoute = region === 'US' || pathname.includes('/real-estate/') || ['texas', 'california', 'new-york', 'florida', 'illinois', 'arizona', 'washington', 'pennsylvania', 'north-carolina'].some(state => pathname.includes(state));
+  const isUSSubdomain = typeof window !== 'undefined' && window.location.hostname.toLowerCase().startsWith('us.');
+  const isUSRoute = region === 'US' || isUSSubdomain || pathname.includes('/real-estate/') || ['texas', 'california', 'new-york', 'florida', 'illinois', 'arizona', 'washington', 'pennsylvania', 'north-carolina'].some(state => pathname.includes(state));
   const isDubaiRoute = pathname.includes('/dubai-property');
 
   return (

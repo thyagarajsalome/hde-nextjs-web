@@ -74,14 +74,14 @@ export default function CalculatorFeature({ forceRegion, forceCalculator }: Calc
     }
   }, [forceCalculator]);
 
-  // Force region switch based on props (e.g. from pSEO pages)
+  // Force region switch based on props (e.g. from pSEO pages) or region state
   React.useEffect(() => {
     if (forceRegion && region !== forceRegion) {
       setRegion(forceRegion);
-      // Auto-switch default calculator tab if they entered a US page
-      if (forceRegion === 'US' && activeCalculator === 'construction' && !forceCalculator) {
-        setActiveCalculator('usa-framing');
-      }
+    }
+    // Auto-switch default calculator tab if in US mode and active calculator is still India construction
+    if (region === 'US' && activeCalculator === 'construction' && !forceCalculator) {
+      setActiveCalculator('usa-rent-vs-buy');
     }
   }, [forceRegion, region, setRegion, activeCalculator, forceCalculator]);
 

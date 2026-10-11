@@ -22,8 +22,16 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initRegion = async () => {
-      // 1. Check URL parameters first (e.g. redirected with ?region=US or ?calc=usa-...)
+      // 1. Check subdomain first (e.g. us.homedesignenglish.com)
       if (typeof window !== 'undefined') {
+        const host = window.location.hostname.toLowerCase();
+        if (host.startsWith('us.') || host.includes('us.localhost')) {
+          setRegionState('US');
+          localStorage.setItem('hde_region', 'US');
+          setIsReady(true);
+          return;
+        }
+
         const params = new URLSearchParams(window.location.search);
         const urlRegion = params.get('region') as Region;
         const urlCalc = params.get('calc');
