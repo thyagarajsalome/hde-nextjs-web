@@ -52,14 +52,35 @@ const Header = () => {
   const handleRegionSelect = (code: 'IN' | 'US' | 'AE') => {
     setRegionDropdownOpen(false);
     setMenuOpen(false);
-    if (code === 'AE') {
-      setRegion('AE');
-      navigate.push('/dubai-property');
-    } else {
-      setRegion(code);
-      if (isDubaiRoute) {
-        navigate.push('/');
+
+    if (typeof window !== 'undefined') {
+      const isLocalhost = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1');
+
+      if (code === 'US') {
+        setRegion('US');
+        if (!isLocalhost && !window.location.hostname.startsWith('us.')) {
+          window.location.href = 'https://us.homedesignenglish.com';
+          return;
+        }
+      } else if (code === 'AE') {
+        setRegion('AE');
+        if (!isLocalhost && !window.location.hostname.startsWith('dubai.')) {
+          window.location.href = 'https://dubai.homedesignenglish.com';
+          return;
+        }
+      } else if (code === 'IN') {
+        setRegion('IN');
+        if (!isLocalhost && (window.location.hostname.startsWith('us.') || window.location.hostname.startsWith('dubai.'))) {
+          window.location.href = 'https://www.homedesignenglish.com';
+          return;
+        }
       }
+    }
+
+    if (code === 'AE') {
+      navigate.push('/dubai-property');
+    } else if (isDubaiRoute) {
+      navigate.push('/');
     }
   };
 
