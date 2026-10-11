@@ -32,6 +32,13 @@ export const RegionProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         }
 
+        if (host.startsWith('dubai.') || host.includes('dubai.localhost')) {
+          setRegionState('AE');
+          localStorage.setItem('hde_region', 'AE');
+          setIsReady(true);
+          return;
+        }
+
         const params = new URLSearchParams(window.location.search);
         const urlRegion = params.get('region') as Region;
         const urlCalc = params.get('calc');
