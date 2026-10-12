@@ -692,28 +692,28 @@ export default async function RealEstateToolPage({ params }: PageProps) {
       />
 
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="bg-slate-900 border-b border-slate-800 text-xs text-slate-400 py-3 px-4">
+      <nav aria-label="Breadcrumb" className="bg-white border-b border-slate-200 text-xs text-slate-500 py-3 px-4">
         <div className="max-w-4xl mx-auto flex items-center gap-2 flex-wrap">
-          <a href="/" className="hover:text-white transition-colors">Home</a>
+          <a href="/" className="hover:text-primary-600 transition-colors">Home</a>
           <span>/</span>
-          <a href="/real-estate" className="hover:text-white transition-colors">USA Real Estate</a>
+          <a href="/real-estate" className="hover:text-primary-600 transition-colors">USA Real Estate</a>
           <span>/</span>
-          <a href={stateHubLink} className="hover:text-white transition-colors">{location.state_name}</a>
+          <a href={stateHubLink} className="hover:text-primary-600 transition-colors">{location.state_name}</a>
           <span>/</span>
-          <span className="text-primary-300 font-semibold">{toolName} in {location.city_name}</span>
+          <span className="text-slate-900 font-semibold">{toolName} in {location.city_name}</span>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-primary-900 to-slate-900 text-white py-14 px-4">
+      <div className="bg-white border-b border-slate-200 text-slate-900 py-12 px-4 shadow-xs">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-800/80 border border-primary-600/50 text-primary-200 text-xs font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-xs font-semibold mb-4">
             <span>🇺🇸</span> Localized 2026 Housing &amp; Construction Data
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 tracking-tight text-slate-900">
             {toolName} for {location.city_name}, {location.state_name}
           </h1>
-          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Transparent, contractor-accurate calculations tailored for homeowners and buyers in {location.city_name}.
           </p>
         </div>

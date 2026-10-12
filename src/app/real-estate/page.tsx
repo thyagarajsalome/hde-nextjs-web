@@ -232,27 +232,27 @@ export default function USRealEstateHub() {
       />
 
       {/* Hero Header */}
-      <section className="bg-gradient-to-br from-slate-900 via-primary-900 to-slate-900 text-white py-16 px-4">
+      <section className="bg-white border-b border-slate-200 text-slate-900 py-14 px-4 shadow-xs">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-800/80 border border-primary-600/50 text-primary-200 text-sm font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-sm font-semibold mb-6">
             <span>🇺🇸</span> 2026 USA Housing &amp; Construction Data
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-slate-900">
             USA Real Estate &amp; Construction Calculators
           </h1>
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
             Transparent, contractor-accurate calculators for American homebuyers, renovators, and real estate investors. Estimate accurate costs across 30+ major metro areas.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-slate-300">
-            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-400"></i> Free &amp; Instant</span>
-            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-400"></i> No Sign-Up Required</span>
-            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-400"></i> Local Labor Rate Data</span>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-slate-700">
+            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-600"></i> Free &amp; Instant</span>
+            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-600"></i> No Sign-Up Required</span>
+            <span className="flex items-center gap-1.5"><i className="fas fa-check-circle text-emerald-600"></i> Local Labor Rate Data</span>
           </div>
         </div>
       </section>
 
       {/* State Pillar Hubs */}
-      <section className="max-w-6xl mx-auto px-4 -mt-8">
+      <section className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {STATE_HUBS.map(hub => (
             <Link
