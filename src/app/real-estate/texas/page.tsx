@@ -20,6 +20,7 @@ const TOOLS = [
   { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊', desc: 'Gunite & fiberglass estimates' },
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓', desc: 'Post-tension concrete & surface' },
   { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥', desc: 'Masonry island & appliances' },
+  { id: 'barndominium-cost', name: 'Barndominium & Barn', icon: '🌾', desc: 'Steel shell, slab & rural utilities' },
 ];
 
 const CITIES = [

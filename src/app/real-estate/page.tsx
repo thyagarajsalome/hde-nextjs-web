@@ -97,6 +97,14 @@ const TOOLS = [
     sampleQuery: 'outdoor-kitchen-cost-in-san-diego-california',
     badge: 'Luxury',
   },
+  {
+    id: 'barndominium-cost',
+    name: 'Barndominium & Pole Barn Estimator',
+    icon: '🌾',
+    description: 'Budget engineered steel shells, concrete slabs, turnkey living quarters, and rural utilities (well, septic, driveway).',
+    sampleQuery: 'barndominium-cost-in-dallas-texas',
+    badge: 'Rural / Acreage',
+  },
 ];
 
 const STATE_HUBS = [

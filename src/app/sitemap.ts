@@ -302,6 +302,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority: 0.8,
       });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/barndominium-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
     });
   } else {
     // Fallback
@@ -405,6 +411,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority: 0.8,
       });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/barndominium-cost-in-${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
     });
   }
 
@@ -418,7 +430,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'true-cost-of-buying-property-in-dubai-2026',
     'backyard-pickleball-court-construction-cost',
     'outdoor-kitchen-roi-and-costs',
-    'rent-vs-buy-a-house-in-2026'
+    'rent-vs-buy-a-house-in-2026',
+    'barndominium-cost-per-square-foot-guide-2026'
   ];
 
   const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => {

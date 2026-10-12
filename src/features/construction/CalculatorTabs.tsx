@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen";
+type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "usa-barndominium";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -56,6 +56,7 @@ const USA_CATEGORIES = [
 
 const USA_CALCULATORS: TabItem[] = [
   // 🏡 Realty & Finance (Top-of-funnel traffic magnets - 100% FREE)
+  { id: "usa-barndominium",       name: "Barndominium & Barn",icon: "fas fa-warehouse",           reqTier: 0, category: "realty",  tagline: "Metal barn home & rural site prep" },
   { id: "usa-rent-vs-buy",        name: "Rent vs. Buy",       icon: "fas fa-balance-scale",        reqTier: 0, category: "realty",  tagline: "5-year wealth & equity comparison" },
   { id: "usa-salary-calculator", name: "Salary Needed",      icon: "fas fa-money-bill-wave",      reqTier: 0, category: "realty",  tagline: "28/36 DTI home affordability" },
   { id: "usa-property-tax",      name: "Property Tax",       icon: "fas fa-file-invoice-dollar",  reqTier: 0, category: "realty",  tagline: "County tax & monthly escrow" },
@@ -97,7 +98,7 @@ const CalculatorTabs: React.FC<CalculatorTabsProps> = ({ activeCalculator, setAc
   useEffect(() => {
     // If we switched regions, ensure the active calculator is valid for this region
     const usaCalcs = [
-      'usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing',
+      'usa-barndominium', 'usa-framing', 'usa-roofing', 'usa-accent-wall', 'usa-flooring', 'usa-plumbing',
       'usa-electrical', 'usa-rent-vs-buy', 'usa-salary-calculator', 'usa-property-tax',
       'usa-remodel-roi', 'usa-garden-bed', 'usa-interior-design', 'usa-kitchen-remodel',
       'usa-bathroom-remodel', 'usa-home-addition', 'usa-swimming-pool',

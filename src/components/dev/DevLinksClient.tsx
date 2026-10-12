@@ -69,6 +69,7 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
       list.push({ url: `/real-estate/swimming-pool-cost-in-${loc.slug}`, label: 'Swimming Pool', region: 'usa', group: g });
       list.push({ url: `/real-estate/pickleball-court-cost-in-${loc.slug}`, label: 'Pickleball Court', region: 'usa', group: g });
       list.push({ url: `/real-estate/outdoor-kitchen-cost-in-${loc.slug}`, label: 'Outdoor Kitchen', region: 'usa', group: g });
+      list.push({ url: `/real-estate/barndominium-cost-in-${loc.slug}`, label: 'Barndominium & Pole Barn', region: 'usa', group: g });
     });
 
     // India City Tools

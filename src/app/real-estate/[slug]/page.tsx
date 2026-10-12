@@ -12,6 +12,7 @@ import USASwimmingPoolCalculator from '@/features/construction/USASwimmingPoolCa
 import USAPickleballCalculator from '@/features/construction/USAPickleballCalculator';
 import USAOutdoorKitchenCalculator from '@/features/construction/USAOutdoorKitchenCalculator';
 import USABathroomRemodelCalculator from '@/features/construction/USABathroomRemodelCalculator';
+import USABarndominiumCalculator from '@/features/construction/USABarndominiumCalculator';
 
 interface PageProps {
   params: Promise<{
@@ -19,7 +20,7 @@ interface PageProps {
   }>;
 }
 
-// Generate static routes for all USA locations x 4 tools
+// Generate static routes for all USA locations x tools
 
 const USA_CITIES_FALLBACK = [
   { slug: 'dallas-texas', city_name: 'Dallas', state_name: 'Texas', country: 'USA' },
@@ -54,8 +55,6 @@ export async function generateStaticParams() {
     locations = [...locations, ...toAdd];
   }
 
-
-
   const params: { slug: string }[] = [];
   for (const loc of locations) {
     params.push({ slug: `rent-vs-buy-in-${loc.slug}` });
@@ -68,6 +67,7 @@ export async function generateStaticParams() {
     params.push({ slug: `swimming-pool-cost-in-${loc.slug}` });
     params.push({ slug: `pickleball-court-cost-in-${loc.slug}` });
     params.push({ slug: `outdoor-kitchen-cost-in-${loc.slug}` });
+    params.push({ slug: `barndominium-cost-in-${loc.slug}` });
   }
 
   return params;
@@ -76,7 +76,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost|barndominium-cost)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -136,6 +136,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   else if (toolType === 'swimming-pool-cost') titlePrefix = 'Swimming Pool Cost Estimator';
   else if (toolType === 'pickleball-court-cost') titlePrefix = 'Pickleball Court Cost Estimator';
   else if (toolType === 'outdoor-kitchen-cost') titlePrefix = 'Outdoor Kitchen Cost Estimator';
+  else if (toolType === 'barndominium-cost') titlePrefix = 'Barndominium & Pole Barn Cost Estimator';
 
   return {
     title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
@@ -163,6 +164,7 @@ const ALL_TOOLS = [
   { id: 'swimming-pool-cost', name: 'Swimming Pool', icon: '🏊' },
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },
   { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥' },
+  { id: 'barndominium-cost', name: 'Barndominium Cost', icon: '🌾' },
 ];
 
 function getSampleCalculation(toolType: string, cityName: string, stateName: string) {
@@ -288,6 +290,21 @@ function getSampleCalculation(toolType: string, cityName: string, stateName: str
           { label: 'Total Estimated Cost', value: '~$28,000' },
         ],
         verdict: 'A complete mid-range outdoor kitchen typically costs around $28,000 to construct.'
+      };
+    case 'barndominium-cost':
+      return {
+        description: `Estimated turn-key construction cost for a 40' x 60' (2,400 sq ft) barndominium with 1,500 sq ft living quarters and a 900 sq ft workshop in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Building Footprint', value: "40' x 60' (2,400 sq ft)" },
+          { label: 'Living / Shop Split', value: '1,500 sq ft Living / 900 sq ft Shop' },
+          { label: '4" Engineered Concrete Slab', value: '~$20,400' },
+          { label: 'Steel Shell & Metal Erection', value: '~$78,000' },
+          { label: 'Closed-Cell Spray Foam', value: '~$9,000' },
+          { label: 'Interior Turn-Key Living Finishes', value: '~$128,000' },
+          { label: 'Rural Utilities (Well & Septic)', value: '~$17,500' },
+          { label: 'Total Turn-Key Build Budget', value: '~$252,900' },
+        ],
+        verdict: 'Turn-key barndominiums in this area average ~$105/sq ft all-in, delivering 30-40% cost savings compared to traditional custom home builds.'
       };
     default:
       return null;
@@ -422,6 +439,18 @@ function getLocalGuideContent(toolType: string, cityName: string, stateName: str
       permitInsight: `Connecting gas lines and underground high-voltage circuits in ${cityName} legally requires licensed trade permits and pressure tests prior to burial.`,
       roiTakeaway: `Outdoor kitchens routinely return over 70% of their investment while creating the ultimate gathering space for family and guests in ${cityName}.`,
     },
+    'barndominium-cost': {
+      title: `Barndominium & Pole Barn Construction Economics in ${cityName}`,
+      summary: `Building a residential barndominium (steel building home) or pole barn residence in ${cityName}, ${stateName} has surged in popularity among landowners, homesteaders, and rural acreage buyers. Engineered steel rigid-frame structures deliver column-free open floor plans, cathedral ceilings, and integrated workshop or RV garages at a fraction of conventional stick-built construction costs.`,
+      costFactors: [
+        { factor: 'Engineered Concrete Slab Foundation', detail: `Monolithic post-tension or thickened-edge grade beam slabs (4" to 6" thick) must support both high-load shop machinery and interior living partitions in ${cityName}.` },
+        { factor: 'Steel Building Kit vs. Wood Pole Framing', detail: `Pre-engineered red-iron steel buildings offer maximum span durability and zero termite risk, while wood post-frame kits reduce upfront framing costs.` },
+        { factor: 'Closed-Cell Spray Foam Insulation', detail: `Mandatory for metal homes in ${cityName} to create an airtight thermal envelope, prevent condensation/sweating on metal siding, and lower monthly HVAC bills.` },
+        { factor: 'Rural Utilities & Site Prep Infrastructure', detail: `Budgeting for a private water well, septic system, gravel driveway, and 200A electrical service drop is critical for raw land builds in ${stateName}.` },
+      ],
+      permitInsight: `While rural agricultural parcels in ${stateName} may have fewer aesthetic HOA guidelines, residential barndominiums still require standard residential building, septic, and electrical permits in ${cityName} county jurisdictions.`,
+      roiTakeaway: `Combining living quarters with a 1,000+ sq ft workshop or garage provides unmatched square-footage utility, holding strong appraised resale value across the ${stateName} acreage market.`,
+    },
   };
 
   return toolDetails[toolType] || toolDetails['rent-vs-buy'];
@@ -500,6 +529,9 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'outdoor-kitchen-cost') {
     toolName = 'Outdoor Kitchen Cost Estimator';
     CalculatorComponent = USAOutdoorKitchenCalculator;
+  } else if (toolType === 'barndominium-cost') {
+    toolName = 'Barndominium & Pole Barn Cost Estimator';
+    CalculatorComponent = USABarndominiumCalculator;
   }
 
   const faqs = [];
@@ -580,6 +612,15 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `What is the ROI of an outdoor kitchen in ${location.city_name}?`,
       answer: `An outdoor kitchen in ${location.city_name}, ${location.state_name} can offer an ROI of 55% to 200%, depending on the quality of materials and features.`
+    });
+  } else if (toolType === 'barndominium-cost') {
+    faqs.push({
+      question: `How much does it cost to build a barndominium in ${location.city_name}?`,
+      answer: `In ${location.city_name}, ${location.state_name}, turn-key barndominiums typically range between $90 and $150 per square foot for living quarters, with unfinished shop or barn space costing $25 to $45 per sq ft. Pre-engineered steel building shells alone run approximately $20 to $35 per sq ft before interior build-out.`
+    });
+    faqs.push({
+      question: `Are barndominiums cheaper than traditional homes in ${location.state_name}?`,
+      answer: `Yes, building a barndominium in ${location.state_name} generally saves 25% to 40% compared to traditional stick-built construction. Savings stem from clear-span pre-fabricated steel framing, rapid erection timelines, and lower exterior maintenance costs over the lifetime of the home.`
     });
   }
 
