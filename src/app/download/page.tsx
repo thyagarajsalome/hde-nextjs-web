@@ -2,6 +2,7 @@
 // src/app/download/page.tsx
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useUser } from "@/context/UserContext";
 import { useRegion } from "@/context/RegionContext";
 import { useToast } from "@/context/ToastContext";
@@ -173,33 +174,125 @@ export default function DownloadPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-gray-800 dark:text-zinc-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
 
-        {/* HERO HEADER */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
-            <i className="fas fa-cube"></i>
-            <span>Desktop CAD Software • Version 2.1</span>
+        {/* HERO HEADER WITH BRAND ICON */}
+        <div className="text-center space-y-6 max-w-4xl mx-auto">
+          {/* Brand Icon & Version Pill */}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="relative group">
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary via-amber-400 to-primary opacity-30 blur-lg group-hover:opacity-60 transition duration-500"></div>
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-slate-900 border-2 border-primary/40 shadow-2xl overflow-hidden flex items-center justify-center p-2">
+                <Image
+                  src="/images/cad/hde-studio-icon.webp"
+                  alt="HDE Studio Architectural CAD Icon"
+                  width={96}
+                  height={96}
+                  className="w-full h-full object-contain rounded-xl"
+                  priority
+                />
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-cube"></i>
+              <span>Desktop CAD Software • Version 2.1 Release</span>
+            </div>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-gray-900 dark:text-white">
-            Download <span className="text-primary">HDE Studio</span> CAD
-          </h1>
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-zinc-400">
-            Professional 2D architectural space planning, AutoCAD vector blocks, and high-resolution PDF blueprints. Designed for architects, civil engineers, and homeowners.
-          </p>
+
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white">
+              Design Faster with <span className="text-primary">HDE Studio</span> CAD
+            </h1>
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-zinc-400">
+              Professional offline 2D architectural space planning, AutoCAD vector blocks, real-time dimensioning, and client-ready vector PDF blueprints.
+            </p>
+          </div>
 
           {/* FEATURE CHIPS */}
-          <div className="flex flex-wrap justify-center gap-2 pt-2 text-xs font-semibold text-gray-600 dark:text-zinc-300">
-            <span className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> India &amp; USA Catalogs
+          <div className="flex flex-wrap justify-center gap-2.5 pt-1 text-xs font-semibold text-gray-700 dark:text-zinc-300">
+            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-500"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
             </span>
-            <span className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> AutoCAD 2D Blocks
+            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-500"></i> 60+ AutoCAD Vector CAD Blocks
             </span>
-            <span className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> High-Res PDF Exporter
+            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-500"></i> 300 DPI Vector PDF Blueprints
             </span>
-            <span className="px-3 py-1 rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> 100% Offline Capability
+            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-500"></i> 100% Offline Standalone Desktop App
             </span>
+          </div>
+        </div>
+
+        {/* HERO ARCHITECTURAL SHOWCASE (RESPONSIVE BLUEPRINT VIEWS) */}
+        <div className="bg-slate-950 text-white rounded-3xl border border-slate-800 shadow-2xl p-4 sm:p-6 lg:p-8 space-y-5 relative overflow-hidden">
+          {/* Subtle Background Radial Glow */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          {/* Application Window Frame Header */}
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5 text-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+              <span className="text-slate-400 font-mono text-[11px] ml-2 hidden sm:inline">
+                HDE Studio CAD 2.1 — Architectural Canvas Viewport
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+              <span className="bg-slate-800 text-cyan-400 border border-cyan-500/30 px-2.5 py-1 rounded-md">
+                📐 Dynamic Dimension Chains
+              </span>
+              <span className="bg-slate-800 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-md hidden md:inline">
+                🛋️ Vector Block Library
+              </span>
+            </div>
+          </div>
+
+          {/* Responsive Blueprint Images Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            {/* Primary Panoramic Blueprint (02.webp) */}
+            <div className="lg:col-span-8 flex flex-col justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-inner relative group overflow-hidden">
+              <div className="relative rounded-xl overflow-hidden bg-[#0d1527] border border-slate-700/60 shadow-lg">
+                <Image
+                  src="/images/cad/cad-hero-plan.webp"
+                  alt="HDE Studio CAD Panoramic Architectural Blueprint"
+                  width={2019}
+                  height={782}
+                  className="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500"
+                  priority
+                />
+                <div className="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-700/60 text-slate-200 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  <span>56&apos;-10&quot; Open-Concept Living &amp; Island Kitchen Layout</span>
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 px-1">
+                <span>✓ Continuous wall hatching &amp; real-time dimensioning</span>
+                <span className="text-cyan-400 font-medium">Auto-snapping Grid (1&apos;-0&quot; / 100mm)</span>
+              </div>
+            </div>
+
+            {/* Detail Plan Blueprint (01.webp) */}
+            <div className="lg:col-span-4 flex flex-col justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-inner relative group overflow-hidden">
+              <div className="relative rounded-xl overflow-hidden bg-[#0d1527] border border-slate-700/60 shadow-lg flex-1 flex items-center justify-center">
+                <Image
+                  src="/images/cad/cad-detail-plan.webp"
+                  alt="HDE Studio CAD Studio Flat & Sanitary Blueprint"
+                  width={616}
+                  height={832}
+                  className="w-full max-h-[380px] object-contain group-hover:scale-[1.01] transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md border border-slate-700/60 text-emerald-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow">
+                  400 SQ.FT STUDIO
+                </div>
+              </div>
+
+              <div className="mt-3 text-center sm:text-left text-[11px] text-slate-400 px-1">
+                <span className="text-emerald-400 font-medium">Ready for High-Res Vector PDF Export</span> (300 DPI)
+              </div>
+            </div>
           </div>
         </div>
 
