@@ -15,156 +15,316 @@ type PlanType = {
   tier: string;
   price: number;
   originalPrice: number;
+  discountBadge?: string;
+  billingPeriod: string;
   description: string;
   credits: string;
   useCase: string;
   features: string[];
   color: string;
   icon: string;
-  badge?: string; // Optional property prevents the TS error!
+  badge?: string;
 };
 
-// 2. Apply the interface to the plans object
-const plans = {
+// 2. India Plans: Lifetime vs Monthly
+const plansLifetime: Record<string, PlanType> = {
   basic: {
-    id: "5_credits",
-    name: "Basic",
+    id: "india_lifetime_starter",
+    name: "Starter Lifetime",
     tier: "basic",
-    price: 199,
-    originalPrice: 249,
-    description: "Ideal for homeowners planning a single room remodel or personal home project.",
-    credits: "5 Project Credits",
-    useCase: "Best for: Saving personal renovation budgets and exporting quotes.",
+    price: 1499,
+    originalPrice: 1999,
+    discountBadge: "Save 25%",
+    billingPeriod: "/one-time",
+    description: "Ideal for homeowners planning a single home build or personal renovation.",
+    credits: "10 Permanent Project Credits",
+    useCase: "Best for: Individual home builders saving private estimates.",
     badge: undefined,
-    features: [
-      "5 Permanent Cloud Project Save Credits",
-      "Itemized PDF Quotes (Bank & Contractor Ready)",
-      "Full House Plan & CAD Gallery Access",
-      "Material & Room Cost Breakdown Spreadsheets",
-      "Direct Buyer Pass: Unlimited Owner Contacts (30 Days)",
-      "Credits never expire"
-    ],
-    color: "blue",
-    icon: "fa-paint-roller"
-  },
-  standard: {
-    id: "10_credits",
-    name: "Standard",
-    tier: "standard",
-    price: 349,
-    originalPrice: 499,
-    description: "Perfect for self-builders and interior designers managing full-house construction.",
-    credits: "10 Project Credits",
-    useCase: "Best for: Complete multi-room home builds and client presentations.",
-    badge: "Most Popular",
     features: [
       "10 Permanent Cloud Project Save Credits",
-      "Detailed Multi-Trade PDF Reports (Plumbing, Electrical, Flooring)",
-      "Doors & Windows Schedule PDF Exports",
-      "Side-by-side Project Scenario Tracking",
-      "Real Estate Extra Listing Slots Included",
-      "Priority Customer Support",
-      "Everything in Basic"
-    ],
-    color: "amber",
-    icon: "fa-drafting-compass"
-  },
-  pro: {
-    id: "pro",
-    name: "Pro",
-    tier: "pro",
-    price: 999,
-    originalPrice: 1427,
-    description: "Built for civil contractors, builders, and architects needing high-volume client management.",
-    credits: "100 Project Credits",
-    useCase: "Best for: Professional builders, commercial contractors, and developers.",
-    badge: undefined,
-    features: [
-      "100 Project Credits (Store up to 100 sites)",
-      "Complete 7-Phase Material BOQ (Bill of Quantities)",
-      "Exact Cement, Steel & Masonry Brand Schedules",
-      "Contractor-grade Client PDF & Excel Exports",
-      "Commercial Agent / Builder Listing Pack Included",
-      "10 Daily Save Limit (Anti-Bot Protection)",
-      "Priority VIP Support"
-    ],
-    color: "gray",
-    icon: "fa-hard-hat"
-  },
-};
-
-const usaPlans = {
-  basic: {
-    id: "usa_basic",
-    name: "Basic",
-    tier: "basic",
-    price: 9.99,
-    originalPrice: 14.99,
-    description: "Perfect for homeowners looking to save remodeling estimates and generate contractor quotes.",
-    credits: "5 Project Credits",
-    useCase: "Best for: Quick renovations and aesthetic projects.",
-    badge: undefined,
-    features: [
-      "5 Permanent Cloud Project Save Credits",
-      "Client-Ready Professional PDF Estimates",
-      "Cost-per-sqft & Material Comparisons",
-      "Side-by-side Scenario Tracking in Dashboard",
+      "Itemized PDF Quotes (Bank & Contractor Ready)",
+      "HDE Studio Desktop CAD Standard (India)",
+      "Material & Room Cost Breakdown Spreadsheets",
+      "Direct Buyer Pass: Unlimited Owner Contacts (30 Days)",
       "Credits never expire"
     ],
     color: "blue",
     icon: "fa-home"
   },
   standard: {
-    id: "usa_standard",
-    name: "Standard",
+    id: "india_lifetime_builder",
+    name: "Builder Studio",
     tier: "standard",
-    price: 24.99,
-    originalPrice: 39.99,
-    description: "Ideal for advanced DIYers or flippers needing technical estimates for framing, plumbing, and additions.",
-    credits: "15 Project Credits",
-    useCase: "Best for: Full property rehabs and structural estimates.",
-    badge: "Best Value",
+    price: 4999,
+    originalPrice: 6999,
+    discountBadge: "Save 28%",
+    billingPeriod: "/one-time",
+    description: "Perfect for self-builders and interior designers managing multi-room construction.",
+    credits: "25 Project Credits",
+    useCase: "Best for: Full-house construction and multi-room renovations.",
+    badge: undefined,
     features: [
-      "15 Permanent Cloud Project Save Credits",
+      "25 Permanent Cloud Project Save Credits",
+      "Detailed Multi-Trade PDF Reports (Plumbing, Electrical, Flooring)",
+      "Doors & Windows Schedule PDF Exports",
+      "Side-by-side Project Scenario Tracking",
+      "Real Estate Extra Listing Slots Included",
+      "Priority Customer Support",
+      "Everything in Starter"
+    ],
+    color: "amber",
+    icon: "fa-drafting-compass"
+  },
+  pro: {
+    id: "india_lifetime_pro",
+    name: "All-Access Pro (CAD + Web)",
+    tier: "pro",
+    price: 18749,
+    originalPrice: 24999,
+    discountBadge: "25% OFF • LAUNCH DEAL",
+    badge: "⭐ 25% OFF • BEST VALUE",
+    billingPeriod: "/lifetime",
+    description: "Flagship Architectural CAD suite & comprehensive cost estimating system for professionals.",
+    credits: "Unlimited Cloud Projects & 100 Credits",
+    useCase: "Best for: Architects, civil engineers, building contractors, and serious developers.",
+    features: [
+      "HDE Studio Desktop CAD All-Access Pro (Perpetual, 100% Offline)",
+      "Dual India (Metric/Vastu) & USA (Imperial) AutoCAD Catalogs",
+      "Full 2D AutoCAD Vector Block Library (All Room Sets)",
+      "Vector PDF Blueprint Exporter (Custom Title Block & Specs, No Watermark)",
+      "Multi-Device License: Activate on up to 3 PCs / Laptops",
+      "Complete 7-Phase Material BOQ (Exact Cement, Steel, Sand bags)",
+      "Contractor-grade Client PDF & Excel Cost Schedules",
+      "Commercial Agent & Builder Listing Pack Included",
+      "Lifetime Software Updates & Direct WhatsApp Priority Support"
+    ],
+    color: "gray",
+    icon: "fa-cube"
+  }
+};
+
+const plansMonthly: Record<string, PlanType> = {
+  basic: {
+    id: "india_monthly_starter",
+    name: "Starter Monthly",
+    tier: "basic",
+    price: 499,
+    originalPrice: 699,
+    discountBadge: "Save 28%",
+    billingPeriod: "/month",
+    description: "Monthly access for homeowners planning ongoing single-room remodels.",
+    credits: "5 Credits / month",
+    useCase: "Best for: Month-by-month renovation tracking.",
+    badge: undefined,
+    features: [
+      "5 Project Save Credits Every Month",
+      "Itemized PDF Quotes (Bank & Contractor Ready)",
+      "Full House Plan & CAD Gallery Access",
+      "Material & Room Cost Breakdown Spreadsheets",
+      "Cancel anytime"
+    ],
+    color: "blue",
+    icon: "fa-home"
+  },
+  standard: {
+    id: "india_monthly_builder",
+    name: "Builder Monthly",
+    tier: "standard",
+    price: 999,
+    originalPrice: 1299,
+    discountBadge: "Save 23%",
+    billingPeriod: "/month",
+    description: "Monthly subscription for interior designers and active home remodelers.",
+    credits: "20 Credits / month",
+    useCase: "Best for: Multi-room home projects.",
+    badge: undefined,
+    features: [
+      "20 Project Credits / month",
+      "Detailed Multi-Trade PDF Reports (Plumbing, Electrical, Flooring)",
+      "Doors & Windows Schedules",
+      "Priority Customer Support"
+    ],
+    color: "amber",
+    icon: "fa-drafting-compass"
+  },
+  pro: {
+    id: "india_monthly_pro",
+    name: "All-Access Pro Monthly",
+    tier: "pro",
+    price: 1999,
+    originalPrice: 2499,
+    discountBadge: "Save 20%",
+    badge: "Most Flexible",
+    billingPeriod: "/month",
+    description: "Full access to HDE Studio Desktop CAD and complete contractor-grade estimators.",
+    credits: "100 Credits / month",
+    useCase: "Best for: Active contractors and civil engineers handling ongoing client bids.",
+    features: [
+      "HDE Studio Desktop CAD All-Access Pro (Active Subscription)",
+      "Full 2D AutoCAD Vector Block Library (India & USA Catalogs)",
+      "Vector PDF Blueprint Exporter (No Watermarks)",
+      "Complete 7-Phase Anti-Overbilling Material BOQ",
+      "100 Project Credits refreshed monthly",
+      "Cancel or pause anytime"
+    ],
+    color: "gray",
+    icon: "fa-cube"
+  }
+};
+
+// 3. USA Plans: Lifetime vs Monthly
+const usaPlansLifetime: Record<string, PlanType> = {
+  basic: {
+    id: "usa_lifetime_starter",
+    name: "Starter Lifetime",
+    tier: "basic",
+    price: 49,
+    originalPrice: 69,
+    discountBadge: "Save 28%",
+    billingPeriod: "/one-time",
+    description: "Ideal for homeowners planning personal remodels, additions, or single builds.",
+    credits: "10 Permanent Project Credits",
+    useCase: "Best for: Quick renovations and aesthetic projects.",
+    badge: undefined,
+    features: [
+      "10 Permanent Cloud Project Save Credits",
+      "Client-Ready Professional PDF Estimates",
+      "Cost-per-sqft & Material Comparisons",
+      "HDE Studio CAD Standard",
+      "Credits never expire"
+    ],
+    color: "blue",
+    icon: "fa-home"
+  },
+  standard: {
+    id: "usa_lifetime_builder",
+    name: "Contractor Pack",
+    tier: "standard",
+    price: 149,
+    originalPrice: 199,
+    discountBadge: "Save 25%",
+    billingPeriod: "/one-time",
+    description: "Ideal for flippers and remodelers needing technical estimates for framing and additions.",
+    credits: "25 Project Credits",
+    useCase: "Best for: Full property rehabs and structural estimates.",
+    badge: undefined,
+    features: [
+      "25 Permanent Cloud Project Save Credits",
       "Technical Trade & Luxury Project PDF Exports",
       "Permit & Contractor Cost Breakdown Sheets",
       "Side-by-side Multi-Property Comparisons",
-      "Priority Email Support",
-      "Everything in Basic"
+      "Priority Email Support"
     ],
     color: "amber",
     icon: "fa-building"
   },
   pro: {
-    id: "usa_pro",
-    name: "Pro",
+    id: "usa_lifetime_pro",
+    name: "All-Access Pro (CAD + Web)",
     tier: "pro",
-    price: 59.99,
-    originalPrice: 89.99,
-    description: "Built for professional contractors, builders, and realtors needing high-volume project saves and client-ready PDFs.",
-    credits: "100 Project Credits",
-    useCase: "Best for: Professionals managing multiple client projects.",
-    badge: undefined,
+    price: 299,
+    originalPrice: 399,
+    discountBadge: "25% OFF • LAUNCH DEAL",
+    badge: "⭐ 25% OFF • BEST VALUE",
+    billingPeriod: "/lifetime",
+    description: "Flagship Architectural CAD suite & comprehensive American cost estimating system.",
+    credits: "Unlimited Cloud Projects & 100 Credits",
+    useCase: "Best for: General contractors, remodelers, architects, and professional builders.",
     features: [
-      "100 Project Credits (Store up to 100 projects)",
-      "Client-Ready Professional PDF Reports",
-      "Complete Trade-by-Trade Cost Schedules",
-      "10 Daily Save Limit (Anti-Bot Protection)",
-      "White-Glove Technical Support"
+      "HDE Studio Desktop CAD All-Access Pro (Perpetual, 100% Offline)",
+      "Full 2D AutoCAD Vector Block Library (IBC/IRC Standards)",
+      "Dual USA Imperial & India Metric Catalogs",
+      "Vector PDF Blueprint Exporter (Custom Title Block & Specs, No Watermark)",
+      "Multi-Device License: Activate on up to 3 PCs / Macs",
+      "Comprehensive Trade Cost Schedules (Framing, Roofing, Plumbing, Electrical)",
+      "Unlimited Cloud Project Saves & Client-Ready Estimates",
+      "Lifetime Software Updates & Direct Engineering Support"
     ],
     color: "gray",
-    icon: "fa-hard-hat"
-  },
+    icon: "fa-cube"
+  }
 };
 
-const uaePlans = {
+const usaPlansMonthly: Record<string, PlanType> = {
+  basic: {
+    id: "usa_monthly_starter",
+    name: "Starter Monthly",
+    tier: "basic",
+    price: 14.99,
+    originalPrice: 19.99,
+    discountBadge: "Save 25%",
+    billingPeriod: "/month",
+    description: "Month-to-month access for quick DIY rehab estimates.",
+    credits: "5 Credits / month",
+    useCase: "Best for: Single month rehab evaluations.",
+    badge: undefined,
+    features: [
+      "5 Monthly Project Save Credits",
+      "Client-Ready PDF Estimates",
+      "Cost-per-sqft & Material Comparisons",
+      "Cancel anytime"
+    ],
+    color: "blue",
+    icon: "fa-home"
+  },
+  standard: {
+    id: "usa_monthly_builder",
+    name: "Contractor Monthly",
+    tier: "standard",
+    price: 24.99,
+    originalPrice: 34.99,
+    discountBadge: "Save 28%",
+    billingPeriod: "/month",
+    description: "Monthly subscription for active flippers and remodelers.",
+    credits: "20 Credits / month",
+    useCase: "Best for: Ongoing subcontractor budgeting.",
+    badge: undefined,
+    features: [
+      "20 Monthly Project Credits",
+      "Trade & Luxury PDF Exports",
+      "Permit & Contractor Cost Breakdown Sheets",
+      "Priority Email Support"
+    ],
+    color: "amber",
+    icon: "fa-building"
+  },
+  pro: {
+    id: "usa_monthly_pro",
+    name: "All-Access Pro Monthly",
+    tier: "pro",
+    price: 49,
+    originalPrice: 69,
+    discountBadge: "Save 28%",
+    badge: "Most Flexible",
+    billingPeriod: "/month",
+    description: "Full monthly access to HDE Studio Desktop CAD and complete American cost estimators.",
+    credits: "100 Credits / month",
+    useCase: "Best for: Active general contractors with ongoing monthly client proposals.",
+    features: [
+      "HDE Studio Desktop CAD All-Access Pro (Active Subscription)",
+      "Full AutoCAD 2D Vector Blocks (IBC/IRC Standards)",
+      "Dual USA & India Catalogs",
+      "Vector PDF Blueprint Exporter (No Watermarks)",
+      "Complete Trade Schedules & Client Bids",
+      "100 Project Saves / month",
+      "Cancel anytime"
+    ],
+    color: "gray",
+    icon: "fa-cube"
+  }
+};
+
+// 4. UAE Plans
+const uaePlansLifetime: Record<string, PlanType> = {
   basic: {
     id: "usa_basic",
     name: "Starter",
     tier: "basic",
-    price: 39,
-    originalPrice: 55,
-    description: "Ideal for individual buyers and overseas investors evaluating single property purchases in Dubai.",
+    price: 180,
+    originalPrice: 250,
+    discountBadge: "Save 28%",
+    billingPeriod: "/one-time",
+    description: "Ideal for individual buyers evaluating single property purchases in Dubai.",
     credits: "5 Project Credits",
     useCase: "Best for: Saving off-plan vs ready property cost comparisons.",
     badge: undefined,
@@ -172,7 +332,6 @@ const uaePlans = {
       "5 Permanent Cloud Project Save Credits",
       "Itemized DLD & Land Department Fee PDFs",
       "Mortgage & Trustee Fee Breakdown Sheets",
-      "Side-by-side Unit Comparison in Dashboard",
       "Credits never expire"
     ],
     color: "blue",
@@ -182,19 +341,19 @@ const uaePlans = {
     id: "usa_standard",
     name: "Investor",
     tier: "standard",
-    price: 99,
-    originalPrice: 149,
-    description: "Perfect for multi-unit property portfolio investors and relocation planners across UAE freehold areas.",
-    credits: "15 Project Credits",
-    useCase: "Best for: Portfolio planning, rental yield ROI, and multi-unit acquisition budgets.",
-    badge: "Most Popular",
+    price: 450,
+    originalPrice: 600,
+    discountBadge: "Save 25%",
+    billingPeriod: "/one-time",
+    description: "Perfect for multi-unit property portfolio investors across UAE freehold areas.",
+    credits: "20 Project Credits",
+    useCase: "Best for: Portfolio planning and rental yield ROI.",
+    badge: undefined,
     features: [
-      "15 Permanent Cloud Project Save Credits",
+      "20 Permanent Cloud Project Save Credits",
       "Comprehensive DLD, Trustee & Broker Fee Takeoffs",
-      "Service Charge & Gross Yield ROI Spreadsheets",
-      "Prime Tier (AED 2M+) Acquisition Budgeting",
-      "Priority Support",
-      "Everything in Starter"
+      "Gross Yield ROI Spreadsheets",
+      "Priority Support"
     ],
     color: "amber",
     icon: "fa-city"
@@ -203,22 +362,36 @@ const uaePlans = {
     id: "usa_pro",
     name: "Developer & Broker",
     tier: "pro",
-    price: 220,
-    originalPrice: 330,
+    price: 1099,
+    originalPrice: 1465,
+    discountBadge: "25% OFF • LAUNCH DEAL",
+    badge: "⭐ 25% OFF • BEST VALUE",
+    billingPeriod: "/lifetime",
     description: "Built for real estate brokers, developers, and wealth managers managing multiple client portfolios.",
     credits: "100 Project Credits",
     useCase: "Best for: Professional advisors and agencies handling client transactions.",
-    badge: undefined,
     features: [
+      "HDE Studio Desktop CAD All-Access Pro (Perpetual)",
       "100 Project Credits (Store up to 100 properties)",
       "Client-Ready Investor Presentation PDF Reports",
       "Complete Freehold Community Fee Schedules",
-      "10 Daily Save Limit (Anti-Bot Protection)",
       "White-Glove VIP Support"
     ],
     color: "gray",
     icon: "fa-briefcase"
-  },
+  }
+};
+
+const uaePlansMonthly: Record<string, PlanType> = {
+  ...uaePlansLifetime,
+  pro: {
+    ...uaePlansLifetime.pro,
+    id: "usa_monthly_pro",
+    price: 180,
+    originalPrice: 240,
+    billingPeriod: "/month",
+    badge: "Most Flexible"
+  }
 };
 
 const BENEFITS_BY_REGION: Record<string, { tag: string; heading: string; cards: { icon: string; color: string; title: string; desc: string }[] }> = {
@@ -647,6 +820,7 @@ const UpgradePage = () => {
   const { user, refreshProfile, planTier, hasPaid, credits } = useUser();
   const { showToast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [billingCycle, setBillingCycle] = useState<'lifetime' | 'monthly'>('lifetime');
   const [error, setError] = useState("");
   const navigate = useRouter();
   const searchParams = useSearchParams();
@@ -655,7 +829,11 @@ const UpgradePage = () => {
   const { region, setRegion } = useRegion();
   const currentRegion = (region && ['US', 'IN', 'AE'].includes(region) ? region : 'IN') as 'US' | 'IN' | 'AE';
 
-  const activePlans = currentRegion === 'US' ? usaPlans : currentRegion === 'AE' ? uaePlans : plans;
+  const activePlans = currentRegion === 'US' 
+    ? (billingCycle === 'lifetime' ? usaPlansLifetime : usaPlansMonthly) 
+    : currentRegion === 'AE' 
+    ? (billingCycle === 'lifetime' ? uaePlansLifetime : uaePlansMonthly) 
+    : (billingCycle === 'lifetime' ? plansLifetime : plansMonthly);
   const currencySymbol = currentRegion === 'US' ? '$' : currentRegion === 'AE' ? 'AED ' : '₹';
   const currentBenefits = BENEFITS_BY_REGION[currentRegion] || BENEFITS_BY_REGION['IN'];
   const currentComparison = COMPARISON_ROWS_BY_REGION[currentRegion] || COMPARISON_ROWS_BY_REGION['IN'];
@@ -838,6 +1016,42 @@ const UpgradePage = () => {
           </div>
         )}
 
+        {/* BILLING CYCLE TOGGLE: LIFETIME vs MONTHLY */}
+        <div className="flex flex-col items-center justify-center gap-3 my-8">
+          <div className="bg-gray-100 dark:bg-zinc-800/80 p-1.5 rounded-2xl flex items-center border border-gray-200 dark:border-zinc-700 shadow-inner">
+            <button
+              onClick={() => setBillingCycle('lifetime')}
+              className={`px-6 py-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2.5 cursor-pointer ${
+                billingCycle === 'lifetime'
+                  ? 'bg-primary text-white shadow-md scale-102'
+                  : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <i className="fas fa-infinity text-sm"></i>
+              <span>Lifetime License</span>
+              <span className="text-[10px] font-black uppercase bg-[#0f2042] text-[#c5a059] px-2 py-0.5 rounded-full border border-[#c5a059]/40 tracking-wider">
+                25% OFF
+              </span>
+            </button>
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
+                billingCycle === 'monthly'
+                  ? 'bg-primary text-white shadow-md scale-102'
+                  : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+              }`}
+            >
+              <i className="fas fa-calendar-alt text-sm"></i>
+              <span>Monthly Subscription</span>
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-zinc-400">
+            {billingCycle === 'lifetime' 
+              ? "⚡ Limited Time 25% Launch Offer: One-time payment, perpetual software access & lifetime updates."
+              : "Flexible monthly billing. Cancel or pause anytime from your dashboard."}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {Object.entries(activePlans).map(([key, plan]) => {
             const isBestValue = plan.badge;
@@ -878,11 +1092,13 @@ const UpgradePage = () => {
                 <div className="mb-6">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-400 dark:text-zinc-500 line-through text-lg">{currencySymbol}{plan.originalPrice}</span>
-                    <span className="bg-green-100 dark:bg-green-950/20 text-green-700 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded">Save 30%</span>
+                    <span className="bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold px-2 py-0.5 rounded">
+                      {plan.discountBadge || "Save 25%"}
+                    </span>
                   </div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black text-gray-900 dark:text-zinc-100">{currencySymbol}{plan.price}</span>
-                    <span className="text-gray-500 dark:text-zinc-400 font-medium">/one-time</span>
+                    <span className="text-gray-500 dark:text-zinc-400 font-medium">{plan.billingPeriod}</span>
                   </div>
                 </div>
 
@@ -915,8 +1131,10 @@ const UpgradePage = () => {
                     </span>
                   ) : isActiveTier ? (
                     'Top-up Credits'
+                  ) : billingCycle === 'lifetime' ? (
+                    'Get Lifetime Access'
                   ) : (
-                    'Buy Credits Now'
+                    'Start Subscription'
                   )}
                 </button>
               </div>
