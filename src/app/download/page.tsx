@@ -407,38 +407,38 @@ export default function DownloadPage() {
         </div>
 
         {/* HDE STUDIO CAD COMMERCIAL LICENSE PRICING */}
-        <div className="bg-gradient-to-br from-slate-900 via-[#0e1a35] to-slate-950 text-white border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
 
           <div className="relative z-10 max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/40 text-xs font-black uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-black uppercase tracking-wider">
                 <i className="fas fa-crown"></i>
                 <span>Commercial &amp; Professional CAD License</span>
               </div>
-              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
                 Unlock Full HDE Studio Pro
               </h3>
-              <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto">
                 Offline 2D architectural CAD software with drafting tools, structural layers, CAD block libraries, and high-res vector PDF printing.
               </p>
             </div>
 
             {/* BILLING TOGGLE */}
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="bg-white/10 p-1.5 rounded-2xl flex items-center border border-white/10 backdrop-blur-sm">
+              <div className="bg-gray-100 dark:bg-zinc-800 p-1.5 rounded-2xl flex items-center border border-gray-200 dark:border-zinc-700 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setCadBilling('lifetime')}
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2.5 cursor-pointer ${
                     cadBilling === 'lifetime'
-                      ? 'bg-[#c5a059] text-[#0f2042] shadow-lg scale-102'
-                      : 'text-gray-300 hover:text-white'
+                      ? 'bg-primary text-white shadow-md scale-102'
+                      : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <i className="fas fa-infinity text-sm"></i>
                   <span>Lifetime Commercial License</span>
-                  <span className="text-[10px] font-black uppercase bg-[#0f2042] text-[#c5a059] px-2 py-0.5 rounded-full border border-[#c5a059]/30">
+                  <span className="text-[10px] font-black uppercase bg-emerald-500 text-white px-2 py-0.5 rounded-full tracking-wider">
                     25% OFF
                   </span>
                 </button>
@@ -447,15 +447,15 @@ export default function DownloadPage() {
                   onClick={() => setCadBilling('monthly')}
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
                     cadBilling === 'monthly'
-                      ? 'bg-[#c5a059] text-[#0f2042] shadow-lg scale-102'
-                      : 'text-gray-300 hover:text-white'
+                      ? 'bg-primary text-white shadow-md scale-102'
+                      : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <i className="fas fa-calendar-alt text-sm"></i>
                   <span>Monthly Pro Plan</span>
                 </button>
               </div>
-              <p className="text-xs text-amber-300/90 font-medium">
+              <p className="text-xs text-gray-500 dark:text-zinc-400 font-medium">
                 {cadBilling === 'lifetime'
                   ? "⭐ Limited Launch Offer: One-time payment, perpetual software license & all future updates included."
                   : "Flexible monthly billing. Cancel or reactivate whenever you need."}
@@ -463,59 +463,59 @@ export default function DownloadPage() {
             </div>
 
             {/* PRICING CARD & DETAILS */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4 max-w-lg">
                 <div className="flex items-baseline gap-3">
                   {cadBilling === 'lifetime' ? (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
                         {region === 'US' ? '$299' : '₹18,749'}
                       </span>
                       <span className="text-lg text-gray-400 line-through">
                         {region === 'US' ? '$399' : '₹24,999'}
                       </span>
-                      <span className="text-xs font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                      <span className="text-xs font-black uppercase bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2.5 py-1 rounded-full">
                         Save 25%
                       </span>
-                      <span className="text-xs text-gray-400 font-semibold block sm:inline">
+                      <span className="text-xs text-gray-500 dark:text-zinc-400 font-semibold block sm:inline">
                         / one-time
                       </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
                         {region === 'US' ? '$49' : '₹1,999'}
                       </span>
-                      <span className="text-sm text-gray-400 font-semibold">
+                      <span className="text-sm text-gray-500 dark:text-zinc-400 font-semibold">
                         / month
                       </span>
                     </>
                   )}
                 </div>
 
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-200">
+                <ul className="space-y-2.5 text-xs sm:text-sm text-gray-700 dark:text-zinc-300">
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span><strong>100% Offline 2D CAD Software</strong> — no internet connection required to draft</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span><strong>AutoCAD Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span><strong>Dual Standard Catalogs</strong> (India Metric mm &amp; USA Imperial Feet/Inches)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span><strong>High-Resolution Vector PDF Export</strong> ready for printing &amp; client handoffs</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span><strong>Commercial License</strong> for Architects, Civil Engineers, Contractors &amp; Firms</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-[#c5a059]"></i>
+                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
                     <span>Instant desktop license key generation with lifetime profile tie-in</span>
                   </li>
                 </ul>
@@ -526,7 +526,7 @@ export default function DownloadPage() {
                   type="button"
                   onClick={handleCadCheckout}
                   disabled={buyingCad}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 hover:scale-102"
+                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 hover:scale-102"
                 >
                   {buyingCad ? (
                     <>
@@ -544,8 +544,8 @@ export default function DownloadPage() {
                     </>
                   )}
                 </button>
-                <div className="flex items-center justify-center gap-2 text-[11px] text-gray-400">
-                  <i className="fas fa-shield-alt text-[#c5a059]"></i>
+                <div className="flex items-center justify-center gap-2 text-[11px] text-gray-500 dark:text-zinc-400">
+                  <i className="fas fa-shield-alt text-emerald-600 dark:text-emerald-400"></i>
                   <span>Secure 256-bit checkout via Razorpay</span>
                 </div>
               </div>
