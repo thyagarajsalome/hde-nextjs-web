@@ -211,6 +211,13 @@ const Header = () => {
             )}
 
             {/* Shared links */}
+            <Link 
+              href="/download" 
+              className={`flex items-center gap-1.5 ${pathname === '/download' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
+            >
+              <i className="fas fa-cube text-xs text-primary"></i>
+              <span>CAD Studio</span>
+            </Link>
             <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
 
             {/* Pro Account Button - Always visible, region-aware */}
@@ -480,6 +487,10 @@ const Header = () => {
             )}
 
             {/* Shared mobile links */}
+            <Link href="/download" className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${pathname === '/download' ? 'text-primary font-bold bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800 no-underline`} onClick={() => setMenuOpen(false)}>
+              <i className="fas fa-cube text-primary text-sm"></i>
+              <span>CAD Studio (Desktop App)</span>
+            </Link>
             <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800 no-underline" onClick={() => setMenuOpen(false)}>Guides</Link>
             {user ? (
               <>
