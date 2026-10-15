@@ -806,28 +806,28 @@ const UpgradePage = () => {
           )}
 
           {/* HDE STUDIO DESKTOP CAD CALLOUT */}
-          <div className="mt-6 max-w-3xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0f2042] via-[#1a3365] to-[#0f2042] text-white border border-[#c5a059]/40 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+          <div className="mt-6 max-w-3xl mx-auto p-4 sm:p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-[#c5a059]/20 text-[#c5a059] flex items-center justify-center text-xl shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
                 <i className="fas fa-cube"></i>
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-[#c5a059] text-[#0f2042] px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
                     Desktop CAD Software
                   </span>
-                  <span className="text-xs font-bold text-gray-300">
+                  <span className="text-xs font-bold text-gray-900 dark:text-white">
                     HDE Studio Architectural CAD v2.1
                   </span>
                 </div>
-                <p className="text-xs text-gray-300 mt-1">
+                <p className="text-xs text-gray-600 dark:text-zinc-400 mt-1">
                   Looking for the offline 2D CAD drafting software? Lifetime licenses available with 25% launch offer ({currentRegion === 'US' ? '$299' : '₹18,749'}).
                 </p>
               </div>
             </div>
             <Link
               href="/download"
-              className="px-4 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black text-xs transition shadow shrink-0 no-underline whitespace-nowrap"
+              className="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-xs transition shadow-sm shrink-0 no-underline whitespace-nowrap"
             >
               View CAD Pricing ➔
             </Link>

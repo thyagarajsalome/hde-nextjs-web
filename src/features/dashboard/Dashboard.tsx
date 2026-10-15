@@ -466,12 +466,11 @@ export default function Dashboard() {
     if (user) {
       fetchProjects();
       getUserLicense(user.id).then((lic) => {
-        if (lic) {
+        // Only reveal license key if user has an active PAID commercial license
+        if (lic && lic.status === 'active' && lic.edition === 'GLOBAL_PRO') {
           setDesktopLicense(lic);
         } else {
-          claimOrCreateLicense(user.id, user.email || "", region || "IN", planTier).then((res) => {
-            if (res) setDesktopLicense(res);
-          });
+          setDesktopLicense(null);
         }
       }).catch(err => console.error("License fetch error:", err));
     }
@@ -873,23 +872,23 @@ export default function Dashboard() {
         </div>
 
         {/* --- HDE STUDIO DESKTOP CAD SUITE WIDGET --- */}
-        <div className="bg-gradient-to-r from-[#0f2042] via-[#162a56] to-[#0f2042] text-white rounded-2xl shadow-lg border border-[#c5a059]/40 p-6 sm:p-7 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#c5a059]/10 rounded-full blur-3xl -z-0"></div>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-sm p-6 sm:p-7 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl -z-0 pointer-events-none"></div>
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-3 py-0.5 rounded-full bg-[#c5a059] text-[#0f2042] text-[10px] font-black uppercase tracking-wider">
+                <span className="px-3 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[10px] font-black uppercase tracking-wider">
                   Desktop Software v2.1
                 </span>
-                <span className="text-xs text-gray-300 flex items-center gap-1.5">
-                  <i className="fas fa-check-circle text-emerald-400"></i> Windows • macOS • Linux
+                <span className="text-xs text-gray-500 dark:text-zinc-400 flex items-center gap-1.5">
+                  <i className="fas fa-check-circle text-emerald-500"></i> Windows • macOS • Linux
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
-                <i className="fas fa-cube text-[#c5a059]"></i>
+              <h2 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">
+                <i className="fas fa-cube text-primary"></i>
                 <span>HDE Studio Architectural CAD</span>
               </h2>
-              <p className="text-xs sm:text-sm text-gray-300 max-w-xl">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 max-w-xl">
                 Design custom floor plans, 2D AutoCAD room sets, and export high-resolution vector blueprints directly from your desktop.
               </p>
             </div>
@@ -897,33 +896,32 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {desktopLicense ? (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                  <div className="bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider flex items-center justify-between gap-3">
-                    <span className="text-[#c5a059]">{desktopLicense.license_key}</span>
+                  <div className="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-3.5 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider flex items-center justify-between gap-3 text-gray-900 dark:text-white">
+                    <span className="text-primary font-mono">{desktopLicense.license_key}</span>
                     <button
                       onClick={handleCopyLicenseKey}
-                      className="text-xs text-gray-300 hover:text-white transition p-1 cursor-pointer"
+                      className="text-xs text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-white transition p-1 cursor-pointer"
                       title="Copy Key"
                     >
-                      <i className={keyCopied ? "fas fa-check text-emerald-400" : "fas fa-copy"}></i>
+                      <i className={keyCopied ? "fas fa-check text-emerald-500" : "fas fa-copy"}></i>
                     </button>
                   </div>
                 </div>
               ) : (
-                <button
-                  onClick={handleClaimLicense}
-                  disabled={claimingLicense}
-                  className="px-4 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-[#0f2042] font-black text-xs transition cursor-pointer shadow-md disabled:opacity-50"
+                <Link
+                  href="/download#pricing"
+                  className="px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-bold text-xs transition flex items-center justify-center gap-2 no-underline cursor-pointer"
                 >
-                  <i className="fas fa-key mr-1.5"></i>
-                  <span>{claimingLicense ? "Generating..." : "Get Free CAD License"}</span>
-                </button>
+                  <i className="fas fa-lock"></i>
+                  <span>Unlock CAD License</span>
+                </Link>
               )}
 
               <Link
                 href="/download"
-                className="px-5 py-2.5 rounded-xl bg-white hover:bg-gray-100 text-[#0f2042] font-black text-xs transition shadow-md flex items-center justify-center gap-2 no-underline cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-xs transition shadow-sm flex items-center justify-center gap-2 no-underline cursor-pointer"
               >
-                <i className="fas fa-download text-[#c5a059]"></i>
+                <i className="fas fa-download"></i>
                 <span>Download App</span>
               </Link>
             </div>

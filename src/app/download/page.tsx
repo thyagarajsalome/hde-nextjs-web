@@ -59,12 +59,11 @@ export default function DownloadPage() {
 
         if (user) {
           const lic = await getUserLicense(user.id);
-          if (lic) {
+          // Only reveal license key if user has an active PAID commercial license
+          if (lic && lic.status === 'active' && lic.edition === 'GLOBAL_PRO') {
             setLicense(lic);
           } else {
-            // Auto-claim license for registered user
-            const claimed = await claimOrCreateLicense(user.id, user.email || '', region || 'IN', planTier);
-            if (claimed) setLicense(claimed);
+            setLicense(null);
           }
         }
       } catch (err) {
@@ -84,22 +83,6 @@ export default function DownloadPage() {
     setTimeout(() => setCopied(false), 3000);
   };
 
-  const handleManualClaim = async () => {
-    if (!user) return;
-    setClaiming(true);
-    try {
-      const claimed = await claimOrCreateLicense(user.id, user.email || '', region || 'IN', planTier);
-      if (claimed) {
-        setLicense(claimed);
-        showToast("License activated successfully!", "success");
-      }
-    } catch {
-      showToast("Could not generate license. Please try again.", "error");
-    } finally {
-      setClaiming(false);
-    }
-  };
-
   const handleCadCheckout = async () => {
     if (!user) {
       window.location.href = `/signin?redirect=/download`;
@@ -107,6 +90,12 @@ export default function DownloadPage() {
     }
     setBuyingCad(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = `/signin?redirect=/download`;
+        return;
+      }
+
       const isUS = region === 'US';
       const planId = isUS
         ? (cadBilling === 'lifetime' ? 'usa_lifetime_pro' : 'usa_monthly_pro')
@@ -114,7 +103,10 @@ export default function DownloadPage() {
       const currency = isUS ? 'USD' : 'INR';
 
       const { data: order, error: orderError } = await supabase.functions.invoke('create-order', {
-        body: { planId, currency }
+        body: { planId, currency },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
       });
 
       if (orderError || !order || order.error) {
@@ -130,7 +122,10 @@ export default function DownloadPage() {
         order_id: order.id,
         handler: async (response: any) => {
           const { data: result } = await supabase.functions.invoke('verify-payment', {
-            body: { ...response, planId, currency }
+            body: { ...response, planId, currency },
+            headers: {
+              Authorization: `Bearer ${session.access_token}`
+            }
           });
           if (result?.status === 'success') {
             const claimed = await claimOrCreateLicense(user.id, user.email || '', region || 'IN', 'pro');
@@ -171,7 +166,7 @@ export default function DownloadPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-gray-800 dark:text-zinc-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#091122] via-[#070d18] to-[#040811] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500/30 selection:text-white">
       <div className="max-w-6xl mx-auto space-y-12">
 
         {/* HERO HEADER WITH BRAND ICON */}
@@ -179,8 +174,8 @@ export default function DownloadPage() {
           {/* Brand Icon & Version Pill */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="relative group">
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-primary via-amber-400 to-primary opacity-30 blur-lg group-hover:opacity-60 transition duration-500"></div>
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-slate-900 border-2 border-primary/40 shadow-2xl overflow-hidden flex items-center justify-center p-2">
+              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 via-primary to-cyan-500 opacity-40 blur-xl group-hover:opacity-75 transition duration-500"></div>
+              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-slate-900 border-2 border-cyan-500/40 shadow-2xl overflow-hidden flex items-center justify-center p-2">
                 <Image
                   src="/images/cad/hde-studio-icon.webp"
                   alt="HDE Studio Architectural CAD Icon"
@@ -192,34 +187,34 @@ export default function DownloadPage() {
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
               <i className="fas fa-cube"></i>
               <span>Desktop CAD Software • Version 2.1 Release</span>
             </div>
           </div>
 
           <div className="space-y-3">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-gray-900 dark:text-white">
-              Design Faster with <span className="text-primary">HDE Studio</span> CAD
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
+              Design Faster with <span className="text-cyan-400">HDE Studio</span> CAD
             </h1>
-            <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-zinc-400">
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300">
               Professional offline 2D architectural space planning, AutoCAD vector blocks, real-time dimensioning, and client-ready vector PDF blueprints.
             </p>
           </div>
 
           {/* FEATURE CHIPS */}
-          <div className="flex flex-wrap justify-center gap-2.5 pt-1 text-xs font-semibold text-gray-700 dark:text-zinc-300">
-            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
+          <div className="flex flex-wrap justify-center gap-2.5 pt-1 text-xs font-semibold text-slate-200">
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-400"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> 60+ AutoCAD Vector CAD Blocks
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-400"></i> 60+ AutoCAD Vector CAD Blocks
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> 300 DPI Vector PDF Blueprints
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-400"></i> 300 DPI Vector PDF Blueprints
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-800/90 border border-gray-200 dark:border-zinc-700 shadow-sm flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-500"></i> 100% Offline Standalone Desktop App
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
+              <i className="fas fa-check text-emerald-400"></i> 100% Offline Standalone Desktop App
             </span>
           </div>
         </div>
@@ -297,16 +292,16 @@ export default function DownloadPage() {
         </div>
 
         {/* LICENSE KEY ACTIVATION WIDGET */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-xl p-6 sm:p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-0"></div>
+        <div className="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-6 sm:p-8 relative overflow-hidden backdrop-blur-md">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <i className="fas fa-key text-primary text-xl"></i>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Your Desktop License Key</h2>
+                <i className="fas fa-key text-cyan-400 text-xl"></i>
+                <h2 className="text-xl font-bold text-white">Your Desktop License Key</h2>
               </div>
-              <p className="text-sm text-gray-600 dark:text-zinc-400">
+              <p className="text-sm text-slate-400">
                 Enter this key along with your registered email upon opening HDE Studio to activate your full edition.
               </p>
             </div>
@@ -314,9 +309,9 @@ export default function DownloadPage() {
             {user ? (
               license ? (
                 <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-4 py-3 rounded-xl font-mono text-sm sm:text-base font-bold text-gray-900 dark:text-white tracking-wider flex items-center justify-between gap-4">
-                    <span>{license.license_key}</span>
-                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                  <div className="bg-[#0a1122] border border-cyan-500/40 px-4 py-3 rounded-xl font-mono text-sm sm:text-base font-bold text-cyan-300 tracking-wider flex items-center justify-between gap-4 shadow-inner">
+                    <span className="font-mono">{license.license_key}</span>
+                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                       {license.edition}
                     </span>
                   </div>
@@ -329,14 +324,19 @@ export default function DownloadPage() {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={handleManualClaim}
-                  disabled={claiming}
-                  className="px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer disabled:opacity-50"
-                >
-                  <i className="fas fa-sparkles"></i>
-                  <span>{claiming ? "Generating Key..." : "Claim Desktop License"}</span>
-                </button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="px-4 py-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-2">
+                    <i className="fas fa-lock text-amber-400"></i>
+                    <span>Commercial License Required to Activate</span>
+                  </div>
+                  <a
+                    href="#pricing"
+                    className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition shadow-sm flex items-center justify-center gap-2 no-underline cursor-pointer whitespace-nowrap"
+                  >
+                    <span>Unlock License Key</span>
+                    <i className="fas fa-arrow-down text-xs"></i>
+                  </a>
+                </div>
               )
             ) : (
               <div className="flex items-center gap-3">
@@ -344,7 +344,7 @@ export default function DownloadPage() {
                   href="/signin?redirect=/download"
                   className="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primary/90 transition-all no-underline"
                 >
-                  Sign In to Get License Key
+                  Sign In / Purchase License
                 </Link>
               </div>
             )}
@@ -352,16 +352,16 @@ export default function DownloadPage() {
         </div>
 
         {/* PRIMARY DOWNLOAD CARD (DETECTED OS) */}
-        <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 rounded-3xl p-6 sm:p-10 shadow-xl text-center space-y-6">
-          <div className="inline-block p-3 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm text-primary text-3xl">
+        <div className="bg-gradient-to-b from-slate-900 via-slate-900/90 to-[#0a1224] border-2 border-primary/40 rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-6 relative overflow-hidden">
+          <div className="inline-block p-3.5 bg-slate-800 border border-slate-700 rounded-2xl shadow-sm text-cyan-400 text-3xl">
             <i className={detectedOS === "windows" ? "fab fa-windows" : detectedOS === "macos" ? "fab fa-apple" : "fab fa-linux"}></i>
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
               Download for {detectedOS === "windows" ? "Windows (64-bit)" : detectedOS === "macos" ? "macOS (Apple & Intel)" : "Linux (64-bit)"}
             </h2>
-            <p className="text-sm text-gray-600 dark:text-zinc-400 mt-1">
+            <p className="text-sm text-slate-300 mt-1">
               Recommended package automatically detected for your system.
             </p>
           </div>
@@ -371,7 +371,7 @@ export default function DownloadPage() {
               <>
                 <a
                   href={winExe.download_url}
-                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
                 >
                   <i className="fas fa-download"></i>
                   <span>Download Windows Installer (.exe)</span>
@@ -379,7 +379,7 @@ export default function DownloadPage() {
                 </a>
                 <a
                   href={winZip.download_url}
-                  className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:border-primary text-gray-700 dark:text-zinc-200 font-bold text-sm shadow-sm transition-all no-underline flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-800/90 border border-slate-700 hover:border-cyan-400 text-slate-200 font-bold text-sm shadow-sm transition-all no-underline flex items-center justify-center gap-2"
                 >
                   <i className="fas fa-file-zipper"></i>
                   <span>Portable Zip ({winZip.file_size_mb} MB)</span>
@@ -390,7 +390,7 @@ export default function DownloadPage() {
             {detectedOS === "macos" && (
               <a
                 href={macDmg.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
               >
                 <i className="fas fa-download"></i>
                 <span>Download macOS DMG (.dmg)</span>
@@ -401,7 +401,7 @@ export default function DownloadPage() {
             {detectedOS === "linux" && (
               <a
                 href={linuxZip.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
               >
                 <i className="fas fa-download"></i>
                 <span>Download Linux Portable (.zip)</span>
@@ -413,35 +413,35 @@ export default function DownloadPage() {
 
         {/* ALL PLATFORMS GRID */}
         <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          <h3 className="text-xl font-bold text-white mb-6 text-center">
             All Operating System Packages
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {/* WINDOWS */}
-            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow space-y-4">
+            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl">
                   <i className="fab fa-windows"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-gray-900 dark:text-white">Windows</h4>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400">Windows 10, 11 (64-bit)</p>
+                  <h4 className="font-bold text-base text-white">Windows</h4>
+                  <p className="text-xs text-slate-400">Windows 10, 11 (64-bit)</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <p className="text-xs text-slate-300">
                 Includes automated setup wizard, Start Menu shortcuts, and embedded runtime.
               </p>
               <div className="space-y-2 pt-2">
                 <a
                   href={winExe.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-white font-bold text-xs transition-colors no-underline"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
                 >
                   Installer Setup (.exe) • {winExe.file_size_mb} MB
                 </a>
                 <a
                   href={winZip.download_url}
-                  className="block text-center py-2 px-4 rounded-xl border border-gray-200 dark:border-zinc-700 hover:border-primary text-gray-600 dark:text-zinc-300 font-semibold text-xs transition-colors no-underline"
+                  className="block text-center py-2 px-4 rounded-xl border border-slate-700 bg-slate-800/60 hover:border-cyan-400 text-slate-300 font-semibold text-xs transition-colors no-underline"
                 >
                   Portable Zip • {winZip.file_size_mb} MB
                 </a>
@@ -449,23 +449,23 @@ export default function DownloadPage() {
             </div>
 
             {/* MACOS */}
-            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow space-y-4">
+            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-zinc-500/10 text-zinc-700 dark:text-zinc-200 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center text-xl">
                   <i className="fab fa-apple"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-gray-900 dark:text-white">macOS</h4>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400">Apple Silicon (M1/M2/M3) &amp; Intel</p>
+                  <h4 className="font-bold text-base text-white">macOS</h4>
+                  <p className="text-xs text-slate-400">Apple Silicon (M1/M2/M3) &amp; Intel</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <p className="text-xs text-slate-300">
                 Native macOS disk image. Drag to Applications folder and launch.
               </p>
               <div className="pt-2">
                 <a
                   href={macDmg.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-white font-bold text-xs transition-colors no-underline"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
                 >
                   macOS Disk Image (.dmg) • {macDmg.file_size_mb} MB
                 </a>
@@ -473,23 +473,23 @@ export default function DownloadPage() {
             </div>
 
             {/* LINUX */}
-            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow space-y-4">
+            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center text-xl">
                   <i className="fab fa-linux"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-gray-900 dark:text-white">Linux</h4>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400">Ubuntu, Debian, Fedora, Arch</p>
+                  <h4 className="font-bold text-base text-white">Linux</h4>
+                  <p className="text-xs text-slate-400">Ubuntu, Debian, Fedora, Arch</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <p className="text-xs text-slate-300">
                 Self-contained bundle with bash launcher script and desktop entry.
               </p>
               <div className="pt-2">
                 <a
                   href={linuxZip.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary/10 hover:bg-primary text-primary hover:text-white font-bold text-xs transition-colors no-underline"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
                 >
                   Portable Bundle (.zip) • {linuxZip.file_size_mb} MB
                 </a>
@@ -500,33 +500,33 @@ export default function DownloadPage() {
         </div>
 
         {/* HDE STUDIO CAD COMMERCIAL LICENSE PRICING */}
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+        <div id="pricing" className="bg-gradient-to-b from-slate-900 via-[#0a1326] to-[#060b14] border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden scroll-mt-12">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
 
           <div className="relative z-10 max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-black uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#d4af37] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
                 <i className="fas fa-crown"></i>
                 <span>Commercial &amp; Professional CAD License</span>
               </div>
-              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
                 Unlock Full HDE Studio Pro
               </h3>
-              <p className="text-gray-600 dark:text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto">
+              <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto">
                 Offline 2D architectural CAD software with drafting tools, structural layers, CAD block libraries, and high-res vector PDF printing.
               </p>
             </div>
 
             {/* BILLING TOGGLE */}
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="bg-gray-100 dark:bg-zinc-800 p-1.5 rounded-2xl flex items-center border border-gray-200 dark:border-zinc-700 shadow-inner">
+              <div className="bg-slate-950/80 p-1.5 rounded-2xl flex items-center border border-slate-800 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setCadBilling('lifetime')}
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2.5 cursor-pointer ${
                     cadBilling === 'lifetime'
                       ? 'bg-primary text-white shadow-md scale-102'
-                      : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <i className="fas fa-infinity text-sm"></i>
@@ -541,14 +541,14 @@ export default function DownloadPage() {
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
                     cadBilling === 'monthly'
                       ? 'bg-primary text-white shadow-md scale-102'
-                      : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <i className="fas fa-calendar-alt text-sm"></i>
                   <span>Monthly Pro Plan</span>
                 </button>
               </div>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 font-medium">
+              <p className="text-xs text-slate-400 font-medium">
                 {cadBilling === 'lifetime'
                   ? "⭐ Limited Launch Offer: One-time payment, perpetual software license & all future updates included."
                   : "Flexible monthly billing. Cancel or reactivate whenever you need."}
@@ -556,59 +556,59 @@ export default function DownloadPage() {
             </div>
 
             {/* PRICING CARD & DETAILS */}
-            <div className="bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4 max-w-lg">
-                <div className="flex items-baseline gap-3">
+                <div className="flex items-baseline gap-3 flex-wrap">
                   {cadBilling === 'lifetime' ? (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-white">
                         {region === 'US' ? '$299' : '₹18,749'}
                       </span>
-                      <span className="text-lg text-gray-400 line-through">
+                      <span className="text-lg text-slate-500 line-through">
                         {region === 'US' ? '$399' : '₹24,999'}
                       </span>
-                      <span className="text-xs font-black uppercase bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2.5 py-1 rounded-full">
+                      <span className="text-xs font-black uppercase bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full">
                         Save 25%
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-zinc-400 font-semibold block sm:inline">
+                      <span className="text-xs text-slate-400 font-semibold block sm:inline">
                         / one-time
                       </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-white">
                         {region === 'US' ? '$49' : '₹1,999'}
                       </span>
-                      <span className="text-sm text-gray-500 dark:text-zinc-400 font-semibold">
+                      <span className="text-sm text-slate-400 font-semibold">
                         / month
                       </span>
                     </>
                   )}
                 </div>
 
-                <ul className="space-y-2.5 text-xs sm:text-sm text-gray-700 dark:text-zinc-300">
+                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-200">
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span><strong>100% Offline 2D CAD Software</strong> — no internet connection required to draft</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span><strong>AutoCAD Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span><strong>Dual Standard Catalogs</strong> (India Metric mm &amp; USA Imperial Feet/Inches)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span><strong>High-Resolution Vector PDF Export</strong> ready for printing &amp; client handoffs</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span><strong>Commercial License</strong> for Architects, Civil Engineers, Contractors &amp; Firms</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-400"></i>
                     <span>Instant desktop license key generation with lifetime profile tie-in</span>
                   </li>
                 </ul>
@@ -637,8 +637,8 @@ export default function DownloadPage() {
                     </>
                   )}
                 </button>
-                <div className="flex items-center justify-center gap-2 text-[11px] text-gray-500 dark:text-zinc-400">
-                  <i className="fas fa-shield-alt text-emerald-600 dark:text-emerald-400"></i>
+                <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
+                  <i className="fas fa-shield-alt text-emerald-400"></i>
                   <span>Secure 256-bit checkout via Razorpay</span>
                 </div>
               </div>
@@ -647,35 +647,35 @@ export default function DownloadPage() {
         </div>
 
         {/* 3-STEP QUICK START GUIDE */}
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-10 space-y-8">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center">
+        <div className="bg-slate-900/70 border border-slate-800/80 rounded-3xl p-8 sm:p-10 space-y-8">
+          <h3 className="text-2xl font-bold text-white text-center">
             How to Install and Activate HDE Studio
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 text-primary font-black text-lg flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
                 1
               </div>
-              <h4 className="font-bold text-base text-gray-900 dark:text-white">Download Setup</h4>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <h4 className="font-bold text-base text-white">Download Setup</h4>
+              <p className="text-xs text-slate-400">
                 Download the setup package above for your operating system.
               </p>
             </div>
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 text-primary font-black text-lg flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
                 2
               </div>
-              <h4 className="font-bold text-base text-gray-900 dark:text-white">Run Installer</h4>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <h4 className="font-bold text-base text-white">Run Installer</h4>
+              <p className="text-xs text-slate-400">
                 Double click the setup file and follow the on-screen instructions to install.
               </p>
             </div>
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 text-primary font-black text-lg flex items-center justify-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
                 3
               </div>
-              <h4 className="font-bold text-base text-gray-900 dark:text-white">Enter License Key</h4>
-              <p className="text-xs text-gray-600 dark:text-zinc-400">
+              <h4 className="font-bold text-base text-white">Enter License Key</h4>
+              <p className="text-xs text-slate-400">
                 Launch HDE Studio and paste your License Key shown above to unlock all CAD tools.
               </p>
             </div>
