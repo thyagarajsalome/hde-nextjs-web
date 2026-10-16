@@ -183,13 +183,13 @@ export default function DownloadPage() {
           
           {/* Brand Icon & Version Pill */}
           <div className="flex flex-col items-center justify-center gap-3">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-slate-200/80 shadow-md flex items-center justify-center p-2.5 transition-transform hover:scale-105 duration-300">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border border-slate-200/80 shadow-md flex items-center justify-center p-2 transition-transform hover:scale-105 duration-300">
               <Image
-                src="/images/cad/hde-studio-icon.webp"
-                alt="HDE Studio Architectural CAD Icon"
-                width={96}
-                height={96}
-                className="w-full h-full object-contain rounded-xl"
+                src="/images/cad/HDE_256px.webp"
+                alt="HDE Studio House Planning Tool Icon"
+                width={256}
+                height={256}
+                className="w-full h-full object-contain"
                 priority
               />
             </div>
@@ -250,7 +250,7 @@ export default function DownloadPage() {
       {/* MAIN CONTAINER */}
       <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
 
-        {/* HERO ARCHITECTURAL SHOWCASE (BLUEPRINT VIEWPORT) */}
+        {/* HERO ARCHITECTURAL SHOWCASE (LIGHT MONOCHROME FLOOR PLAN) */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-4 sm:p-6 lg:p-8 space-y-6">
           
           {/* Window Title Bar */}
@@ -265,60 +265,55 @@ export default function DownloadPage() {
             </div>
             <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
               <span className="bg-slate-100 text-primary border border-slate-200 px-2.5 py-1 rounded-md">
-                📐 Dynamic Dimension Chains
+                📐 50&apos; &times; 40&apos; Monochrome Residential Plan
               </span>
               <span className="bg-slate-100 text-emerald-700 border border-slate-200 px-2.5 py-1 rounded-md hidden md:inline">
-                🛋️ Vector Block Library
+                🛋️ Smart CAD Block Set
               </span>
             </div>
           </div>
 
-          {/* Blueprint Showcase Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            
-            {/* Primary Panoramic Blueprint (Monochrome 40x50 House Floor Plan) */}
-            <div className="lg:col-span-8 flex flex-col justify-between bg-slate-50 border border-slate-200/90 rounded-2xl p-4 shadow-xs group">
-              <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
-                <Image
-                  src="/images/cad/cad-hero-plan.webp"
-                  alt="HDE Studio CAD 40x50 House Floor Plan Blueprint"
-                  width={2019}
-                  height={782}
-                  className="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500"
-                  priority
-                />
-                <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className="font-semibold">Monochrome 40&apos; &times; 50&apos; Residential Floor Plan</span>
-                </div>
-              </div>
-
-              <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 px-1">
-                <span>✓ Wall hatching, structural column offsets &amp; room schedules</span>
-                <span className="text-primary font-semibold">Auto-snapping Grid (1&apos;-0&quot; / 100mm)</span>
+          {/* Clean Light Architectural Floor Plan Showcase */}
+          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-5 shadow-xs">
+            <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm flex items-center justify-center">
+              <Image
+                src="/images/cad/monochrome-40x50-floor-plan.webp"
+                alt="HDE Studio CAD 40x50 Monochrome Architectural Floor Plan"
+                width={2019}
+                height={1245}
+                className="w-full h-auto object-contain"
+                priority
+              />
+              <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="font-semibold">Monochrome 40&apos; &times; 50&apos; Residential Floor Plan</span>
               </div>
             </div>
 
-            {/* Detail Plan Blueprint (webp plan-02) */}
-            <div className="lg:col-span-4 flex flex-col justify-between bg-slate-50 border border-slate-200/90 rounded-2xl p-4 shadow-xs group">
-              <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm flex-1 flex items-center justify-center p-2">
-                <Image
-                  src="/images/cad/cad-detail-plan.webp"
-                  alt="HDE Studio CAD Detailed Space Planning Blueprint"
-                  width={616}
-                  height={832}
-                  className="w-full max-h-[420px] object-contain group-hover:scale-[1.01] transition-transform duration-500"
-                />
-                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md border border-slate-200 text-primary text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-xs">
-                  ARCHITECTURAL SET
+            {/* Feature Highlights beneath canvas */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 pt-3 border-t border-slate-200/80 text-xs">
+              <div className="flex items-start gap-2.5 text-slate-700">
+                <i className="fas fa-ruler-combined text-primary mt-0.5 text-sm"></i>
+                <div>
+                  <span className="font-bold text-slate-900 block">Real-Time Dimension Chains</span>
+                  <span className="text-slate-500 text-[11px]">Precision wall, door &amp; window lengths with auto-aligned tick marks.</span>
                 </div>
               </div>
-
-              <div className="mt-3.5 text-center sm:text-left text-xs text-slate-600 px-1">
-                <span className="text-emerald-700 font-semibold">High-Res Vector PDF Export</span> (Ready for 300 DPI Client Prints)
+              <div className="flex items-start gap-2.5 text-slate-700">
+                <i className="fas fa-couch text-emerald-600 mt-0.5 text-sm"></i>
+                <div>
+                  <span className="font-bold text-slate-900 block">60+ Architectural Vector Blocks</span>
+                  <span className="text-slate-500 text-[11px]">Pre-drawn beds, dining sets, sanitary ware, kitchen islands &amp; vehicles.</span>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5 text-slate-700">
+                <i className="fas fa-file-pdf text-red-600 mt-0.5 text-sm"></i>
+                <div>
+                  <span className="font-bold text-slate-900 block">300 DPI Vector PDF Export</span>
+                  <span className="text-slate-500 text-[11px]">Lossless blueprint resolution ready for client handoffs &amp; municipal review.</span>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
 
