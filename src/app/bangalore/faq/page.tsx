@@ -5,6 +5,9 @@ import Link from "next/link";
 export const metadata = {
   title: "Bangalore Real Estate FAQs | HDE Property Guide",
   description: "Comprehensive answers to Bangalore real estate questions: A Khata vs B Khata, K-RERA agent verification, posting free listings, and transit connectivity.",
+  alternates: {
+    canonical: "/bangalore/faq",
+  },
 };
 
 export default function BangaloreFaqPage() {

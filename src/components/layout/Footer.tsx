@@ -31,6 +31,10 @@ export default function Footer() {
             
             {/* Quick Links Horizontally */}
             <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-3 gap-y-1 text-sm font-medium pt-1">
+              <Link href="/download" className="text-primary font-semibold hover:underline">HDE Studio CAD</Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/upgrade" className="text-gray-500 hover:text-primary transition-colors no-underline">Pricing &amp; Plans</Link>
+              <span className="text-gray-300">|</span>
               <Link href="/home-planning" className="text-primary font-semibold hover:underline">Home Planning Guide</Link>
               <span className="text-gray-300">|</span>
               <Link href="/blog" className="text-gray-500 hover:text-primary transition-colors no-underline">Blog & Guides</Link>
@@ -136,6 +140,19 @@ export default function Footer() {
                 <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" className="hover:text-primary transition-colors">Miami</Link>
                 <span>&bull;</span>
                 <Link href="/real-estate/rent-vs-buy-in-seattle-washington" className="hover:text-primary transition-colors">Seattle</Link>
+              </div>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
+                <Link href="/real-estate/barndominium-cost-in-dallas-texas" className="hover:text-primary transition-colors">Barndominium Dallas</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/kitchen-remodel-in-austin-texas" className="hover:text-primary transition-colors">Kitchen Austin</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/swimming-pool-cost-in-miami-florida" className="hover:text-primary transition-colors">Pool Miami</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/home-addition-in-los-angeles-california" className="hover:text-primary transition-colors">Addition LA</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/pickleball-court-cost-in-phoenix-arizona" className="hover:text-primary transition-colors">Pickleball Phoenix</Link>
+                <span>&bull;</span>
+                <Link href="/real-estate/outdoor-kitchen-cost-in-tampa-florida" className="hover:text-primary transition-colors">Outdoor Kitchen Tampa</Link>
               </div>
             </div>
 

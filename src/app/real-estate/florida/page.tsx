@@ -70,7 +70,7 @@ export default function FloridaHubPage() {
             <nav className="flex items-center gap-2 text-xs text-slate-400">
               <Link href="/" className="hover:text-amber-400 transition">Home</Link>
               <span>/</span>
-              <Link href="/dev-links" className="hover:text-amber-400 transition">Real Estate</Link>
+              <Link href="/real-estate" className="hover:text-amber-400 transition">Real Estate</Link>
               <span>/</span>
               <span className="text-amber-400 font-semibold">Florida</span>
             </nav>

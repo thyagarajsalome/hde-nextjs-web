@@ -5,6 +5,9 @@ import Link from "next/link";
 export const metadata = {
   title: "Real Estate Buyer Lead Privacy Policy | HDE Bangalore",
   description: "Privacy policy for buyer inquiries, contact unlocks, and home loan lead sharing on Home Design English.",
+  alternates: {
+    canonical: "/bangalore/privacy",
+  },
 };
 
 export default function BangalorePrivacyPage() {

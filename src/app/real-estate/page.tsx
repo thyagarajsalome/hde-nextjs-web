@@ -362,10 +362,28 @@ export default function USRealEstateHub() {
                     Property Tax
                   </Link>
                   <Link
+                    href={`/real-estate/salary-needed-to-buy-in-${city.slug}`}
+                    className="text-slate-600 hover:text-primary-600 font-medium hover:underline"
+                  >
+                    Salary Needed
+                  </Link>
+                  <Link
                     href={`/real-estate/kitchen-remodel-in-${city.slug}`}
                     className="text-slate-600 hover:text-primary-600 font-medium hover:underline"
                   >
                     Kitchen Remodel
+                  </Link>
+                  <Link
+                    href={`/real-estate/swimming-pool-cost-in-${city.slug}`}
+                    className="text-slate-600 hover:text-primary-600 font-medium hover:underline"
+                  >
+                    Swimming Pool
+                  </Link>
+                  <Link
+                    href={`/real-estate/barndominium-cost-in-${city.slug}`}
+                    className="text-slate-600 hover:text-primary-600 font-medium hover:underline"
+                  >
+                    Barndominium Cost
                   </Link>
                 </div>
               </div>

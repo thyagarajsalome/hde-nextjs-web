@@ -5,6 +5,9 @@ import Link from "next/link";
 export const metadata = {
   title: "Property Listing Terms & Conditions | HDE Bangalore Real Estate",
   description: "Terms and conditions for property listings, seller verifications, and buyer inquiry rules on Home Design English (HDE).",
+  alternates: {
+    canonical: "/bangalore/terms",
+  },
 };
 
 export default function BangaloreTermsPage() {

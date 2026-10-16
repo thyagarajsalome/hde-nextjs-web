@@ -86,7 +86,7 @@ export default function TexasHubPage() {
             <nav className="flex items-center gap-2 text-xs text-slate-400">
               <Link href="/" className="hover:text-amber-400 transition">Home</Link>
               <span>/</span>
-              <Link href="/dev-links" className="hover:text-amber-400 transition">Real Estate</Link>
+              <Link href="/real-estate" className="hover:text-amber-400 transition">Real Estate</Link>
               <span>/</span>
               <span className="text-amber-400 font-semibold">Texas</span>
             </nav>
@@ -107,15 +107,15 @@ export default function TexasHubPage() {
               {/* Stats badges */}
               <div className="flex items-center gap-3 shrink-0">
                 <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 text-center">
-                  <div className="text-lg font-black text-[#c5a059]">19</div>
+                  <div className="text-lg font-black text-[#c5a059]">{CITIES.length}</div>
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">Texas Cities</div>
                 </div>
                 <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 text-center">
-                  <div className="text-lg font-black text-white">9</div>
+                  <div className="text-lg font-black text-white">{TOOLS.length}</div>
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">Tools / City</div>
                 </div>
                 <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl px-4 py-2 text-center">
-                  <div className="text-lg font-black text-emerald-400">171</div>
+                  <div className="text-lg font-black text-emerald-400">{CITIES.length * TOOLS.length}</div>
                   <div className="text-[10px] text-slate-400 uppercase font-semibold">Calculators</div>
                 </div>
               </div>

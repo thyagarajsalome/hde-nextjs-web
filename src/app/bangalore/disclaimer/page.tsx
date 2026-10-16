@@ -5,6 +5,9 @@ import Link from "next/link";
 export const metadata = {
   title: "Real Estate Disclaimer & RERA Notice | HDE Bangalore",
   description: "RERA compliance, safe harbor intermediary status, and buyer due diligence notice for Bangalore Real Estate.",
+  alternates: {
+    canonical: "/bangalore/disclaimer",
+  },
 };
 
 export default function BangaloreDisclaimerPage() {
