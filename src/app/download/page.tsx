@@ -15,6 +15,33 @@ import {
   claimOrCreateLicense 
 } from "@/services/licenseService";
 
+const CAD_FAQS = [
+  {
+    q: "Can I use HDE Studio CAD without an active internet connection?",
+    a: "Yes, 100%. HDE Studio is a native, offline desktop CAD application built for independent drafting. Once downloaded and activated, you never need an active internet connection or constant cloud check-in to draft, edit, or export your floor plans."
+  },
+  {
+    q: "What file formats does HDE Studio support for export and printing?",
+    a: "HDE Studio allows you to export your 2D plans directly to crisp, lossless vector PDF files up to 300 DPI, optimized for large-format architectural plotters (A0, A1, A2, A3, A4) as well as PNG and SVG graphics ready for municipal approval packages and client presentations."
+  },
+  {
+    q: "How does the desktop license key activation work?",
+    a: "When you purchase an HDE Studio Pro license (Monthly or Lifetime), an official license key in the format HDE-PRO-YYYY-XXXX-XXXX is instantly generated and tied to your account email. Simply open HDE Studio, navigate to Help > Activate License, and enter your key and registered email to unlock all commercial features."
+  },
+  {
+    q: "Can I install HDE Studio CAD on multiple computers?",
+    a: "Yes. Each single commercial user license permits activation on up to two personal workstations (such as an office desktop and a travel laptop) for the same licensed user. For corporate design firms or multi-seat drafting teams, please email us for bulk licenses."
+  },
+  {
+    q: "Does HDE Studio support both Metric and Imperial architectural units?",
+    a: "Yes. HDE Studio includes built-in dual unit catalogs: India Metric (millimeters, centimeters, meters, and square feet) and USA Imperial (feet, fractional inches, and architectural dimension strings) with automatic snap-grid calibration."
+  },
+  {
+    q: "How do software updates work for HDE Studio CAD?",
+    a: "We actively develop and regularly update HDE Studio on a continuous basis to provide the best architectural drafting experience. New versions, improved tools, and expanded CAD block libraries are published on this page. All lifetime license holders receive future version updates at no additional charge."
+  }
+];
+
 export default function DownloadPage() {
   const { user, planTier } = useUser();
   const { region } = useRegion();
@@ -28,6 +55,7 @@ export default function DownloadPage() {
   const [loading, setLoading] = useState(true);
   const [cadBilling, setCadBilling] = useState<'lifetime' | 'monthly'>('lifetime');
   const [buyingCad, setBuyingCad] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Load Razorpay checkout script
   useEffect(() => {
@@ -707,6 +735,99 @@ export default function DownloadPage() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* FREQUENTLY ASKED QUESTIONS */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xs">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-circle-question text-primary"></i>
+              <span>Help &amp; Documentation</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
+              Frequently Asked Questions
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
+              Everything you need to know about downloading, installing, and licensing HDE Studio CAD.
+            </p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            {CAD_FAQS.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className="border border-slate-200/90 rounded-2xl overflow-hidden transition-all bg-slate-50/50 hover:bg-slate-50"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-slate-900 text-sm sm:text-base cursor-pointer"
+                  >
+                    <span>{faq.q}</span>
+                    <i
+                      className={`fas fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ${
+                        isOpen ? "rotate-180 text-primary" : ""
+                      }`}
+                    ></i>
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* CONTINUOUS DEVELOPMENT NOTICE & DISCLAIMER */}
+        <div className="bg-amber-50/60 border border-amber-200/90 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
+          <div className="flex items-center gap-2.5 text-amber-900 font-bold text-base">
+            <i className="fas fa-triangle-exclamation text-amber-600 text-lg"></i>
+            <span>Continuous Development Notice &amp; Official Disclaimer</span>
+          </div>
+          <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2.5">
+            <p>
+              <strong>We are continually updating this application:</strong> At Home Design English (HDE), we are committed to providing architects, civil engineers, building contractors, and homeowners with the best offline CAD drafting and space-planning experience. We are actively and regularly updating this Desktop application with improved drafting tools, performance optimizations, bug fixes, and expanded vector block catalogs.
+            </p>
+            <p>
+              <strong>Professional Architectural Disclaimer:</strong> HDE Studio is an architectural floor plan drafting and spatial layout tool. While the standard room sets, wall thickness presets, and dimensioning tools adhere to common building conventions, all final structural calculations, load-bearing beam/column sizing, soil foundation engineering, and local municipal building code compliances must be reviewed, stamped, and approved by a locally licensed architect or structural engineer before construction begins.
+            </p>
+            <p className="pt-1 text-slate-800">
+              For any software support, bug reports, feature suggestions, or desktop license assistance, please contact our team directly at:{" "}
+              <a 
+                href="mailto:hdeadmin@gmail.com?subject=HDE%20Studio%20CAD%20Support%20Inquiry" 
+                className="font-bold text-primary hover:text-primary-900 underline underline-offset-2 transition-colors"
+              >
+                hdeadmin@gmail.com
+              </a>
+            </p>
+          </div>
+        </div>
+
+        {/* CONTACT / SUPPORT DESK CALLOUT */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center text-xl shrink-0">
+              <i className="fas fa-headset"></i>
+            </div>
+            <div>
+              <h4 className="font-bold text-base text-slate-900">Need Help or Want to Request a CAD Feature?</h4>
+              <p className="text-xs text-slate-600">
+                Our engineering team is here to assist with license activation, workstation setup, or custom CAD block sets.
+              </p>
+            </div>
+          </div>
+          <a
+            href="mailto:hdeadmin@gmail.com?subject=HDE%20Studio%20CAD%20Support%20Inquiry"
+            className="px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2 shrink-0 no-underline"
+          >
+            <i className="fas fa-envelope"></i>
+            <span>Contact: hdeadmin@gmail.com</span>
+          </a>
         </div>
 
       </div>
