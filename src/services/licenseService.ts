@@ -189,7 +189,7 @@ export async function claimOrCreateLicense(
         edition,
         plan_name: planName,
         status: 'active',
-        max_devices: planTier === 'pro' ? 5 : 2,
+        max_devices: 1,
       })
       .select()
       .single();
@@ -205,7 +205,7 @@ export async function claimOrCreateLicense(
         edition,
         plan_name: planName,
         status: 'active',
-        max_devices: 2,
+        max_devices: 1,
         created_at: new Date().toISOString()
       };
     }

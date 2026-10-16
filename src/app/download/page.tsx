@@ -30,7 +30,7 @@ const CAD_FAQS = [
   },
   {
     q: "Can I install HDE Studio CAD on multiple computers?",
-    a: "Yes. Each single commercial user license permits activation on up to two personal workstations (such as an office desktop and a travel laptop) for the same licensed user. For corporate design firms or multi-seat drafting teams, please email us for bulk licenses."
+    a: "No. Each commercial license is strictly valid for 1 single PC / workstation. If you need to run HDE Studio CAD on multiple computers in your office or across your drafting team, each PC requires its own separate commercial license key. For multi-PC firm licenses, please contact us at hdeadmin@gmail.com."
   },
   {
     q: "Does HDE Studio support both Metric and Imperial architectural units?",
