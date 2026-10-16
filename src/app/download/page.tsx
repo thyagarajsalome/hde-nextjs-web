@@ -136,7 +136,7 @@ export default function DownloadPage() {
           }
         },
         prefill: { email: user?.email },
-        theme: { color: "#d9a443" }
+        theme: { color: "#0f2042" }
       };
 
       new (window as any).Razorpay(options).open();
@@ -166,158 +166,188 @@ export default function DownloadPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#091122] via-[#070d18] to-[#040811] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 selection:bg-cyan-500/30 selection:text-white">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-primary/20 selection:text-primary">
+      
+      {/* BREADCRUMB */}
+      <nav aria-label="Breadcrumb" className="bg-white border-b border-slate-200 text-xs text-slate-500 py-3 px-4">
+        <div className="max-w-6xl mx-auto flex items-center gap-2 flex-wrap">
+          <Link href="/" className="hover:text-primary transition-colors no-underline text-slate-600">Home</Link>
+          <span>/</span>
+          <span className="text-slate-900 font-semibold">HDE Studio CAD</span>
+        </div>
+      </nav>
 
-        {/* HERO HEADER WITH BRAND ICON */}
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
+      {/* HERO HEADER */}
+      <section className="bg-white border-b border-slate-200 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 shadow-xs">
+        <div className="max-w-5xl mx-auto text-center space-y-6">
+          
           {/* Brand Icon & Version Pill */}
           <div className="flex flex-col items-center justify-center gap-3">
-            <div className="relative group">
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 via-primary to-cyan-500 opacity-40 blur-xl group-hover:opacity-75 transition duration-500"></div>
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-slate-900 border-2 border-cyan-500/40 shadow-2xl overflow-hidden flex items-center justify-center p-2">
-                <Image
-                  src="/images/cad/hde-studio-icon.webp"
-                  alt="HDE Studio Architectural CAD Icon"
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-contain rounded-xl"
-                  priority
-                />
-              </div>
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-slate-200/80 shadow-md flex items-center justify-center p-2.5 transition-transform hover:scale-105 duration-300">
+              <Image
+                src="/images/cad/hde-studio-icon.webp"
+                alt="HDE Studio Architectural CAD Icon"
+                width={96}
+                height={96}
+                className="w-full h-full object-contain rounded-xl"
+                priority
+              />
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
-              <i className="fas fa-cube"></i>
-              <span>Desktop CAD Software • Version 2.1 Release</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/5 border border-primary/15 text-primary text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-cube text-primary"></i>
+              <span>Desktop Architectural CAD • Version 2.1 Release</span>
             </div>
           </div>
 
+          {/* Headline & Description */}
           <div className="space-y-3">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white">
-              Design Faster with <span className="text-cyan-400">HDE Studio</span> CAD
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900">
+              Design Faster with <span className="text-primary">HDE Studio</span> CAD
             </h1>
-            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-300">
-              Professional offline 2D architectural space planning, AutoCAD vector blocks, real-time dimensioning, and client-ready vector PDF blueprints.
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed">
+              Professional offline 2D architectural space planning, AutoCAD vector blocks, real-time dimensioning chains, and client-ready vector PDF blueprints.
             </p>
           </div>
 
-          {/* FEATURE CHIPS */}
-          <div className="flex flex-wrap justify-center gap-2.5 pt-1 text-xs font-semibold text-slate-200">
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-400"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
+          {/* Feature Badges */}
+          <div className="flex flex-wrap justify-center gap-2.5 pt-2 text-xs font-semibold text-slate-700">
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
+              <i className="fas fa-check-circle text-emerald-600"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-400"></i> 60+ AutoCAD Vector CAD Blocks
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
+              <i className="fas fa-check-circle text-emerald-600"></i> 60+ AutoCAD Vector CAD Blocks
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-400"></i> 300 DPI Vector PDF Blueprints
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
+              <i className="fas fa-check-circle text-emerald-600"></i> 300 DPI Vector PDF Blueprints
             </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center gap-1.5">
-              <i className="fas fa-check text-emerald-400"></i> 100% Offline Standalone Desktop App
+            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
+              <i className="fas fa-check-circle text-emerald-600"></i> 100% Offline Standalone Desktop App
             </span>
           </div>
+
+          {/* Jump to Actions */}
+          <div className="pt-2 flex flex-wrap justify-center items-center gap-3">
+            <a
+              href="#download"
+              className="px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 no-underline"
+            >
+              <i className="fas fa-download"></i>
+              <span>Download Free Package</span>
+            </a>
+            <a
+              href="#pricing"
+              className="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm border border-slate-200/80 transition-all flex items-center gap-2 no-underline"
+            >
+              <i className="fas fa-crown text-[#c5a059]"></i>
+              <span>Commercial Pro License</span>
+            </a>
+          </div>
+
         </div>
+      </section>
 
-        {/* HERO ARCHITECTURAL SHOWCASE (RESPONSIVE BLUEPRINT VIEWS) */}
-        <div className="bg-slate-950 text-white rounded-3xl border border-slate-800 shadow-2xl p-4 sm:p-6 lg:p-8 space-y-5 relative overflow-hidden">
-          {/* Subtle Background Radial Glow */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+      {/* MAIN CONTAINER */}
+      <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
 
-          {/* Application Window Frame Header */}
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5 text-xs">
+        {/* HERO ARCHITECTURAL SHOWCASE (BLUEPRINT VIEWPORT) */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-4 sm:p-6 lg:p-8 space-y-6">
+          
+          {/* Window Title Bar */}
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-              <span className="text-slate-400 font-mono text-[11px] ml-2 hidden sm:inline">
-                HDE Studio CAD 2.1 — Architectural Canvas Viewport
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
+              <span className="text-slate-600 font-mono text-[11px] ml-2 hidden sm:inline font-semibold">
+                HDE Studio CAD 2.1 — High-Precision Canvas Viewport
               </span>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
-              <span className="bg-slate-800 text-cyan-400 border border-cyan-500/30 px-2.5 py-1 rounded-md">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
+              <span className="bg-slate-100 text-primary border border-slate-200 px-2.5 py-1 rounded-md">
                 📐 Dynamic Dimension Chains
               </span>
-              <span className="bg-slate-800 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-md hidden md:inline">
+              <span className="bg-slate-100 text-emerald-700 border border-slate-200 px-2.5 py-1 rounded-md hidden md:inline">
                 🛋️ Vector Block Library
               </span>
             </div>
           </div>
 
-          {/* Responsive Blueprint Images Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-            {/* Primary Panoramic Blueprint (02.webp) */}
-            <div className="lg:col-span-8 flex flex-col justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-inner relative group overflow-hidden">
-              <div className="relative rounded-xl overflow-hidden bg-[#0d1527] border border-slate-700/60 shadow-lg">
+          {/* Blueprint Showcase Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            {/* Primary Panoramic Blueprint (Monochrome 40x50 House Floor Plan) */}
+            <div className="lg:col-span-8 flex flex-col justify-between bg-slate-50 border border-slate-200/90 rounded-2xl p-4 shadow-xs group">
+              <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
                 <Image
                   src="/images/cad/cad-hero-plan.webp"
-                  alt="HDE Studio CAD Panoramic Architectural Blueprint"
+                  alt="HDE Studio CAD 40x50 House Floor Plan Blueprint"
                   width={2019}
                   height={782}
                   className="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500"
                   priority
                 />
-                <div className="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md border border-slate-700/60 text-slate-200 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                  <span>56&apos;-10&quot; Open-Concept Living &amp; Island Kitchen Layout</span>
+                <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="font-semibold">Monochrome 40&apos; &times; 50&apos; Residential Floor Plan</span>
                 </div>
               </div>
 
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400 px-1">
-                <span>✓ Continuous wall hatching &amp; real-time dimensioning</span>
-                <span className="text-cyan-400 font-medium">Auto-snapping Grid (1&apos;-0&quot; / 100mm)</span>
+              <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 px-1">
+                <span>✓ Wall hatching, structural column offsets &amp; room schedules</span>
+                <span className="text-primary font-semibold">Auto-snapping Grid (1&apos;-0&quot; / 100mm)</span>
               </div>
             </div>
 
-            {/* Detail Plan Blueprint (01.webp) */}
-            <div className="lg:col-span-4 flex flex-col justify-between bg-slate-900/90 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-inner relative group overflow-hidden">
-              <div className="relative rounded-xl overflow-hidden bg-[#0d1527] border border-slate-700/60 shadow-lg flex-1 flex items-center justify-center">
+            {/* Detail Plan Blueprint (webp plan-02) */}
+            <div className="lg:col-span-4 flex flex-col justify-between bg-slate-50 border border-slate-200/90 rounded-2xl p-4 shadow-xs group">
+              <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm flex-1 flex items-center justify-center p-2">
                 <Image
                   src="/images/cad/cad-detail-plan.webp"
-                  alt="HDE Studio CAD Studio Flat & Sanitary Blueprint"
+                  alt="HDE Studio CAD Detailed Space Planning Blueprint"
                   width={616}
                   height={832}
-                  className="w-full max-h-[380px] object-contain group-hover:scale-[1.01] transition-transform duration-500"
+                  className="w-full max-h-[420px] object-contain group-hover:scale-[1.01] transition-transform duration-500"
                 />
-                <div className="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md border border-slate-700/60 text-emerald-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow">
-                  400 SQ.FT STUDIO
+                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md border border-slate-200 text-primary text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-xs">
+                  ARCHITECTURAL SET
                 </div>
               </div>
 
-              <div className="mt-3 text-center sm:text-left text-[11px] text-slate-400 px-1">
-                <span className="text-emerald-400 font-medium">Ready for High-Res Vector PDF Export</span> (300 DPI)
+              <div className="mt-3.5 text-center sm:text-left text-xs text-slate-600 px-1">
+                <span className="text-emerald-700 font-semibold">High-Res Vector PDF Export</span> (Ready for 300 DPI Client Prints)
               </div>
             </div>
+
           </div>
         </div>
 
         {/* LICENSE KEY ACTIVATION WIDGET */}
-        <div className="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-6 sm:p-8 relative overflow-hidden backdrop-blur-md">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <i className="fas fa-key text-cyan-400 text-xl"></i>
-                <h2 className="text-xl font-bold text-white">Your Desktop License Key</h2>
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 text-slate-900">
+                <i className="fas fa-key text-primary text-xl"></i>
+                <h2 className="text-xl font-bold">Your Desktop License Key</h2>
               </div>
-              <p className="text-sm text-slate-400">
-                Enter this key along with your registered email upon opening HDE Studio to activate your full edition.
+              <p className="text-sm text-slate-600">
+                Enter this key along with your registered account email upon opening HDE Studio to activate your full edition.
               </p>
             </div>
 
             {user ? (
               license ? (
                 <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="bg-[#0a1122] border border-cyan-500/40 px-4 py-3 rounded-xl font-mono text-sm sm:text-base font-bold text-cyan-300 tracking-wider flex items-center justify-between gap-4 shadow-inner">
+                  <div className="bg-slate-50 border border-slate-300 px-4 py-3 rounded-xl font-mono text-sm sm:text-base font-bold text-slate-900 tracking-wider flex items-center justify-between gap-4 shadow-inner">
                     <span className="font-mono">{license.license_key}</span>
-                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
                       {license.edition}
                     </span>
                   </div>
                   <button
                     onClick={handleCopyKey}
-                    className="px-5 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+                    className="px-5 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
                   >
                     <i className={copied ? "fas fa-check" : "fas fa-copy"}></i>
                     <span>{copied ? "Copied!" : "Copy Key"}</span>
@@ -325,8 +355,8 @@ export default function DownloadPage() {
                 </div>
               ) : (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="px-4 py-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-2">
-                    <i className="fas fa-lock text-amber-400"></i>
+                  <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
+                    <i className="fas fa-lock text-amber-600"></i>
                     <span>Commercial License Required to Activate</span>
                   </div>
                   <a
@@ -348,21 +378,23 @@ export default function DownloadPage() {
                 </Link>
               </div>
             )}
+
           </div>
         </div>
 
         {/* PRIMARY DOWNLOAD CARD (DETECTED OS) */}
-        <div className="bg-gradient-to-b from-slate-900 via-slate-900/90 to-[#0a1224] border-2 border-primary/40 rounded-3xl p-6 sm:p-10 shadow-2xl text-center space-y-6 relative overflow-hidden">
-          <div className="inline-block p-3.5 bg-slate-800 border border-slate-700 rounded-2xl shadow-sm text-cyan-400 text-3xl">
+        <div id="download" className="bg-white border-2 border-primary/20 rounded-3xl p-6 sm:p-10 shadow-md text-center space-y-6 scroll-mt-12">
+          
+          <div className="inline-block p-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary text-3xl shadow-xs">
             <i className={detectedOS === "windows" ? "fab fa-windows" : detectedOS === "macos" ? "fab fa-apple" : "fab fa-linux"}></i>
           </div>
 
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <div className="space-y-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Download for {detectedOS === "windows" ? "Windows (64-bit)" : detectedOS === "macos" ? "macOS (Apple & Intel)" : "Linux (64-bit)"}
             </h2>
-            <p className="text-sm text-slate-300 mt-1">
-              Recommended package automatically detected for your system.
+            <p className="text-sm text-slate-600">
+              Recommended package automatically detected for your computer system.
             </p>
           </div>
 
@@ -371,15 +403,15 @@ export default function DownloadPage() {
               <>
                 <a
                   href={winExe.download_url}
-                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
                 >
                   <i className="fas fa-download"></i>
                   <span>Download Windows Installer (.exe)</span>
-                  <span className="text-xs font-normal opacity-80">({winExe.file_size_mb} MB)</span>
+                  <span className="text-xs font-normal opacity-90">({winExe.file_size_mb} MB)</span>
                 </a>
                 <a
                   href={winZip.download_url}
-                  className="w-full sm:w-auto px-6 py-4 rounded-2xl bg-slate-800/90 border border-slate-700 hover:border-cyan-400 text-slate-200 font-bold text-sm shadow-sm transition-all no-underline flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 font-bold text-sm transition-all no-underline flex items-center justify-center gap-2"
                 >
                   <i className="fas fa-file-zipper"></i>
                   <span>Portable Zip ({winZip.file_size_mb} MB)</span>
@@ -390,22 +422,22 @@ export default function DownloadPage() {
             {detectedOS === "macos" && (
               <a
                 href={macDmg.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
               >
                 <i className="fas fa-download"></i>
                 <span>Download macOS DMG (.dmg)</span>
-                <span className="text-xs font-normal opacity-80">({macDmg.file_size_mb} MB)</span>
+                <span className="text-xs font-normal opacity-90">({macDmg.file_size_mb} MB)</span>
               </a>
             )}
 
             {detectedOS === "linux" && (
               <a
                 href={linuxZip.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl hover:scale-105 transition-all no-underline flex items-center justify-center gap-3"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
               >
                 <i className="fas fa-download"></i>
                 <span>Download Linux Portable (.zip)</span>
-                <span className="text-xs font-normal opacity-80">({linuxZip.file_size_mb} MB)</span>
+                <span className="text-xs font-normal opacity-90">({linuxZip.file_size_mb} MB)</span>
               </a>
             )}
           </div>
@@ -413,35 +445,35 @@ export default function DownloadPage() {
 
         {/* ALL PLATFORMS GRID */}
         <div>
-          <h3 className="text-xl font-bold text-white mb-6 text-center">
+          <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">
             All Operating System Packages
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {/* WINDOWS */}
-            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
+            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-xl">
                   <i className="fab fa-windows"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-white">Windows</h4>
-                  <p className="text-xs text-slate-400">Windows 10, 11 (64-bit)</p>
+                  <h4 className="font-bold text-base text-slate-900">Windows</h4>
+                  <p className="text-xs text-slate-500">Windows 10, 11 (64-bit)</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-600 leading-relaxed">
                 Includes automated setup wizard, Start Menu shortcuts, and embedded runtime.
               </p>
               <div className="space-y-2 pt-2">
                 <a
                   href={winExe.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
                 >
                   Installer Setup (.exe) • {winExe.file_size_mb} MB
                 </a>
                 <a
                   href={winZip.download_url}
-                  className="block text-center py-2 px-4 rounded-xl border border-slate-700 bg-slate-800/60 hover:border-cyan-400 text-slate-300 font-semibold text-xs transition-colors no-underline"
+                  className="block text-center py-2 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition-colors no-underline"
                 >
                   Portable Zip • {winZip.file_size_mb} MB
                 </a>
@@ -449,23 +481,23 @@ export default function DownloadPage() {
             </div>
 
             {/* MACOS */}
-            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
+            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center text-xl">
                   <i className="fab fa-apple"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-white">macOS</h4>
-                  <p className="text-xs text-slate-400">Apple Silicon (M1/M2/M3) &amp; Intel</p>
+                  <h4 className="font-bold text-base text-slate-900">macOS</h4>
+                  <p className="text-xs text-slate-500">Apple Silicon (M1/M2/M3) &amp; Intel</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-300">
-                Native macOS disk image. Drag to Applications folder and launch.
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Native macOS disk image. Drag to Applications folder and launch immediately.
               </p>
               <div className="pt-2">
                 <a
                   href={macDmg.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
                 >
                   macOS Disk Image (.dmg) • {macDmg.file_size_mb} MB
                 </a>
@@ -473,23 +505,23 @@ export default function DownloadPage() {
             </div>
 
             {/* LINUX */}
-            <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-xl transition-all space-y-4">
+            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center text-xl">
+                <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xl">
                   <i className="fab fa-linux"></i>
                 </div>
                 <div>
-                  <h4 className="font-bold text-base text-white">Linux</h4>
-                  <p className="text-xs text-slate-400">Ubuntu, Debian, Fedora, Arch</p>
+                  <h4 className="font-bold text-base text-slate-900">Linux</h4>
+                  <p className="text-xs text-slate-500">Ubuntu, Debian, Fedora, Arch</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-300">
-                Self-contained bundle with bash launcher script and desktop entry.
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Self-contained bundle with bash launcher script and desktop entry shortcut.
               </p>
               <div className="pt-2">
                 <a
                   href={linuxZip.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-sm"
+                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
                 >
                   Portable Bundle (.zip) • {linuxZip.file_size_mb} MB
                 </a>
@@ -500,38 +532,37 @@ export default function DownloadPage() {
         </div>
 
         {/* HDE STUDIO CAD COMMERCIAL LICENSE PRICING */}
-        <div id="pricing" className="bg-gradient-to-b from-slate-900 via-[#0a1326] to-[#060b14] border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 shadow-2xl relative overflow-hidden scroll-mt-12">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#c5a059]/5 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-
+        <div id="pricing" className="bg-white border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 shadow-md relative overflow-hidden scroll-mt-12">
+          
           <div className="relative z-10 max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#d4af37] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#a07c33] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
                 <i className="fas fa-crown"></i>
                 <span>Commercial &amp; Professional CAD License</span>
               </div>
-              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
+              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900">
                 Unlock Full HDE Studio Pro
               </h3>
-              <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto">
+              <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
                 Offline 2D architectural CAD software with drafting tools, structural layers, CAD block libraries, and high-res vector PDF printing.
               </p>
             </div>
 
             {/* BILLING TOGGLE */}
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="bg-slate-950/80 p-1.5 rounded-2xl flex items-center border border-slate-800 shadow-inner">
+              <div className="bg-slate-100 p-1.5 rounded-2xl flex items-center border border-slate-200 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setCadBilling('lifetime')}
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2.5 cursor-pointer ${
                     cadBilling === 'lifetime'
-                      ? 'bg-primary text-white shadow-md scale-102'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   <i className="fas fa-infinity text-sm"></i>
                   <span>Lifetime Commercial License</span>
-                  <span className="text-[10px] font-black uppercase bg-emerald-500 text-white px-2 py-0.5 rounded-full tracking-wider">
+                  <span className="text-[10px] font-black uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full tracking-wider">
                     25% OFF
                   </span>
                 </button>
@@ -540,15 +571,15 @@ export default function DownloadPage() {
                   onClick={() => setCadBilling('monthly')}
                   className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
                     cadBilling === 'monthly'
-                      ? 'bg-primary text-white shadow-md scale-102'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   <i className="fas fa-calendar-alt text-sm"></i>
                   <span>Monthly Pro Plan</span>
                 </button>
               </div>
-              <p className="text-xs text-slate-400 font-medium">
+              <p className="text-xs text-slate-500 font-medium">
                 {cadBilling === 'lifetime'
                   ? "⭐ Limited Launch Offer: One-time payment, perpetual software license & all future updates included."
                   : "Flexible monthly billing. Cancel or reactivate whenever you need."}
@@ -556,59 +587,59 @@ export default function DownloadPage() {
             </div>
 
             {/* PRICING CARD & DETAILS */}
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4 max-w-lg">
                 <div className="flex items-baseline gap-3 flex-wrap">
                   {cadBilling === 'lifetime' ? (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-slate-900">
                         {region === 'US' ? '$299' : '₹18,749'}
                       </span>
-                      <span className="text-lg text-slate-500 line-through">
+                      <span className="text-lg text-slate-400 line-through">
                         {region === 'US' ? '$399' : '₹24,999'}
                       </span>
-                      <span className="text-xs font-black uppercase bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-full">
+                      <span className="text-xs font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-full">
                         Save 25%
                       </span>
-                      <span className="text-xs text-slate-400 font-semibold block sm:inline">
+                      <span className="text-xs text-slate-500 font-semibold block sm:inline">
                         / one-time
                       </span>
                     </>
                   ) : (
                     <>
-                      <span className="text-4xl sm:text-5xl font-black text-white">
+                      <span className="text-4xl sm:text-5xl font-black text-slate-900">
                         {region === 'US' ? '$49' : '₹1,999'}
                       </span>
-                      <span className="text-sm text-slate-400 font-semibold">
+                      <span className="text-sm text-slate-500 font-semibold">
                         / month
                       </span>
                     </>
                   )}
                 </div>
 
-                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-200">
+                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span><strong>100% Offline 2D CAD Software</strong> — no internet connection required to draft</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span><strong>AutoCAD Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span><strong>Dual Standard Catalogs</strong> (India Metric mm &amp; USA Imperial Feet/Inches)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span><strong>High-Resolution Vector PDF Export</strong> ready for printing &amp; client handoffs</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span><strong>Commercial License</strong> for Architects, Civil Engineers, Contractors &amp; Firms</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-400"></i>
+                    <i className="fas fa-check-circle text-emerald-600"></i>
                     <span>Instant desktop license key generation with lifetime profile tie-in</span>
                   </li>
                 </ul>
@@ -619,7 +650,7 @@ export default function DownloadPage() {
                   type="button"
                   onClick={handleCadCheckout}
                   disabled={buyingCad}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-xl transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 hover:scale-102"
+                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 hover:scale-102"
                 >
                   {buyingCad ? (
                     <>
@@ -637,45 +668,46 @@ export default function DownloadPage() {
                     </>
                   )}
                 </button>
-                <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
-                  <i className="fas fa-shield-alt text-emerald-400"></i>
+                <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
+                  <i className="fas fa-shield-alt text-emerald-600"></i>
                   <span>Secure 256-bit checkout via Razorpay</span>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
         {/* 3-STEP QUICK START GUIDE */}
-        <div className="bg-slate-900/70 border border-slate-800/80 rounded-3xl p-8 sm:p-10 space-y-8">
-          <h3 className="text-2xl font-bold text-white text-center">
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 space-y-8 shadow-xs">
+          <h3 className="text-2xl font-bold text-slate-900 text-center">
             How to Install and Activate HDE Studio
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
                 1
               </div>
-              <h4 className="font-bold text-base text-white">Download Setup</h4>
-              <p className="text-xs text-slate-400">
+              <h4 className="font-bold text-base text-slate-900">Download Setup</h4>
+              <p className="text-xs text-slate-600">
                 Download the setup package above for your operating system.
               </p>
             </div>
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
                 2
               </div>
-              <h4 className="font-bold text-base text-white">Run Installer</h4>
-              <p className="text-xs text-slate-400">
+              <h4 className="font-bold text-base text-slate-900">Run Installer</h4>
+              <p className="text-xs text-slate-600">
                 Double click the setup file and follow the on-screen instructions to install.
               </p>
             </div>
             <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/20 border border-cyan-500/30 text-cyan-400 font-black text-lg flex items-center justify-center shadow-inner">
+              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
                 3
               </div>
-              <h4 className="font-bold text-base text-white">Enter License Key</h4>
-              <p className="text-xs text-slate-400">
+              <h4 className="font-bold text-base text-slate-900">Enter License Key</h4>
+              <p className="text-xs text-slate-600">
                 Launch HDE Studio and paste your License Key shown above to unlock all CAD tools.
               </p>
             </div>
