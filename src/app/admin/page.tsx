@@ -48,6 +48,17 @@ export default function AdminPortalHubPage() {
         { label: 'System Health Check', href: '/admin/health' },
       ],
     },
+    {
+      title: 'Desktop CAD License Telemetry',
+      description: 'Live monitor for HDE Studio activations, device bindings, and real-time failure alerts across all users.',
+      href: '/admin/health#desktop-licenses',
+      icon: 'fa-key',
+      badge: 'Licensing',
+      accent: 'border-amber-500/40 bg-amber-500/5 text-amber-700',
+      links: [
+        { label: 'Live Telemetry & Alerts', href: '/admin/health#desktop-licenses' },
+      ],
+    },
   ];
 
   return (
@@ -85,7 +96,7 @@ export default function AdminPortalHubPage() {
         </div>
 
         {/* Modules Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {sections.map((sec) => (
             <div
               key={sec.title}

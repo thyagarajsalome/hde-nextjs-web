@@ -17,6 +17,28 @@ interface HealthData {
   checks: HealthCheckItem[];
 }
 
+export interface TelemetryEvent {
+  id: string;
+  timestamp: string;
+  email: string;
+  license_key: string;
+  machine_id: string;
+  app_version: string;
+  os: string;
+  status: 'SUCCESS' | 'FAILED';
+  failure_reason?: string | null;
+  plan?: string;
+  ip?: string;
+}
+
+export interface TelemetryStats {
+  total: number;
+  successful: number;
+  failed: number;
+  recentFailures: number;
+  uniqueMachines: number;
+}
+
 export default function AdminHealthPage() {
   const [data, setData] = useState<HealthData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +46,15 @@ export default function AdminHealthPage() {
   const [copied, setCopied] = useState(false);
   const [smokeTesting, setSmokeTesting] = useState(false);
   const [smokeOutput, setSmokeOutput] = useState<string | null>(null);
+
+  // License Telemetry State
+  const [telemetry, setTelemetry] = useState<{ stats: TelemetryStats; logs: TelemetryEvent[] } | null>(null);
+  const [loadingTelemetry, setLoadingTelemetry] = useState(true);
+  const [telemetryFilter, setTelemetryFilter] = useState<'all' | 'failed' | 'success'>('all');
+  const [testEmail, setTestEmail] = useState('thyagarajsalome@gmail.com');
+  const [testKey, setTestKey] = useState('HDE-PRO-2026-MLW8-TUNG');
+  const [testingKey, setTestingKey] = useState(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const fetchHealth = async () => {
     setLoading(true);
@@ -38,8 +69,55 @@ export default function AdminHealthPage() {
     }
   };
 
+  const fetchTelemetry = async () => {
+    setLoadingTelemetry(true);
+    try {
+      const res = await fetch("/api/license?action=telemetry", { cache: "no-store" });
+      const json = await res.json();
+      if (json.success) {
+        setTelemetry({ stats: json.stats, logs: json.logs });
+      }
+    } catch (err: any) {
+      console.error("License telemetry fetch error:", err);
+    } finally {
+      setLoadingTelemetry(false);
+    }
+  };
+
+  const handleTestKey = async () => {
+    if (!testEmail || !testKey) return;
+    setTestingKey(true);
+    setTestResult(null);
+    try {
+      const res = await fetch("/api/license", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "verify",
+          email: testEmail.trim(),
+          license_key: testKey.trim(),
+          machine_id: "ADMIN-SIMULATOR",
+          app_version: "v2.2.3",
+          os: "Admin Web Diagnostics"
+        }),
+      });
+      const json = await res.json();
+      setTestResult({
+        success: Boolean(json.valid),
+        message: json.message || (json.valid ? `Valid License! Plan: ${json.plan_name || json.edition}` : 'Rejected by verification engine')
+      });
+      // Refresh telemetry table immediately
+      fetchTelemetry();
+    } catch (err: any) {
+      setTestResult({ success: false, message: err.message || "Failed to reach license verification API" });
+    } finally {
+      setTestingKey(false);
+    }
+  };
+
   useEffect(() => {
     fetchHealth();
+    fetchTelemetry();
   }, []);
 
   const handleCopyReport = () => {
@@ -248,6 +326,268 @@ ${data.checks
             </pre>
           </section>
         )}
+
+        {/* Desktop CAD License Telemetry & Failure Alerts */}
+        <section id="desktop-licenses" className="bg-stone-900 border border-stone-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-800 pb-5">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm border border-amber-500/20">
+                  <i className="fas fa-key"></i>
+                </span>
+                <h2 className="text-xl font-bold text-stone-100 tracking-tight">
+                  Desktop CAD Studio License Telemetry
+                </h2>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Live Feed
+                </span>
+              </div>
+              <p className="text-xs text-stone-400 mt-1 max-w-2xl">
+                Real-time tracking of desktop workstation activations, hardware bindings, and instant failure alerts across all HDE Studio CAD users.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={fetchTelemetry}
+                disabled={loadingTelemetry}
+                className="text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-3.5 py-2 rounded-xl transition flex items-center gap-2 cursor-pointer"
+              >
+                <i className={`fas fa-sync-alt ${loadingTelemetry ? "fa-spin" : ""}`}></i>
+                Refresh Telemetry
+              </button>
+            </div>
+          </div>
+
+          {/* Developer Alert Banner if recent failures exist */}
+          {telemetry && telemetry.stats.recentFailures > 0 && (
+            <div className="bg-red-500/10 border-2 border-red-500/40 rounded-2xl p-4 sm:p-5 flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 border border-red-500/30">
+                <i className="fas fa-triangle-exclamation text-lg animate-bounce"></i>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-red-200 flex items-center gap-2">
+                  <span>Attention Developer: {telemetry.stats.recentFailures} Activation Failure(s) Reported in Last 24h!</span>
+                </h3>
+                <p className="text-xs text-red-300/80 leading-relaxed">
+                  One or more users experienced key activation issues. Check the failure reasons below to proactively assist users or resolve license discrepancies before complaints arise.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Metrics Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-stone-950/60 border border-stone-800/80 rounded-2xl p-4">
+              <div className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+                Total Events
+              </div>
+              <div className="text-2xl font-black text-stone-100 mt-1">
+                {telemetry?.stats.total ?? 0}
+              </div>
+            </div>
+            <div className="bg-stone-950/60 border border-stone-800/80 rounded-2xl p-4">
+              <div className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+                Active Machines
+              </div>
+              <div className="text-2xl font-black text-primary mt-1">
+                {telemetry?.stats.uniqueMachines ?? 0}
+                <span className="text-xs font-normal text-stone-500"> unique</span>
+              </div>
+            </div>
+            <div className="bg-stone-950/60 border border-stone-800/80 rounded-2xl p-4">
+              <div className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
+                Successful Activations
+              </div>
+              <div className="text-2xl font-black text-emerald-400 mt-1">
+                {telemetry?.stats.successful ?? 0}
+              </div>
+            </div>
+            <div className={`border rounded-2xl p-4 ${
+              (telemetry?.stats.failed ?? 0) > 0
+                ? "bg-red-500/10 border-red-500/30 text-red-400"
+                : "bg-stone-950/60 border-stone-800/80 text-stone-400"
+            }`}>
+              <div className="text-[11px] font-semibold uppercase tracking-wider">
+                Failed Attempts
+              </div>
+              <div className={`text-2xl font-black mt-1 ${
+                (telemetry?.stats.failed ?? 0) > 0 ? "text-red-400" : "text-stone-300"
+              }`}>
+                {telemetry?.stats.failed ?? 0}
+                {(telemetry?.stats.failed ?? 0) > 0 && (
+                  <span className="text-xs font-bold text-red-300 ml-2">⚠️ Inspect</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Live Simulator Bar */}
+          <div className="bg-stone-950/60 border border-stone-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
+            <div className="text-xs font-bold uppercase tracking-wider text-stone-300 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <i className="fas fa-vial text-primary"></i>
+                Verify License Key (Developer Simulator)
+              </span>
+              <span className="text-[11px] text-stone-500 normal-case">
+                Tests /api/license and logs telemetry instantly
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div className="sm:col-span-5">
+                <input
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="Customer Email (e.g. user@gmail.com)"
+                  className="w-full bg-stone-900 border border-stone-700/80 rounded-xl px-3.5 py-2 text-xs text-stone-100 placeholder:text-stone-600 focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div className="sm:col-span-5">
+                <input
+                  type="text"
+                  value={testKey}
+                  onChange={(e) => setTestKey(e.target.value)}
+                  placeholder="License Key (e.g. HDE-PRO-2026-XXXX-XXXX)"
+                  className="w-full bg-stone-900 border border-stone-700/80 rounded-xl px-3.5 py-2 text-xs text-stone-100 placeholder:text-stone-600 font-mono focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <button
+                  onClick={handleTestKey}
+                  disabled={testingKey || !testEmail || !testKey}
+                  className="w-full h-full min-h-[34px] bg-primary hover:bg-primary/90 text-stone-950 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <i className={`fas fa-check-circle ${testingKey ? "fa-spin" : ""}`}></i>
+                  {testingKey ? "Checking..." : "Verify Key"}
+                </button>
+              </div>
+            </div>
+
+            {testResult && (
+              <div className={`p-3 rounded-xl border text-xs flex items-center gap-2.5 ${
+                testResult.success
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                  : "bg-red-500/10 border-red-500/30 text-red-300"
+              }`}>
+                <i className={`fas ${testResult.success ? "fa-check-circle" : "fa-circle-xmark"} text-sm shrink-0`}></i>
+                <span className="font-semibold">{testResult.message}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Telemetry Filter Tabs & Live Table */}
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                Recent Activation Logs ({telemetry?.logs.length || 0})
+              </h3>
+              <div className="flex gap-1.5 bg-stone-950 p-1 rounded-xl border border-stone-800 text-xs">
+                {(['all', 'failed', 'success'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setTelemetryFilter(mode)}
+                    className={`px-3 py-1 rounded-lg font-medium capitalize transition cursor-pointer ${
+                      telemetryFilter === mode
+                        ? "bg-stone-800 text-stone-100"
+                        : "text-stone-400 hover:text-stone-200"
+                    }`}
+                  >
+                    {mode === 'all' ? 'All Events' : mode === 'failed' ? 'Failures Only' : 'Successes'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-stone-800 bg-stone-950/80">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-stone-800 bg-stone-900/60 text-stone-400 font-semibold uppercase tracking-wider text-[10px]">
+                    <th className="py-3 px-4">Time</th>
+                    <th className="py-3 px-4">Customer Email</th>
+                    <th className="py-3 px-4">License Key</th>
+                    <th className="py-3 px-4">Machine ID</th>
+                    <th className="py-3 px-4">Platform</th>
+                    <th className="py-3 px-4">Status</th>
+                    <th className="py-3 px-4">Diagnostics / Plan</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-800/60 font-mono text-[11px]">
+                  {loadingTelemetry ? (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-stone-500 font-sans">
+                        <i className="fas fa-circle-notch fa-spin mr-2"></i> Loading license telemetry...
+                      </td>
+                    </tr>
+                  ) : (!telemetry || telemetry.logs.length === 0) ? (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-stone-500 font-sans">
+                        No activation events logged yet. Use the simulator above or activate HDE Studio on your desktop to populate telemetry.
+                      </td>
+                    </tr>
+                  ) : (
+                    telemetry.logs
+                      .filter((item) => {
+                        if (telemetryFilter === 'failed') return item.status === 'FAILED';
+                        if (telemetryFilter === 'success') return item.status === 'SUCCESS';
+                        return true;
+                      })
+                      .map((item) => (
+                        <tr
+                          key={item.id}
+                          className={`hover:bg-stone-900/40 transition ${
+                            item.status === 'FAILED' ? 'bg-red-500/5' : ''
+                          }`}
+                        >
+                          <td className="py-3 px-4 text-stone-400 whitespace-nowrap font-sans text-[11px]">
+                            {new Date(item.timestamp).toLocaleString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit"
+                            })}
+                          </td>
+                          <td className="py-3 px-4 text-stone-200 font-sans font-semibold">
+                            {item.email}
+                          </td>
+                          <td className="py-3 px-4 text-amber-300 font-mono">
+                            {item.license_key}
+                          </td>
+                          <td className="py-3 px-4 text-stone-400 text-[10px]">
+                            {item.machine_id}
+                          </td>
+                          <td className="py-3 px-4 text-stone-400 font-sans text-[11px] whitespace-nowrap">
+                            {item.os} ({item.app_version})
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap font-sans">
+                            {item.status === 'SUCCESS' ? (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                SUCCESS
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/30 animate-pulse">
+                                <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                FAILED
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 font-sans text-[11px]">
+                            {item.status === 'SUCCESS' ? (
+                              <span className="text-emerald-300/90">{item.plan || 'Commercial License'}</span>
+                            ) : (
+                              <span className="text-red-400 font-medium">{item.failure_reason || 'Verification rejected'}</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
 
         {/* Diagnostic Checks Section */}
         <section className="space-y-4">
