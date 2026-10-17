@@ -713,28 +713,32 @@ export default function DownloadPage() {
           </div>
 
           {/* Quick CTA Banner beneath comparison */}
-          <div className="bg-gradient-to-r from-slate-900 via-primary-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
-            <div className="space-y-1.5 text-center md:text-left">
-              <span className="text-xs font-black uppercase tracking-wider text-emerald-400">Pure Speed • Zero Bloat</span>
-              <h3 className="text-xl sm:text-2xl font-black">Ready to Experience Drafting Without the Headache?</h3>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+          <div className="bg-gradient-to-r from-blue-50/90 via-slate-50 to-indigo-50/70 border-2 border-primary/20 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+            <div className="space-y-2 text-center md:text-left">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/80 border border-emerald-300 px-3 py-1 rounded-full">
+                <i className="fas fa-bolt text-emerald-600"></i> Pure Speed • Zero Bloat
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                Ready to Experience Drafting Without the Headache?
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
                 Download the free standalone desktop installer and begin floor planning in minutes. No credit card required.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
               <a
                 href="#download"
-                className="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs sm:text-sm transition-all text-center no-underline shadow-xs"
+                className="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 hover:scale-102 cursor-pointer"
               >
-                <i className="fas fa-download mr-2 text-primary"></i>
-                Download Installer
+                <i className="fas fa-download"></i>
+                <span>Download Installer</span>
               </a>
               <a
                 href="#pricing"
-                className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all text-center no-underline shadow-xs"
+                className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 hover:scale-102 cursor-pointer"
               >
-                <i className="fas fa-crown mr-2 text-amber-300"></i>
-                Get Lifetime License
+                <i className="fas fa-crown text-amber-300"></i>
+                <span>Get Lifetime License</span>
               </a>
             </div>
           </div>
