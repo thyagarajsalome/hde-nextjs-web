@@ -36,7 +36,7 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     title: 'HDE Studio Windows Installer (Setup.exe)',
     download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-Setup-v2.1.exe',
     file_size_mb: 38.9,
-    release_notes: 'Automated installer with embedded JRE 21, desktop shortcut, India & USA AutoCAD Room Sets.',
+    release_notes: 'Automated installer with embedded JRE 21, desktop shortcut, India & USA Architectural CAD Room Sets.',
     is_latest: true
   },
   {

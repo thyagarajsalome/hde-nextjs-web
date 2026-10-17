@@ -15,7 +15,134 @@ import {
   claimOrCreateLicense 
 } from "@/services/licenseService";
 
+const CAD_COMPARISON = [
+  {
+    feature: "Learning Curve & Complexity",
+    traditional: "Steep learning curve. Requires weeks of specialized training, memorizing command-line prompts, and navigating dense 1,000-icon engineering toolbars.",
+    hdeStudio: "Zero learning curve. Intuitive point-and-click architectural drafting designed so anyone can create a complete floor plan within 5 minutes.",
+    icon: "fa-graduation-cap",
+  },
+  {
+    feature: "Wall Drafting & Corner Healing",
+    traditional: "Manual multi-step process: drawing single lines, offsetting double lines, manually trimming intersections, and fixing corner joints.",
+    hdeStudio: "Smart Wall Snapping & Corner Mitering. Corners weld automatically, and doors/windows cut through walls with zero manual trimming.",
+    icon: "fa-border-all",
+  },
+  {
+    feature: "Pre-Scaled Architectural Blocks",
+    traditional: "Users must hunt online for third-party block libraries, unscale them, purge messy layers, and convert unit systems.",
+    hdeStudio: "60+ Built-in Architectural Vector Blocks (Beds, Sofas, Kitchens, Bathrooms, Vehicles) calibrated to standard room clearances.",
+    icon: "fa-couch",
+  },
+  {
+    feature: "Dimensioning & Annotation",
+    traditional: "Tedious manual dimension setup, configuring dimension styles, scale factors, and manually moving tick marks after wall edits.",
+    hdeStudio: "Live Dynamic Dimension Chains that automatically calculate and display wall and room lengths in real-time as you draft.",
+    icon: "fa-ruler-combined",
+  },
+  {
+    feature: "Software Size & Boot Speed",
+    traditional: "Heavy 4 GB to 10 GB disk footprint, sluggish startup (30–60s), and heavy background licensing daemons.",
+    hdeStudio: "Ultra-Lightweight (~38 MB installer), instant 2-second launch, and smooth performance on any everyday laptop or workstation.",
+    icon: "fa-bolt",
+  },
+  {
+    feature: "Pricing & License Ownership",
+    traditional: "Expensive recurring subscriptions ($300 to $2,000+/year) with forced cloud lock-in that revokes file access if unpaid.",
+    hdeStudio: "Affordable Lifetime Commercial License (perpetual ownership) with free future updates, or low-cost monthly flexibility.",
+    icon: "fa-tag",
+  },
+  {
+    feature: "Offline Reliability",
+    traditional: "Frequently demands internet connectivity for cloud license checks, user sign-in verification, and update nag screens.",
+    hdeStudio: "100% Offline Standalone Desktop Software. Full drafting, editing, and vector export capability anywhere with zero internet.",
+    icon: "fa-shield-halved",
+  },
+];
+
+const TARGET_USERS = [
+  {
+    role: "Homeowners & Self-Builders",
+    icon: "fa-house-user",
+    color: "from-blue-500/10 to-indigo-500/10 text-blue-700 border-blue-200",
+    badge: "Cost Savings",
+    headline: "Visualize before you spend",
+    description: "Avoid costly construction mistakes and redesign fees. Easily test whether your furniture fits, adjust bedroom sizes, and experiment with kitchen layouts before breaking ground."
+  },
+  {
+    role: "Civil Contractors & Site Supervisors",
+    icon: "fa-helmet-safety",
+    color: "from-amber-500/10 to-orange-500/10 text-amber-700 border-amber-200",
+    badge: "Field Productivity",
+    headline: "Instant site sketches on your laptop",
+    description: "Draw and revise 2D floor plans directly at the job site. Give masons clear room dimensions and export 300 DPI vector PDF blueprints to clients without waiting for external draftspersons."
+  },
+  {
+    role: "Interior Designers & Decorators",
+    icon: "fa-compass-drafting",
+    color: "from-emerald-500/10 to-teal-500/10 text-emerald-700 border-emerald-200",
+    badge: "Space Planning",
+    headline: "Real-world ergonomic clearances",
+    description: "Drop in modular kitchens, wardrobes, dining suites, and bathroom fixtures with true architectural clearance. Test room circulation and walkway ergonomics in minutes."
+  },
+  {
+    role: "Architecture & Civil Students",
+    icon: "fa-graduation-cap",
+    color: "from-purple-500/10 to-pink-500/10 text-purple-700 border-purple-200",
+    badge: "Fast Learning",
+    headline: "Master spatial layout fundamentals",
+    description: "Focus on design theory, room zoning, and residential circulation without getting trapped in the maze of complex legacy CAD menus or steep learning curves."
+  },
+  {
+    role: "Real Estate Agents & Property Scouts",
+    icon: "fa-building",
+    color: "from-sky-500/10 to-cyan-500/10 text-sky-700 border-sky-200",
+    badge: "Sales & Marketing",
+    headline: "Professional presentation floor plans",
+    description: "Create crisp, attractive 2D floor plan schematics for property listings that help prospective buyers immediately understand room sizes and home layout flow."
+  }
+];
+
+const SIMPLICITY_PILLARS = [
+  {
+    title: "Zero Learning Curve",
+    subtitle: "Draft in 5 Minutes",
+    desc: "No command line, no obscure shortcuts. Visual point-and-click drafting makes floor planning as intuitive as sketching on graph paper.",
+    icon: "fa-wand-magic-sparkles",
+    accent: "text-amber-500 bg-amber-500/10 border-amber-500/20"
+  },
+  {
+    title: "Smart Wall Auto-Healing",
+    subtitle: "Automatic Miters & Cutouts",
+    desc: "Corners miter and weld automatically. Drop a door or window onto any wall and HDE Studio cleanly cuts the opening with frame reveals instantly.",
+    icon: "fa-layer-group",
+    accent: "text-blue-500 bg-blue-500/10 border-blue-500/20"
+  },
+  {
+    title: "Live Dimension Chains",
+    subtitle: "Precision Real-Time Feedback",
+    desc: "Dimension strings calculate dynamically as you adjust walls and rooms. Say goodbye to manual measurement re-annotations.",
+    icon: "fa-ruler-combined",
+    accent: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20"
+  },
+  {
+    title: "Dual Standard Catalogs",
+    subtitle: "Metric (mm) & Imperial (Ft/In)",
+    desc: "Switch between India Metric (mm, cm, m, sqft) and USA Imperial (feet, inches) in one click with pre-calibrated snap grids.",
+    icon: "fa-globe",
+    accent: "text-purple-500 bg-purple-500/10 border-purple-500/20"
+  }
+];
+
 const CAD_FAQS = [
+  {
+    q: "Do I need prior 2D CAD drafting experience to use HDE Studio?",
+    a: "No CAD experience is required. Traditional 2D CAD software was designed for specialized engineers and requires memorizing hundreds of text commands. HDE Studio was engineered specifically to be visual, intuitive, and accessible to everyone. You can start drawing walls, placing doors, adding furniture, and dimensioning rooms within 5 minutes of opening the app."
+  },
+  {
+    q: "Why is HDE Studio CAD a must-have for homeowners, contractors, and designers?",
+    a: "Because it bridges the gap between rough hand sketches and overly complicated legacy CAD programs. Homeowners can test furniture fits and plan room layouts before spending thousands on construction. Contractors can sketch site revisions on their laptop and hand masons accurate vector drawings. Designers can verify clearances and room flow in minutes."
+  },
   {
     q: "Can I use HDE Studio CAD without an active internet connection?",
     a: "Yes, 100%. HDE Studio is a native, offline desktop CAD application built for independent drafting. Once downloaded and activated, you never need an active internet connection or constant cloud check-in to draft, edit, or export your floor plans."
@@ -234,7 +361,7 @@ export default function DownloadPage() {
               Design Faster with <span className="text-primary">HDE Studio</span> CAD
             </h1>
             <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed">
-              Professional offline 2D architectural space planning, AutoCAD vector blocks, real-time dimensioning chains, and client-ready vector PDF blueprints.
+              Professional offline 2D architectural space planning, 60+ pre-scaled vector blocks, real-time dynamic dimensioning, and client-ready vector PDF blueprints.
             </p>
           </div>
 
@@ -244,7 +371,7 @@ export default function DownloadPage() {
               <i className="fas fa-check-circle text-emerald-600"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
             </span>
             <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
-              <i className="fas fa-check-circle text-emerald-600"></i> 60+ AutoCAD Vector CAD Blocks
+              <i className="fas fa-check-circle text-emerald-600"></i> 60+ Pre-Scaled Architectural Blocks
             </span>
             <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
               <i className="fas fa-check-circle text-emerald-600"></i> 300 DPI Vector PDF Blueprints
@@ -264,8 +391,22 @@ export default function DownloadPage() {
               <span>Download Free Package</span>
             </a>
             <a
+              href="#why-must-have"
+              className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 transition-all flex items-center gap-2 no-underline shadow-xs"
+            >
+              <i className="fas fa-star text-amber-500"></i>
+              <span>Why It&apos;s a Must-Have</span>
+            </a>
+            <a
+              href="#comparison"
+              className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 transition-all flex items-center gap-2 no-underline shadow-xs"
+            >
+              <i className="fas fa-balance-scale text-primary"></i>
+              <span>Compare with Traditional 2D Software</span>
+            </a>
+            <a
               href="#pricing"
-              className="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm border border-slate-200/80 transition-all flex items-center gap-2 no-underline"
+              className="px-6 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-sm border border-amber-200/80 transition-all flex items-center gap-2 no-underline shadow-xs"
             >
               <i className="fas fa-crown text-[#c5a059]"></i>
               <span>Commercial Pro License</span>
@@ -344,6 +485,261 @@ export default function DownloadPage() {
             </div>
           </div>
         </div>
+
+        {/* SECTION: WHY HDE STUDIO CAD IS A MUST-HAVE */}
+        <section id="why-must-have" className="space-y-8 scroll-mt-12">
+          
+          {/* Header */}
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-sparkles text-emerald-600"></i>
+              <span>Simplicity First • Zero CAD Experience Required</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Why HDE Studio CAD is the Simple, Must-Have Software for Everyone
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Architectural planning shouldn&apos;t require an engineering degree or a 40-hour training course. HDE Studio CAD is engineered for intuitive point-and-click drafting — giving homeowners, contractors, and designers instant floor plan mastery.
+            </p>
+          </div>
+
+          {/* 4 Pillars of Simplicity */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {SIMPLICITY_PILLARS.map((pillar, idx) => (
+              <div 
+                key={idx}
+                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center border text-lg ${pillar.accent}`}>
+                    <i className={`fas ${pillar.icon}`}></i>
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block">{pillar.subtitle}</span>
+                    <h3 className="text-base font-bold text-slate-900">{pillar.title}</h3>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {pillar.desc}
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] font-semibold text-primary">
+                  <i className="fas fa-check text-xs"></i> Built-in Standard
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Who Needs It - Target Personas */}
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 lg:p-10 shadow-xs space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 pb-6">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-primary">Universal Usability</span>
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                  Who Needs HDE Studio CAD?
+                </h3>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md">
+                From self-builders planning dream layouts to contractors sketching on site, see how HDE Studio saves time and money.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {TARGET_USERS.map((userRole, idx) => (
+                <div 
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 p-5 space-y-3 hover:border-slate-300 transition-all bg-gradient-to-b from-slate-50/50 to-white flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border ${userRole.color}`}>
+                        <i className={`fas ${userRole.icon}`}></i>
+                        {userRole.badge}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Role #{idx + 1}</span>
+                    </div>
+
+                    <div>
+                      <h4 className="font-extrabold text-base text-slate-900">{userRole.role}</h4>
+                      <p className="text-xs font-semibold text-primary mt-0.5">&ldquo;{userRole.headline}&rdquo;</p>
+                    </div>
+
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {userRole.description}
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100/80 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                    <span>Zero Training Required</span>
+                    <i className="fas fa-arrow-right text-[10px] text-slate-400"></i>
+                  </div>
+                </div>
+              ))}
+
+              {/* Callout Card */}
+              <div className="rounded-2xl border border-dashed border-primary/40 p-6 bg-primary/5 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-lg">
+                    <i className="fas fa-lightbulb"></i>
+                  </div>
+                  <h4 className="font-bold text-base text-slate-900">Have Your Own Custom Drafting Need?</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    HDE Studio CAD is built for custom floor plans, commercial shops, electrical layouts, and residential remodels.
+                  </p>
+                </div>
+                <a
+                  href="#download"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition-all no-underline"
+                >
+                  <span>Start Drafting Now</span>
+                  <i className="fas fa-arrow-down text-xs"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        {/* SECTION: TRADITIONAL 2D SOFTWARE VS HDE STUDIO CAD */}
+        <section id="comparison" className="space-y-8 scroll-mt-12">
+
+          {/* Comparison Header */}
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-balance-scale text-primary"></i>
+              <span>Honest Architectural Software Comparison</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Traditional 2D Software vs. HDE Studio CAD
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Why fight with bloated, legacy desktop CAD suites when you can draft clean, professional 2D floor plans with zero friction?
+            </p>
+          </div>
+
+          {/* Comparison Table for Tablet / Desktop (md and above) */}
+          <div className="hidden md:block bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-slate-50/80">
+                    <th className="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500 w-1/4">
+                      Core Capability
+                    </th>
+                    <th className="py-4 px-6 text-xs font-bold uppercase tracking-wider text-rose-800 bg-rose-50/50 w-[37.5%] border-x border-slate-200/60">
+                      <div className="flex items-center gap-2">
+                        <i className="fas fa-times-circle text-rose-500"></i>
+                        <span>Traditional 2D Software</span>
+                      </div>
+                    </th>
+                    <th className="py-4 px-6 text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50/60 w-[37.5%]">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <i className="fas fa-check-circle text-emerald-600"></i>
+                          <span>HDE Studio CAD</span>
+                        </div>
+                        <span className="text-[10px] bg-emerald-600 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
+                          Modern
+                        </span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm">
+                  {CAD_COMPARISON.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/40 transition-colors">
+                      <td className="py-4 px-6 font-bold text-slate-900 align-top">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 shrink-0 text-xs mt-0.5">
+                            <i className={`fas ${row.icon}`}></i>
+                          </div>
+                          <span className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                            {row.feature}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-slate-600 align-top bg-rose-50/20 border-x border-slate-200/50 text-xs sm:text-sm leading-relaxed">
+                        <div className="flex items-start gap-2">
+                          <i className="fas fa-circle-minus text-rose-400 mt-1 shrink-0 text-xs"></i>
+                          <span>{row.traditional}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-slate-900 align-top bg-emerald-50/20 text-xs sm:text-sm font-medium leading-relaxed">
+                        <div className="flex items-start gap-2">
+                          <i className="fas fa-circle-check text-emerald-600 mt-1 shrink-0 text-xs"></i>
+                          <span>{row.hdeStudio}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Comparison Cards for Mobile (hidden on md and above) */}
+          <div className="md:hidden space-y-4">
+            {CAD_COMPARISON.map((row, idx) => (
+              <div key={idx} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+                <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary text-xs shrink-0">
+                    <i className={`fas ${row.icon}`}></i>
+                  </div>
+                  <h4 className="font-extrabold text-sm text-slate-900">{row.feature}</h4>
+                </div>
+
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 rounded-xl bg-rose-50/60 border border-rose-200/80 space-y-1">
+                    <div className="flex items-center gap-1.5 text-rose-800 font-bold uppercase text-[10px] tracking-wider">
+                      <i className="fas fa-times-circle text-rose-500"></i>
+                      <span>Traditional 2D Software</span>
+                    </div>
+                    <p className="text-slate-600 leading-relaxed">
+                      {row.traditional}
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1">
+                    <div className="flex items-center gap-1.5 text-emerald-800 font-bold uppercase text-[10px] tracking-wider">
+                      <i className="fas fa-check-circle text-emerald-600"></i>
+                      <span>HDE Studio CAD</span>
+                    </div>
+                    <p className="text-slate-900 font-medium leading-relaxed">
+                      {row.hdeStudio}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick CTA Banner beneath comparison */}
+          <div className="bg-gradient-to-r from-slate-900 via-primary-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+            <div className="space-y-1.5 text-center md:text-left">
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-400">Pure Speed • Zero Bloat</span>
+              <h3 className="text-xl sm:text-2xl font-black">Ready to Experience Drafting Without the Headache?</h3>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                Download the free standalone desktop installer and begin floor planning in minutes. No credit card required.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
+              <a
+                href="#download"
+                className="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs sm:text-sm transition-all text-center no-underline shadow-xs"
+              >
+                <i className="fas fa-download mr-2 text-primary"></i>
+                Download Installer
+              </a>
+              <a
+                href="#pricing"
+                className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all text-center no-underline shadow-xs"
+              >
+                <i className="fas fa-crown mr-2 text-amber-300"></i>
+                Get Lifetime License
+              </a>
+            </div>
+          </div>
+
+        </section>
 
         {/* LICENSE KEY ACTIVATION WIDGET */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
@@ -647,7 +1043,7 @@ export default function DownloadPage() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>AutoCAD Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows)</span>
+                    <span><strong>Architectural Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows, Vehicles)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <i className="fas fa-check-circle text-emerald-600"></i>
