@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import Script from 'next/script';
 import LandUnitConverter from '@/features/tools/LandUnitConverter';
@@ -51,6 +52,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ConversionPairPage({ params }: PageProps) {
   const { slug } = await params;
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || '';
+  if (host.startsWith('us.') || host.includes('us.localhost')) {
+    redirect(`https://www.homedesignenglish.com/land-converter/${slug}`);
+  }
+
   const pair = TOP_CONVERSION_PAIRS.find((p) => p.slug === slug);
 
   if (!pair) {
@@ -128,26 +135,27 @@ export default async function ConversionPairPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      {/* Header Banner */}
-      <section className="bg-gradient-to-br from-secondary via-slate-900 to-secondary text-white py-12 px-4 sm:px-6 lg:px-8 border-b border-primary/20">
+      {/* Header Banner - HDE Brand Cream White */}
+      <section className="bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-white border-b border-[#c5a059]/25 py-12 px-4 sm:px-6 lg:px-8 shadow-xs">
         <div className="max-w-5xl mx-auto text-center space-y-3">
           {/* Breadcrumbs */}
-          <nav className="text-xs text-gray-400 flex items-center justify-center gap-2 mb-2">
-            <Link href="/" className="hover:text-primary transition">Home</Link>
+          <nav className="text-xs text-slate-500 flex items-center justify-center gap-2 mb-2 font-medium">
+            <Link href="/" className="hover:text-[#c5a059] transition">Home</Link>
             <span>/</span>
-            <Link href="/land-converter" className="hover:text-primary transition">Land Converter</Link>
+            <Link href="/land-converter" className="hover:text-[#c5a059] transition">Land Converter</Link>
             <span>/</span>
-            <span className="text-primary font-bold">{pair.title}</span>
+            <span className="text-[#8c6b2d] font-bold">{pair.title}</span>
           </nav>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#0f2042]">
             {pair.title}
           </h1>
-          <p className="text-gray-300 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed font-medium">
             {pair.shortDesc} Use the calculator below for custom values or reference the conversion chart.
           </p>
 
-          <div className="pt-2 inline-flex items-center gap-3 bg-white/10 px-4 py-1.5 rounded-full text-xs font-bold text-emerald-300">
+          <div className="pt-2 inline-flex items-center gap-2 bg-[#c5a059]/15 border border-[#c5a059]/30 px-4 py-1.5 rounded-full text-xs font-bold text-[#8c6b2d] shadow-2xs">
+            <i className="fas fa-calculator text-[10px] text-[#c5a059]"></i>
             <span>Formula: 1 {fromUnit.name} = {ratio.toLocaleString()} {toUnit.plural}</span>
           </div>
         </div>

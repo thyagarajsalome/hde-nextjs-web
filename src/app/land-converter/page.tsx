@@ -2,6 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import LandUnitConverter from '@/features/tools/LandUnitConverter';
 import { TOP_CONVERSION_PAIRS, LAND_UNITS } from '@/data/landUnits';
 
@@ -44,7 +46,13 @@ const FAQS = [
   }
 ];
 
-export default function LandConverterPage() {
+export default async function LandConverterPage() {
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || '';
+  if (host.startsWith('us.') || host.includes('us.localhost')) {
+    redirect('https://www.homedesignenglish.com/land-converter');
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -81,16 +89,17 @@ export default function LandConverterPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-secondary via-slate-900 to-secondary text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-primary/20">
+      {/* Hero Section - HDE Brand Cream White */}
+      <section className="bg-gradient-to-b from-[#fdfbf7] via-[#faf6ee] to-white border-b border-[#c5a059]/25 py-14 px-4 sm:px-6 lg:px-8 shadow-xs">
         <div className="max-w-5xl mx-auto text-center space-y-4">
-          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30 uppercase tracking-wider">
-            🇮🇳 All-India Land Measurement Suite
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#c5a059]/15 text-[#8c6b2d] border border-[#c5a059]/30 uppercase tracking-wider shadow-2xs">
+            <span>🇮🇳</span>
+            <span>All-India Land Measurement Suite</span>
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#0f2042]">
             Indian Land Measurement &amp; Area Converter
           </h1>
-          <p className="text-gray-300 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed font-medium">
             Convert Gunta, Bigha, Cent, Ground, Ankanam, and Gaj into Square Feet (Sq Ft) and Acres instantly. Built with official state revenue department benchmarks.
           </p>
         </div>

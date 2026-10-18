@@ -38,8 +38,12 @@ export default function Footer() {
               <Link href="/home-planning" className="text-primary font-semibold hover:underline">Home Planning Guide</Link>
               <span className="text-gray-300">|</span>
               <Link href="/blog" className="text-gray-500 hover:text-primary transition-colors no-underline">Blog & Guides</Link>
-              <span className="text-gray-300">|</span>
-              <Link href="/land-converter" className="text-gray-500 hover:text-primary transition-colors no-underline">Land Area Converter</Link>
+              {!isUSRoute && (
+                <>
+                  <span className="text-gray-300">|</span>
+                  <Link href="/land-converter" className="text-gray-500 hover:text-primary transition-colors no-underline">Land Area Converter</Link>
+                </>
+              )}
               <span className="text-gray-300">|</span>
               <Link href="/about" className="text-gray-500 hover:text-primary transition-colors no-underline">About Us</Link>
               <span className="text-gray-300">|</span>

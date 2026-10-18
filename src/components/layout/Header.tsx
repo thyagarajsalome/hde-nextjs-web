@@ -187,6 +187,7 @@ const Header = () => {
                 </div>
 
                 <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
+                <Link href="/land-converter" className={`${pathname.startsWith('/land-converter') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Land Converter</Link>
               </>
             )}
 
@@ -197,7 +198,6 @@ const Header = () => {
                 <Link href="/real-estate/texas" className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
                 <Link href="/real-estate/florida" className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
                 <Link href="/real-estate/california" className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
-                <Link href="/land-converter" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap">Land Converter</Link>
               </>
             )}
 
@@ -447,6 +447,9 @@ const Header = () => {
                 <Link href="/app" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
                   HDE App
                 </Link>
+                <Link href="/land-converter" className={`block px-3 py-2 rounded-md text-base ${pathname.startsWith('/land-converter') ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                  Land Area Converter
+                </Link>
               </>
             )}
 
@@ -464,9 +467,6 @@ const Header = () => {
                 </Link>
                 <Link href="/real-estate/california" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   California Real Estate Hub
-                </Link>
-                <Link href="/land-converter" className={`block px-3 py-2 rounded-md text-base ${pathname === '/land-converter' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
-                  Land Area Converter
                 </Link>
               </>
             )}

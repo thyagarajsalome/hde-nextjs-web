@@ -1035,26 +1035,28 @@ export default function Dashboard() {
               </div>
             </Link>
 
-            {/* 5. Land Area Converter */}
-            <Link
-              href="/land-converter"
-              className="group p-3.5 rounded-xl border border-teal-200/70 dark:border-teal-900/40 bg-teal-50/40 dark:bg-teal-950/10 hover:bg-teal-50 dark:hover:bg-teal-950/30 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-vector-square text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">
-                    Land Unit Converter
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-teal-600 transition"></i>
+            {/* 5. Land Area Converter (India Only) */}
+            {region !== 'US' && (
+              <Link
+                href="/land-converter"
+                className="group p-3.5 rounded-xl border border-teal-200/70 dark:border-teal-900/40 bg-teal-50/40 dark:bg-teal-950/10 hover:bg-teal-50 dark:hover:bg-teal-950/30 transition flex items-start gap-3 shadow-2xs"
+              >
+                <div className="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
+                  <i className="fas fa-vector-square text-base"></i>
                 </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  Convert Gunta, Bigha, Cent, Acres, and Square Meters to Sq Ft.
-                </p>
-              </div>
-            </Link>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">
+                      Land Unit Converter
+                    </h4>
+                    <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-teal-600 transition"></i>
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
+                    Convert Gunta, Bigha, Cent, Acres, and Square Meters to Sq Ft.
+                  </p>
+                </div>
+              </Link>
+            )}
 
             {/* 6. SEO Blog & Editorial Guides */}
             <Link

@@ -567,12 +567,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.95,
       },
       {
-        url: `${BASE_URL}/land-converter`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.9,
-      },
-      {
         url: `${BASE_URL}/blog`,
         lastModified: new Date(),
         changeFrequency: 'daily',
@@ -585,7 +579,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
       },
       ...realEstateRoutes,
-      ...landConverterRoutes,
       ...blogRoutes,
     ];
   }
