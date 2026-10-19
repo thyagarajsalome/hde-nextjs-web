@@ -235,42 +235,42 @@ export default function WinterProjectEstimator() {
         })}
       </div>
 
-      {/* Results Summary Box */}
-      <div className="rounded-2xl bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md">
+      {/* Results Summary Box - Cream Light Aesthetic */}
+      <div className="rounded-2xl bg-gradient-to-br from-[#fdfbf7] via-[#faf6ee] to-[#f4ecdb] border-2 border-[#c5a059]/40 text-[#0f2042] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
         <div className="space-y-2 text-center md:text-left">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059]/20 text-[#8c6b2d] border border-[#c5a059]/40">
             <i className="fas fa-shield-halved"></i>
             <span>{totals.count} Winter Projects Selected</span>
           </span>
-          <h4 className="text-2xl font-black">Your Estimated Winter Investment</h4>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-md leading-relaxed">
+          <h4 className="text-2xl font-black text-[#0f2042]">Your Estimated Winter Investment</h4>
+          <p className="text-xs sm:text-sm text-slate-700 max-w-md leading-relaxed font-medium">
             Invest in strategic sealing and thermal upgrades to cut heating costs and stay comfortable all season.
           </p>
         </div>
 
         <div className="flex items-center gap-6 sm:gap-8 shrink-0">
           <div className="text-center md:text-right">
-            <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 block">
               Total Upfront Cost
             </span>
-            <span className="text-3xl sm:text-4xl font-black text-white">
+            <span className="text-3xl sm:text-4xl font-black text-[#0f2042]">
               ${totals.totalCost.toLocaleString()}
             </span>
-            <span className="text-[11px] text-slate-400 block mt-0.5">
+            <span className="text-[11px] text-slate-500 block mt-0.5 font-medium">
               ({mode === "diy" ? "DIY Materials" : "With Labor"})
             </span>
           </div>
 
-          <div className="w-px h-14 bg-white/15 hidden sm:block"></div>
+          <div className="w-px h-14 bg-[#c5a059]/30 hidden sm:block"></div>
 
           <div className="text-center md:text-right">
-            <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-400 block">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-emerald-700 block">
               Annual Bill Savings
             </span>
-            <span className="text-3xl sm:text-4xl font-black text-emerald-400">
+            <span className="text-3xl sm:text-4xl font-black text-emerald-600">
               ${totals.totalSavings.toLocaleString()}/yr
             </span>
-            <span className="text-[11px] text-slate-400 block mt-0.5">
+            <span className="text-[11px] text-emerald-800 font-semibold block mt-0.5">
               Payback in {totals.paybackYears} {totals.paybackYears === "1.0" ? "year" : "years"}
             </span>
           </div>

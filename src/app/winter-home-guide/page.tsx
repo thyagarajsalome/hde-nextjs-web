@@ -346,37 +346,37 @@ export default function WinterHomeGuidePage() {
           </div>
         </section>
 
-        {/* SECTION 4: HDE STUDIO CAD INTEGRATION CARD */}
-        <section className="bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-md flex flex-col lg:flex-row items-center justify-between gap-8">
+        {/* SECTION 4: HDE STUDIO CAD INTEGRATION CARD - HDE Brand Cream Light */}
+        <section className="bg-gradient-to-br from-[#fdfbf7] via-[#faf6ee] to-[#f4ecdb] border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 text-[#0f2042] shadow-sm flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="space-y-3 text-center lg:text-left max-w-2xl">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              <i className="fas fa-cube text-emerald-400"></i>
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059]/20 text-[#8c6b2d] border border-[#c5a059]/40 shadow-2xs">
+              <i className="fas fa-cube text-[#8c6b2d]"></i>
               <span>Offline Desktop Software</span>
             </span>
-            <h3 className="text-2xl sm:text-3xl font-black">
+            <h3 className="text-2xl sm:text-3xl font-black text-[#0f2042] tracking-tight">
               Model Your Winter Renovation Layouts with HDE Studio CAD
             </h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
               Planning to finish your basement, remodel a bathroom, or draft a mudroom addition this winter? Avoid costly contractor redesign fees by drafting precise 2D blueprints with automated dimensioning and 60+ architectural vector blocks.
             </p>
-            <div className="pt-2 flex flex-wrap justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-300">
-              <span><i className="fas fa-check text-emerald-400 mr-1.5"></i> 100% Offline Standalone App</span>
-              <span><i className="fas fa-check text-emerald-400 mr-1.5"></i> USA Imperial (Ft/In) Catalogs</span>
-              <span><i className="fas fa-check text-emerald-400 mr-1.5"></i> 300 DPI Vector PDF Blueprints</span>
+            <div className="pt-2 flex flex-wrap justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-700">
+              <span className="flex items-center"><i className="fas fa-circle-check text-emerald-600 mr-1.5 text-sm"></i> 100% Offline Standalone App</span>
+              <span className="flex items-center"><i className="fas fa-circle-check text-emerald-600 mr-1.5 text-sm"></i> USA Imperial (Ft/In) Catalogs</span>
+              <span className="flex items-center"><i className="fas fa-circle-check text-emerald-600 mr-1.5 text-sm"></i> 300 DPI Vector PDF Blueprints</span>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto shrink-0">
             <Link
               href="/download"
-              className="px-8 py-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-black text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2"
+              className="px-8 py-4 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white font-black text-sm shadow-md hover:shadow-lg transition-all text-center no-underline flex items-center justify-center gap-2.5 cursor-pointer border border-[#0f2042]"
             >
-              <i className="fas fa-download text-primary"></i>
+              <i className="fas fa-download text-[#c5a059]"></i>
               <span>Download CAD Studio Free</span>
             </Link>
             <Link
               href="/download#pricing"
-              className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2"
+              className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all text-center no-underline flex items-center justify-center gap-2 cursor-pointer"
             >
               <i className="fas fa-crown text-amber-300"></i>
               <span>Get Lifetime License ($299)</span>
