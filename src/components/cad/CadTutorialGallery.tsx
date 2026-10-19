@@ -1,17 +1,56 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import Link from "next/link";
 import { CAD_TUTORIALS, CAD_TUTORIAL_CATEGORIES, CadTutorial } from "@/data/cadTutorials";
+import { CadTutorialService } from "@/services/cadTutorialService";
+import { useUser } from "@/context/UserContext";
+
+const ADMIN_EMAIL = "thyagaraja1983@gmail.com";
 
 export default function CadTutorialGallery() {
+  const { user } = useUser();
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+
+  const [tutorials, setTutorials] = useState<CadTutorial[]>(CAD_TUTORIALS);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeVideo, setActiveVideo] = useState<CadTutorial>(CAD_TUTORIALS[0]);
   const theaterRef = useRef<HTMLDivElement>(null);
 
+  // Load from service (Supabase + LocalStorage sync)
+  const refreshTutorials = async () => {
+    try {
+      const data = await CadTutorialService.getTutorials();
+      if (data && data.length > 0) {
+        setTutorials(data);
+        // If current active video not in new list, pick the first
+        setActiveVideo((prev) => {
+          const found = data.find((t) => t.id === prev.id);
+          return found || data[0];
+        });
+      }
+    } catch {
+      // fallback
+    }
+  };
+
+  useEffect(() => {
+    refreshTutorials();
+
+    const handleUpdate = () => {
+      refreshTutorials();
+    };
+
+    window.addEventListener("hde_cad_tutorials_updated", handleUpdate);
+    return () => {
+      window.removeEventListener("hde_cad_tutorials_updated", handleUpdate);
+    };
+  }, []);
+
   // Filter tutorials by category & search query
   const filteredTutorials = useMemo(() => {
-    return CAD_TUTORIALS.filter((tutorial) => {
+    return tutorials.filter((tutorial) => {
       const matchesCategory =
         selectedCategory === "all" || tutorial.category === selectedCategory;
       const matchesSearch =
@@ -21,7 +60,7 @@ export default function CadTutorialGallery() {
         tutorial.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [tutorials, selectedCategory, searchQuery]);
 
   // Handle switching video and smooth scroll to theater player
   const handleSelectVideo = (tutorial: CadTutorial) => {
@@ -32,14 +71,14 @@ export default function CadTutorialGallery() {
   };
 
   // Previous & Next navigation
-  const currentIndex = CAD_TUTORIALS.findIndex((t) => t.id === activeVideo.id);
+  const currentIndex = tutorials.findIndex((t) => t.id === activeVideo.id);
   const handlePrev = () => {
-    const prevIdx = currentIndex > 0 ? currentIndex - 1 : CAD_TUTORIALS.length - 1;
-    handleSelectVideo(CAD_TUTORIALS[prevIdx]);
+    const prevIdx = currentIndex > 0 ? currentIndex - 1 : tutorials.length - 1;
+    handleSelectVideo(tutorials[prevIdx]);
   };
   const handleNext = () => {
-    const nextIdx = currentIndex < CAD_TUTORIALS.length - 1 ? currentIndex + 1 : 0;
-    handleSelectVideo(CAD_TUTORIALS[nextIdx]);
+    const nextIdx = currentIndex < tutorials.length - 1 ? currentIndex + 1 : 0;
+    handleSelectVideo(tutorials[nextIdx]);
   };
 
   return (
@@ -47,9 +86,20 @@ export default function CadTutorialGallery() {
       
       {/* SECTION HEADER */}
       <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase tracking-wider shadow-2xs">
-          <i className="fab fa-youtube text-red-600 text-sm"></i>
-          <span>Official 16:9 Widescreen CAD Masterclass</span>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase tracking-wider shadow-2xs">
+            <i className="fab fa-youtube text-red-600 text-sm"></i>
+            <span>Official 16:9 Widescreen CAD Masterclass</span>
+          </div>
+          {isAdmin && (
+            <Link
+              href="/admin/tutorials"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-900 border border-amber-300 text-xs font-black uppercase tracking-wider hover:bg-amber-500/25 transition no-underline shadow-2xs"
+            >
+              <i className="fas fa-gear text-amber-600 text-xs"></i>
+              <span>Manage Videos (Admin CRUD)</span>
+            </Link>
+          )}
         </div>
         <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
           Learn Every Tool in Full 16:9 Widescreen

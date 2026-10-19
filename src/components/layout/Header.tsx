@@ -187,7 +187,6 @@ const Header = () => {
                 </div>
 
                 <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
-                <Link href="/land-converter" className={`${pathname.startsWith('/land-converter') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Land Converter</Link>
               </>
             )}
 

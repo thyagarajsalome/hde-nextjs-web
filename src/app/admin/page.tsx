@@ -49,6 +49,18 @@ export default function AdminPortalHubPage() {
       ],
     },
     {
+      title: 'CAD Video Tutorials Manager',
+      description: 'Add, edit, delete, and reorder 16:9 widescreen YouTube tutorials for all 20 drafting tools in HDE Studio CAD.',
+      href: '/admin/tutorials',
+      icon: 'fa-film',
+      badge: 'Video Masterclass',
+      accent: 'border-red-500/40 bg-red-500/5 text-red-600',
+      links: [
+        { label: 'Manage Video Tutorials (CRUD)', href: '/admin/tutorials' },
+        { label: 'View Live Gallery', href: '/download#tutorials' },
+      ],
+    },
+    {
       title: 'Desktop CAD License Telemetry',
       description: 'Live monitor for HDE Studio activations, device bindings, and real-time failure alerts across all users.',
       href: '/admin/health#desktop-licenses',
