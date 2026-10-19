@@ -142,6 +142,20 @@ export default function DownloadPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const isAdmin = Boolean(user && user.email?.toLowerCase() === "thyagaraja1983@gmail.com");
 
+  // Load Razorpay Checkout Script
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if ((window as any).Razorpay) return;
+    const existing = document.getElementById("razorpay-checkout-js");
+    if (!existing) {
+      const script = document.createElement("script");
+      script.id = "razorpay-checkout-js";
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
   // Detect OS
   useEffect(() => {
     const ua = window.navigator.userAgent.toLowerCase();
@@ -219,8 +233,26 @@ export default function DownloadPage() {
         throw new Error(order?.error || "Order creation failed.");
       }
 
+      // Ensure Razorpay SDK is available
+      if (typeof window === "undefined" || !(window as any).Razorpay) {
+        // Attempt quick on-demand load
+        await new Promise<void>((resolve) => {
+          const s = document.createElement("script");
+          s.src = "https://checkout.razorpay.com/v1/checkout.js";
+          s.onload = () => resolve();
+          s.onerror = () => resolve();
+          document.body.appendChild(s);
+        });
+      }
+
+      if (!(window as any).Razorpay) {
+        throw new Error("Payment gateway could not be loaded. Please check your internet connection.");
+      }
+
+      const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_RVimcPWU7yAgZr';
+
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: keyId,
         amount: order.amount,
         currency: order.currency,
         name: "HDE Studio CAD Pro",
@@ -245,7 +277,8 @@ export default function DownloadPage() {
         theme: { color: "#0f2042" }
       };
 
-      new (window as any).Razorpay(options).open();
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
     } catch (err: any) {
       showToast(err.message || "Payment initiation failed", "error");
     } finally {
