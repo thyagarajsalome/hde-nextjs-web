@@ -204,6 +204,17 @@ const INDIA_QUICK_TOOLS: QuickTool[] = [
 
 const USA_QUICK_TOOLS: QuickTool[] = [
   {
+    id: "winter-guide",
+    name: "Winter Home Guide",
+    subtitle: "Cozy decor & energy upgrades",
+    icon: "fas fa-snowflake",
+    badge: "Trending",
+    route: "/winter-home-guide",
+    color: "from-sky-500 to-blue-600",
+    textColor: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
+  },
+  {
     id: "usa-rent-vs-buy",
     name: "Rent vs. Buy",
     subtitle: "5-year equity vs PITI costs",

@@ -1,7 +1,8 @@
 import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/mdx';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { Metadata } from 'next';
 
 export async function generateStaticParams() {
@@ -16,16 +17,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const post = getPostBySlug(resolvedParams.slug);
     const desc = post.meta.description || post.meta.excerpt || 'Expert home construction and planning guide by HDE.';
+    const pRegion = post.meta.region?.toUpperCase();
+    const domain = pRegion === 'US' ? 'https://us.homedesignenglish.com' : pRegion === 'AE' ? 'https://dubai.homedesignenglish.com' : 'https://www.homedesignenglish.com';
     return {
       title: `${post.meta.title} | HDE`,
       description: desc,
       alternates: {
-        canonical: `/blog/${resolvedParams.slug}`,
+        canonical: `${domain}/blog/${resolvedParams.slug}`,
       },
       openGraph: {
         title: `${post.meta.title} | HDE`,
         description: desc,
-        url: `/blog/${resolvedParams.slug}`,
+        url: `${domain}/blog/${resolvedParams.slug}`,
         type: 'article',
         publishedTime: post.meta.date,
         authors: [post.meta.author],
@@ -103,6 +106,19 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || '';
+  const isUS = host.startsWith('us.') || host.includes('us.localhost');
+  const isDubai = host.startsWith('dubai.') || host.includes('dubai.localhost');
+  const pRegion = post.meta.region?.toUpperCase();
+
+  // Strict domain isolation: never serve Indian articles on US subdomain
+  if (isUS && pRegion === 'IN') {
+    redirect(`https://www.homedesignenglish.com/blog/${resolvedParams.slug}`);
+  }
+
+  const domain = pRegion === 'US' ? 'https://us.homedesignenglish.com' : pRegion === 'AE' ? 'https://dubai.homedesignenglish.com' : 'https://www.homedesignenglish.com';
+
   const relatedPosts = getRelatedPosts(resolvedParams.slug, 3);
   const cta = getContextualCTA(resolvedParams.slug, post.meta.category);
 
@@ -119,7 +135,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     datePublished: post.meta.date,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://www.homedesignenglish.com/blog/${resolvedParams.slug}`,
+      '@id': `${domain}/blog/${resolvedParams.slug}`,
     },
     publisher: {
       '@type': 'Organization',

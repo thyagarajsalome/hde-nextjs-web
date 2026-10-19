@@ -437,19 +437,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'backyard-pickleball-court-construction-cost',
     'outdoor-kitchen-roi-and-costs',
     'rent-vs-buy-a-house-in-2026',
-    'barndominium-cost-per-square-foot-guide-2026'
+    'barndominium-cost-per-square-foot-guide-2026',
+    'winter-home-decor-ideas-cozy-styling-guide',
+    'winter-home-improvement-projects-cost-checklist'
   ];
 
-  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map((post) => {
+  const mapPostToRoute = (post: typeof blogPosts[0]) => {
     const isValidDate = post.meta.date && !isNaN(Date.parse(post.meta.date));
     const isPillar = PILLAR_GUIDES.includes(post.slug);
     return {
       url: `${BASE_URL}/blog/${post.slug}`,
       lastModified: isValidDate ? new Date(post.meta.date) : new Date(),
-      changeFrequency: isPillar ? 'weekly' : 'monthly',
+      changeFrequency: isPillar ? 'weekly' as const : 'monthly' as const,
       priority: isPillar ? 0.9 : 0.8,
     };
-  });
+  };
+
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map(mapPostToRoute);
+  const usBlogRoutes: MetadataRoute.Sitemap = blogPosts
+    .filter(p => p.meta.region?.toUpperCase() === 'US' || p.meta.region?.toUpperCase() === 'GLOBAL')
+    .map(mapPostToRoute);
 
   // Dubai Property Routes
   const DUBAI_AREAS = [
@@ -567,6 +574,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.95,
       },
       {
+        url: `${BASE_URL}/winter-home-guide`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.96,
+      },
+      {
         url: `${BASE_URL}/blog`,
         lastModified: new Date(),
         changeFrequency: 'daily',
@@ -579,7 +592,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
       },
       ...realEstateRoutes,
-      ...blogRoutes,
+      ...usBlogRoutes,
     ];
   }
 

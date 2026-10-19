@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { headers } from "next/headers";
 import Hero from "@/components/layout/Hero";
 import FAQ from "@/components/layout/FAQ";
 import CalculatorFeature from "@/components/layout/CalculatorFeature";
@@ -216,17 +217,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description = `Get building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
   }
 
+  const domain = cityData.country === 'USA' ? 'https://us.homedesignenglish.com' : 'https://www.homedesignenglish.com';
+
   return {
     title,
     description,
     alternates: {
-      canonical: `/cost/${resolvedParams.slug}`,
+      canonical: `${domain}/cost/${resolvedParams.slug}`,
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: `/cost/${resolvedParams.slug}`,
+      url: `${domain}/cost/${resolvedParams.slug}`,
     }
   };
 }
@@ -269,6 +272,13 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   }
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
+
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || '';
+  const isUS = host.startsWith('us.') || host.includes('us.localhost');
+  if (isUS && forceRegion === 'IN') {
+    redirect(`https://www.homedesignenglish.com/cost/${resolvedParams.slug}`);
+  }
 
   const sampleEstimate = forceRegion === 'IN' ? getIndiaSampleEstimate(cityData) : null;
   const formatLakhs = (amount: number) => `₹${(amount / 100000).toFixed(2)} Lakhs`;

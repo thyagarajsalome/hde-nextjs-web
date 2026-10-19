@@ -122,6 +122,8 @@ export default function Footer() {
                 <span>USA Real Estate Tools</span>
               </p>
               <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
+                <Link href="/winter-home-guide" className="hover:text-primary font-bold text-sky-700">Winter Guide ❄️</Link>
+                <span>&bull;</span>
                 <Link href="/real-estate" className="hover:text-primary font-bold text-primary">All USA Calculators</Link>
                 <span>&bull;</span>
                 <Link href="/real-estate/texas" className="hover:text-primary font-semibold">Texas Hub</Link>
