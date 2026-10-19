@@ -238,7 +238,7 @@ export default function CadTutorialGallery() {
               >
                 <i className="fas fa-crown text-amber-300"></i>
                 <span>
-                  Buy License ({region === "US" ? "$299" : region === "AE" ? "1,099 Dhs" : "Rs. 18,749"})
+                  Buy License ({region === "US" ? "$149" : region === "AE" ? "549 Dhs" : "Rs. 4,999"})
                 </span>
               </a>
             </div>

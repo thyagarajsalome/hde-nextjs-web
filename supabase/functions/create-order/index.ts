@@ -14,10 +14,10 @@ const PLANS: Record<string, { amount: number, currency: string }> = {
   "pro": { amount: 99900, currency: "INR" },
   "india_monthly_starter": { amount: 49900, currency: "INR" },
   "india_monthly_builder": { amount: 99900, currency: "INR" },
-  "india_monthly_pro": { amount: 199900, currency: "INR" }, // ₹1,999/mo
+  "india_monthly_pro": { amount: 99900, currency: "INR" }, // ₹999/mo
   "india_lifetime_starter": { amount: 149900, currency: "INR" },
   "india_lifetime_builder": { amount: 499900, currency: "INR" },
-  "india_lifetime_pro": { amount: 1874900, currency: "INR" }, // ₹18,749 lifetime (25% off ₹24,999)
+  "india_lifetime_pro": { amount: 499900, currency: "INR" }, // ₹4,999 lifetime (50% off ₹9,999)
   
   // USA Plans (USD - cents)
   "usa_basic": { amount: 999, currency: "USD" },
@@ -25,10 +25,10 @@ const PLANS: Record<string, { amount: number, currency: string }> = {
   "usa_pro": { amount: 5999, currency: "USD" },
   "usa_monthly_starter": { amount: 1499, currency: "USD" },
   "usa_monthly_builder": { amount: 2499, currency: "USD" },
-  "usa_monthly_pro": { amount: 4900, currency: "USD" }, // $49/mo
+  "usa_monthly_pro": { amount: 2900, currency: "USD" }, // $29/mo
   "usa_lifetime_starter": { amount: 4900, currency: "USD" },
   "usa_lifetime_builder": { amount: 14900, currency: "USD" },
-  "usa_lifetime_pro": { amount: 29900, currency: "USD" } // $299 lifetime (25% off $399)
+  "usa_lifetime_pro": { amount: 14900, currency: "USD" } // $149 lifetime (50% off $299)
 };
 
 Deno.serve(async (req) => {

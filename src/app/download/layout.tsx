@@ -32,7 +32,7 @@ const softwareSchema = {
   "offers": [
     {
       "@type": "Offer",
-      "price": "299.00",
+      "price": "149.00",
       "priceCurrency": "USD",
       "name": "Lifetime Commercial License (USA)",
       "availability": "https://schema.org/InStock",
@@ -40,7 +40,7 @@ const softwareSchema = {
     },
     {
       "@type": "Offer",
-      "price": "18749.00",
+      "price": "4999.00",
       "priceCurrency": "INR",
       "name": "Lifetime Commercial License (India)",
       "availability": "https://schema.org/InStock",
@@ -48,7 +48,7 @@ const softwareSchema = {
     },
     {
       "@type": "Offer",
-      "price": "1099.00",
+      "price": "549.00",
       "priceCurrency": "AED",
       "name": "Lifetime Commercial License (Dubai / UAE)",
       "availability": "https://schema.org/InStock",
