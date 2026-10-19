@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { CAD_TUTORIALS, CAD_TUTORIAL_CATEGORIES, CadTutorial } from "@/data/cadTutorials";
 
 export default function CadTutorialGallery() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [activeVideo, setActiveVideo] = useState<CadTutorial | null>(null);
+  const [activeVideo, setActiveVideo] = useState<CadTutorial>(CAD_TUTORIALS[0]);
+  const theaterRef = useRef<HTMLDivElement>(null);
 
   // Filter tutorials by category & search query
   const filteredTutorials = useMemo(() => {
@@ -22,59 +23,173 @@ export default function CadTutorialGallery() {
     });
   }, [selectedCategory, searchQuery]);
 
+  // Handle switching video and smooth scroll to theater player
+  const handleSelectVideo = (tutorial: CadTutorial) => {
+    setActiveVideo(tutorial);
+    if (theaterRef.current) {
+      theaterRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // Previous & Next navigation
+  const currentIndex = CAD_TUTORIALS.findIndex((t) => t.id === activeVideo.id);
+  const handlePrev = () => {
+    const prevIdx = currentIndex > 0 ? currentIndex - 1 : CAD_TUTORIALS.length - 1;
+    handleSelectVideo(CAD_TUTORIALS[prevIdx]);
+  };
+  const handleNext = () => {
+    const nextIdx = currentIndex < CAD_TUTORIALS.length - 1 ? currentIndex + 1 : 0;
+    handleSelectVideo(CAD_TUTORIALS[nextIdx]);
+  };
+
   return (
-    <section id="tutorials" className="space-y-8 scroll-mt-12">
-      {/* Header */}
+    <section id="tutorials" className="space-y-8 scroll-mt-12" ref={theaterRef}>
+      
+      {/* SECTION HEADER */}
       <div className="text-center space-y-3 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-red-700 border border-red-200 text-xs font-bold uppercase tracking-wider shadow-2xs">
           <i className="fab fa-youtube text-red-600 text-sm"></i>
-          <span>Official 2–5 Minute Video Masterclass</span>
+          <span>Official 16:9 Widescreen CAD Masterclass</span>
         </div>
         <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Learn Every Tool in HDE Studio CAD
+          Learn Every Tool in Full 16:9 Widescreen
         </h2>
         <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-          Step-by-step video tutorials for each drafting tool. Master point-and-click walls, automated corner welding, modular furniture blocks, and 300 DPI vector PDF exports.
+          Watch high-definition 16:9 tutorials for every architectural drafting tool in HDE Studio. See exact toolbar menus, point-and-click snapping, and contractor-ready 300 DPI exports.
         </p>
       </div>
 
-      {/* Controls: Category Filter Tabs & Search */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-4">
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
-          
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
-            {CAD_TUTORIAL_CATEGORIES.map((cat) => {
-              const count =
-                cat.id === "all"
-                  ? CAD_TUTORIALS.length
-                  : CAD_TUTORIALS.filter((t) => t.category === cat.id).length;
-              const isActive = selectedCategory === cat.id;
+      {/* 16:9 MAIN THEATER STAGE */}
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden p-4 sm:p-6 lg:p-8 space-y-6">
+        
+        {/* Theater Viewport Window Title */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-400"></div>
+              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+              <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-md bg-[#0f2042] text-amber-300 font-bold text-xs uppercase tracking-wider">
+                {activeVideo.categoryLabel}
+              </span>
+              <span className="text-xs text-slate-500 font-semibold hidden md:inline">
+                Tool #{currentIndex + 1} of {CAD_TUTORIALS.length}
+              </span>
+            </div>
+          </div>
 
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap border ${
-                    isActive
-                      ? "bg-[#0f2042] text-white border-[#0f2042] shadow-xs"
-                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  <i className={`fas ${cat.icon} text-xs ${isActive ? "text-[#c5a059]" : "text-slate-400"}`}></i>
-                  <span>{cat.label}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
-                      isActive
-                        ? "bg-white/20 text-white"
-                        : "bg-slate-200/80 text-slate-600"
-                    }`}
-                  >
-                    {count}
+          {/* Quick Prev / Next tool controls */}
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <button
+              onClick={handlePrev}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              title="Previous Tutorial"
+            >
+              <i className="fas fa-chevron-left text-[10px]"></i>
+              <span className="hidden sm:inline">Prev Tool</span>
+            </button>
+            <span className="text-xs font-mono font-bold text-slate-400 px-1">
+              {currentIndex + 1} / {CAD_TUTORIALS.length}
+            </span>
+            <button
+              onClick={handleNext}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              title="Next Tutorial"
+            >
+              <span className="hidden sm:inline">Next Tool</span>
+              <i className="fas fa-chevron-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        {/* 16:9 FULLSCREEN-CAPABLE WIDESCREEN VIDEO PLAYER */}
+        <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800">
+          <iframe
+            src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+            title={activeVideo.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="w-full h-full border-0"
+          ></iframe>
+        </div>
+
+        {/* Active Tool Details & Conversion CTAs */}
+        <div className="space-y-4 pt-2">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  {activeVideo.title}
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 flex items-center gap-1">
+                  <i className="far fa-clock text-[10px]"></i> {activeVideo.duration} min
+                </span>
+                {activeVideo.badge && (
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                    {activeVideo.badge}
                   </span>
-                </button>
-              );
-            })}
+                )}
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium max-w-3xl">
+                {activeVideo.description}
+              </p>
+            </div>
+
+            {/* Direct Tool Practice CTA */}
+            <div className="flex items-center gap-3 shrink-0">
+              <a
+                href="#download"
+                className="px-5 py-3 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 no-underline border border-[#0f2042] cursor-pointer"
+              >
+                <i className="fas fa-download text-[#c5a059]"></i>
+                <span>Practice in Free CAD</span>
+              </a>
+              <a
+                href="#pricing"
+                className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 no-underline cursor-pointer"
+              >
+                <i className="fas fa-crown text-amber-300"></i>
+                <span>Buy License ($299)</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Key Tool Shortcuts & Takeaways */}
+          <div className="space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+              Pro Drafting Tips Covered in this Tutorial:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {activeVideo.keyTakeaways.map((tip, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded-xl bg-[#fdfbf7] border border-[#c5a059]/30 text-xs font-semibold text-slate-800 flex items-center gap-2.5 shadow-2xs"
+                >
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0">
+                    <i className="fas fa-check"></i>
+                  </div>
+                  <span className="leading-tight">{tip}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ALL TUTORIALS PLAYLIST & CATEGORY SELECTOR */}
+      <div className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-6 shadow-xs space-y-5">
+        
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">
+              Interactive Tool Selector
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              Browse All 20 Tool Masterclass Videos
+            </h3>
           </div>
 
           {/* Search Input */}
@@ -85,7 +200,7 @@ export default function CadTutorialGallery() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tools (walls, doors, dims)..."
-              className="w-full pl-9 pr-8 py-2 rounded-xl text-xs border border-slate-200 bg-slate-50/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 font-medium placeholder-slate-400"
+              className="w-full pl-9 pr-8 py-2.5 rounded-xl text-xs border border-slate-200 bg-slate-50/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-800 font-medium placeholder-slate-400"
             />
             {searchQuery && (
               <button
@@ -98,261 +213,129 @@ export default function CadTutorialGallery() {
           </div>
         </div>
 
-        {/* Status info bar */}
-        <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-          <span>
-            Showing <strong className="text-slate-800">{filteredTutorials.length}</strong> of {CAD_TUTORIALS.length} video tutorials
-          </span>
-          <span className="hidden sm:inline text-[11px] text-slate-400 font-medium">
-            💡 Click any card to watch full video with tool shortcuts
-          </span>
-        </div>
-      </div>
+        {/* Category Filter Pills */}
+        <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
+          {CAD_TUTORIAL_CATEGORIES.map((cat) => {
+            const count =
+              cat.id === "all"
+                ? CAD_TUTORIALS.length
+                : CAD_TUTORIALS.filter((t) => t.category === cat.id).length;
+            const isActive = selectedCategory === cat.id;
 
-      {/* Video Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTutorials.map((tutorial) => {
-          return (
-            <div
-              key={tutorial.id}
-              onClick={() => setActiveVideo(tutorial)}
-              className="group bg-white rounded-2xl border border-slate-200 hover:border-primary/50 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer"
-            >
-              {/* Thumbnail Container */}
-              <div className="relative aspect-video bg-slate-900 overflow-hidden flex items-center justify-center">
-                {/* Real YouTube HQ Thumbnail */}
-                <img
-                  src={`https://img.youtube.com/vi/${tutorial.youtubeId}/hqdefault.jpg`}
-                  alt={tutorial.title}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-300"
-                  onError={(e) => {
-                    // Fallback to stylized blueprint gradient if ID isn't live
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
-
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/30"></div>
-
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
-                    <i className="fas fa-play text-sm ml-0.5"></i>
-                  </div>
-                </div>
-
-                {/* Duration Badge */}
-                <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-xs text-white text-[11px] font-mono font-bold flex items-center gap-1">
-                  <i className="far fa-clock text-[9px] text-slate-300"></i>
-                  <span>{tutorial.duration}</span>
-                </div>
-
-                {/* Badge Top Left */}
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
-                  <span className="px-2 py-0.5 rounded-md bg-[#0f2042]/90 backdrop-blur-xs text-amber-300 text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                    {tutorial.categoryLabel}
-                  </span>
-                  {tutorial.badge && (
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-600/90 text-white text-[10px] font-black uppercase tracking-wider">
-                      {tutorial.badge}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs shrink-0 mt-0.5">
-                      <i className={`fas ${tutorial.icon}`}></i>
-                    </div>
-                    <h3 className="font-extrabold text-sm text-slate-900 group-hover:text-primary transition-colors leading-snug">
-                      {tutorial.title}
-                    </h3>
-                  </div>
-
-                  <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                    {tutorial.description}
-                  </p>
-                </div>
-
-                {/* Key Takeaways */}
-                <div className="pt-3 border-t border-slate-100 space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    What You&apos;ll Learn:
-                  </span>
-                  <ul className="space-y-1 text-[11px] text-slate-600">
-                    {tutorial.keyTakeaways.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-1.5">
-                        <i className="fas fa-check text-emerald-500 text-[10px] shrink-0"></i>
-                        <span className="truncate">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Action button */}
-                <div className="pt-3">
-                  <button
-                    type="button"
-                    className="w-full py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-[#0f2042] text-slate-800 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-2 border border-slate-200 hover:border-[#0f2042] cursor-pointer"
-                  >
-                    <i className="fas fa-circle-play text-red-500 group-hover:text-red-400 text-xs"></i>
-                    <span>Watch Tutorial ({tutorial.duration})</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Empty State */}
-      {filteredTutorials.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-3xl border border-slate-200 p-8 space-y-3">
-          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-lg">
-            <i className="fas fa-search"></i>
-          </div>
-          <h4 className="font-bold text-slate-800">No tutorial matching &ldquo;{searchQuery}&rdquo;</h4>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            Try searching for &quot;walls&quot;, &quot;doors&quot;, &quot;dimensions&quot;, &quot;kitchen&quot;, or &quot;export&quot;.
-          </p>
-          <button
-            onClick={() => {
-              setSelectedCategory("all");
-              setSearchQuery("");
-            }}
-            className="px-4 py-2 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition"
-          >
-            Reset Filters
-          </button>
-        </div>
-      )}
-
-      {/* Bottom Conversion Banner */}
-      <div className="bg-gradient-to-r from-[#fdfbf7] via-[#faf6ee] to-[#f4ecdb] border-2 border-[#c5a059]/40 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
-        <div className="space-y-2 text-center md:text-left">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-[#8c6b2d] bg-[#c5a059]/20 border border-[#c5a059]/40 px-3 py-1 rounded-full">
-            <i className="fas fa-cube text-[#c5a059]"></i> Free Hands-On Learning
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black text-[#0f2042]">
-            Ready to Practice What You Learned?
-          </h3>
-          <p className="text-xs sm:text-sm text-slate-700 max-w-xl leading-relaxed font-medium">
-            Download the free standalone desktop installer and begin floor planning in 5 minutes. No subscription or credit card needed.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
-          <a
-            href="#download"
-            className="px-6 py-3.5 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 cursor-pointer border border-[#0f2042]"
-          >
-            <i className="fas fa-download text-[#c5a059]"></i>
-            <span>Download CAD Studio Free</span>
-          </a>
-          <a
-            href="#pricing"
-            className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <i className="fas fa-crown text-amber-300"></i>
-            <span>Get Lifetime License ($299)</span>
-          </a>
-        </div>
-      </div>
-
-      {/* VIDEO POPUP MODAL */}
-      {activeVideo && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
-          <div className="relative w-full max-w-4xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-200 bg-slate-50/80">
-              <div className="flex items-center gap-2.5 pr-4 truncate">
-                <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs shrink-0">
-                  <i className="fab fa-youtube"></i>
-                </div>
-                <div className="truncate">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    {activeVideo.categoryLabel} • {activeVideo.duration}
-                  </span>
-                  <h4 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
-                    {activeVideo.title}
-                  </h4>
-                </div>
-              </div>
+            return (
               <button
-                onClick={() => setActiveVideo(null)}
-                className="w-9 h-9 rounded-full bg-white hover:bg-slate-200 border border-slate-200 text-slate-600 flex items-center justify-center transition-all cursor-pointer shrink-0"
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap border ${
+                  isActive
+                    ? "bg-[#0f2042] text-white border-[#0f2042] shadow-xs"
+                    : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900"
+                }`}
               >
-                <i className="fas fa-times text-sm"></i>
-              </button>
-            </div>
-
-            {/* Modal Video Player (Responsive 16:9) */}
-            <div className="relative aspect-video bg-black w-full shrink-0">
-              <iframe
-                src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-                title={activeVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              ></iframe>
-            </div>
-
-            {/* Modal Info & CTA Bar */}
-            <div className="p-4 sm:p-6 bg-white overflow-y-auto space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
-                <div>
-                  <h4 className="font-extrabold text-base text-slate-900">
-                    {activeVideo.title}
-                  </h4>
-                  <p className="text-xs text-slate-600 mt-1">
-                    {activeVideo.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <a
-                    href="#download"
-                    onClick={() => setActiveVideo(null)}
-                    className="px-4 py-2 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition no-underline flex items-center gap-1.5"
-                  >
-                    <i className="fas fa-download"></i>
-                    <span>Download Free</span>
-                  </a>
-                  <a
-                    href="#pricing"
-                    onClick={() => setActiveVideo(null)}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow-xs hover:bg-emerald-700 transition no-underline flex items-center gap-1.5"
-                  >
-                    <i className="fas fa-crown text-amber-300"></i>
-                    <span>Buy Lifetime</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Key Takeaways In Modal */}
-              <div className="space-y-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Key Tool Concepts Covered:
+                <i className={`fas ${cat.icon} text-xs ${isActive ? "text-[#c5a059]" : "text-slate-400"}`}></i>
+                <span>{cat.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-slate-200/80 text-slate-600"
+                  }`}
+                >
+                  {count}
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {activeVideo.keyTakeaways.map((tip, idx) => (
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Playlist Video Grid (16:9 Thumbnail Cards) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+          {filteredTutorials.map((tutorial) => {
+            const isPlaying = activeVideo.id === tutorial.id;
+
+            return (
+              <div
+                key={tutorial.id}
+                onClick={() => handleSelectVideo(tutorial)}
+                className={`group rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col justify-between cursor-pointer ${
+                  isPlaying
+                    ? "border-primary bg-primary/5 ring-2 ring-primary/30 shadow-md scale-[1.02]"
+                    : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-md"
+                }`}
+              >
+                {/* 16:9 Thumbnail with Play Badge */}
+                <div className="relative aspect-video bg-slate-900 overflow-hidden flex items-center justify-center">
+                  <img
+                    src={`https://img.youtube.com/vi/${tutorial.youtubeId}/hqdefault.jpg`}
+                    alt={tutorial.title}
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-95 group-hover:scale-105 transition-all duration-300"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+
+                  {/* Play Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <div
-                      key={idx}
-                      className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center gap-2"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 ${
+                        isPlaying
+                          ? "bg-emerald-500 text-white animate-pulse"
+                          : "bg-red-600 group-hover:bg-red-500 text-white"
+                      }`}
                     >
-                      <i className="fas fa-check-circle text-emerald-600 shrink-0"></i>
-                      <span>{tip}</span>
+                      <i className={`fas ${isPlaying ? "fa-volume-high" : "fa-play"} text-xs ml-0.5`}></i>
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Duration Badge */}
+                  <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-xs text-white text-[10px] font-mono font-bold">
+                    {tutorial.duration}
+                  </div>
+
+                  {/* Category Pill */}
+                  <div className="absolute top-2 left-2">
+                    <span className="px-2 py-0.5 rounded bg-[#0f2042]/90 text-amber-300 text-[9px] font-bold uppercase tracking-wider">
+                      {tutorial.categoryLabel}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Info */}
+                <div className="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
+                  <div className="space-y-1">
+                    <h4
+                      className={`font-bold text-xs leading-snug line-clamp-2 ${
+                        isPlaying ? "text-primary font-black" : "text-slate-900 group-hover:text-primary"
+                      }`}
+                    >
+                      {tutorial.title}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                      {tutorial.description}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold">
+                    <span className={isPlaying ? "text-emerald-700" : "text-slate-400"}>
+                      {isPlaying ? "▶ Now Playing Above" : "Click to Play in 16:9"}
+                    </span>
+                    <i className="fas fa-arrow-up text-[9px] text-slate-400 group-hover:-translate-y-0.5 transition-transform"></i>
+                  </div>
                 </div>
               </div>
-            </div>
-
-          </div>
+            );
+          })}
         </div>
-      )}
+
+        {/* Empty Search Result */}
+        {filteredTutorials.length === 0 && (
+          <div className="text-center py-8 text-xs text-slate-500">
+            No tutorial matching &ldquo;{searchQuery}&rdquo;. Try searching for &quot;walls&quot; or &quot;dimensions&quot;.
+          </div>
+        )}
+      </div>
+
     </section>
   );
 }
