@@ -780,12 +780,12 @@ export default function DownloadPage() {
               <div className="flex items-baseline gap-2.5">
                 <span className="text-3xl sm:text-4xl font-black text-slate-900">
                   {cadBilling === 'lifetime'
-                    ? (region === 'US' ? '$149' : region === 'AE' ? '549 Dhs' : 'Rs. 4,999')
-                    : (region === 'US' ? '$29' : region === 'AE' ? '99 Dhs' : 'Rs. 999')}
+                    ? (region === 'US' ? '$299' : region === 'AE' ? '1,099 Dhs' : 'Rs. 9,999')
+                    : (region === 'US' ? '$59' : region === 'AE' ? '199 Dhs' : 'Rs. 1,999')}
                 </span>
                 {cadBilling === 'lifetime' && (
                   <span className="text-base text-slate-400 line-through">
-                    {region === 'US' ? '$299' : region === 'AE' ? '1,099 Dhs' : 'Rs. 9,999'}
+                    {region === 'US' ? '$599' : region === 'AE' ? '2,199 Dhs' : 'Rs. 19,999'}
                   </span>
                 )}
                 <span className="text-xs text-slate-500 font-semibold">
@@ -834,8 +834,8 @@ export default function DownloadPage() {
                     <i className="fas fa-shopping-cart"></i>
                     <span>
                       {cadBilling === 'lifetime'
-                        ? `Buy Lifetime License • ${region === 'US' ? '$149' : region === 'AE' ? '549 Dhs' : 'Rs. 4,999'}`
-                        : `Subscribe Monthly • ${region === 'US' ? '$29/mo' : region === 'AE' ? '99 Dhs/mo' : 'Rs. 999/mo'}`}
+                        ? `Buy Lifetime License • ${region === 'US' ? '$299' : region === 'AE' ? '1,099 Dhs' : 'Rs. 9,999'}`
+                        : `Subscribe Monthly • ${region === 'US' ? '$59/mo' : region === 'AE' ? '199 Dhs/mo' : 'Rs. 1,999/mo'}`}
                     </span>
                   </>
                 )}
