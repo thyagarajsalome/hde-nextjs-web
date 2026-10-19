@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
 import { CadTutorial, CAD_TUTORIAL_CATEGORIES } from "@/data/cadTutorials";
 import { CadTutorialService, extractYouTubeId } from "@/services/cadTutorialService";
 
 export default function AdminCadTutorialsPage() {
+  const { user, loading: userLoading } = useUser();
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === "thyagaraja1983@gmail.com");
+
   const [tutorials, setTutorials] = useState<CadTutorial[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -228,6 +232,51 @@ export default function AdminCadTutorialsPage() {
             </button>
           </div>
         </div>
+
+        {/* Admin Authorization & Database Sync Status */}
+        {isAdmin ? (
+          <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                <i className="fas fa-shield-halved"></i>
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-xs text-emerald-950">Verified Super Admin</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-black text-[9px] uppercase tracking-wider">
+                    Full CRUD Privileges
+                  </span>
+                </div>
+                <span className="text-[11px] text-emerald-800 font-medium">Logged in as: <strong>{user?.email}</strong></span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] font-semibold text-emerald-800 bg-white/70 px-3 py-1.5 rounded-xl border border-emerald-200/60 self-start sm:self-auto">
+              <i className="fas fa-database text-emerald-600"></i>
+              <span>Live Sync to Supabase `cad_tutorials` &amp; Local Storage</span>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-amber-50 border border-amber-200/90 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+                <i className="fas fa-lock"></i>
+              </div>
+              <div>
+                <span className="font-extrabold text-xs text-amber-950 block">Local Preview Mode</span>
+                <span className="text-[11px] text-amber-800">
+                  To persist changes live to Supabase, sign in with your admin account (<strong>thyagaraja1983@gmail.com</strong>).
+                </span>
+              </div>
+            </div>
+            <Link
+              href="/signin?redirect=/admin/tutorials"
+              className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs shadow-xs transition no-underline flex items-center gap-2 self-start sm:self-auto"
+            >
+              <i className="fas fa-right-to-bracket"></i>
+              <span>Sign In as Admin</span>
+            </Link>
+          </div>
+        )}
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
