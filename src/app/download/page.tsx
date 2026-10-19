@@ -420,72 +420,7 @@ export default function DownloadPage() {
       {/* MAIN CONTAINER */}
       <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
 
-        {/* HERO ARCHITECTURAL SHOWCASE (LIGHT MONOCHROME FLOOR PLAN) */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-md p-4 sm:p-6 lg:p-8 space-y-6">
-          
-          {/* Window Title Bar */}
-          <div className="flex items-center justify-between border-b border-slate-200 pb-4 text-xs">
-            <div className="flex items-center gap-2.5">
-              <div className="w-3 h-3 rounded-full bg-red-400"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-              <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-              <span className="text-slate-600 font-mono text-[11px] ml-2 hidden sm:inline font-semibold">
-                HDE Studio CAD 2.1 — High-Precision Canvas Viewport
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
-              <span className="bg-slate-100 text-primary border border-slate-200 px-2.5 py-1 rounded-md">
-                📐 30&apos; &times; 40&apos; Architectural Floor Plan
-              </span>
-              <span className="bg-slate-100 text-emerald-700 border border-slate-200 px-2.5 py-1 rounded-md hidden md:inline">
-                🛋️ Smart CAD Block Set
-              </span>
-            </div>
-          </div>
 
-          {/* Clean Light Architectural Floor Plan Showcase */}
-          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-5 shadow-xs">
-            <div className="relative rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm flex items-center justify-center p-2 sm:p-4">
-              <Image
-                src="/images/cad/architectural-30x40-floor-plan.webp"
-                alt="HDE Studio CAD 30x40 Architectural Floor Plan"
-                width={1859}
-                height={2477}
-                className="w-full max-w-2xl h-auto max-h-[800px] object-contain mx-auto"
-                priority
-              />
-              <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-200 text-slate-800 text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="font-semibold">Architectural 30&apos; &times; 40&apos; Floor Plan (1,200 Sq.Ft)</span>
-              </div>
-            </div>
-
-            {/* Feature Highlights beneath canvas */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 pt-3 border-t border-slate-200/80 text-xs">
-              <div className="flex items-start gap-2.5 text-slate-700">
-                <i className="fas fa-ruler-combined text-primary mt-0.5 text-sm"></i>
-                <div>
-                  <span className="font-bold text-slate-900 block">Real-Time Dimension Chains</span>
-                  <span className="text-slate-500 text-[11px]">Precision wall, door &amp; window lengths with auto-aligned tick marks.</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-700">
-                <i className="fas fa-couch text-emerald-600 mt-0.5 text-sm"></i>
-                <div>
-                  <span className="font-bold text-slate-900 block">60+ Architectural Vector Blocks</span>
-                  <span className="text-slate-500 text-[11px]">Pre-drawn beds, dining sets, sanitary ware, kitchen islands &amp; vehicles.</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5 text-slate-700">
-                <i className="fas fa-file-pdf text-red-600 mt-0.5 text-sm"></i>
-                <div>
-                  <span className="font-bold text-slate-900 block">300 DPI Vector PDF Export</span>
-                  <span className="text-slate-500 text-[11px]">Lossless blueprint resolution ready for client handoffs &amp; municipal review.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* PROVISION: Video Tutorials Masterclass Gallery
             Ready for activation once official video guides are recorded.
