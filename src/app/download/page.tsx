@@ -14,6 +14,7 @@ import {
   getUserLicense, 
   claimOrCreateLicense 
 } from "@/services/licenseService";
+import CadTutorialGallery from "@/components/cad/CadTutorialGallery";
 
 const CAD_COMPARISON = [
   {
@@ -391,6 +392,13 @@ export default function DownloadPage() {
               <span>Download Free Package</span>
             </a>
             <a
+              href="#tutorials"
+              className="px-6 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-800 font-bold text-sm border border-red-200 transition-all flex items-center gap-2 no-underline shadow-xs"
+            >
+              <i className="fab fa-youtube text-red-600"></i>
+              <span>Video Tutorials</span>
+            </a>
+            <a
               href="#why-must-have"
               className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 transition-all flex items-center gap-2 no-underline shadow-xs"
             >
@@ -485,6 +493,9 @@ export default function DownloadPage() {
             </div>
           </div>
         </div>
+
+        {/* SECTION: VIDEO TUTORIALS & TOOL MASTERCLASS GALLERY */}
+        <CadTutorialGallery />
 
         {/* SECTION: WHY HDE STUDIO CAD IS A MUST-HAVE */}
         <section id="why-must-have" className="space-y-8 scroll-mt-12">
