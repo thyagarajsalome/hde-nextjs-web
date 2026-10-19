@@ -155,7 +155,11 @@ export default function CadTutorialGallery() {
         </div>
 
         {/* 16:9 FULLSCREEN-CAPABLE WIDESCREEN VIDEO PLAYER OR PROVISION PLACEHOLDER */}
-        <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800 flex items-center justify-center">
+        <div className={`relative aspect-video w-full rounded-2xl overflow-hidden flex items-center justify-center transition-colors ${
+          activeVideo.youtubeId 
+            ? "bg-slate-950 shadow-2xl border border-slate-800" 
+            : "bg-[#FAF8F5] border-2 border-[#EAE3D2] shadow-sm"
+        }`}>
           {activeVideo.youtubeId ? (
             <iframe
               src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
@@ -165,19 +169,26 @@ export default function CadTutorialGallery() {
               className="w-full h-full border-0"
             ></iframe>
           ) : (
-            <div className="text-center p-8 space-y-3">
-              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-amber-400 text-2xl">
+            <div className="text-center p-6 sm:p-10 space-y-3.5 max-w-lg">
+              <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center mx-auto text-[#b38e47] text-2xl shadow-xs">
                 <i className="fas fa-video"></i>
               </div>
-              <h4 className="text-white font-bold text-lg">Tutorial In Production</h4>
-              <p className="text-slate-400 text-xs max-w-md mx-auto">
-                The video tutorial for &ldquo;{activeVideo.title}&rdquo; is in production. You can link your YouTube video anytime via the Admin Portal.
+              <div className="space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-100/70 border border-amber-300 px-2.5 py-0.5 rounded-full inline-block">
+                  Masterclass Recording
+                </span>
+                <h4 className="text-slate-900 font-extrabold text-lg sm:text-xl tracking-tight">
+                  Tutorial In Production
+                </h4>
+              </div>
+              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                The video tutorial for &ldquo;<strong>{activeVideo.title}</strong>&rdquo; is currently being recorded and will be linked here shortly.
               </p>
               {isAdmin && (
                 <div className="pt-2">
                   <Link
                     href="/admin/tutorials"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-md no-underline cursor-pointer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#c5a059] hover:bg-[#b38e47] text-white font-black text-xs uppercase tracking-wider transition shadow-sm hover:shadow-md no-underline cursor-pointer"
                   >
                     <i className="fas fa-video"></i>
                     <span>+ Add / Manage Video in Admin Portal</span>
