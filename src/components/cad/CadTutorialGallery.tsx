@@ -173,6 +173,17 @@ export default function CadTutorialGallery() {
               <p className="text-slate-400 text-xs max-w-md mx-auto">
                 The video tutorial for &ldquo;{activeVideo.title}&rdquo; is in production. You can link your YouTube video anytime via the Admin Portal.
               </p>
+              {isAdmin && (
+                <div className="pt-2">
+                  <Link
+                    href="/admin/tutorials"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow-md no-underline cursor-pointer"
+                  >
+                    <i className="fas fa-video"></i>
+                    <span>+ Add / Manage Video in Admin Portal</span>
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

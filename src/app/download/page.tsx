@@ -14,6 +14,7 @@ import {
   getUserLicense, 
   claimOrCreateLicense 
 } from "@/services/licenseService";
+import CadTutorialGallery from "@/components/cad/CadTutorialGallery";
 
 const CAD_COMPARISON = [
   {
@@ -139,6 +140,7 @@ export default function DownloadPage() {
   const [buyingCad, setBuyingCad] = useState(false);
   const [copied, setCopied] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === "thyagaraja1983@gmail.com");
 
   // Detect OS
   useEffect(() => {
@@ -271,6 +273,32 @@ export default function DownloadPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-primary/20 selection:text-primary">
       
+      {/* ADMIN QUICK-ACTION BAR (THYAGARAJA1983@GMAIL.COM) */}
+      {isAdmin && (
+        <div className="bg-amber-400 text-slate-950 font-bold px-4 py-2.5 border-b border-amber-500 shadow-xs sticky top-0 z-40">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center text-[10px]">
+                <i className="fas fa-crown"></i>
+              </span>
+              <span>Admin Mode Active: <strong>{user?.email}</strong></span>
+              <span className="text-[10px] bg-black/10 px-2 py-0.5 rounded-full uppercase font-black">
+                CAD Studio Admin
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/tutorials"
+                className="px-3.5 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-900 text-amber-300 font-black text-xs transition flex items-center gap-1.5 no-underline shadow-xs cursor-pointer"
+              >
+                <i className="fab fa-youtube text-red-500"></i>
+                <span>Open Video Tutorials Manager (Add / Edit Videos) &rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* BREADCRUMB */}
       <nav aria-label="Breadcrumb" className="bg-white border-b border-slate-200 text-xs text-slate-500 py-3 px-4">
         <div className="max-w-6xl mx-auto flex items-center gap-2 flex-wrap">
@@ -394,6 +422,11 @@ export default function DownloadPage() {
                 <span>Compare CAD</span>
               </a>
               <span>•</span>
+              <a href="#tutorials" className="hover:text-primary transition no-underline flex items-center gap-1.5">
+                <i className="fab fa-youtube text-red-600 text-[11px]"></i>
+                <span>Video Tutorials</span>
+              </a>
+              <span>•</span>
               <a href="#pricing" className="hover:text-primary transition no-underline flex items-center gap-1.5 text-[#a07c33] font-bold">
                 <i className="fas fa-crown text-[11px]"></i>
                 <span>Pro License</span>
@@ -404,6 +437,18 @@ export default function DownloadPage() {
                 <span>FAQs</span>
               </a>
             </div>
+
+            {isAdmin && (
+              <div className="pt-1">
+                <Link
+                  href="/admin/tutorials"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-950 font-black text-xs transition no-underline shadow-2xs"
+                >
+                  <i className="fab fa-youtube text-red-600"></i>
+                  <span>Admin: Add / Manage Video Tutorials &rarr;</span>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Trust Guarantees */}
@@ -597,6 +642,9 @@ export default function DownloadPage() {
             ))}
           </div>
         </section>
+
+        {/* SECTION: 16:9 CAD VIDEO TUTORIALS MASTERCLASS */}
+        <CadTutorialGallery />
 
         {/* SECTION 3: COMMERCIAL PRO LICENSE PRICING */}
         <section id="pricing" className="bg-white border-2 border-[#c5a059]/40 rounded-3xl p-6 sm:p-10 shadow-md relative overflow-hidden scroll-mt-12 space-y-6">
