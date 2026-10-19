@@ -14,7 +14,6 @@ import {
   getUserLicense, 
   claimOrCreateLicense 
 } from "@/services/licenseService";
-import CadTutorialGallery from "@/components/cad/CadTutorialGallery";
 
 const CAD_COMPARISON = [
   {
@@ -59,49 +58,6 @@ const CAD_COMPARISON = [
     hdeStudio: "100% Offline Standalone Desktop Software. Full drafting, editing, and vector export capability anywhere with zero internet.",
     icon: "fa-shield-halved",
   },
-];
-
-const TARGET_USERS = [
-  {
-    role: "Homeowners & Self-Builders",
-    icon: "fa-house-user",
-    color: "from-blue-500/10 to-indigo-500/10 text-blue-700 border-blue-200",
-    badge: "Cost Savings",
-    headline: "Visualize before you spend",
-    description: "Avoid costly construction mistakes and redesign fees. Easily test whether your furniture fits, adjust bedroom sizes, and experiment with kitchen layouts before breaking ground."
-  },
-  {
-    role: "Civil Contractors & Site Supervisors",
-    icon: "fa-helmet-safety",
-    color: "from-amber-500/10 to-orange-500/10 text-amber-700 border-amber-200",
-    badge: "Field Productivity",
-    headline: "Instant site sketches on your laptop",
-    description: "Draw and revise 2D floor plans directly at the job site. Give masons clear room dimensions and export 300 DPI vector PDF blueprints to clients without waiting for external draftspersons."
-  },
-  {
-    role: "Interior Designers & Decorators",
-    icon: "fa-compass-drafting",
-    color: "from-emerald-500/10 to-teal-500/10 text-emerald-700 border-emerald-200",
-    badge: "Space Planning",
-    headline: "Real-world ergonomic clearances",
-    description: "Drop in modular kitchens, wardrobes, dining suites, and bathroom fixtures with true architectural clearance. Test room circulation and walkway ergonomics in minutes."
-  },
-  {
-    role: "Architecture & Civil Students",
-    icon: "fa-graduation-cap",
-    color: "from-purple-500/10 to-pink-500/10 text-purple-700 border-purple-200",
-    badge: "Fast Learning",
-    headline: "Master spatial layout fundamentals",
-    description: "Focus on design theory, room zoning, and residential circulation without getting trapped in the maze of complex legacy CAD menus or steep learning curves."
-  },
-  {
-    role: "Real Estate Agents & Property Scouts",
-    icon: "fa-building",
-    color: "from-sky-500/10 to-cyan-500/10 text-sky-700 border-sky-200",
-    badge: "Sales & Marketing",
-    headline: "Professional presentation floor plans",
-    description: "Create crisp, attractive 2D floor plan schematics for property listings that help prospective buyers immediately understand room sizes and home layout flow."
-  }
 ];
 
 const SIMPLICITY_PILLARS = [
@@ -178,22 +134,13 @@ export default function DownloadPage() {
   const [releases, setReleases] = useState<AppRelease[]>([]);
   const [license, setLicense] = useState<DesktopLicense | null>(null);
   const [detectedOS, setDetectedOS] = useState<"windows" | "macos" | "linux">("windows");
-  const [copied, setCopied] = useState(false);
-  const [claiming, setClaiming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cadBilling, setCadBilling] = useState<'lifetime' | 'monthly'>('lifetime');
   const [buyingCad, setBuyingCad] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Load Razorpay checkout script
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
-  // Detect Operating System
+  // Detect OS
   useEffect(() => {
     const ua = window.navigator.userAgent.toLowerCase();
     if (ua.includes("win")) {
@@ -333,13 +280,13 @@ export default function DownloadPage() {
         </div>
       </nav>
 
-      {/* HERO HEADER */}
+      {/* STREAMLINED HERO: DOWNLOAD IMMEDIATELY ABOVE THE FOLD */}
       <section className="bg-white border-b border-slate-200 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 shadow-xs">
-        <div className="max-w-5xl mx-auto text-center space-y-6">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
           
           {/* Brand Icon & Version Pill */}
           <div className="flex flex-col items-center justify-center gap-3">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border border-slate-200/80 shadow-md flex items-center justify-center p-2 transition-transform hover:scale-105 duration-300">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-slate-200 shadow-md flex items-center justify-center p-2 transition-transform hover:scale-105 duration-300">
               <Image
                 src="/images/cad/HDE_256px.webp"
                 alt="HDE Studio House Planning Tool Icon"
@@ -361,103 +308,210 @@ export default function DownloadPage() {
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900">
               Design Faster with <span className="text-primary">HDE Studio</span> CAD
             </h1>
-            <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed">
-              Professional offline 2D architectural space planning, 60+ pre-scaled vector blocks, real-time dynamic dimensioning, and client-ready vector PDF blueprints.
+            <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-600 leading-relaxed">
+              Intuitive offline 2D architectural space planning, 60+ pre-scaled vector blocks, real-time dynamic dimensioning, and client-ready 300 DPI vector PDF blueprints.
             </p>
           </div>
 
-          {/* Feature Badges */}
-          <div className="flex flex-wrap justify-center gap-2.5 pt-2 text-xs font-semibold text-slate-700">
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
-              <i className="fas fa-check-circle text-emerald-600"></i> India Metric (mm) &amp; USA Imperial (Ft/In)
-            </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
-              <i className="fas fa-check-circle text-emerald-600"></i> 60+ Pre-Scaled Architectural Blocks
-            </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
-              <i className="fas fa-check-circle text-emerald-600"></i> 300 DPI Vector PDF Blueprints
-            </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200/90 shadow-xs flex items-center gap-1.5">
-              <i className="fas fa-check-circle text-emerald-600"></i> 100% Offline Standalone Desktop App
-            </span>
+          {/* PRIMARY DOWNLOAD ACTION BUTTONS (DIRECT & INSTANT) */}
+          <div id="download" className="pt-2 max-w-xl mx-auto space-y-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              {detectedOS === "windows" && (
+                <>
+                  <a
+                    href={winExe.download_url}
+                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
+                  >
+                    <i className="fab fa-windows text-xl"></i>
+                    <div className="text-left">
+                      <div className="text-sm font-black leading-tight">Download for Windows</div>
+                      <div className="text-[11px] font-normal opacity-90">64-bit Installer (.exe) • {winExe.file_size_mb} MB</div>
+                    </div>
+                  </a>
+                  <a
+                    href={winZip.download_url}
+                    className="w-full sm:w-auto px-5 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold text-xs transition-all no-underline flex items-center justify-center gap-2"
+                    title="Portable version with zero installation"
+                  >
+                    <i className="fas fa-file-zipper text-sm"></i>
+                    <span>Portable Zip ({winZip.file_size_mb} MB)</span>
+                  </a>
+                </>
+              )}
+
+              {detectedOS === "macos" && (
+                <a
+                  href={macDmg.download_url}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <i className="fab fa-apple text-xl"></i>
+                  <div className="text-left">
+                    <div className="text-sm font-black leading-tight">Download for macOS</div>
+                    <div className="text-[11px] font-normal opacity-90">Apple Silicon &amp; Intel (.dmg) • {macDmg.file_size_mb} MB</div>
+                  </div>
+                </a>
+              )}
+
+              {detectedOS === "linux" && (
+                <a
+                  href={linuxZip.download_url}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
+                >
+                  <i className="fab fa-linux text-xl"></i>
+                  <div className="text-left">
+                    <div className="text-sm font-black leading-tight">Download for Linux</div>
+                    <div className="text-[11px] font-normal opacity-90">Portable Bundle (.zip) • {linuxZip.file_size_mb} MB</div>
+                  </div>
+                </a>
+              )}
+            </div>
+
+            {/* Other OS Switcher Links */}
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-slate-500 pt-1">
+              <span className="font-semibold text-slate-400">Other Platforms:</span>
+              <a href={winExe.download_url} className="hover:text-primary transition font-medium no-underline flex items-center gap-1">
+                <i className="fab fa-windows text-[11px]"></i> Windows .exe
+              </a>
+              <span>•</span>
+              <a href={macDmg.download_url} className="hover:text-primary transition font-medium no-underline flex items-center gap-1">
+                <i className="fab fa-apple text-[11px]"></i> macOS .dmg
+              </a>
+              <span>•</span>
+              <a href={linuxZip.download_url} className="hover:text-primary transition font-medium no-underline flex items-center gap-1">
+                <i className="fab fa-linux text-[11px]"></i> Linux .zip
+              </a>
+            </div>
+
+            {/* In-Page Jump Anchors */}
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-semibold text-slate-600 pt-2">
+              <a href="#features" className="hover:text-primary transition no-underline flex items-center gap-1.5">
+                <i className="fas fa-sparkles text-amber-500 text-[11px]"></i>
+                <span>Features</span>
+              </a>
+              <span>•</span>
+              <a href="#comparison" className="hover:text-primary transition no-underline flex items-center gap-1.5">
+                <i className="fas fa-balance-scale text-primary text-[11px]"></i>
+                <span>Compare CAD</span>
+              </a>
+              <span>•</span>
+              <a href="#pricing" className="hover:text-primary transition no-underline flex items-center gap-1.5 text-[#a07c33] font-bold">
+                <i className="fas fa-crown text-[11px]"></i>
+                <span>Pro License</span>
+              </a>
+              <span>•</span>
+              <a href="#faqs" className="hover:text-primary transition no-underline flex items-center gap-1.5">
+                <i className="fas fa-circle-question text-[11px]"></i>
+                <span>FAQs</span>
+              </a>
+            </div>
           </div>
 
-          {/* Jump to Actions */}
-          <div className="pt-2 flex flex-wrap justify-center items-center gap-3">
-            <a
-              href="#download"
-              className="px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 no-underline"
-            >
-              <i className="fas fa-download"></i>
-              <span>Download Free Package</span>
-            </a>
-            <a
-              href="#why-must-have"
-              className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 transition-all flex items-center gap-2 no-underline shadow-xs"
-            >
-              <i className="fas fa-star text-amber-500"></i>
-              <span>Why It&apos;s a Must-Have</span>
-            </a>
-            <a
-              href="#comparison"
-              className="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 transition-all flex items-center gap-2 no-underline shadow-xs"
-            >
-              <i className="fas fa-balance-scale text-primary"></i>
-              <span>Compare with Traditional 2D Software</span>
-            </a>
-            <a
-              href="#pricing"
-              className="px-6 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold text-sm border border-amber-200/80 transition-all flex items-center gap-2 no-underline shadow-xs"
-            >
-              <i className="fas fa-crown text-[#c5a059]"></i>
-              <span>Commercial Pro License</span>
-            </a>
+          {/* Trust Guarantees */}
+          <div className="flex flex-wrap justify-center gap-3 pt-4 text-xs font-semibold text-slate-600 border-t border-slate-100">
+            <span className="flex items-center gap-1.5">
+              <i className="fas fa-shield-halved text-emerald-600"></i> 100% Offline Standalone App
+            </span>
+            <span className="text-slate-300">•</span>
+            <span className="flex items-center gap-1.5">
+              <i className="fas fa-bolt text-amber-500"></i> Zero Learning Curve
+            </span>
+            <span className="text-slate-300">•</span>
+            <span className="flex items-center gap-1.5">
+              <i className="fas fa-file-pdf text-red-500"></i> 300 DPI Vector PDF Export
+            </span>
           </div>
 
         </div>
       </section>
 
       {/* MAIN CONTAINER */}
-      <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-12">
 
-
-
-        {/* PROVISION: Video Tutorials Masterclass Gallery
-            Ready for activation once official video guides are recorded.
-            Manage tutorials anytime via /admin/tutorials */}
-        {/* <CadTutorialGallery /> */}
-
-        {/* SECTION: WHY HDE STUDIO CAD IS A MUST-HAVE */}
-        <section id="why-must-have" className="space-y-8 scroll-mt-12">
-          
-          {/* Header */}
-          <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold uppercase tracking-wider">
-              <i className="fas fa-sparkles text-emerald-600"></i>
-              <span>Simplicity First • Zero CAD Experience Required</span>
+        {/* LICENSE KEY ACTIVATION WIDGET */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-7">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-slate-900">
+                <i className="fas fa-key text-primary text-lg"></i>
+                <h2 className="text-lg font-bold">Your Desktop License Key</h2>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Enter your key and registered account email in HDE Studio (Help &gt; Activate License) to unlock commercial features.
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Why HDE Studio CAD is the Simple, Must-Have Software for Everyone
+
+            {user ? (
+              license ? (
+                <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="bg-slate-50 border border-slate-300 px-4 py-2.5 rounded-xl font-mono text-sm font-bold text-slate-900 tracking-wider flex items-center justify-between gap-4 shadow-inner">
+                    <span>{license.license_key}</span>
+                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                      {license.edition}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleCopyKey}
+                    className="px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+                  >
+                    <i className={copied ? "fas fa-check" : "fas fa-copy"}></i>
+                    <span>{copied ? "Copied!" : "Copy Key"}</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
+                    <i className="fas fa-lock text-amber-600"></i>
+                    <span>Free Edition Active</span>
+                  </div>
+                  <a
+                    href="#pricing"
+                    className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition shadow-xs flex items-center justify-center gap-2 no-underline cursor-pointer whitespace-nowrap"
+                  >
+                    <span>Unlock Commercial Pro</span>
+                    <i className="fas fa-arrow-down text-[10px]"></i>
+                  </a>
+                </div>
+              )
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/signin?redirect=/download"
+                  className="px-4 py-2 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition-all no-underline"
+                >
+                  Sign In to View License
+                </Link>
+              </div>
+            )}
+
+          </div>
+        </div>
+
+        {/* SECTION 1: CORE PILLARS OF SIMPLICITY */}
+        <section id="features" className="space-y-6 scroll-mt-12">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">Intuitive Drafting</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Why HDE Studio CAD is Built for Everyone
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Architectural planning shouldn&apos;t require an engineering degree or a 40-hour training course. HDE Studio CAD is engineered for intuitive point-and-click drafting — giving homeowners, contractors, and designers instant floor plan mastery.
+            <p className="text-xs sm:text-sm text-slate-600">
+              Zero engineering curve. Point-and-click drafting gives homeowners, contractors, and designers instant floor plan mastery.
             </p>
           </div>
 
-          {/* 4 Pillars of Simplicity */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {SIMPLICITY_PILLARS.map((pillar, idx) => (
               <div 
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
+                className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
               >
-                <div className="space-y-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center border text-lg ${pillar.accent}`}>
+                <div className="space-y-2.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border text-base ${pillar.accent}`}>
                     <i className={`fas ${pillar.icon}`}></i>
                   </div>
                   <div>
-                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 block">{pillar.subtitle}</span>
-                    <h3 className="text-base font-bold text-slate-900">{pillar.title}</h3>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">{pillar.subtitle}</span>
+                    <h3 className="text-sm font-bold text-slate-900">{pillar.title}</h3>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">
                     {pillar.desc}
@@ -469,652 +523,277 @@ export default function DownloadPage() {
               </div>
             ))}
           </div>
-
-          {/* Who Needs It - Target Personas */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 lg:p-10 shadow-xs space-y-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 pb-6">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-primary">Universal Usability</span>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900">
-                  Who Needs HDE Studio CAD?
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-md">
-                From self-builders planning dream layouts to contractors sketching on site, see how HDE Studio saves time and money.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {TARGET_USERS.map((userRole, idx) => (
-                <div 
-                  key={idx}
-                  className="rounded-2xl border border-slate-200 p-5 space-y-3 hover:border-slate-300 transition-all bg-gradient-to-b from-slate-50/50 to-white flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border ${userRole.color}`}>
-                        <i className={`fas ${userRole.icon}`}></i>
-                        {userRole.badge}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Role #{idx + 1}</span>
-                    </div>
-
-                    <div>
-                      <h4 className="font-extrabold text-base text-slate-900">{userRole.role}</h4>
-                      <p className="text-xs font-semibold text-primary mt-0.5">&ldquo;{userRole.headline}&rdquo;</p>
-                    </div>
-
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {userRole.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100/80 flex items-center justify-between text-[11px] text-slate-500 font-medium">
-                    <span>Zero Training Required</span>
-                    <i className="fas fa-arrow-right text-[10px] text-slate-400"></i>
-                  </div>
-                </div>
-              ))}
-
-              {/* Callout Card */}
-              <div className="rounded-2xl border border-dashed border-primary/40 p-6 bg-primary/5 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-lg">
-                    <i className="fas fa-lightbulb"></i>
-                  </div>
-                  <h4 className="font-bold text-base text-slate-900">Have Your Own Custom Drafting Need?</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    HDE Studio CAD is built for custom floor plans, commercial shops, electrical layouts, and residential remodels.
-                  </p>
-                </div>
-                <a
-                  href="#download"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-xs hover:bg-primary/90 transition-all no-underline"
-                >
-                  <span>Start Drafting Now</span>
-                  <i className="fas fa-arrow-down text-xs"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
         </section>
 
-        {/* SECTION: TRADITIONAL 2D SOFTWARE VS HDE STUDIO CAD */}
-        <section id="comparison" className="space-y-8 scroll-mt-12">
-
-          {/* Comparison Header */}
-          <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold uppercase tracking-wider">
-              <i className="fas fa-balance-scale text-primary"></i>
-              <span>Honest Architectural Software Comparison</span>
-            </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Traditional 2D Software vs. HDE Studio CAD
+        {/* SECTION 2: SOFTWARE COMPARISON TABLE */}
+        <section id="comparison" className="space-y-6 scroll-mt-12">
+          <div className="text-center space-y-2 max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">Honest Software Comparison</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Traditional 2D CAD vs. HDE Studio CAD
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Why fight with bloated, legacy desktop CAD suites when you can draft clean, professional 2D floor plans with zero friction?
+            <p className="text-xs sm:text-sm text-slate-600">
+              Why struggle with bloated, expensive legacy CAD suites when you can draft clean, professional 2D floor plans with zero friction?
             </p>
           </div>
 
-          {/* Comparison Table for Tablet / Desktop (md and above) */}
-          <div className="hidden md:block bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50/80">
-                    <th className="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500 w-1/4">
-                      Core Capability
-                    </th>
-                    <th className="py-4 px-6 text-xs font-bold uppercase tracking-wider text-rose-800 bg-rose-50/50 w-[37.5%] border-x border-slate-200/60">
+          {/* Desktop Comparison Table */}
+          <div className="hidden md:block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/80">
+                  <th className="py-3 px-5 text-xs font-bold uppercase tracking-wider text-slate-500 w-1/4">
+                    Capability
+                  </th>
+                  <th className="py-3 px-5 text-xs font-bold uppercase tracking-wider text-rose-800 bg-rose-50/40 w-[37.5%] border-x border-slate-200/60">
+                    Traditional 2D Software
+                  </th>
+                  <th className="py-3 px-5 text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50/50 w-[37.5%]">
+                    HDE Studio CAD
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-xs sm:text-sm">
+                {CAD_COMPARISON.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50/40 transition-colors">
+                    <td className="py-3.5 px-5 font-bold text-slate-900 align-top">
                       <div className="flex items-center gap-2">
-                        <i className="fas fa-times-circle text-rose-500"></i>
-                        <span>Traditional 2D Software</span>
+                        <i className={`fas ${row.icon} text-slate-400 text-xs`}></i>
+                        <span>{row.feature}</span>
                       </div>
-                    </th>
-                    <th className="py-4 px-6 text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-50/60 w-[37.5%]">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <i className="fas fa-check-circle text-emerald-600"></i>
-                          <span>HDE Studio CAD</span>
-                        </div>
-                        <span className="text-[10px] bg-emerald-600 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-widest">
-                          Modern
-                        </span>
+                    </td>
+                    <td className="py-3.5 px-5 text-slate-600 align-top bg-rose-50/20 border-x border-slate-200/50 leading-relaxed text-xs">
+                      {row.traditional}
+                    </td>
+                    <td className="py-3.5 px-5 text-slate-900 align-top bg-emerald-50/20 font-medium leading-relaxed text-xs">
+                      <div className="flex items-start gap-1.5">
+                        <i className="fas fa-check-circle text-emerald-600 text-xs mt-0.5 shrink-0"></i>
+                        <span>{row.hdeStudio}</span>
                       </div>
-                    </th>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm">
-                  {CAD_COMPARISON.map((row, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/40 transition-colors">
-                      <td className="py-4 px-6 font-bold text-slate-900 align-top">
-                        <div className="flex items-start gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 shrink-0 text-xs mt-0.5">
-                            <i className={`fas ${row.icon}`}></i>
-                          </div>
-                          <span className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
-                            {row.feature}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-slate-600 align-top bg-rose-50/20 border-x border-slate-200/50 text-xs sm:text-sm leading-relaxed">
-                        <div className="flex items-start gap-2">
-                          <i className="fas fa-circle-minus text-rose-400 mt-1 shrink-0 text-xs"></i>
-                          <span>{row.traditional}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-slate-900 align-top bg-emerald-50/20 text-xs sm:text-sm font-medium leading-relaxed">
-                        <div className="flex items-start gap-2">
-                          <i className="fas fa-circle-check text-emerald-600 mt-1 shrink-0 text-xs"></i>
-                          <span>{row.hdeStudio}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Comparison Cards for Mobile (hidden on md and above) */}
-          <div className="md:hidden space-y-4">
+          {/* Mobile Comparison Cards */}
+          <div className="md:hidden space-y-3">
             {CAD_COMPARISON.map((row, idx) => (
-              <div key={idx} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
-                <div className="flex items-center gap-2.5 border-b border-slate-100 pb-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary text-xs shrink-0">
-                    <i className={`fas ${row.icon}`}></i>
-                  </div>
-                  <h4 className="font-extrabold text-sm text-slate-900">{row.feature}</h4>
+              <div key={idx} className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs space-y-3 text-xs">
+                <div className="flex items-center gap-2 font-bold text-slate-900 border-b border-slate-100 pb-2">
+                  <i className={`fas ${row.icon} text-primary`}></i>
+                  <span>{row.feature}</span>
                 </div>
-
-                <div className="space-y-3 text-xs">
-                  <div className="p-3 rounded-xl bg-rose-50/60 border border-rose-200/80 space-y-1">
-                    <div className="flex items-center gap-1.5 text-rose-800 font-bold uppercase text-[10px] tracking-wider">
-                      <i className="fas fa-times-circle text-rose-500"></i>
-                      <span>Traditional 2D Software</span>
-                    </div>
-                    <p className="text-slate-600 leading-relaxed">
-                      {row.traditional}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1">
-                    <div className="flex items-center gap-1.5 text-emerald-800 font-bold uppercase text-[10px] tracking-wider">
-                      <i className="fas fa-check-circle text-emerald-600"></i>
-                      <span>HDE Studio CAD</span>
-                    </div>
-                    <p className="text-slate-900 font-medium leading-relaxed">
-                      {row.hdeStudio}
-                    </p>
-                  </div>
+                <div className="p-2.5 rounded-lg bg-rose-50/70 border border-rose-200/70 text-slate-600 space-y-1">
+                  <span className="font-bold text-rose-800 text-[10px] uppercase">Traditional CAD</span>
+                  <p>{row.traditional}</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-slate-900 font-medium space-y-1">
+                  <span className="font-bold text-emerald-800 text-[10px] uppercase">HDE Studio</span>
+                  <p>{row.hdeStudio}</p>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Quick CTA Banner beneath comparison */}
-          <div className="bg-gradient-to-r from-blue-50/90 via-slate-50 to-indigo-50/70 border-2 border-primary/20 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
-            <div className="space-y-2 text-center md:text-left">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-100/80 border border-emerald-300 px-3 py-1 rounded-full">
-                <i className="fas fa-bolt text-emerald-600"></i> Pure Speed • Zero Bloat
-              </span>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
-                Ready to Experience Drafting Without the Headache?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
-                Download the free standalone desktop installer and begin floor planning in minutes. No credit card required.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
-              <a
-                href="#download"
-                className="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 hover:scale-102 cursor-pointer"
-              >
-                <i className="fas fa-download"></i>
-                <span>Download Installer</span>
-              </a>
-              <a
-                href="#pricing"
-                className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center no-underline flex items-center justify-center gap-2 hover:scale-102 cursor-pointer"
-              >
-                <i className="fas fa-crown text-amber-300"></i>
-                <span>Get Lifetime License</span>
-              </a>
-            </div>
-          </div>
-
         </section>
 
-        {/* LICENSE KEY ACTIVATION WIDGET */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-slate-900">
-                <i className="fas fa-key text-primary text-xl"></i>
-                <h2 className="text-xl font-bold">Your Desktop License Key</h2>
-              </div>
-              <p className="text-sm text-slate-600">
-                Enter this key along with your registered account email upon opening HDE Studio to activate your full edition.
-              </p>
+        {/* SECTION 3: COMMERCIAL PRO LICENSE PRICING */}
+        <section id="pricing" className="bg-white border-2 border-[#c5a059]/40 rounded-3xl p-6 sm:p-10 shadow-md relative overflow-hidden scroll-mt-12 space-y-6">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#a07c33] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
+              <i className="fas fa-crown"></i>
+              <span>Commercial &amp; Professional CAD License</span>
             </div>
-
-            {user ? (
-              license ? (
-                <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="bg-slate-50 border border-slate-300 px-4 py-3 rounded-xl font-mono text-sm sm:text-base font-bold text-slate-900 tracking-wider flex items-center justify-between gap-4 shadow-inner">
-                    <span className="font-mono">{license.license_key}</span>
-                    <span className="text-[10px] uppercase font-sans font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
-                      {license.edition}
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleCopyKey}
-                    className="px-5 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
-                  >
-                    <i className={copied ? "fas fa-check" : "fas fa-copy"}></i>
-                    <span>{copied ? "Copied!" : "Copy Key"}</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
-                    <i className="fas fa-lock text-amber-600"></i>
-                    <span>Commercial License Required to Activate</span>
-                  </div>
-                  <a
-                    href="#pricing"
-                    className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition shadow-sm flex items-center justify-center gap-2 no-underline cursor-pointer whitespace-nowrap"
-                  >
-                    <span>Unlock License Key</span>
-                    <i className="fas fa-arrow-down text-xs"></i>
-                  </a>
-                </div>
-              )
-            ) : (
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/signin?redirect=/download"
-                  className="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primary/90 transition-all no-underline"
-                >
-                  Sign In / Purchase License
-                </Link>
-              </div>
-            )}
-
-          </div>
-        </div>
-
-        {/* PRIMARY DOWNLOAD CARD (DETECTED OS) */}
-        <div id="download" className="bg-white border-2 border-primary/20 rounded-3xl p-6 sm:p-10 shadow-md text-center space-y-6 scroll-mt-12">
-          
-          <div className="inline-block p-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary text-3xl shadow-xs">
-            <i className={detectedOS === "windows" ? "fab fa-windows" : detectedOS === "macos" ? "fab fa-apple" : "fab fa-linux"}></i>
-          </div>
-
-          <div className="space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Download for {detectedOS === "windows" ? "Windows (64-bit)" : detectedOS === "macos" ? "macOS (Apple & Intel)" : "Linux (64-bit)"}
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+              Unlock Full HDE Studio Pro
             </h2>
-            <p className="text-sm text-slate-600">
-              Recommended package automatically detected for your computer system.
+            <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+              Standalone 2D architectural CAD software with all vector block sets, real-time dimensions, and high-resolution PDF printing.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            {detectedOS === "windows" && (
-              <>
-                <a
-                  href={winExe.download_url}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
-                >
-                  <i className="fas fa-download"></i>
-                  <span>Download Windows Installer (.exe)</span>
-                  <span className="text-xs font-normal opacity-90">({winExe.file_size_mb} MB)</span>
-                </a>
-                <a
-                  href={winZip.download_url}
-                  className="w-full sm:w-auto px-6 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 font-bold text-sm transition-all no-underline flex items-center justify-center gap-2"
-                >
-                  <i className="fas fa-file-zipper"></i>
-                  <span>Portable Zip ({winZip.file_size_mb} MB)</span>
-                </a>
-              </>
-            )}
-
-            {detectedOS === "macos" && (
-              <a
-                href={macDmg.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
+          {/* Billing Selector */}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200">
+              <button
+                type="button"
+                onClick={() => setCadBilling('lifetime')}
+                className={`px-4 sm:px-6 py-2 rounded-lg font-black text-xs transition-all flex items-center gap-2 cursor-pointer ${
+                  cadBilling === 'lifetime'
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
               >
-                <i className="fas fa-download"></i>
-                <span>Download macOS DMG (.dmg)</span>
-                <span className="text-xs font-normal opacity-90">({macDmg.file_size_mb} MB)</span>
-              </a>
-            )}
-
-            {detectedOS === "linux" && (
-              <a
-                href={linuxZip.download_url}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md hover:scale-102 transition-all no-underline flex items-center justify-center gap-3"
+                <i className="fas fa-infinity text-xs"></i>
+                <span>Lifetime License</span>
+                <span className="text-[9px] font-black uppercase bg-emerald-600 text-white px-1.5 py-0.5 rounded-full">
+                  SAVE 25%
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCadBilling('monthly')}
+                className={`px-4 sm:px-6 py-2 rounded-lg font-bold text-xs transition-all flex items-center gap-2 cursor-pointer ${
+                  cadBilling === 'monthly'
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
               >
-                <i className="fas fa-download"></i>
-                <span>Download Linux Portable (.zip)</span>
-                <span className="text-xs font-normal opacity-90">({linuxZip.file_size_mb} MB)</span>
-              </a>
-            )}
+                <i className="fas fa-calendar-alt text-xs"></i>
+                <span>Monthly Plan</span>
+              </button>
+            </div>
+            <span className="text-[11px] text-slate-500 font-medium">
+              {cadBilling === 'lifetime'
+                ? "⭐ One-time payment • Perpetual software license & all future updates included."
+                : "Cancel or reactivate whenever you need."}
+            </span>
           </div>
-        </div>
 
-        {/* ALL PLATFORMS GRID */}
-        <div>
-          <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">
-            All Operating System Packages
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            {/* WINDOWS */}
-            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-xl">
-                  <i className="fab fa-windows"></i>
-                </div>
-                <div>
-                  <h4 className="font-bold text-base text-slate-900">Windows</h4>
-                  <p className="text-xs text-slate-500">Windows 10, 11 (64-bit)</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Includes automated setup wizard, Start Menu shortcuts, and embedded runtime.
-              </p>
-              <div className="space-y-2 pt-2">
-                <a
-                  href={winExe.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
-                >
-                  Installer Setup (.exe) • {winExe.file_size_mb} MB
-                </a>
-                <a
-                  href={winZip.download_url}
-                  className="block text-center py-2 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs transition-colors no-underline"
-                >
-                  Portable Zip • {winZip.file_size_mb} MB
-                </a>
-              </div>
-            </div>
-
-            {/* MACOS */}
-            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 flex items-center justify-center text-xl">
-                  <i className="fab fa-apple"></i>
-                </div>
-                <div>
-                  <h4 className="font-bold text-base text-slate-900">macOS</h4>
-                  <p className="text-xs text-slate-500">Apple Silicon (M1/M2/M3) &amp; Intel</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Native macOS disk image. Drag to Applications folder and launch immediately.
-              </p>
-              <div className="pt-2">
-                <a
-                  href={macDmg.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
-                >
-                  macOS Disk Image (.dmg) • {macDmg.file_size_mb} MB
-                </a>
-              </div>
-            </div>
-
-            {/* LINUX */}
-            <div className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 shadow-xs hover:shadow-md transition-all space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center text-xl">
-                  <i className="fab fa-linux"></i>
-                </div>
-                <div>
-                  <h4 className="font-bold text-base text-slate-900">Linux</h4>
-                  <p className="text-xs text-slate-500">Ubuntu, Debian, Fedora, Arch</p>
-                </div>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Self-contained bundle with bash launcher script and desktop entry shortcut.
-              </p>
-              <div className="pt-2">
-                <a
-                  href={linuxZip.download_url}
-                  className="block text-center py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-colors no-underline shadow-xs"
-                >
-                  Portable Bundle (.zip) • {linuxZip.file_size_mb} MB
-                </a>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* HDE STUDIO CAD COMMERCIAL LICENSE PRICING */}
-        <div id="pricing" className="bg-white border-2 border-[#c5a059]/40 rounded-3xl p-8 sm:p-12 shadow-md relative overflow-hidden scroll-mt-12">
-          
-          <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#a07c33] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
-                <i className="fas fa-crown"></i>
-                <span>Commercial &amp; Professional CAD License</span>
-              </div>
-              <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900">
-                Unlock Full HDE Studio Pro
-              </h3>
-              <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-                Offline 2D architectural CAD software with drafting tools, structural layers, CAD block libraries, and high-res vector PDF printing.
-              </p>
-            </div>
-
-            {/* BILLING TOGGLE */}
-            <div className="flex flex-col items-center justify-center gap-3">
-              <div className="bg-slate-100 p-1.5 rounded-2xl flex items-center border border-slate-200 shadow-inner">
-                <button
-                  type="button"
-                  onClick={() => setCadBilling('lifetime')}
-                  className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2.5 cursor-pointer ${
-                    cadBilling === 'lifetime'
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <i className="fas fa-infinity text-sm"></i>
-                  <span>Lifetime Commercial License</span>
-                  <span className="text-[10px] font-black uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full tracking-wider">
-                    25% OFF
+          {/* Checkout Card */}
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-3 max-w-md">
+              <div className="flex items-baseline gap-2.5">
+                <span className="text-3xl sm:text-4xl font-black text-slate-900">
+                  {cadBilling === 'lifetime'
+                    ? (region === 'US' ? '$299' : '₹18,749')
+                    : (region === 'US' ? '$49' : '₹1,999')}
+                </span>
+                {cadBilling === 'lifetime' && (
+                  <span className="text-base text-slate-400 line-through">
+                    {region === 'US' ? '$399' : '₹24,999'}
                   </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCadBilling('monthly')}
-                  className={`px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${
-                    cadBilling === 'monthly'
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  <i className="fas fa-calendar-alt text-sm"></i>
-                  <span>Monthly Pro Plan</span>
-                </button>
+                )}
+                <span className="text-xs text-slate-500 font-semibold">
+                  {cadBilling === 'lifetime' ? '/ one-time' : '/ month'}
+                </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium">
-                {cadBilling === 'lifetime'
-                  ? "⭐ Limited Launch Offer: One-time payment, perpetual software license & all future updates included."
-                  : "Flexible monthly billing. Cancel or reactivate whenever you need."}
-              </p>
+
+              <ul className="space-y-2 text-xs text-slate-700">
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span><strong>100% Offline Software</strong> — draft anywhere with zero internet</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span><strong>60+ Architectural Vector Blocks</strong> (Furniture, Kitchens, Baths)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span><strong>Dual Standard Catalogs</strong> (Metric mm &amp; Imperial Ft/In)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span><strong>300 DPI Vector PDF Blueprints</strong> for client handoffs</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <i className="fas fa-check-circle text-emerald-600"></i>
+                  <span>Instant desktop license key linked to your account</span>
+                </li>
+              </ul>
             </div>
 
-            {/* PRICING CARD & DETAILS */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="space-y-4 max-w-lg">
-                <div className="flex items-baseline gap-3 flex-wrap">
-                  {cadBilling === 'lifetime' ? (
-                    <>
-                      <span className="text-4xl sm:text-5xl font-black text-slate-900">
-                        {region === 'US' ? '$299' : '₹18,749'}
-                      </span>
-                      <span className="text-lg text-slate-400 line-through">
-                        {region === 'US' ? '$399' : '₹24,999'}
-                      </span>
-                      <span className="text-xs font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-full">
-                        Save 25%
-                      </span>
-                      <span className="text-xs text-slate-500 font-semibold block sm:inline">
-                        / one-time
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-4xl sm:text-5xl font-black text-slate-900">
-                        {region === 'US' ? '$49' : '₹1,999'}
-                      </span>
-                      <span className="text-sm text-slate-500 font-semibold">
-                        / month
-                      </span>
-                    </>
-                  )}
-                </div>
-
-                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>100% Offline 2D CAD Software</strong> — no internet connection required to draft</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>Architectural Vector Blocks</strong> (Furniture, Sanitary, Doors, Windows, Vehicles)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>Dual Standard Catalogs</strong> (India Metric mm &amp; USA Imperial Feet/Inches)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>High-Resolution Vector PDF Export</strong> ready for printing &amp; client handoffs</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span><strong>Commercial License</strong> for Architects, Civil Engineers, Contractors &amp; Firms</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <i className="fas fa-check-circle text-emerald-600"></i>
-                    <span>Instant desktop license key generation with lifetime profile tie-in</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="w-full md:w-auto text-center space-y-3 shrink-0">
-                <button
-                  type="button"
-                  onClick={handleCadCheckout}
-                  disabled={buyingCad}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-base shadow-md transition-all flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 hover:scale-102"
-                >
-                  {buyingCad ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin"></i>
-                      <span>Processing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-shopping-cart"></i>
-                      <span>
-                        {cadBilling === 'lifetime'
-                          ? `Buy Lifetime License • ${region === 'US' ? '$299' : '₹18,749'}`
-                          : `Subscribe Monthly • ${region === 'US' ? '$49/mo' : '₹1,999/mo'}`}
-                      </span>
-                    </>
-                  )}
-                </button>
-                <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 font-medium">
-                  <i className="fas fa-shield-alt text-emerald-600"></i>
-                  <span>Secure 256-bit checkout via Razorpay</span>
-                </div>
+            <div className="w-full md:w-auto text-center space-y-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleCadCheckout}
+                disabled={buyingCad}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-sm shadow-md transition-all flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 hover:scale-102"
+              >
+                {buyingCad ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-shopping-cart"></i>
+                    <span>
+                      {cadBilling === 'lifetime'
+                        ? `Buy Lifetime License • ${region === 'US' ? '$299' : '₹18,749'}`
+                        : `Subscribe Monthly • ${region === 'US' ? '$49/mo' : '₹1,999/mo'}`}
+                    </span>
+                  </>
+                )}
+              </button>
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
+                <i className="fas fa-shield-alt text-emerald-600"></i>
+                <span>Secure 256-bit payment via Razorpay</span>
               </div>
             </div>
-
           </div>
-        </div>
+        </section>
 
-        {/* 3-STEP QUICK START GUIDE */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 space-y-8 shadow-xs">
-          <h3 className="text-2xl font-bold text-slate-900 text-center">
+        {/* SECTION 4: 3-STEP INSTALL GUIDE */}
+        <section className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
+          <h3 className="text-xl font-bold text-slate-900 text-center">
             How to Install and Activate HDE Studio
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center space-y-2">
+              <div className="w-10 h-10 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-sm flex items-center justify-center">
                 1
               </div>
-              <h4 className="font-bold text-base text-slate-900">Download Setup</h4>
+              <h4 className="font-bold text-sm text-slate-900">Download Installer</h4>
               <p className="text-xs text-slate-600">
-                Download the setup package above for your operating system.
+                Click download above for Windows, macOS, or Linux.
               </p>
             </div>
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
+            <div className="text-center space-y-2">
+              <div className="w-10 h-10 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-sm flex items-center justify-center">
                 2
               </div>
-              <h4 className="font-bold text-base text-slate-900">Run Installer</h4>
+              <h4 className="font-bold text-sm text-slate-900">Run Setup</h4>
               <p className="text-xs text-slate-600">
-                Double click the setup file and follow the on-screen instructions to install.
+                Double-click the installer and launch the application in 2 seconds.
               </p>
             </div>
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-lg flex items-center justify-center shadow-xs">
+            <div className="text-center space-y-2">
+              <div className="w-10 h-10 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary font-black text-sm flex items-center justify-center">
                 3
               </div>
-              <h4 className="font-bold text-base text-slate-900">Enter License Key</h4>
+              <h4 className="font-bold text-sm text-slate-900">Enter License Key</h4>
               <p className="text-xs text-slate-600">
-                Launch HDE Studio and paste your License Key shown above to unlock all CAD tools.
+                Open Help &gt; Activate License and paste your key to unlock Pro drafting.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* FREQUENTLY ASKED QUESTIONS */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 space-y-6 shadow-xs">
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold uppercase tracking-wider">
-              <i className="fas fa-circle-question text-primary"></i>
-              <span>Help &amp; Documentation</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
+        {/* SECTION 5: FREQUENTLY ASKED QUESTIONS */}
+        <section id="faqs" className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-5 shadow-xs scroll-mt-12">
+          <div className="text-center space-y-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
               Frequently Asked Questions
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
+            <p className="text-xs text-slate-500">
               Everything you need to know about downloading, installing, and licensing HDE Studio CAD.
             </p>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-1">
             {CAD_FAQS.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div
                   key={idx}
-                  className="border border-slate-200/90 rounded-2xl overflow-hidden transition-all bg-slate-50/50 hover:bg-slate-50"
+                  className="border border-slate-200 rounded-xl overflow-hidden transition-all bg-slate-50/50 hover:bg-slate-50"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-slate-900 text-sm sm:text-base cursor-pointer"
+                    className="w-full text-left p-3.5 sm:p-4 flex items-center justify-between gap-4 font-bold text-slate-900 text-xs sm:text-sm cursor-pointer"
                   >
                     <span>{faq.q}</span>
                     <i
-                      className={`fas fa-chevron-down text-xs text-slate-400 transition-transform duration-200 shrink-0 ${
+                      className={`fas fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200 shrink-0 ${
                         isOpen ? "rotate-180 text-primary" : ""
                       }`}
                     ></i>
                   </button>
                   {isOpen && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-200/60">
+                    <div className="px-3.5 pb-3.5 sm:px-4 sm:pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-200/60">
                       {faq.a}
                     </div>
                   )}
@@ -1122,53 +801,32 @@ export default function DownloadPage() {
               );
             })}
           </div>
-        </div>
+        </section>
 
-        {/* CONTINUOUS DEVELOPMENT NOTICE & DISCLAIMER */}
-        <div className="bg-amber-50/60 border border-amber-200/90 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
-          <div className="flex items-center gap-2.5 text-amber-900 font-bold text-base">
-            <i className="fas fa-triangle-exclamation text-amber-600 text-lg"></i>
-            <span>Continuous Development Notice &amp; Official Disclaimer</span>
+        {/* SECTION 6: UNIFIED SUPPORT & ARCHITECTURAL DISCLAIMER */}
+        <div className="bg-slate-100/80 border border-slate-200 rounded-2xl p-6 space-y-4 text-xs text-slate-600">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center text-sm shrink-0">
+                <i className="fas fa-headset"></i>
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-slate-900">Need Help or Feature Assistance?</h4>
+                <p className="text-[11px] text-slate-500">Our engineering team responds to all drafting and licensing inquiries within 24 hours.</p>
+              </div>
+            </div>
+            <a
+              href="mailto:hdeadmin@gmail.com?subject=HDE%20Studio%20CAD%20Inquiry"
+              className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:border-primary text-slate-800 hover:text-primary font-bold text-xs transition no-underline flex items-center gap-1.5 self-start sm:self-auto shrink-0 shadow-2xs"
+            >
+              <i className="fas fa-envelope text-primary"></i>
+              <span>hdeadmin@gmail.com</span>
+            </a>
           </div>
-          <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2.5">
-            <p>
-              <strong>We are continually updating this application:</strong> At Home Design English (HDE), we are committed to providing architects, civil engineers, building contractors, and homeowners with the best offline CAD drafting and space-planning experience. We are actively and regularly updating this Desktop application with improved drafting tools, performance optimizations, bug fixes, and expanded vector block catalogs.
-            </p>
-            <p>
-              <strong>Professional Architectural Disclaimer:</strong> HDE Studio is an architectural floor plan drafting and spatial layout tool. While the standard room sets, wall thickness presets, and dimensioning tools adhere to common building conventions, all final structural calculations, load-bearing beam/column sizing, soil foundation engineering, and local municipal building code compliances must be reviewed, stamped, and approved by a locally licensed architect or structural engineer before construction begins.
-            </p>
-            <p className="pt-1 text-slate-800">
-              For any software support, bug reports, feature suggestions, or desktop license assistance, please contact our team directly at:{" "}
-              <a 
-                href="mailto:hdeadmin@gmail.com?subject=HDE%20Studio%20CAD%20Support%20Inquiry" 
-                className="font-bold text-primary hover:text-primary-900 underline underline-offset-2 transition-colors"
-              >
-                hdeadmin@gmail.com
-              </a>
-            </p>
-          </div>
-        </div>
 
-        {/* CONTACT / SUPPORT DESK CALLOUT */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center text-xl shrink-0">
-              <i className="fas fa-headset"></i>
-            </div>
-            <div>
-              <h4 className="font-bold text-base text-slate-900">Need Help or Want to Request a CAD Feature?</h4>
-              <p className="text-xs text-slate-600">
-                Our engineering team is here to assist with license activation, workstation setup, or custom CAD block sets.
-              </p>
-            </div>
-          </div>
-          <a
-            href="mailto:hdeadmin@gmail.com?subject=HDE%20Studio%20CAD%20Support%20Inquiry"
-            className="px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2 shrink-0 no-underline"
-          >
-            <i className="fas fa-envelope"></i>
-            <span>Contact: hdeadmin@gmail.com</span>
-          </a>
+          <p className="leading-relaxed text-[11px] text-slate-500">
+            <strong>Professional Disclaimer:</strong> HDE Studio CAD is an architectural floor plan drafting and spatial layout tool. Standard room sets, wall thickness presets, and dimensioning tools adhere to common building conventions. All final structural engineering, beam/column load sizing, foundation depth, and local municipal building code compliances must be reviewed, stamped, and approved by a locally licensed architect or structural engineer before construction commences.
+          </p>
         </div>
 
       </div>
