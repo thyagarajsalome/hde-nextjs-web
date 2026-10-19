@@ -325,24 +325,35 @@ export default function AdminCadTutorialsPage() {
                     <tr key={t.id} className="hover:bg-slate-50/60 transition">
                       {/* Thumbnail Preview */}
                       <td className="py-3 px-4 w-36">
-                        <div
-                          onClick={() => setPreviewVideo(t)}
-                          className="relative aspect-video rounded-lg overflow-hidden bg-slate-900 cursor-pointer group shadow-2xs"
-                        >
-                          <img
-                            src={`https://img.youtube.com/vi/${t.youtubeId}/hqdefault.jpg`}
-                            alt={t.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition"
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = "none";
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition flex items-center justify-center">
-                            <div className="w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px]">
-                              <i className="fas fa-play ml-0.5"></i>
+                        {t.youtubeId ? (
+                          <div
+                            onClick={() => setPreviewVideo(t)}
+                            className="relative aspect-video rounded-lg overflow-hidden bg-slate-900 cursor-pointer group shadow-2xs"
+                          >
+                            <img
+                              src={`https://img.youtube.com/vi/${t.youtubeId}/hqdefault.jpg`}
+                              alt={t.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = "none";
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition flex items-center justify-center">
+                              <div className="w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px]">
+                                <i className="fas fa-play ml-0.5"></i>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div
+                            onClick={() => handleOpenEdit(t)}
+                            className="aspect-video rounded-lg border border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center p-2 text-center cursor-pointer hover:bg-slate-100 transition"
+                            title="Click to add YouTube video URL"
+                          >
+                            <i className="fas fa-video-slash text-slate-400 text-xs mb-1"></i>
+                            <span className="text-[10px] text-slate-500 font-semibold leading-tight">No Video (Click to Add)</span>
+                          </div>
+                        )}
                       </td>
 
                       {/* Title & Desc */}
@@ -378,15 +389,19 @@ export default function AdminCadTutorialsPage() {
 
                       {/* YouTube ID */}
                       <td className="py-3 px-4">
-                        <a
-                          href={`https://youtu.be/${t.youtubeId}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-mono text-[11px] text-red-600 hover:underline flex items-center gap-1"
-                        >
-                          <span>{t.youtubeId}</span>
-                          <i className="fas fa-arrow-up-right-from-square text-[9px]"></i>
-                        </a>
+                        {t.youtubeId ? (
+                          <a
+                            href={`https://youtu.be/${t.youtubeId}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="font-mono text-[11px] text-red-600 hover:underline flex items-center gap-1"
+                          >
+                            <span>{t.youtubeId}</span>
+                            <i className="fas fa-arrow-up-right-from-square text-[9px]"></i>
+                          </a>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 italic">No URL set</span>
+                        )}
                       </td>
 
                       {/* Actions */}
@@ -598,14 +613,22 @@ export default function AdminCadTutorialsPage() {
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="aspect-video w-full bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${previewVideo.youtubeId}?autoplay=1`}
-                title={previewVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              ></iframe>
+            <div className="aspect-video w-full bg-black flex items-center justify-center">
+              {previewVideo.youtubeId ? (
+                <iframe
+                  src={`https://www.youtube.com/embed/${previewVideo.youtubeId}?autoplay=1`}
+                  title={previewVideo.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                ></iframe>
+              ) : (
+                <div className="text-center p-8 space-y-2 text-white">
+                  <i className="fas fa-video-slash text-amber-400 text-3xl mb-2"></i>
+                  <h4 className="font-bold text-base">No Video Configured Yet</h4>
+                  <p className="text-xs text-slate-400">Click &ldquo;Edit Tutorial&rdquo; in the table to paste a YouTube video URL when ready.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

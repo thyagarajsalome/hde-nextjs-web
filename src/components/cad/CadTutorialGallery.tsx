@@ -154,15 +154,27 @@ export default function CadTutorialGallery() {
           </div>
         </div>
 
-        {/* 16:9 FULLSCREEN-CAPABLE WIDESCREEN VIDEO PLAYER */}
-        <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800">
-          <iframe
-            src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
-            title={activeVideo.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="w-full h-full border-0"
-          ></iframe>
+        {/* 16:9 FULLSCREEN-CAPABLE WIDESCREEN VIDEO PLAYER OR PROVISION PLACEHOLDER */}
+        <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 shadow-2xl border border-slate-800 flex items-center justify-center">
+          {activeVideo.youtubeId ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+              title={activeVideo.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="w-full h-full border-0"
+            ></iframe>
+          ) : (
+            <div className="text-center p-8 space-y-3">
+              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-amber-400 text-2xl">
+                <i className="fas fa-video"></i>
+              </div>
+              <h4 className="text-white font-bold text-lg">Tutorial In Production</h4>
+              <p className="text-slate-400 text-xs max-w-md mx-auto">
+                The video tutorial for &ldquo;{activeVideo.title}&rdquo; is in production. You can link your YouTube video anytime via the Admin Portal.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Active Tool Details & Conversion CTAs */}
