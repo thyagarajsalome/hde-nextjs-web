@@ -100,6 +100,11 @@ export default function AdminCadTutorialsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!isAdmin) {
+      showToast("Access Denied: Super-admin privileges required", "error");
+      return;
+    }
+
     if (!formTitle.trim()) {
       showToast("Please enter a tutorial title", "error");
       return;
@@ -138,13 +143,18 @@ export default function AdminCadTutorialsPage() {
       setTutorials(updatedList);
       setIsModalOpen(false);
       showToast(editingId ? "Tutorial updated and saved successfully!" : "New tutorial added and live!");
-    } catch {
-      showToast("Failed to save tutorial", "error");
+    } catch (err: any) {
+      showToast(err.message || "Failed to save tutorial to database", "error");
     }
   };
 
   // Delete
   const handleDelete = async (id: string, title: string) => {
+    if (!isAdmin) {
+      showToast("Access Denied: Super-admin privileges required", "error");
+      return;
+    }
+
     if (!confirm(`Are you sure you want to delete "${title}"?`)) {
       return;
     }
@@ -153,13 +163,18 @@ export default function AdminCadTutorialsPage() {
       const updatedList = await CadTutorialService.deleteTutorial(id);
       setTutorials(updatedList);
       showToast("Tutorial deleted successfully");
-    } catch {
-      showToast("Failed to delete tutorial", "error");
+    } catch (err: any) {
+      showToast(err.message || "Failed to delete tutorial from database", "error");
     }
   };
 
   // Reset to Defaults
   const handleReset = async () => {
+    if (!isAdmin) {
+      showToast("Access Denied: Super-admin privileges required", "error");
+      return;
+    }
+
     if (!confirm("Reset all tutorials back to the factory 20 HDE Studio masterclass videos? This will replace your custom edits.")) {
       return;
     }
@@ -168,8 +183,8 @@ export default function AdminCadTutorialsPage() {
       const defaults = await CadTutorialService.resetToDefaults();
       setTutorials(defaults);
       showToast("Reset to factory defaults");
-    } catch {
-      showToast("Failed to reset", "error");
+    } catch (err: any) {
+      showToast(err.message || "Failed to reset", "error");
     }
   };
 

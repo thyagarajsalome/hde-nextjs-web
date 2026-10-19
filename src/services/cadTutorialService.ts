@@ -94,23 +94,24 @@ export const CadTutorialService = {
       youtubeId: extractYouTubeId(tutorial.youtubeId),
     };
 
-    // 1. Try upserting to Supabase
-    try {
-      await supabase.from("cad_tutorials").upsert({
-        id: cleanTutorial.id,
-        title: cleanTutorial.title,
-        category: cleanTutorial.category,
-        category_label: cleanTutorial.categoryLabel,
-        duration: cleanTutorial.duration,
-        youtube_id: cleanTutorial.youtubeId,
-        icon: cleanTutorial.icon,
-        badge: cleanTutorial.badge,
-        description: cleanTutorial.description,
-        key_takeaways: cleanTutorial.keyTakeaways,
-        updated_at: new Date().toISOString(),
-      });
-    } catch {
-      // ignore table missing error
+    // 1. Save to Supabase (Protected by PostgreSQL RLS for thyagaraja1983@gmail.com)
+    const { error } = await supabase.from("cad_tutorials").upsert({
+      id: cleanTutorial.id,
+      title: cleanTutorial.title,
+      category: cleanTutorial.category,
+      category_label: cleanTutorial.categoryLabel,
+      duration: cleanTutorial.duration,
+      youtube_id: cleanTutorial.youtubeId,
+      icon: cleanTutorial.icon,
+      badge: cleanTutorial.badge,
+      description: cleanTutorial.description,
+      key_takeaways: cleanTutorial.keyTakeaways,
+      updated_at: new Date().toISOString(),
+    });
+
+    if (error) {
+      console.error("Supabase error saving tutorial:", error);
+      throw new Error(error.message || "Database permission denied");
     }
 
     // 2. Update local storage
@@ -135,11 +136,11 @@ export const CadTutorialService = {
    * Delete a tutorial
    */
   async deleteTutorial(id: string): Promise<CadTutorial[]> {
-    // 1. Try deleting from Supabase
-    try {
-      await supabase.from("cad_tutorials").delete().eq("id", id);
-    } catch {
-      // ignore
+    // 1. Delete from Supabase (Protected by PostgreSQL RLS for thyagaraja1983@gmail.com)
+    const { error } = await supabase.from("cad_tutorials").delete().eq("id", id);
+    if (error) {
+      console.error("Supabase error deleting tutorial:", error);
+      throw new Error(error.message || "Database permission denied");
     }
 
     // 2. Remove from local storage
