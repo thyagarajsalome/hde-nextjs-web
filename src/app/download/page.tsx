@@ -129,7 +129,7 @@ const CAD_FAQS = [
 
 export default function DownloadPage() {
   const { user, planTier } = useUser();
-  const { region } = useRegion();
+  const { region, setRegion } = useRegion();
   const { showToast } = useToast();
 
   const [releases, setReleases] = useState<AppRelease[]>([]);
@@ -202,10 +202,11 @@ export default function DownloadPage() {
       }
 
       const isUS = region === 'US';
-      const planId = isUS
+      const isAE = region === 'AE';
+      const planId = (isUS || isAE)
         ? (cadBilling === 'lifetime' ? 'usa_lifetime_pro' : 'usa_monthly_pro')
         : (cadBilling === 'lifetime' ? 'india_lifetime_pro' : 'india_monthly_pro');
-      const currency = isUS ? 'USD' : 'INR';
+      const currency = (isUS || isAE) ? 'USD' : 'INR';
 
       const { data: order, error: orderError } = await supabase.functions.invoke('create-order', {
         body: { planId, currency },
@@ -507,7 +508,7 @@ export default function DownloadPage() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
                     <i className="fas fa-lock text-amber-600"></i>
-                    <span>Free Edition Active</span>
+                    <span>Unlicensed Edition</span>
                   </div>
                   <a
                     href="#pricing"
@@ -661,8 +662,49 @@ export default function DownloadPage() {
             </p>
           </div>
 
+          {/* Region Currency Selector */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            <span className="text-xs font-bold text-slate-500 mr-1">Select Region:</span>
+            <button
+              type="button"
+              onClick={() => setRegion('IN')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                region === 'IN' || !region
+                  ? 'bg-amber-100 text-amber-950 border-2 border-amber-400 shadow-2xs font-black'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <span>🇮🇳</span>
+              <span>India (Rs.)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRegion('US')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                region === 'US'
+                  ? 'bg-amber-100 text-amber-950 border-2 border-amber-400 shadow-2xs font-black'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <span>🇺🇸</span>
+              <span>USA ($)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setRegion('AE')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                region === 'AE'
+                  ? 'bg-amber-100 text-amber-950 border-2 border-amber-400 shadow-2xs font-black'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <span>🇦🇪</span>
+              <span>Dubai (Dhs)</span>
+            </button>
+          </div>
+
           {/* Billing Selector */}
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-2 pt-1">
             <div className="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200">
               <button
                 type="button"
@@ -705,12 +747,12 @@ export default function DownloadPage() {
               <div className="flex items-baseline gap-2.5">
                 <span className="text-3xl sm:text-4xl font-black text-slate-900">
                   {cadBilling === 'lifetime'
-                    ? (region === 'US' ? '$299' : '₹18,749')
-                    : (region === 'US' ? '$49' : '₹1,999')}
+                    ? (region === 'US' ? '$299' : region === 'AE' ? '1,099 Dhs' : 'Rs. 18,749')
+                    : (region === 'US' ? '$49' : region === 'AE' ? '179 Dhs' : 'Rs. 1,999')}
                 </span>
                 {cadBilling === 'lifetime' && (
                   <span className="text-base text-slate-400 line-through">
-                    {region === 'US' ? '$399' : '₹24,999'}
+                    {region === 'US' ? '$399' : region === 'AE' ? '1,465 Dhs' : 'Rs. 24,999'}
                   </span>
                 )}
                 <span className="text-xs text-slate-500 font-semibold">
@@ -759,8 +801,8 @@ export default function DownloadPage() {
                     <i className="fas fa-shopping-cart"></i>
                     <span>
                       {cadBilling === 'lifetime'
-                        ? `Buy Lifetime License • ${region === 'US' ? '$299' : '₹18,749'}`
-                        : `Subscribe Monthly • ${region === 'US' ? '$49/mo' : '₹1,999/mo'}`}
+                        ? `Buy Lifetime License • ${region === 'US' ? '$299' : region === 'AE' ? '1,099 Dhs' : 'Rs. 18,749'}`
+                        : `Subscribe Monthly • ${region === 'US' ? '$49/mo' : region === 'AE' ? '179 Dhs/mo' : 'Rs. 1,999/mo'}`}
                     </span>
                   </>
                 )}

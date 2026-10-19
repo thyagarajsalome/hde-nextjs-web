@@ -821,7 +821,7 @@ const UpgradePage = () => {
                   </span>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-zinc-400 mt-1">
-                  Looking for the offline 2D CAD drafting software? Lifetime licenses available with 25% launch offer ({currentRegion === 'US' ? '$299' : '₹18,749'}).
+                  Looking for the offline 2D CAD drafting software? Lifetime licenses available with 25% launch offer ({currentRegion === 'US' ? '$299' : currentRegion === 'AE' ? '1,099 Dhs' : 'Rs. 18,749'}).
                 </p>
               </div>
             </div>

@@ -5,11 +5,13 @@ import Link from "next/link";
 import { CAD_TUTORIALS, CAD_TUTORIAL_CATEGORIES, CadTutorial } from "@/data/cadTutorials";
 import { CadTutorialService } from "@/services/cadTutorialService";
 import { useUser } from "@/context/UserContext";
+import { useRegion } from "@/context/RegionContext";
 
 const ADMIN_EMAIL = "thyagaraja1983@gmail.com";
 
 export default function CadTutorialGallery() {
   const { user } = useUser();
+  const { region } = useRegion();
   const isAdmin = Boolean(user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
 
   const [tutorials, setTutorials] = useState<CadTutorial[]>(CAD_TUTORIALS);
@@ -228,14 +230,16 @@ export default function CadTutorialGallery() {
                 className="px-5 py-3 rounded-xl bg-[#0f2042] hover:bg-[#1a3360] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 no-underline border border-[#0f2042] cursor-pointer"
               >
                 <i className="fas fa-download text-[#c5a059]"></i>
-                <span>Practice in Free CAD</span>
+                <span>Download HDE Studio</span>
               </a>
               <a
                 href="#pricing"
                 className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 no-underline cursor-pointer"
               >
                 <i className="fas fa-crown text-amber-300"></i>
-                <span>Buy License ($299)</span>
+                <span>
+                  Buy License ({region === "US" ? "$299" : region === "AE" ? "1,099 Dhs" : "Rs. 18,749"})
+                </span>
               </a>
             </div>
           </div>
