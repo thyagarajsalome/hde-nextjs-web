@@ -108,20 +108,7 @@ export function generateLicenseKey(edition: 'INDIA' | 'USA' | 'GLOBAL_PRO'): str
  * Fetch latest software releases
  */
 export async function getLatestReleases(): Promise<AppRelease[]> {
-  try {
-    const { data, error } = await supabase
-      .from('app_releases')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error || !data || data.length === 0) {
-      return DEFAULT_RELEASES;
-    }
-
-    return data as AppRelease[];
-  } catch {
-    return DEFAULT_RELEASES;
-  }
+  return DEFAULT_RELEASES;
 }
 
 /**

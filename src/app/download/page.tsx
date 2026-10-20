@@ -10,6 +10,7 @@ import { supabase } from "@/config/supabaseClient";
 import { 
   AppRelease, 
   DesktopLicense, 
+  DEFAULT_RELEASES,
   getLatestReleases, 
   getUserLicense, 
   claimOrCreateLicense 
@@ -136,7 +137,7 @@ export default function DownloadPage() {
   const { region, setRegion } = useRegion();
   const { showToast } = useToast();
 
-  const [releases, setReleases] = useState<AppRelease[]>([]);
+  const [releases, setReleases] = useState<AppRelease[]>(DEFAULT_RELEASES);
   const [license, setLicense] = useState<DesktopLicense | null>(null);
   const [detectedOS, setDetectedOS] = useState<"windows" | "macos" | "linux">("windows");
   const [loading, setLoading] = useState(true);
