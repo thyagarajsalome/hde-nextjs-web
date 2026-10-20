@@ -71,6 +71,17 @@ export default function AdminPortalHubPage() {
         { label: 'Live Telemetry & Alerts', href: '/admin/health#desktop-licenses' },
       ],
     },
+    {
+      title: 'Marketing & Brevo Email Audience',
+      description: 'Export all registered platform users as a Brevo-ready CSV contact list for marketing and promotional email campaigns.',
+      href: 'https://ncontvjtfhsabphxfuhb.supabase.co/functions/v1/export-users?format=csv',
+      icon: 'fa-envelope-open-text',
+      badge: 'Brevo Sync',
+      accent: 'border-emerald-500/40 bg-emerald-500/5 text-emerald-700',
+      links: [
+        { label: '📥 Download Brevo CSV Contacts', href: 'https://ncontvjtfhsabphxfuhb.supabase.co/functions/v1/export-users?format=csv' },
+      ],
+    },
   ];
 
   return (
