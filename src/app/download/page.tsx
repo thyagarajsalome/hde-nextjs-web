@@ -292,20 +292,20 @@ export default function DownloadPage() {
 
   // Find installer URLs
   const winExe = releases.find(r => r.platform === 'windows' && r.installer_type === 'exe') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-Setup-v2.1.exe',
-    file_size_mb: 38.9
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-Setup-v2.2.6.exe',
+    file_size_mb: 37.2
   };
   const winZip = releases.find(r => r.platform === 'windows' && r.installer_type === 'zip') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-v2.1-Windows-Portable.zip',
-    file_size_mb: 61.2
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
+    file_size_mb: 8.5
   };
   const linuxZip = releases.find(r => r.platform === 'linux') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-v2.1-Linux-Portable.zip',
-    file_size_mb: 5.38
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
+    file_size_mb: 8.4
   };
   const macDmg = releases.find(r => r.platform === 'macos') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio.dmg',
-    file_size_mb: 65.0
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio.dmg',
+    file_size_mb: 61.7
   };
 
   return (

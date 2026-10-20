@@ -21,16 +21,8 @@ export async function GET(request: Request) {
   // Fetch software release installers
   if (action === 'releases' || !action) {
     try {
-      const { data, error } = await supabase
-        .from('app_releases')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error || !data || data.length === 0) {
-        return NextResponse.json({ success: true, releases: DEFAULT_RELEASES });
-      }
-
-      return NextResponse.json({ success: true, releases: data });
+      // Return authoritative latest v2.2.6 releases catalogue
+      return NextResponse.json({ success: true, releases: DEFAULT_RELEASES });
     } catch {
       return NextResponse.json({ success: true, releases: DEFAULT_RELEASES });
     }

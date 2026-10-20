@@ -29,46 +29,46 @@ export interface DesktopLicense {
 // Fallback release catalogue in case Supabase table is not yet migrated
 export const DEFAULT_RELEASES: AppRelease[] = [
   {
-    id: 'win-exe-2.1',
-    version: 'v2.1',
+    id: 'win-exe-2.2.6',
+    version: 'v2.2.6',
     platform: 'windows',
     installer_type: 'exe',
     title: 'HDE Studio Windows Installer (Setup.exe)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-Setup-v2.1.exe',
-    file_size_mb: 38.9,
-    release_notes: 'Automated installer with embedded JRE 21, desktop shortcut, India & USA Architectural CAD Room Sets.',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-Setup-v2.2.6.exe',
+    file_size_mb: 37.2,
+    release_notes: 'v2.2.6: 14-day full free trial, smart wall mitering, 60+ architectural vector blocks, dynamic dimensioning, offline standalone CAD engine.',
     is_latest: true
   },
   {
-    id: 'win-zip-2.1',
-    version: 'v2.1',
+    id: 'win-zip-2.2.6',
+    version: 'v2.2.6',
     platform: 'windows',
     installer_type: 'zip',
     title: 'HDE Studio Windows Portable (.zip)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-v2.1-Windows-Portable.zip',
-    file_size_mb: 61.2,
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
+    file_size_mb: 8.5,
     release_notes: 'Standalone portable zero-installation archive for Windows 10/11 64-bit.',
     is_latest: false
   },
   {
-    id: 'linux-zip-2.1',
-    version: 'v2.1',
+    id: 'linux-zip-2.2.6',
+    version: 'v2.2.6',
     platform: 'linux',
     installer_type: 'zip',
     title: 'HDE Studio Linux Portable (.zip)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio-v2.1-Linux-Portable.zip',
-    file_size_mb: 5.38,
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
+    file_size_mb: 8.4,
     release_notes: 'Cross-distro portable Linux bundle with hde-studio.sh launcher and desktop menu entry.',
     is_latest: true
   },
   {
-    id: 'mac-dmg-2.1',
-    version: 'v2.1',
+    id: 'mac-dmg-2.2.6',
+    version: 'v2.2.6',
     platform: 'macos',
     installer_type: 'dmg',
     title: 'HDE Studio macOS DMG (.dmg)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.1/HDE-Studio.dmg',
-    file_size_mb: 65.0,
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio.dmg',
+    file_size_mb: 61.7,
     release_notes: 'Native macOS disk image application bundle for Apple Silicon and Intel Macs.',
     is_latest: true
   }
