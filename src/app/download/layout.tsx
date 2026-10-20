@@ -1,24 +1,23 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Download HDE Studio CAD | Professional 2D Architectural Drafting & Floor Plan Software',
-  description: 'Download HDE Studio CAD for PC. Professional offline 2D architectural drafting software with smart wall snapping, metric & imperial catalogs, and high-resolution vector PDF export.',
-  keywords: 'HDE Studio CAD, architectural drafting software, 2D CAD download, floor plan software, offline CAD, house planning software, CAD for Windows',
+  title: 'Download HDE Studio CAD | 14-Day Free Trial | Professional 2D Architectural Software',
+  description: 'Download HDE Studio CAD for PC with a 14-day unrestricted free trial. Professional offline 2D architectural drafting software with smart wall snapping, dual metric & imperial catalogs, and high-resolution vector PDF export.',
+  keywords: 'HDE Studio CAD, architectural drafting software, 2D CAD download, free trial CAD, floor plan software, offline CAD, house planning software, CAD for Windows',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/download',
   },
   openGraph: {
-    title: 'Download HDE Studio CAD | Professional 2D Architectural Drafting Software',
-    description: 'Standalone desktop CAD application for home builders, drafters, and architects. Offline, fast, and built for modern architectural drafting.',
+    title: 'Download HDE Studio CAD | 14-Day Free Trial Included',
+    description: 'Standalone desktop CAD application for home builders, drafters, and architects. 14-day full free trial, offline, fast, and built for modern architectural drafting.',
     url: 'https://www.homedesignenglish.com/download',
     siteName: 'Home Design English',
-    type: 'website',
     images: [{ url: '/HDE_256px.webp', width: 256, height: 256, alt: 'HDE Studio CAD' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Download HDE Studio CAD | Professional 2D Architectural Drafting Software',
-    description: 'Download HDE Studio CAD for Windows. Native offline 2D CAD drafting with dual unit catalogs and crisp vector PDF export.',
+    title: 'Download HDE Studio CAD | 14-Day Free Trial Included',
+    description: 'Download HDE Studio CAD for Windows with a 14-day free trial. Native offline 2D CAD drafting with dual unit catalogs and crisp vector PDF export.',
   },
 };
 
@@ -87,6 +86,14 @@ const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is there a free trial for HDE Studio CAD?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! HDE Studio CAD includes a 14-day full-featured free trial for everyone. When you install the app on Windows, macOS, or Linux, you get immediate access to all architectural drafting tools, 60+ vector blocks, automatic wall mitering, dynamic dimensions, and 300 DPI vector PDF blueprints with zero credit card required. After 14 days, you can choose to activate a perpetual Lifetime license or Monthly plan directly inside the app."
+      }
+    },
     {
       "@type": "Question",
       "name": "Do I need prior 2D CAD drafting experience to use HDE Studio?",

@@ -165,6 +165,28 @@ export async function POST(request: Request) {
       });
     }
 
+    // Free 14-Day Evaluation Trial Registration & Telemetry
+    if (action === 'trial_started') {
+      const trialRecord = await recordTelemetryEvent({
+        email: email || 'trial_user',
+        license_key: 'TRIAL-14-DAYS',
+        machine_id: machine_id || 'UNKNOWN',
+        app_version: app_version || 'v2.2.6',
+        os: os || 'Windows / Unknown',
+        status: 'SUCCESS',
+        failure_reason: null,
+        plan: '14-Day Free Evaluation Trial',
+        ip: clientIp,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: '14-Day Free Trial registered successfully.',
+        trial_days: 14,
+        event_id: trialRecord.id,
+      });
+    }
+
     // Direct Key Generation (Admin / Internal)
     if (action === 'generate') {
       const targetEdition = (edition === 'USA' || edition === 'INDIA') ? edition : 'GLOBAL_PRO';

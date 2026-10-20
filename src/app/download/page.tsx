@@ -94,6 +94,10 @@ const SIMPLICITY_PILLARS = [
 
 const CAD_FAQS = [
   {
+    q: "Is there a free trial for HDE Studio CAD?",
+    a: "Yes! HDE Studio CAD includes a 14-day full-featured free trial for everyone. When you install the app on Windows, macOS, or Linux, you get immediate access to all architectural drafting tools, 60+ vector blocks, automatic wall mitering, dynamic dimensions, and 300 DPI vector PDF blueprints with zero credit card required. After 14 days, you can choose to activate a perpetual Lifetime license or Monthly plan directly inside the app."
+  },
+  {
     q: "Do I need prior 2D CAD drafting experience to use HDE Studio?",
     a: "No CAD experience is required. Traditional 2D CAD software was designed for specialized engineers and requires memorizing hundreds of text commands. HDE Studio was engineered specifically to be visual, intuitive, and accessible to everyone. You can start drawing walls, placing doors, adding furniture, and dimensioning rooms within 5 minutes of opening the app."
   },
@@ -359,9 +363,9 @@ export default function DownloadPage() {
               />
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/5 border border-primary/15 text-primary text-xs font-bold uppercase tracking-wider">
-              <i className="fas fa-cube text-primary"></i>
-              <span>Desktop Architectural CAD • Version 2.1 Release</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+              <i className="fas fa-gift text-emerald-600"></i>
+              <span>14-Day Full-Featured Free Trial Included • Version 2.2.6</span>
             </div>
           </div>
 
@@ -371,7 +375,7 @@ export default function DownloadPage() {
               Design Faster with <span className="text-primary">HDE Studio</span> CAD
             </h1>
             <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-600 leading-relaxed">
-              Intuitive offline 2D architectural space planning, 60+ pre-scaled vector blocks, real-time dynamic dimensioning, and client-ready 300 DPI vector PDF blueprints.
+              Intuitive offline 2D architectural space planning, 60+ pre-scaled vector blocks, real-time dynamic dimensioning, and client-ready 300 DPI vector PDF blueprints. <strong>Try 100% free for 14 days — zero credit card required.</strong>
             </p>
           </div>
 
@@ -386,8 +390,8 @@ export default function DownloadPage() {
                   >
                     <i className="fab fa-windows text-xl"></i>
                     <div className="text-left">
-                      <div className="text-sm font-black leading-tight">Download for Windows</div>
-                      <div className="text-[11px] font-normal opacity-90">64-bit Installer (.exe) • {winExe.file_size_mb} MB</div>
+                      <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
+                      <div className="text-[11px] font-normal opacity-90">Windows 64-bit Installer (.exe) • {winExe.file_size_mb} MB</div>
                     </div>
                   </a>
                   <a
@@ -408,8 +412,8 @@ export default function DownloadPage() {
                 >
                   <i className="fab fa-apple text-xl"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight">Download for macOS</div>
-                    <div className="text-[11px] font-normal opacity-90">Apple Silicon &amp; Intel (.dmg) • {macDmg.file_size_mb} MB</div>
+                    <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
+                    <div className="text-[11px] font-normal opacity-90">macOS Apple Silicon &amp; Intel (.dmg) • {macDmg.file_size_mb} MB</div>
                   </div>
                 </a>
               )}
@@ -421,8 +425,8 @@ export default function DownloadPage() {
                 >
                   <i className="fab fa-linux text-xl"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight">Download for Linux</div>
-                    <div className="text-[11px] font-normal opacity-90">Portable Bundle (.zip) • {linuxZip.file_size_mb} MB</div>
+                    <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
+                    <div className="text-[11px] font-normal opacity-90">Linux Portable Bundle (.zip) • {linuxZip.file_size_mb} MB</div>
                   </div>
                 </a>
               )}
@@ -487,6 +491,10 @@ export default function DownloadPage() {
 
           {/* Trust Guarantees */}
           <div className="flex flex-wrap justify-center gap-3 pt-4 text-xs font-semibold text-slate-600 border-t border-slate-100">
+            <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              <i className="fas fa-gift text-emerald-600"></i> 14-Day Full-Featured Free Trial
+            </span>
+            <span className="text-slate-300">•</span>
             <span className="flex items-center gap-1.5">
               <i className="fas fa-shield-halved text-emerald-600"></i> 100% Offline Standalone App
             </span>
@@ -539,15 +547,15 @@ export default function DownloadPage() {
                 </div>
               ) : (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <div className="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2">
-                    <i className="fas fa-lock text-amber-600"></i>
-                    <span>Unlicensed Edition</span>
+                  <div className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+                    <i className="fas fa-gift text-emerald-600"></i>
+                    <span>14-Day Free Trial Active on Install</span>
                   </div>
                   <a
                     href="#pricing"
                     className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition shadow-xs flex items-center justify-center gap-2 no-underline cursor-pointer whitespace-nowrap"
                   >
-                    <span>Unlock Commercial Pro</span>
+                    <span>Upgrade to Lifetime Pro</span>
                     <i className="fas fa-arrow-down text-[10px]"></i>
                   </a>
                 </div>
@@ -685,13 +693,13 @@ export default function DownloadPage() {
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#c5a059]/10 text-[#a07c33] border border-[#c5a059]/30 text-xs font-black uppercase tracking-wider">
               <i className="fas fa-crown"></i>
-              <span>Commercial &amp; Professional CAD License</span>
+              <span>14-Day Free Trial • Upgrade to Perpetual Pro Anytime</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
-              Unlock Full HDE Studio Pro
+              Try Free for 14 Days, Then Choose Your Pro Plan
             </h2>
             <p className="text-slate-600 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-              Standalone 2D architectural CAD software with all vector block sets, real-time dimensions, and high-resolution PDF printing.
+              Draft unrestricted on your PC for 14 days with zero credit card required. When ready, upgrade to perpetual Lifetime ownership or flexible monthly billing with instant hardware seat binding.
             </p>
           </div>
 
