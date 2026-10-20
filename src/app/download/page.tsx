@@ -296,15 +296,15 @@ export default function DownloadPage() {
     file_size_mb: 37.2
   };
   const winZip = releases.find(r => r.platform === 'windows' && r.installer_type === 'zip') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
     file_size_mb: 8.5
   };
   const linuxZip = releases.find(r => r.platform === 'linux') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
     file_size_mb: 8.4
   };
   const macDmg = releases.find(r => r.platform === 'macos') || {
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio.dmg',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio.dmg',
     file_size_mb: 61.7
   };
 

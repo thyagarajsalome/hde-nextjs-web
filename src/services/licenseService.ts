@@ -45,7 +45,7 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     platform: 'windows',
     installer_type: 'zip',
     title: 'HDE Studio Windows Portable (.zip)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
     file_size_mb: 8.5,
     release_notes: 'Standalone portable zero-installation archive for Windows 10/11 64-bit.',
     is_latest: false
@@ -56,7 +56,7 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     platform: 'linux',
     installer_type: 'zip',
     title: 'HDE Studio Linux Portable (.zip)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
     file_size_mb: 8.4,
     release_notes: 'Cross-distro portable Linux bundle with hde-studio.sh launcher and desktop menu entry.',
     is_latest: true
@@ -67,7 +67,7 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     platform: 'macos',
     installer_type: 'dmg',
     title: 'HDE Studio macOS DMG (.dmg)',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio_Java-Project/releases/download/v2.2.6/HDE-Studio.dmg',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio.dmg',
     file_size_mb: 61.7,
     release_notes: 'Native macOS disk image application bundle for Apple Silicon and Intel Macs.',
     is_latest: true
