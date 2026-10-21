@@ -293,7 +293,7 @@ export default function DownloadPage() {
 
   // Find installer URLs
   const winExe = releases.find(r => r.platform === 'windows' && r.installer_type === 'exe') || {
-    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-Setup-v2.2.6.exe',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.7/HDE-Studio-Setup-v2.2.7.exe',
     file_size_mb: 37.2
   };
   const winZip = releases.find(r => r.platform === 'windows' && r.installer_type === 'zip') || {
@@ -366,7 +366,7 @@ export default function DownloadPage() {
 
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold uppercase tracking-wider">
               <i className="fas fa-gift text-emerald-600"></i>
-              <span>14-Day Full-Featured Free Trial Included • Version 2.2.6</span>
+              <span>14-Day Full-Featured Free Trial Included • Version 2.2.7</span>
             </div>
           </div>
 

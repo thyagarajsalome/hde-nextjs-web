@@ -29,19 +29,19 @@ export interface DesktopLicense {
 // Fallback release catalogue in case Supabase table is not yet migrated
 export const DEFAULT_RELEASES: AppRelease[] = [
   {
-    id: 'win-exe-2.2.6',
-    version: 'v2.2.6',
+    id: 'win-exe-2.2.7',
+    version: 'v2.2.7',
     platform: 'windows',
     installer_type: 'exe',
     title: 'HDE Studio Windows Installer (Setup.exe)',
-    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-Setup-v2.2.6.exe',
+    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.7/HDE-Studio-Setup-v2.2.7.exe',
     file_size_mb: 37.2,
-    release_notes: 'v2.2.6: 14-day full free trial, smart wall mitering, 60+ architectural vector blocks, dynamic dimensioning, offline standalone CAD engine.',
+    release_notes: 'v2.2.7: 14-day full free trial, AutoCAD-style 2-point dimensioning, wall auto-dimensioning, 60+ architectural vector blocks, dynamic dimension chains.',
     is_latest: true
   },
   {
-    id: 'win-zip-2.2.6',
-    version: 'v2.2.6',
+    id: 'win-zip-2.2.7',
+    version: 'v2.2.7',
     platform: 'windows',
     installer_type: 'zip',
     title: 'HDE Studio Windows Portable (.zip)',
@@ -51,8 +51,8 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     is_latest: false
   },
   {
-    id: 'linux-zip-2.2.6',
-    version: 'v2.2.6',
+    id: 'linux-zip-2.2.7',
+    version: 'v2.2.7',
     platform: 'linux',
     installer_type: 'zip',
     title: 'HDE Studio Linux Portable (.zip)',
@@ -62,8 +62,8 @@ export const DEFAULT_RELEASES: AppRelease[] = [
     is_latest: true
   },
   {
-    id: 'mac-dmg-2.2.6',
-    version: 'v2.2.6',
+    id: 'mac-dmg-2.2.7',
+    version: 'v2.2.7',
     platform: 'macos',
     installer_type: 'dmg',
     title: 'HDE Studio macOS DMG (.dmg)',

@@ -54,7 +54,7 @@ const softwareSchema = {
       "url": "https://www.homedesignenglish.com/download#pricing"
     }
   ],
-  "softwareVersion": "2.2.6",
+  "softwareVersion": "2.2.7",
   "fileSize": "37MB",
   "author": {
     "@type": "Organization",
