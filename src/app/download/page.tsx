@@ -293,19 +293,23 @@ export default function DownloadPage() {
 
   // Find installer URLs
   const winExe = releases.find(r => r.platform === 'windows' && r.installer_type === 'exe') || {
+    version: 'v2.2.7',
     download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.7/HDE-Studio-Setup-v2.2.7.exe',
-    file_size_mb: 37.2
+    file_size_mb: 39.1
   };
   const winZip = releases.find(r => r.platform === 'windows' && r.installer_type === 'zip') || {
-    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Windows-Portable.zip',
+    version: 'v2.2.7',
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/v2.2.7/HDE-Studio.jar',
     file_size_mb: 8.5
   };
   const linuxZip = releases.find(r => r.platform === 'linux') || {
-    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio-v2.2.6-Linux-Portable.zip',
+    version: 'v2.2.7',
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/v2.2.7/HDE-Studio-v2.2.7-Linux-Portable.zip',
     file_size_mb: 8.4
   };
   const macDmg = releases.find(r => r.platform === 'macos') || {
-    download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.6/HDE-Studio.dmg',
+    version: 'v2.2.7',
+    download_url: 'https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/v2.2.7/HDE-Studio.dmg',
     file_size_mb: 61.7
   };
 
@@ -391,8 +395,15 @@ export default function DownloadPage() {
                   >
                     <i className="fab fa-windows text-xl"></i>
                     <div className="text-left">
-                      <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
-                      <div className="text-[11px] font-normal opacity-90">Windows 64-bit Installer (.exe) • {winExe.file_size_mb} MB</div>
+                      <div className="text-sm font-black leading-tight flex items-center gap-2">
+                        <span>Download 14-Day Free Trial</span>
+                        <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                          {winExe.version || 'v2.2.7'} Latest
+                        </span>
+                      </div>
+                      <div className="text-[11px] font-normal opacity-90">
+                        Windows 64-bit Installer (.exe) • {winExe.version || 'v2.2.7'} • {winExe.file_size_mb} MB
+                      </div>
                     </div>
                   </a>
                   <a
@@ -401,7 +412,7 @@ export default function DownloadPage() {
                     title="Portable version with zero installation"
                   >
                     <i className="fas fa-file-zipper text-sm"></i>
-                    <span>Portable Zip ({winZip.file_size_mb} MB)</span>
+                    <span>Portable Zip ({winZip.version || 'v2.2.7'} • {winZip.file_size_mb} MB)</span>
                   </a>
                 </>
               )}
@@ -413,8 +424,15 @@ export default function DownloadPage() {
                 >
                   <i className="fab fa-apple text-xl"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
-                    <div className="text-[11px] font-normal opacity-90">macOS Apple Silicon &amp; Intel (.dmg) • {macDmg.file_size_mb} MB</div>
+                    <div className="text-sm font-black leading-tight flex items-center gap-2">
+                      <span>Download 14-Day Free Trial</span>
+                      <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                        {macDmg.version || 'v2.2.7'} Latest
+                      </span>
+                    </div>
+                    <div className="text-[11px] font-normal opacity-90">
+                      macOS Apple Silicon &amp; Intel (.dmg) • {macDmg.version || 'v2.2.7'} • {macDmg.file_size_mb} MB
+                    </div>
                   </div>
                 </a>
               )}
@@ -426,8 +444,15 @@ export default function DownloadPage() {
                 >
                   <i className="fab fa-linux text-xl"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight">Download 14-Day Free Trial</div>
-                    <div className="text-[11px] font-normal opacity-90">Linux Portable Bundle (.zip) • {linuxZip.file_size_mb} MB</div>
+                    <div className="text-sm font-black leading-tight flex items-center gap-2">
+                      <span>Download 14-Day Free Trial</span>
+                      <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                        {linuxZip.version || 'v2.2.7'} Latest
+                      </span>
+                    </div>
+                    <div className="text-[11px] font-normal opacity-90">
+                      Linux Portable Bundle (.zip) • {linuxZip.version || 'v2.2.7'} • {linuxZip.file_size_mb} MB
+                    </div>
                   </div>
                 </a>
               )}
@@ -435,7 +460,7 @@ export default function DownloadPage() {
 
             {/* Other OS Switcher Links */}
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-slate-500 pt-1">
-              <span className="font-semibold text-slate-400">Other Platforms:</span>
+              <span className="font-semibold text-slate-400">Other Platforms ({winExe.version || 'v2.2.7'}):</span>
               <a href={winExe.download_url} className="hover:text-primary transition font-medium no-underline flex items-center gap-1">
                 <i className="fab fa-windows text-[11px]"></i> Windows .exe
               </a>
