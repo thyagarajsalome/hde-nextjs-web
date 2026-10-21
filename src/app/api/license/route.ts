@@ -18,10 +18,78 @@ export async function GET(request: Request) {
     }
   }
 
-  // Fetch software release installers
+  // Fetch software release installers dynamically from public releases
   if (action === 'releases' || !action) {
     try {
-      // Return authoritative latest v2.2.6 releases catalogue
+      const ghRes = await fetch('https://api.github.com/repos/thyagarajsalome/HDE-Studio-Releases/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'HDE-Studio-Web' },
+        next: { revalidate: 60 }
+      });
+      if (ghRes.ok) {
+        const ghData = await ghRes.json();
+        const tag = ghData.tag_name || 'v2.2.7';
+        const assets: Array<{ name: string; size: number; browser_download_url: string }> = ghData.assets || [];
+
+        const exeAsset = assets.find(a => a.name.toLowerCase().endsWith('.exe'));
+        const winZipAsset = assets.find(a => a.name.toLowerCase().includes('windows') && a.name.toLowerCase().endsWith('.zip')) ||
+                            assets.find(a => a.name.toLowerCase().endsWith('.jar'));
+        const macAsset = assets.find(a => a.name.toLowerCase().endsWith('.dmg')) ||
+                         assets.find(a => a.name.toLowerCase().includes('macos') && a.name.toLowerCase().endsWith('.zip'));
+        const linuxAsset = assets.find(a => a.name.toLowerCase().includes('linux') && a.name.toLowerCase().endsWith('.zip')) ||
+                           assets.find(a => a.name.toLowerCase().includes('linux') && a.name.toLowerCase().endsWith('.tar.gz'));
+
+        const dynamicReleases = [
+          {
+            id: `win-exe-${tag}`,
+            version: tag,
+            platform: 'windows' as const,
+            installer_type: 'exe' as const,
+            title: `HDE Studio Windows Installer (Setup.exe)`,
+            download_url: exeAsset ? exeAsset.browser_download_url : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/latest/HDE-Studio-Setup-latest.exe`,
+            file_size_mb: exeAsset ? parseFloat((exeAsset.size / (1024 * 1024)).toFixed(1)) : 37.3,
+            release_notes: ghData.body || DEFAULT_RELEASES[0].release_notes,
+            is_latest: true
+          },
+          {
+            id: `win-zip-${tag}`,
+            version: tag,
+            platform: 'windows' as const,
+            installer_type: 'zip' as const,
+            title: `HDE Studio Windows Portable (.zip)`,
+            download_url: winZipAsset ? winZipAsset.browser_download_url : `https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/${tag}/HDE-Studio.jar`,
+            file_size_mb: winZipAsset ? parseFloat((winZipAsset.size / (1024 * 1024)).toFixed(1)) : 8.5,
+            release_notes: 'Standalone portable zero-installation archive for Windows 10/11 64-bit.',
+            is_latest: false
+          },
+          {
+            id: `linux-zip-${tag}`,
+            version: tag,
+            platform: 'linux' as const,
+            installer_type: 'zip' as const,
+            title: `HDE Studio Linux Portable (.zip)`,
+            download_url: linuxAsset ? linuxAsset.browser_download_url : `https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/${tag}/HDE-Studio-v${tag.replace('v','')}-Linux-Portable.zip`,
+            file_size_mb: linuxAsset ? parseFloat((linuxAsset.size / (1024 * 1024)).toFixed(1)) : 8.4,
+            release_notes: 'Cross-distro portable Linux bundle with hde-studio.sh launcher and desktop menu entry.',
+            is_latest: true
+          },
+          {
+            id: `mac-dmg-${tag}`,
+            version: tag,
+            platform: 'macos' as const,
+            installer_type: (macAsset && macAsset.name.endsWith('.dmg')) ? ('dmg' as const) : ('zip' as const),
+            title: `HDE Studio macOS (.dmg)`,
+            download_url: macAsset ? macAsset.browser_download_url : `https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/${tag}/HDE-Studio.dmg`,
+            file_size_mb: macAsset ? parseFloat((macAsset.size / (1024 * 1024)).toFixed(1)) : 61.7,
+            release_notes: 'Native macOS disk image application bundle for Apple Silicon and Intel Macs.',
+            is_latest: true
+          }
+        ];
+
+        return NextResponse.json(
+          { success: true, releases: dynamicReleases },
+          { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120' } }
+        );
+      }
       return NextResponse.json({ success: true, releases: DEFAULT_RELEASES });
     } catch {
       return NextResponse.json({ success: true, releases: DEFAULT_RELEASES });

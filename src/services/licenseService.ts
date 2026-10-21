@@ -105,9 +105,22 @@ export function generateLicenseKey(edition: 'INDIA' | 'USA' | 'GLOBAL_PRO'): str
 }
 
 /**
- * Fetch latest software releases
+ * Fetch latest software releases dynamically with static fallback
  */
 export async function getLatestReleases(): Promise<AppRelease[]> {
+  try {
+    if (typeof window !== 'undefined') {
+      const res = await fetch('/api/license?action=releases', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.releases) && data.releases.length > 0) {
+          return data.releases;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Error fetching dynamic releases:', err);
+  }
   return DEFAULT_RELEASES;
 }
 

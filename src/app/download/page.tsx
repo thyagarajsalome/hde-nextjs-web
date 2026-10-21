@@ -370,7 +370,7 @@ export default function DownloadPage() {
 
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-bold uppercase tracking-wider">
               <i className="fas fa-gift text-emerald-600"></i>
-              <span>14-Day Full-Featured Free Trial Included • Version 2.2.7</span>
+              <span>14-Day Full-Featured Free Trial Included • Version {winExe.version ? winExe.version.replace('v', '') : '2.2.7'}</span>
             </div>
           </div>
 
