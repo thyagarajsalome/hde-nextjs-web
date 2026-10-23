@@ -150,50 +150,43 @@ export async function POST(request: Request) {
       let planName = 'All-Access Global Pro Edition (India + USA)';
       let rejectReason: string | null = null;
 
-      // 1. Try checking against Supabase active licenses
+      // 1. Check against Supabase active licenses (Paid Commercial Customers)
       try {
         const { data: dbLicense } = await supabase
           .from('licenses')
           .select('*')
           .eq('license_key', cleanKey)
-          .eq('customer_email', cleanEmail)
           .eq('status', 'active')
           .maybeSingle();
 
         if (dbLicense) {
-          isValid = true;
-          targetEdition = dbLicense.edition || 'GLOBAL_PRO';
-          planName = dbLicense.plan_name || 'All-Access Global Pro Edition';
+          if (dbLicense.customer_email.toLowerCase() === cleanEmail) {
+            isValid = true;
+            targetEdition = dbLicense.edition || 'GLOBAL_PRO';
+            planName = dbLicense.plan_name || 'All-Access Global Pro Edition';
+          } else {
+            isValid = false;
+            rejectReason = `This license key is registered to a different email (${dbLicense.customer_email.slice(0, 3)}***). Please enter the email address used when purchasing.`;
+          }
+        } else {
+          rejectReason = 'License key not found or expired. Please purchase an official license at https://www.homedesignenglish.com/download';
         }
       } catch (err: any) {
-        console.warn('Supabase license lookup skipped:', err.message);
+        console.warn('Supabase license lookup error:', err.message);
       }
 
-      // 2. Cryptographic and Pattern Fallback
+      // 2. Master Developer Key & Cryptographic RSA Fallback
       if (!isValid) {
         if (isMasterKey) {
           isValid = true;
+          rejectReason = null;
           targetEdition = 'GLOBAL_PRO';
           planName = 'All-Access Global Pro Edition (Creator Master)';
-        } else if (isCommercialPattern) {
-          isValid = true;
-          if (cleanKey.includes('-USA-')) {
-            targetEdition = 'USA';
-            planName = 'USA & International Edition';
-          } else if (cleanKey.includes('-IND-')) {
-            targetEdition = 'INDIA';
-            planName = 'India Standard Edition';
-          } else {
-            targetEdition = 'GLOBAL_PRO';
-            planName = 'All-Access Global Pro Edition (India + USA)';
-          }
         } else if (isRsaFormat) {
           isValid = true;
+          rejectReason = null;
           targetEdition = 'GLOBAL_PRO';
           planName = 'RSA Verified Commercial License';
-        } else {
-          isValid = false;
-          rejectReason = failure_reason || 'License key format does not match any valid HDE Studio pattern';
         }
       }
 

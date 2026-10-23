@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/buy',
+        destination: '/download#pricing',
+        permanent: true,
+      },
+      {
         source: '/blog/virtual-wall-paint-color-visualizer-tool',
         destination: '/blog',
         permanent: true,
