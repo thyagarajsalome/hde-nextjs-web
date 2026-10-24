@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'California Real Estate Calculators & City Directory | HDE',
   description: 'Free California real estate calculators. Compare rent vs. buy, property taxes, home remodel, pool costs, and salary needed across major California cities.',
   alternates: {
-    canonical: '/real-estate/california',
+    canonical: 'https://us.homedesignenglish.com/real-estate/california',
   },
 };
 

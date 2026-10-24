@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   title: 'USA Real Estate Calculators & Construction Cost Estimators (2026) | HDE',
   description: 'Free, accurate 2026 real estate and remodeling calculators for top US markets. Calculate rent vs. buy, property taxes, kitchen remodels, swimming pools, additions, and more.',
   alternates: {
-    canonical: '/real-estate',
+    canonical: 'https://us.homedesignenglish.com/real-estate',
   },
   openGraph: {
     title: 'USA Real Estate Calculators & Construction Cost Estimators (2026) | HDE',
     description: 'Free, accurate 2026 real estate and remodeling calculators for top US markets.',
-    url: '/real-estate',
+    url: 'https://us.homedesignenglish.com/real-estate',
     type: 'website',
   },
 };

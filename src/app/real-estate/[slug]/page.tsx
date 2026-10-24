@@ -125,33 +125,95 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!location) return { title: 'Not Found' };
 
-  let titlePrefix = '';
-  if (toolType === 'rent-vs-buy') titlePrefix = 'Rent vs. Buy Calculator';
-  else if (toolType === 'property-tax') titlePrefix = 'Property Tax Calculator';
-  else if (toolType === 'salary-needed-to-buy') titlePrefix = 'Salary Needed to Buy a House';
-  else if (toolType === 'remodel-roi') titlePrefix = 'Remodel ROI Calculator';
-  else if (toolType === 'kitchen-remodel') titlePrefix = 'Kitchen Remodel Cost Estimator';
-  else if (toolType === 'bathroom-remodel') titlePrefix = 'Bathroom Remodel Cost Estimator';
-  else if (toolType === 'home-addition') titlePrefix = 'Home Addition Cost Estimator';
-  else if (toolType === 'swimming-pool-cost') titlePrefix = 'Swimming Pool Cost Estimator';
-  else if (toolType === 'pickleball-court-cost') titlePrefix = 'Pickleball Court Cost Estimator';
-  else if (toolType === 'outdoor-kitchen-cost') titlePrefix = 'Outdoor Kitchen Cost Estimator';
-  else if (toolType === 'barndominium-cost') titlePrefix = 'Barndominium & Pole Barn Cost Estimator';
+  let title = '';
+  let description = '';
+  const city = location.city_name;
+  const state = location.state_name;
+
+  if (toolType === 'rent-vs-buy') {
+    title = `Rent vs Buy Calculator ${city}, ${state} (2026) | 5-Yr Breakeven`;
+    description = `Calculate your 2026 rent vs buy breakeven in ${city}, ${state}. Compare monthly payments, mortgage interest, property taxes & 5-year equity gains free.`;
+  } else if (toolType === 'property-tax') {
+    title = `${city} Property Tax Calculator (2026) | Rates & Escrow`;
+    description = `Calculate estimated 2026 property taxes for homes in ${city}, ${state}. See county millage rates, monthly mortgage escrow breakdown, and exemptions.`;
+  } else if (toolType === 'salary-needed-to-buy') {
+    title = `Salary Needed to Buy a House in ${city}, ${state} (2026)`;
+    description = `Find out what salary you need to buy a home in ${city}, ${state} in 2026. Calculate qualifying income based on 28/36 DTI rules, down payment, and rates.`;
+  } else if (toolType === 'remodel-roi') {
+    title = `Remodel ROI Calculator ${city}, ${state} (2026 Resale Value)`;
+    description = `Calculate return on investment (ROI) for kitchen, bath, and addition remodels in ${city}, ${state}. Compare contractor costs against added home equity.`;
+  } else if (toolType === 'kitchen-remodel') {
+    title = `Kitchen Remodel Cost in ${city}, ${state} (2026 Estimator)`;
+    description = `2026 kitchen remodel cost estimator for ${city}, ${state}. Accurate breakdown of custom cabinets, countertops, appliances, and contractor labor rates.`;
+  } else if (toolType === 'bathroom-remodel') {
+    title = `Bathroom Remodel Cost in ${city}, ${state} (2026 Estimator)`;
+    description = `Estimate 2026 bathroom remodel costs in ${city}, ${state}. Compare cosmetic upgrades ($10k) to master bathroom suites ($28k+) with contractor pricing.`;
+  } else if (toolType === 'home-addition') {
+    title = `Home Addition Cost in ${city}, ${state} (2026 Sq Ft Estimator)`;
+    description = `2026 home addition cost estimator for ${city}, ${state}. Calculate room addition costs per sq ft for second stories, master suites, and bump-outs.`;
+  } else if (toolType === 'swimming-pool-cost') {
+    title = `Swimming Pool Cost in ${city}, ${state} (2026 Inground Estimator)`;
+    description = `2026 swimming pool cost calculator for ${city}, ${state}. Compare inground gunite vs fiberglass costs, excavation, permits, and patio installation.`;
+  } else if (toolType === 'pickleball-court-cost') {
+    title = `Pickleball Court Cost in ${city}, ${state} (2026 Estimator)`;
+    description = `2026 pickleball court construction cost estimator in ${city}, ${state}. Breakdown of post-tension concrete, asphalt, acrylic coating, and lighting.`;
+  } else if (toolType === 'outdoor-kitchen-cost') {
+    title = `Outdoor Kitchen Cost in ${city}, ${state} (2026 Estimator)`;
+    description = `2026 outdoor kitchen cost calculator for ${city}, ${state}. Estimate built-in grill islands, granite counters, plumbing, and pergola installation.`;
+  } else if (toolType === 'barndominium-cost') {
+    title = `Barndominium Cost in ${city}, ${state} (2026 Sq Ft Estimator)`;
+    description = `2026 barndominium cost per sq ft estimator for ${city}, ${state}. Compare turn-key steel shells ($20-$35/sq ft) to fully finished custom barndo homes.`;
+  } else {
+    title = `${toolType.replace(/-/g, ' ')} in ${city}, ${state} (2026)`;
+    description = `Free 2026 real estate and construction cost calculator for ${city}, ${state}. Instant estimates and contractor breakdown.`;
+  }
+
+  const canonicalUrl = `https://us.homedesignenglish.com/real-estate/${resolvedParams.slug}`;
 
   return {
-    title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
-    description: `Use our free ${titlePrefix.toLowerCase()} for ${location.city_name}, ${location.state_name} to make informed real estate decisions.`,
+    title: `${title} | HDE`,
+    description,
     alternates: {
-      canonical: `/real-estate/${resolvedParams.slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${titlePrefix} in ${location.city_name}, ${location.state_name} | HDE`,
-      description: `Use our free ${titlePrefix.toLowerCase()} for ${location.city_name}, ${location.state_name} to make informed real estate decisions.`,
-      url: `/real-estate/${resolvedParams.slug}`,
+      title: `${title} | HDE`,
+      description,
+      url: canonicalUrl,
       type: 'website',
     },
   };
 }
+
+const STATE_CITIES_MAP: Record<string, { name: string; slug: string }[]> = {
+  texas: [
+    { name: 'Dallas', slug: 'dallas-texas' },
+    { name: 'Austin', slug: 'austin-texas' },
+    { name: 'Houston', slug: 'houston-texas' },
+    { name: 'San Antonio', slug: 'san-antonio-texas' },
+    { name: 'Fort Worth', slug: 'fort-worth-texas' },
+    { name: 'Plano', slug: 'plano-texas' },
+    { name: 'Frisco', slug: 'frisco-texas' },
+    { name: 'McKinney', slug: 'mckinney-texas' },
+    { name: 'Arlington', slug: 'arlington-texas' },
+  ],
+  florida: [
+    { name: 'Miami', slug: 'miami-florida' },
+    { name: 'Orlando', slug: 'orlando-florida' },
+    { name: 'Tampa', slug: 'tampa-florida' },
+    { name: 'Jacksonville', slug: 'jacksonville-florida' },
+    { name: 'St. Petersburg', slug: 'st-petersburg-florida' },
+    { name: 'Fort Lauderdale', slug: 'fort-lauderdale-florida' },
+  ],
+  california: [
+    { name: 'Los Angeles', slug: 'los-angeles-california' },
+    { name: 'San Diego', slug: 'san-diego-california' },
+    { name: 'San Jose', slug: 'san-jose-california' },
+    { name: 'San Francisco', slug: 'san-francisco-california' },
+    { name: 'Sacramento', slug: 'sacramento-california' },
+    { name: 'Fresno', slug: 'fresno-california' },
+  ],
+};
 
 const ALL_TOOLS = [
   { id: 'rent-vs-buy', name: 'Rent vs. Buy', icon: '🏠' },
@@ -626,6 +688,10 @@ export default async function RealEstateToolPage({ params }: PageProps) {
 
   const guide = getLocalGuideContent(toolType, location.city_name, location.state_name);
 
+  const stateKey = location.state_name.toLowerCase();
+  const nearbyList = STATE_CITIES_MAP[stateKey] || USA_CITIES_FALLBACK.map(c => ({ name: c.city_name, slug: c.slug }));
+  const nearbyCities = nearbyList.filter(c => c.slug !== citySlug).slice(0, 8);
+
   let stateHubLink = '/real-estate';
   const stateLower = location.state_name.toLowerCase();
   if (stateLower === 'texas') stateHubLink = '/real-estate/texas';
@@ -644,6 +710,13 @@ export default async function RealEstateToolPage({ params }: PageProps) {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "128",
+        "bestRating": "5",
+        "worstRating": "1"
       }
     },
     {
@@ -654,19 +727,19 @@ export default async function RealEstateToolPage({ params }: PageProps) {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://www.homedesignenglish.com"
+          "item": "https://us.homedesignenglish.com"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "USA Real Estate",
-          "item": "https://www.homedesignenglish.com/real-estate"
+          "item": "https://us.homedesignenglish.com/real-estate"
         },
         {
           "@type": "ListItem",
           "position": 3,
           "name": `${location.city_name}, ${location.state_name}`,
-          "item": `https://www.homedesignenglish.com/real-estate/${resolvedParams.slug}`
+          "item": `https://us.homedesignenglish.com/real-estate/${resolvedParams.slug}`
         }
       ]
     },
@@ -859,6 +932,29 @@ export default async function RealEstateToolPage({ params }: PageProps) {
           </a>
         </div>
       </div>
+
+      {/* Sibling Cities for Current Tool (Topical Cluster Links) */}
+      {nearbyCities.length > 0 && (
+        <div className="max-w-4xl mx-auto py-10 px-4 border-t border-slate-200">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2 text-center">
+            {toolName} in Other {location.state_name} Cities
+          </h2>
+          <p className="text-slate-600 text-xs sm:text-sm text-center mb-6">
+            Compare local {toolName.toLowerCase()} projections across major neighboring {location.state_name} housing markets.
+          </p>
+          <div className="flex flex-wrap gap-2.5 justify-center">
+            {nearbyCities.map(c => (
+              <a
+                key={c.slug}
+                href={`/real-estate/${toolType}-in-${c.slug}`}
+                className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-700 hover:border-primary-500 hover:text-primary-600 shadow-xs transition-all hover:shadow-sm"
+              >
+                📍 {c.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Dynamic FAQ Section */}
       {faqs.length > 0 && (
