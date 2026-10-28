@@ -16,14 +16,19 @@ const USA_CITIES_FALLBACK = [
   'raleigh-north-carolina', 'salt-lake-city-utah', 'san-diego-california'
 ];
 
+const INDIA_CITIES_FALLBACK = [
+  'mumbai', 'bengaluru', 'delhi-ncr', 'chennai', 'hyderabad', 'pune',
+  'ahmedabad', 'kolkata', 'jaipur', 'lucknow', 'surat', 'nagpur'
+];
+
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const headerList = await headers();
   const host = headerList.get('host')?.toLowerCase() || 'www.homedesignenglish.com';
 
-  const isUS = host.startsWith('us.');
-  const isDubai = host.startsWith('dubai.');
+  const isUS = host.startsWith('us.') || host.includes('us.localhost');
+  const isDubai = host.startsWith('dubai.') || host.includes('dubai.localhost');
 
   const protocol = host.includes('localhost') ? 'http' : 'https';
   const BASE_URL = isUS 
@@ -31,7 +36,235 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     : isDubai 
     ? `${protocol}://dubai.homedesignenglish.com` 
     : `${protocol}://www.homedesignenglish.com`;
-  // Static Routes
+
+  // 1. Fetch locations from Supabase
+  const { data: locations } = await supabase.from('pseo_locations').select('slug, country');
+
+  // ==========================================
+  // CASE 1: US SUBDOMAIN (us.homedesignenglish.com)
+  // ==========================================
+  if (isUS) {
+    const usaLocations = (locations || []).filter((loc: any) => loc.country === 'USA');
+    const existingUsaSlugs = new Set(usaLocations.map((l: any) => l.slug));
+    USA_CITIES_FALLBACK.forEach((slug) => {
+      if (!existingUsaSlugs.has(slug)) {
+        usaLocations.push({ slug, country: 'USA' });
+      }
+    });
+
+    const realEstateRoutes: MetadataRoute.Sitemap = [];
+    usaLocations.forEach((loc: any) => {
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/rent-vs-buy-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/property-tax-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/salary-needed-to-buy-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/remodel-roi-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/kitchen-remodel-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/bathroom-remodel-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/home-addition-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/swimming-pool-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/pickleball-court-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/outdoor-kitchen-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/barndominium-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+    });
+
+    const blogPosts = getAllPosts();
+    const usBlogRoutes: MetadataRoute.Sitemap = blogPosts
+      .filter(p => p.meta.region?.toUpperCase() === 'US' || p.meta.region?.toUpperCase() === 'GLOBAL')
+      .map(p => ({
+        url: `${BASE_URL}/blog/${p.slug}`,
+        lastModified: p.meta.date && !isNaN(Date.parse(p.meta.date)) ? new Date(p.meta.date) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }));
+
+    return [
+      {
+        url: `${BASE_URL}/`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 1.0,
+      },
+      {
+        url: `${BASE_URL}/real-estate`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.98,
+      },
+      {
+        url: `${BASE_URL}/real-estate/texas`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/real-estate/florida`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/real-estate/california`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.95,
+      },
+      {
+        url: `${BASE_URL}/download`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+      },
+      {
+        url: `${BASE_URL}/blog`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.85,
+      },
+      ...realEstateRoutes,
+      ...usBlogRoutes,
+    ];
+  }
+
+  // ==========================================
+  // CASE 2: DUBAI SUBDOMAIN (dubai.homedesignenglish.com)
+  // ==========================================
+  if (isDubai) {
+    const DUBAI_AREAS = [
+      'dubai-marina', 'downtown-dubai', 'business-bay', 'jvc',
+      'dubai-hills', 'palm-jumeirah', 'jlt', 'dubai-creek-harbour',
+      'mbr-city', 'arabian-ranches', 'dubai-south', 'jbr',
+      'dubai-silicon-oasis', 'al-barsha', 'dubai-sports-city'
+    ];
+
+    const PROPERTY_TYPES = ['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'];
+    const dubaiRoutes: MetadataRoute.Sitemap = [
+      {
+        url: `${BASE_URL}/dubai-property`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+      },
+      {
+        url: `${BASE_URL}/dubai-property/calculator`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+      },
+      {
+        url: `${BASE_URL}/dubai-property/partners`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      },
+      ...DUBAI_AREAS.map(slug => ({
+        url: `${BASE_URL}/dubai-property/areas/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      } as const))
+    ];
+
+    DUBAI_AREAS.forEach(areaSlug => {
+      PROPERTY_TYPES.forEach(pt => {
+        dubaiRoutes.push({
+          url: `${BASE_URL}/dubai-property/buy/${pt}-for-sale-in-${areaSlug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.8,
+        });
+      });
+    });
+
+    const dubaiPartnerRoutes: MetadataRoute.Sitemap = PARTNER_SEO_SLUGS.map(slug => ({
+      url: `${BASE_URL}/dubai-property/partners/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+
+    const blogPosts = getAllPosts();
+    const dubaiBlogRoutes: MetadataRoute.Sitemap = blogPosts
+      .filter(p => p.meta.region?.toUpperCase() === 'UAE' || p.meta.region?.toUpperCase() === 'GLOBAL')
+      .map(p => ({
+        url: `${BASE_URL}/blog/${p.slug}`,
+        lastModified: p.meta.date && !isNaN(Date.parse(p.meta.date)) ? new Date(p.meta.date) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }));
+
+    return [
+      {
+        url: `${BASE_URL}/`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 1.0,
+      },
+      ...dubaiRoutes,
+      ...dubaiPartnerRoutes,
+      ...dubaiBlogRoutes,
+    ];
+  }
+
+  // ==========================================
+  // CASE 3: MAIN INDIA DOMAIN (www.homedesignenglish.com)
+  // Strictly India & global features only.
+  // NO US Real Estate or Dubai pages.
+  // ==========================================
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}/`,
@@ -79,30 +312,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/blog`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/real-estate`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.95,
-    },
-    {
-      url: `${BASE_URL}/real-estate/texas`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/real-estate/florida`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/real-estate/california`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
@@ -191,326 +400,83 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ];
 
-  // Dynamic City SEO Routes from Supabase
-  const { data: locations } = await supabase.from('pseo_locations').select('slug, country');
-  let cityRoutes: MetadataRoute.Sitemap = [];
-  const realEstateRoutes: MetadataRoute.Sitemap = [];
-  
-  if (locations && locations.length > 0) {
-    cityRoutes = locations.flatMap((loc: any) => [
-      {
-        url: `${BASE_URL}/cost/construction-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/interior-design-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/flooring-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/painting-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/home-loan-emi-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/building-material-cost-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      }
-    ]);
+  // Indian cities for /cost/ programmatic pages
+  const indiaLocations = (locations || []).filter((loc: any) => loc.country?.toUpperCase() === 'INDIA');
+  const existingIndiaSlugs = new Set(indiaLocations.map((l: any) => l.slug));
+  INDIA_CITIES_FALLBACK.forEach(slug => {
+    if (!existingIndiaSlugs.has(slug)) {
+      indiaLocations.push({ slug, country: 'INDIA' });
+    }
+  });
 
-    // USA Real Estate tools
-    const usaLocations = locations.filter((loc: any) => loc.country === 'USA');
-    
-    // Merge fallbacks
-    const existingSlugs = new Set(usaLocations.map((l: any) => l.slug));
-    USA_CITIES_FALLBACK.forEach((slug) => {
-      if (!existingSlugs.has(slug)) {
-        usaLocations.push({ slug, country: 'USA' });
-      }
-    });
+  const cityRoutes: MetadataRoute.Sitemap = indiaLocations.flatMap((loc: any) => [
+    {
+      url: `${BASE_URL}/cost/construction-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/cost/interior-design-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/cost/flooring-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/cost/painting-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/cost/home-loan-emi-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/cost/building-material-cost-in-${loc.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }
+  ]);
 
-    usaLocations.forEach((loc: any) => {
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/rent-vs-buy-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/property-tax-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/salary-needed-to-buy-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/remodel-roi-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/kitchen-remodel-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/bathroom-remodel-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/home-addition-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/swimming-pool-cost-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/pickleball-court-cost-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/outdoor-kitchen-cost-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/barndominium-cost-in-${loc.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-    });
-  } else {
-    // Fallback
-    cityRoutes = Object.keys(CITIES_DATA).flatMap((cityKey) => [
-      {
-        url: `${BASE_URL}/cost/construction-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/interior-design-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/flooring-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/painting-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/home-loan-emi-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-      {
-        url: `${BASE_URL}/cost/building-material-cost-in-${cityKey}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      }
-    ]);
-
-    USA_CITIES_FALLBACK.forEach((slug) => {
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/rent-vs-buy-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/property-tax-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/salary-needed-to-buy-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/remodel-roi-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/kitchen-remodel-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/bathroom-remodel-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/home-addition-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/swimming-pool-cost-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/pickleball-court-cost-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/outdoor-kitchen-cost-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-      realEstateRoutes.push({
-        url: `${BASE_URL}/real-estate/barndominium-cost-in-${slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-    });
-  }
-
-  // Dynamic Blog Routes
+  // Dynamic Blog Routes (India / Global)
   const blogPosts = getAllPosts();
   const PILLAR_GUIDES = [
     'modular-kitchen-designs-cost-layouts-india',
     'modern-bathroom-designs-india-cost-guide',
     'house-construction-cost-in-india-2026',
     'home-loan-emi-calculator-guide-sbi-hdfc',
-    'true-cost-of-buying-property-in-dubai-2026',
-    'backyard-pickleball-court-construction-cost',
-    'outdoor-kitchen-roi-and-costs',
-    'rent-vs-buy-a-house-in-2026',
-    'barndominium-cost-per-square-foot-guide-2026',
     'winter-home-decor-ideas-cozy-styling-guide',
     'winter-home-improvement-projects-cost-checklist'
   ];
 
-  const mapPostToRoute = (post: typeof blogPosts[0]) => {
-    const isValidDate = post.meta.date && !isNaN(Date.parse(post.meta.date));
-    const isPillar = PILLAR_GUIDES.includes(post.slug);
-    return {
-      url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: isValidDate ? new Date(post.meta.date) : new Date(),
-      changeFrequency: isPillar ? 'weekly' as const : 'monthly' as const,
-      priority: isPillar ? 0.9 : 0.8,
-    };
-  };
-
-  const blogRoutes: MetadataRoute.Sitemap = blogPosts.map(mapPostToRoute);
-  const usBlogRoutes: MetadataRoute.Sitemap = blogPosts
-    .filter(p => p.meta.region?.toUpperCase() === 'US' || p.meta.region?.toUpperCase() === 'GLOBAL')
-    .map(mapPostToRoute);
-
-  // Dubai Property Routes
-  const DUBAI_AREAS = [
-    'dubai-marina', 'downtown-dubai', 'business-bay', 'jvc',
-    'dubai-hills', 'palm-jumeirah', 'jlt', 'dubai-creek-harbour',
-    'mbr-city', 'arabian-ranches', 'dubai-south', 'jbr',
-    'dubai-silicon-oasis', 'al-barsha', 'dubai-sports-city'
-  ];
-
-  const dubaiRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}/dubai-property`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/dubai-property/calculator`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/dubai-property/partners`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    ...DUBAI_AREAS.map(slug => ({
-      url: `${BASE_URL}/dubai-property/areas/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    } as const))
-  ];
-
-  const PROPERTY_TYPES = ['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'];
-  
-  DUBAI_AREAS.forEach(areaSlug => {
-    PROPERTY_TYPES.forEach(pt => {
-      dubaiRoutes.push({
-        url: `${BASE_URL}/dubai-property/buy/${pt}-for-sale-in-${areaSlug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
+  const blogRoutes: MetadataRoute.Sitemap = blogPosts
+    .filter(p => p.meta.region?.toUpperCase() === 'INDIA' || p.meta.region?.toUpperCase() === 'GLOBAL' || !p.meta.region)
+    .map((post) => {
+      const isValidDate = post.meta.date && !isNaN(Date.parse(post.meta.date));
+      const isPillar = PILLAR_GUIDES.includes(post.slug);
+      return {
+        url: `${BASE_URL}/blog/${post.slug}`,
+        lastModified: isValidDate ? new Date(post.meta.date) : new Date(),
+        changeFrequency: isPillar ? 'weekly' as const : 'monthly' as const,
+        priority: isPillar ? 0.9 : 0.8,
+      };
     });
-  });
 
   const landConverterRoutes: MetadataRoute.Sitemap = TOP_CONVERSION_PAIRS.map(pair => ({
     url: `${BASE_URL}/land-converter/${pair.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: 0.8,
+    priority: 0.85,
   }));
 
   const housePlanRoutes: MetadataRoute.Sitemap = Object.keys(HOUSE_PLAN_SEO_DATA).map((slug) => ({
@@ -518,13 +484,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.85,
-  }));
-
-  const dubaiPartnerRoutes: MetadataRoute.Sitemap = PARTNER_SEO_SLUGS.map(slug => ({
-    url: `${BASE_URL}/dubai-property/partners/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.8,
   }));
 
   // Bangalore Real Estate Programmatic Routes (24 localities x 6 templates)
@@ -540,79 +499,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
-  // On US subdomain (us.homedesignenglish.com), serve US-focused sitemap
-  if (isUS) {
-    return [
-      {
-        url: `${BASE_URL}/`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1.0,
-      },
-      {
-        url: `${BASE_URL}/real-estate`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.98,
-      },
-      {
-        url: `${BASE_URL}/real-estate/texas`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.95,
-      },
-      {
-        url: `${BASE_URL}/real-estate/florida`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.95,
-      },
-      {
-        url: `${BASE_URL}/real-estate/california`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.95,
-      },
-      {
-        url: `${BASE_URL}/blog`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.85,
-      },
-      {
-        url: `${BASE_URL}/download`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.9,
-      },
-      ...realEstateRoutes,
-      ...usBlogRoutes,
-    ];
-  }
-
-  // On Dubai subdomain (dubai.homedesignenglish.com), serve Dubai-focused sitemap
-  if (isDubai) {
-    return [
-      {
-        url: `${BASE_URL}/`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 1.0,
-      },
-      ...dubaiRoutes,
-      ...dubaiPartnerRoutes,
-      ...blogRoutes,
-    ];
-  }
-
-  // Default Main Domain (www.homedesignenglish.com) serves full master index
   return [
     ...staticRoutes,
     ...cityRoutes,
-    ...realEstateRoutes,
     ...blogRoutes,
-    ...dubaiRoutes,
-    ...dubaiPartnerRoutes,
     ...landConverterRoutes,
     ...housePlanRoutes,
     ...bangaloreRoutes,

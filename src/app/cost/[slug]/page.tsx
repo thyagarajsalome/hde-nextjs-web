@@ -71,35 +71,26 @@ function getIndiaSampleEstimate(cityData: CityData) {
 }
 
 export async function generateStaticParams() {
-  // Try to fetch slugs from Supabase
-  const { data: dbLocations } = await supabase.from('pseo_locations').select('slug');
+  const { data: dbLocations } = await supabase
+    .from('pseo_locations')
+    .select('slug, country');
   
-  let locations = dbLocations || [];
+  const indiaDbSlugs = (dbLocations || [])
+    .filter((l: any) => l.country?.toUpperCase() === 'INDIA')
+    .map((l: any) => l.slug);
+
+  const existing = new Set(indiaDbSlugs);
+  INDIA_CITIES.forEach(c => {
+    if (!existing.has(c.slug)) indiaDbSlugs.push(c.slug);
+  });
   
-  // Merge in the hardcoded USA fallback
-  const existingSlugs = new Set(locations.map((l: any) => l.slug));
-  const toAdd = USA_CITIES_FALLBACK.filter((c: any) => !existingSlugs.has(c.slug));
-  locations = [...locations, ...toAdd];
-  
-  if (locations.length > 0) {
-    return locations.flatMap((loc: any) => [
-      { slug: `construction-in-${loc.slug}` },
-      { slug: `interior-design-in-${loc.slug}` },
-      { slug: `flooring-in-${loc.slug}` },
-      { slug: `painting-in-${loc.slug}` },
-      { slug: `home-loan-emi-in-${loc.slug}` },
-      { slug: `building-material-cost-in-${loc.slug}` },
-    ]);
-  }
-  
-  // Fallback to hardcoded if DB fails
-  return Object.keys(CITIES_DATA).flatMap((city) => [
-    { slug: `construction-in-${city}` },
-    { slug: `interior-design-in-${city}` },
-    { slug: `flooring-in-${city}` },
-    { slug: `painting-in-${city}` },
-    { slug: `home-loan-emi-in-${city}` },
-    { slug: `building-material-cost-in-${city}` },
+  return indiaDbSlugs.flatMap((slug: string) => [
+    { slug: `construction-in-${slug}` },
+    { slug: `interior-design-in-${slug}` },
+    { slug: `flooring-in-${slug}` },
+    { slug: `painting-in-${slug}` },
+    { slug: `home-loan-emi-in-${slug}` },
+    { slug: `building-material-cost-in-${slug}` },
   ]);
 }
 
@@ -138,40 +129,7 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
 
 
 
-  // If the location was found in DB but missing rates, and it's a USA city, provide defaults
-  if (loc && loc.country === 'USA') {
-    return {
-      slug: loc.slug,
-      cityName: loc.city_name,
-      stateName: loc.state_name,
-      country: loc.country,
 
-      metaDesc: `Calculate construction and remodeling costs in ${loc.city_name}, ${loc.state_name}. Check local standard building rates, plumbing, and electrical charges.`,
-      neighborhoods: 'prime sectors and local neighborhoods',
-      soilType: 'local soil types',
-      basicRate: '$120/sqft',
-      standardRate: '$160/sqft',
-      premiumRate: '$220/sqft',
-    };
-  }
-
-  // Check if it is in our USA_CITIES_FALLBACK (for cities not in DB at all)
-  const usaFallback = USA_CITIES_FALLBACK.find(c => c.slug === cityKey);
-
-  if (usaFallback) {
-    return {
-      slug: usaFallback.slug,
-      cityName: usaFallback.city_name,
-      stateName: usaFallback.state_name,
-      country: usaFallback.country,
-      metaDesc: `Calculate construction and remodeling costs in ${usaFallback.city_name}, ${usaFallback.state_name}. Check local standard building rates, plumbing, and electrical charges.`,
-      neighborhoods: 'prime sectors and local neighborhoods',
-      soilType: 'local soil types',
-      basicRate: '$120/sqft',
-      standardRate: '$160/sqft',
-      premiumRate: '$220/sqft',
-    };
-  }
 
   // Fallback to CITIES_DATA
   return CITIES_DATA[cityKey] || null;
@@ -217,7 +175,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description = `Get building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
   }
 
-  const domain = cityData.country === 'USA' ? 'https://us.homedesignenglish.com' : 'https://www.homedesignenglish.com';
+  const domain = 'https://www.homedesignenglish.com';
 
   return {
     title,
@@ -236,6 +194,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CityPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
+  const headerList = await headers();
+  const host = headerList.get('host')?.toLowerCase() || '';
+  if (host.startsWith('us.') || host.includes('us.localhost')) {
+    redirect(`https://www.homedesignenglish.com/cost/${resolvedParams.slug}`);
+  }
   
   if (!resolvedParams.slug.startsWith('construction-in-') &&
       !resolvedParams.slug.startsWith('interior-design-in-') &&
@@ -272,13 +235,6 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   }
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
-
-  const headerList = await headers();
-  const host = headerList.get('host')?.toLowerCase() || '';
-  const isUS = host.startsWith('us.') || host.includes('us.localhost');
-  if (isUS && forceRegion === 'IN') {
-    redirect(`https://www.homedesignenglish.com/cost/${resolvedParams.slug}`);
-  }
 
   const sampleEstimate = forceRegion === 'IN' ? getIndiaSampleEstimate(cityData) : null;
   const formatLakhs = (amount: number) => `₹${(amount / 100000).toFixed(2)} Lakhs`;
