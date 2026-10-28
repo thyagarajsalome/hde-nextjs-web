@@ -297,11 +297,6 @@ export default function DownloadPage() {
     download_url: 'https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/releases/v2.2.7/HDE-Studio-Setup-v2.2.7.exe',
     file_size_mb: 39.1
   };
-  const winZip = releases.find(r => r.platform === 'windows' && r.installer_type === 'zip') || {
-    version: 'v2.2.7',
-    download_url: 'https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/v2.2.7/HDE-Studio.jar',
-    file_size_mb: 8.5
-  };
   const linuxZip = releases.find(r => r.platform === 'linux') || {
     version: 'v2.2.7',
     download_url: 'https://github.com/thyagarajsalome/HDE-Studio-Releases/releases/download/v2.2.7/HDE-Studio-v2.2.7-Linux-Portable.zip',
@@ -388,49 +383,39 @@ export default function DownloadPage() {
           <div id="download" className="pt-2 max-w-xl mx-auto space-y-4">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {detectedOS === "windows" && (
-                <>
-                  <a
-                    href={winExe.download_url}
-                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
-                  >
-                    <i className="fab fa-windows text-xl"></i>
-                    <div className="text-left">
-                      <div className="text-sm font-black leading-tight flex items-center gap-2">
-                        <span>Download 14-Day Free Trial</span>
-                        <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
-                          {winExe.version || 'v2.2.7'} Latest
-                        </span>
-                      </div>
-                      <div className="text-[11px] font-normal opacity-90">
-                        Windows 64-bit Installer (.exe) • {winExe.version || 'v2.2.7'} • {winExe.file_size_mb} MB
-                      </div>
+                <a
+                  href={winExe.download_url}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3.5 cursor-pointer"
+                >
+                  <i className="fab fa-windows text-2xl shrink-0"></i>
+                  <div className="text-left">
+                    <div className="text-sm sm:text-base font-black leading-tight flex items-center gap-2.5">
+                      <span className="whitespace-nowrap">Download 14-Day Free Trial</span>
+                      <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider whitespace-nowrap">
+                        {winExe.version || 'v2.2.7'} Latest
+                      </span>
                     </div>
-                  </a>
-                  <a
-                    href={winZip.download_url}
-                    className="w-full sm:w-auto px-5 py-4 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold text-xs transition-all no-underline flex items-center justify-center gap-2"
-                    title="Portable version with zero installation"
-                  >
-                    <i className="fas fa-file-zipper text-sm"></i>
-                    <span>Portable Zip ({winZip.version || 'v2.2.7'} • {winZip.file_size_mb} MB)</span>
-                  </a>
-                </>
+                    <div className="text-[11px] sm:text-xs font-normal opacity-90 mt-1 whitespace-nowrap">
+                      Windows 64-bit Installer (.exe) • {winExe.version || 'v2.2.7'} • {winExe.file_size_mb} MB
+                    </div>
+                  </div>
+                </a>
               )}
 
               {detectedOS === "macos" && (
                 <a
                   href={macDmg.download_url}
-                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3.5 cursor-pointer"
                 >
-                  <i className="fab fa-apple text-xl"></i>
+                  <i className="fab fa-apple text-2xl shrink-0"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight flex items-center gap-2">
-                      <span>Download 14-Day Free Trial</span>
-                      <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                    <div className="text-sm sm:text-base font-black leading-tight flex items-center gap-2.5">
+                      <span className="whitespace-nowrap">Download 14-Day Free Trial</span>
+                      <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider whitespace-nowrap">
                         {macDmg.version || 'v2.2.7'} Latest
                       </span>
                     </div>
-                    <div className="text-[11px] font-normal opacity-90">
+                    <div className="text-[11px] sm:text-xs font-normal opacity-90 mt-1 whitespace-nowrap">
                       macOS Apple Silicon &amp; Intel (.dmg) • {macDmg.version || 'v2.2.7'} • {macDmg.file_size_mb} MB
                     </div>
                   </div>
@@ -440,18 +425,18 @@ export default function DownloadPage() {
               {detectedOS === "linux" && (
                 <a
                   href={linuxZip.download_url}
-                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3 cursor-pointer"
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-102 transition-all no-underline flex items-center justify-center gap-3.5 cursor-pointer"
                 >
-                  <i className="fab fa-linux text-xl"></i>
+                  <i className="fab fa-linux text-2xl shrink-0"></i>
                   <div className="text-left">
-                    <div className="text-sm font-black leading-tight flex items-center gap-2">
-                      <span>Download 14-Day Free Trial</span>
-                      <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                    <div className="text-sm sm:text-base font-black leading-tight flex items-center gap-2.5">
+                      <span className="whitespace-nowrap">Download 14-Day Free Trial</span>
+                      <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider whitespace-nowrap">
                         {linuxZip.version || 'v2.2.7'} Latest
                       </span>
                     </div>
-                    <div className="text-[11px] font-normal opacity-90">
-                      Linux Portable Bundle (.zip) • {linuxZip.version || 'v2.2.7'} • {linuxZip.file_size_mb} MB
+                    <div className="text-[11px] sm:text-xs font-normal opacity-90 mt-1 whitespace-nowrap">
+                      Linux Bundle (.zip) • {linuxZip.version || 'v2.2.7'} • {linuxZip.file_size_mb} MB
                     </div>
                   </div>
                 </a>
