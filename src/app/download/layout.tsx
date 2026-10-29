@@ -12,12 +12,13 @@ export const metadata: Metadata = {
     description: 'Standalone desktop CAD application for home builders, drafters, and architects. 14-day full free trial, offline, fast, and built for modern architectural drafting.',
     url: 'https://www.homedesignenglish.com/download',
     siteName: 'Home Design English',
-    images: [{ url: '/HDE_256px.webp', width: 256, height: 256, alt: 'HDE Studio CAD' }],
+    images: [{ url: '/hde-studio-logo.png', width: 512, height: 512, alt: 'HDE Studio CAD' }],
   },
   twitter: {
     card: 'summary',
     title: 'Download HDE Studio CAD | 14-Day Free Trial Included',
     description: 'Download HDE Studio CAD for Windows with a 14-day free trial. Native offline 2D CAD drafting with dual unit catalogs and crisp vector PDF export.',
+    images: ['/hde-studio-logo.png'],
   },
 };
 

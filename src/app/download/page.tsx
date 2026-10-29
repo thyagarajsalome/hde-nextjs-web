@@ -354,11 +354,11 @@ export default function DownloadPage() {
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-slate-200 shadow-md flex items-center justify-center p-2 transition-transform hover:scale-105 duration-300">
               <Image
-                src="/images/cad/HDE_256px.webp"
-                alt="HDE Studio House Planning Tool Icon"
+                src="/images/cad/hde-studio-icon.png"
+                alt="HDE Studio CAD Icon Logo"
                 width={256}
                 height={256}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain rounded-xl"
                 priority
               />
             </div>
