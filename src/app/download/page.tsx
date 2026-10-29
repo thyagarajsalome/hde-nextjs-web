@@ -352,13 +352,13 @@ export default function DownloadPage() {
           
           {/* Brand Icon & Version Pill */}
           <div className="flex flex-col items-center justify-center gap-3">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white border border-slate-200 shadow-md flex items-center justify-center p-2 transition-transform hover:scale-105 duration-300">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-md transition-transform hover:scale-105 duration-300 overflow-hidden">
               <Image
                 src="/images/cad/hde-studio-icon.png"
                 alt="HDE Studio CAD Icon Logo"
                 width={256}
                 height={256}
-                className="w-full h-full object-contain rounded-xl"
+                className="w-full h-full object-contain"
                 priority
               />
             </div>
