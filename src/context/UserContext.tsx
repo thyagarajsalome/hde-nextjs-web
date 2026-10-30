@@ -21,6 +21,7 @@ interface UserContextType {
   setMarkup: (val: number) => void;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
+  isDeveloper?: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -35,6 +36,55 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [markup, setMarkup] = useState(0);
+  const [isDeveloper, setIsDeveloper] = useState(false);
+
+  // Initialize Developer Mode (Localhost, query param ?dev=true, or localStorage flag)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const devParam = urlParams.get('dev') || urlParams.get('developer') || urlParams.get('admin');
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const hasDevFlag = window.localStorage.getItem('hde_developer_mode') === 'true';
+
+      if (devParam === 'true' || devParam === '1') {
+        window.localStorage.setItem('hde_developer_mode', 'true');
+        window.localStorage.setItem('hde_user_has_paid', 'true');
+        window.localStorage.setItem('hde_bank_report_paid', 'true');
+        setIsDeveloper(true);
+        setHasPaid(true);
+        setPlanTier('pro');
+        setRole('admin');
+        setCredits(9999);
+      } else if (hasDevFlag || isLocal) {
+        setIsDeveloper(true);
+        setHasPaid(true);
+        setPlanTier('pro');
+        setRole('admin');
+        setCredits(9999);
+      }
+
+      // Expose developer helpers globally in browser console
+      (window as any).enableDevAccess = () => {
+        window.localStorage.setItem('hde_developer_mode', 'true');
+        window.localStorage.setItem('hde_user_has_paid', 'true');
+        window.localStorage.setItem('hde_bank_report_paid', 'true');
+        setIsDeveloper(true);
+        setHasPaid(true);
+        setPlanTier('pro');
+        setRole('admin');
+        setCredits(9999);
+        console.log('%c[HDE DevAccess] Full Developer Access Granted! All paywalls, calculators, and reports unlocked.', 'color: #10b981; font-weight: bold; font-size: 14px;');
+      };
+
+      (window as any).disableDevAccess = () => {
+        window.localStorage.removeItem('hde_developer_mode');
+        window.localStorage.removeItem('hde_user_has_paid');
+        window.localStorage.removeItem('hde_bank_report_paid');
+        setIsDeveloper(false);
+        console.log('%c[HDE DevAccess] Developer Access Disabled.', 'color: #ef4444; font-weight: bold; font-size: 14px;');
+      };
+    }
+  }, []);
 
   const tierValue = { free: 0, basic: 1, standard: 2, pro: 3 }[planTier];
 
@@ -72,7 +122,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (error) console.error("Error fetching profile:", error);
         
-        const isPaid = Boolean(data?.has_paid);
+        const isDev = Boolean(
+          isDeveloper ||
+          data?.role === 'admin' ||
+          data?.role === 'developer' ||
+          userId === 'dev-admin'
+        );
+        const isPaid = Boolean(data?.has_paid || isDev);
         const resolvedTier = data?.plan_tier || (isPaid ? 'pro' : 'free');
         
         setHasPaid(isPaid);
@@ -89,7 +145,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         //   - New free users get 1 Free Welcome Credit to test saving their first project.
         let userCredits = data?.credits;
         if (userCredits === null || userCredits === undefined) {
-          userCredits = isPaid ? 100 : 1;
+          userCredits = (isDev || isDeveloper) ? 9999 : (isPaid ? 100 : 1);
         }
         setCredits(userCredits);
         fetchedUserIdRef.current = userId;
