@@ -6,6 +6,9 @@ import Link from "next/link";
 
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { useUser } from "../../context/UserContext";
+import { useRegion } from "../../context/RegionContext";
+import { openRazorpayCheckout } from "../../lib/razorpayClient";
+import { generateBankEstimatePDF } from "../../services/bankEstimatePdfService";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
@@ -74,7 +77,7 @@ function formatINR(val: number): string {
 // ── Component ──────────────────────────────────────────────────────────────────
 export const ConstructionCalculator = ({ projectData }: { projectData?: any }) => {
   // Destructure user status, planTier, and role to guarantee existing paid customers full access
-  const { hasPaid, planTier, role, markup = 0 } = useUser();
+  const { user, hasPaid, planTier, role, markup = 0 } = useUser();
   const isUserPaid = Boolean(hasPaid || role === 'admin' || (planTier && planTier !== 'free'));
   
   const pathname = usePathname();
@@ -110,6 +113,86 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   const [isEditingRate,      setIsEditingRate]     = useState(false);
   const [activeTab,          setActiveTab]         = useState<"rates"|"timeline">("rates");
   const [detectedCityName,   setDetectedCityName]  = useState<string | null>(null);
+
+  const { region } = useRegion();
+  const [isIndia, setIsIndia] = useState(true);
+
+  // Bank Estimate Offer States (Strictly for India users)
+  const [showBankModal, setShowBankModal] = useState(false);
+  const [borrowerName, setBorrowerName] = useState("");
+  const [siteAddress, setSiteAddress] = useState("");
+  const [numFloors, setNumFloors] = useState<number>(1);
+  const [isGeneratingBankPdf, setIsGeneratingBankPdf] = useState(false);
+  const [hasPaidBankReport, setHasPaidBankReport] = useState(false);
+  const [paymentFeedback, setPaymentFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const host = window.location.hostname.toLowerCase();
+      const isUS = host.startsWith("us.") || host.includes("us.localhost") || region === "US";
+      setIsIndia(!isUS);
+
+      if (window.sessionStorage.getItem("hde_bank_report_paid") === "true") {
+        setHasPaidBankReport(true);
+      }
+    }
+  }, [region]);
+
+  const handleDownloadBankReport = async () => {
+    setIsGeneratingBankPdf(true);
+    setPaymentFeedback("Compiling official bank estimation & BOQ PDF...");
+    try {
+      await generateBankEstimatePDF({
+        clientName: borrowerName.trim() || (user?.user_metadata?.full_name as string) || user?.email || "Home Construction Borrower",
+        siteLocation: siteAddress.trim() || (detectedCityName ? `${detectedCityName}, India` : "Residential Plot, India"),
+        builtUpArea: parsedArea,
+        floors: numFloors,
+        quality: quality,
+        customRate: Math.round(customRate * mFactor),
+        costs: { ...costs, total: totalCost },
+        finalTotalCost: finalTotalCost,
+        parkingArea: parkingArea ? Number(parkingArea) : 0,
+        compoundWallLength: compoundWallLength ? Number(compoundWallLength) : 0,
+        includeSump: includeSump,
+      });
+      setPaymentFeedback("PDF downloaded successfully! Ready for bank loan submission.");
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem("hde_bank_report_paid", "true");
+      }
+      setHasPaidBankReport(true);
+    } catch (err) {
+      console.error("Bank PDF generation error:", err);
+      setPaymentFeedback("Failed to generate PDF. Please try again.");
+    } finally {
+      setIsGeneratingBankPdf(false);
+    }
+  };
+
+  const handleInitiateBankReportPayment = () => {
+    if (hasPaidBankReport) {
+      handleDownloadBankReport();
+      return;
+    }
+
+    setPaymentFeedback(null);
+    openRazorpayCheckout({
+      amountInRupees: 299,
+      itemName: "Bank Estimate & BOQ Report (PDF)",
+      description: `${parsedArea} sq.ft Home Construction Loan Estimate`,
+      prefill: {
+        name: borrowerName.trim() || (user?.user_metadata?.full_name as string) || "",
+        email: user?.email || "",
+      },
+      onSuccess: async (paymentId) => {
+        console.log("Payment successful:", paymentId);
+        await handleDownloadBankReport();
+      },
+      onFailure: (err) => {
+        console.warn("Payment dismissed or failed:", err);
+        setPaymentFeedback("Payment was not completed. You can try again anytime.");
+      },
+    });
+  };
 
   // 1. Pathname-change effect: Detects city from URL path and resets edit rate status on navigation
   useEffect(() => {
@@ -1020,7 +1103,78 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
             </div>
 
             <div className="space-y-3">
-              <WhatsAppShareButton
+              {/* Bank-Ready Estimation & BOQ Report High-Conversion Card (India Only) */}
+            {isIndia && parsedArea > 0 && (
+              <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/90 dark:border-amber-500/50 bg-gradient-to-br from-amber-500/[0.08] via-amber-50/[0.3] to-emerald-500/[0.06] dark:from-zinc-900 dark:via-zinc-900/90 dark:to-amber-950/20 p-4 sm:p-5 shadow-lg space-y-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-400/30">
+                    <i className="fas fa-university text-amber-600 dark:text-amber-400"></i>
+                    <span>Bank Loan &amp; Contractor Compliant</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-gray-500 dark:text-zinc-400">
+                    SBI • HDFC • Canara • ICICI Format
+                  </span>
+                </div>
+
+                <div>
+                  <h4 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+                    <span>Official Bank-Ready Estimate &amp; BOQ Report (PDF)</span>
+                  </h4>
+                  <p className="text-xs text-gray-600 dark:text-zinc-300 mt-1 leading-relaxed">
+                    Applying for an Indian home construction loan or contractor agreement? Download the verified 2-page civil engineer estimate with complete itemized material quantities (Cement, Steel, Sand, Bricks), 6-stage loan disbursement tranches, and bank valuer signature blocks.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-gray-700 dark:text-zinc-300 font-medium pt-1">
+                  <div className="flex items-center gap-1.5">
+                    <i className="fas fa-check-circle text-emerald-500 text-xs shrink-0"></i>
+                    <span>Bank Abstract Costing &amp; Specifications</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <i className="fas fa-check-circle text-emerald-500 text-xs shrink-0"></i>
+                    <span>BOQ: Bags Cement, Tonnes Steel, Sand &amp; Bricks</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <i className="fas fa-check-circle text-emerald-500 text-xs shrink-0"></i>
+                    <span>6-Stage Loan Disbursement Milestones</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <i className="fas fa-check-circle text-emerald-500 text-xs shrink-0"></i>
+                    <span>Civil Engineer &amp; Valuer Seal Blocks</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-amber-300/30 dark:border-zinc-700/60">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                      ₹299
+                    </span>
+                    <span className="text-xs line-through text-gray-400">
+                      ₹2,500
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
+                      Save 90% vs Valuer
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!siteAddress && detectedCityName) {
+                        setSiteAddress(`${detectedCityName}, India`);
+                      }
+                      setShowBankModal(true);
+                    }}
+                    className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+                  >
+                    <i className="fas fa-file-invoice-dollar text-sm"></i>
+                    <span>{hasPaidBankReport ? "Download Bank Report Again (PDF) ✓" : "Download Bank Report (PDF) — ₹299"}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <WhatsAppShareButton
                 title={`House Construction Estimate (${detectedCityName || 'India'})`}
                 total={formatCurrency(finalTotalCost)}
                 details={[
