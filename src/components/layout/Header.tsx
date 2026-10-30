@@ -217,7 +217,6 @@ const Header = () => {
               <i className="fas fa-cube text-xs text-primary"></i>
               <span>CAD Studio</span>
             </Link>
-            <Link href="/blog" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">Guides</Link>
 
             {/* Pro Account Button - Always visible, region-aware */}
             <Link
@@ -490,7 +489,6 @@ const Header = () => {
               <i className="fas fa-cube text-primary text-sm"></i>
               <span>CAD Studio (Desktop App)</span>
             </Link>
-            <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-800 no-underline" onClick={() => setMenuOpen(false)}>Guides</Link>
             {user ? (
               <>
                 <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
