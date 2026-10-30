@@ -1214,6 +1214,148 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
           </div>
         )}
       </section>
+      {/* Modal for Personalizing & Downloading Bank Report */}
+      {showBankModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-white dark:bg-zinc-900 rounded-3xl p-6 sm:p-7 shadow-2xl border border-amber-300/60 dark:border-amber-500/30 my-8 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowBankModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 text-gray-500 hover:text-gray-900 dark:hover:text-white flex items-center justify-center text-sm transition"
+            >
+              ✕
+            </button>
+
+            {/* Modal Header */}
+            <div className="flex items-start gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
+                <i className="fas fa-university"></i>
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-extrabold text-gray-900 dark:text-zinc-100">
+                  Bank-Ready Estimation &amp; BOQ Report
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
+                  Formatted for SBI, HDFC, Canara Bank, ICICI &amp; Local Civil Contractors
+                </p>
+              </div>
+            </div>
+
+            {/* Report Specs Summary Pill */}
+            <div className="grid grid-cols-3 gap-2 p-3 bg-gray-50 dark:bg-zinc-800/60 rounded-xl text-center border border-gray-100 dark:border-zinc-800 text-xs">
+              <div>
+                <span className="text-[10px] text-gray-400 uppercase font-bold">Built-up</span>
+                <p className="font-extrabold text-gray-800 dark:text-zinc-200 mt-0.5">{parsedArea.toLocaleString('en-IN')} sq.ft</p>
+              </div>
+              <div>
+                <span className="text-[10px] text-gray-400 uppercase font-bold">Grade</span>
+                <p className="font-extrabold text-gray-800 dark:text-zinc-200 mt-0.5">{quality.toUpperCase()}</p>
+              </div>
+              <div>
+                <span className="text-[10px] text-gray-400 uppercase font-bold">Estimated Cost</span>
+                <p className="font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">₹{Math.round(finalTotalCost).toLocaleString('en-IN')}</p>
+              </div>
+            </div>
+
+            {/* Form Fields for Customization */}
+            <div className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
+                  Borrower / Owner Name <span className="text-gray-400 font-normal">(as on loan application)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Rajesh Kumar"
+                  value={borrowerName}
+                  onChange={(e) => setBorrowerName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
+                  Property Site / Plot Address
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Plot #42, Whitefield, Bengaluru"
+                  value={siteAddress}
+                  onChange={(e) => setSiteAddress(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-700 dark:text-zinc-300 mb-1">
+                  Number of Floors
+                </label>
+                <select
+                  value={numFloors}
+                  onChange={(e) => setNumFloors(Number(e.target.value))}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white text-xs focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
+                >
+                  <option value={1}>Ground Floor Only (1 Floor)</option>
+                  <option value={2}>Ground + 1 Floor (Duplex / G+1)</option>
+                  <option value={3}>Ground + 2 Floors (G+2)</option>
+                  <option value={4}>Ground + 3 Floors (G+3)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Feedback alert */}
+            {paymentFeedback && (
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
+                {paymentFeedback}
+              </div>
+            )}
+
+            {/* Pricing Callout & Checkout Action */}
+            <div className="pt-2 border-t border-gray-100 dark:border-zinc-800 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-gray-500">Official Report Fee:</span>
+                  <span className="ml-2 line-through text-gray-400">₹2,500</span>
+                  <span className="ml-2 font-black text-slate-900 dark:text-white text-base">₹299</span>
+                </div>
+                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
+                  Instant Download
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleInitiateBankReportPayment}
+                disabled={isGeneratingBankPdf}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-extrabold text-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isGeneratingBankPdf ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    <span>Compiling Bank PDF...</span>
+                  </>
+                ) : hasPaidBankReport ? (
+                  <>
+                    <i className="fas fa-download"></i>
+                    <span>Download Bank Report (PDF) Now</span>
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-lock text-xs"></i>
+                    <span>Pay ₹299 &amp; Download Bank Report (PDF)</span>
+                  </>
+                )}
+              </button>
+
+              <div className="flex items-center justify-center gap-3 text-[10px] text-gray-400 dark:text-zinc-500">
+                <span><i className="fas fa-shield-alt text-emerald-500 mr-1"></i>Razorpay Secure</span>
+                <span>•</span>
+                <span>UPI, GPay, PhonePe, Cards, NetBanking</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
