@@ -698,6 +698,10 @@ const UpgradePage = () => {
             body: { ...response, planId, currency: paymentCurrency }
           });
           if (result?.status === "success") {
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem("hde_user_has_paid", "true");
+              window.localStorage.setItem("hde_bank_report_paid", "true");
+            }
             await refreshProfile();
             navigate.push("/dashboard");
           } else {
