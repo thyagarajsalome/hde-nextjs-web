@@ -408,15 +408,16 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   };
 
   const handleDownloadPDF = () => {
+    const fmtRs = (val: number) => `Rs. ${Math.round(val).toLocaleString('en-IN')}`;
     const rows: [string, string, string][] = [
-      ["Construction Base", `${area} sq.ft @ Rs.${Math.round(customRate * mFactor)}/sqft`, formatCurrency(costs.main)],
+      ["Construction Base", `${area} sq.ft @ Rs.${Math.round(customRate * mFactor)}/sqft`, fmtRs(costs.main)],
     ];
-    if (costs.parking > 0) rows.push(["Parking Construction", `${parkingArea} sq.ft`, formatCurrency(costs.parking)]);
-    if (costs.wall > 0) rows.push(["Compound Wall Boundary", `${compoundWallLength} ft`, formatCurrency(costs.wall)]);
-    if (costs.sump > 0) rows.push(["Sump & Septic Vault", `${quality} preset`, formatCurrency(costs.sump)]);
+    if (costs.parking > 0) rows.push(["Parking Construction", `${parkingArea} sq.ft`, fmtRs(costs.parking)]);
+    if (costs.wall > 0) rows.push(["Compound Wall Boundary", `${compoundWallLength} ft`, fmtRs(costs.wall)]);
+    if (costs.sump > 0) rows.push(["Sump & Septic Vault", `${quality} preset`, fmtRs(costs.sump)]);
     
     if (savings.total > 0) {
-      rows.push(["Cost Optimization Savings", `Applied deductions`, `-${formatCurrency(savings.total)}`]);
+      rows.push(["Cost Optimization Savings", `Applied deductions`, `-${fmtRs(savings.total)}`]);
     }
 
     Object.entries(BREAKDOWN_PERCENTAGES).forEach(([k, pct]) => {
@@ -427,10 +428,10 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
       if (k === "Finishing" && selectedSavings.includes("tiles")) {
         phaseCost = Math.max(0, phaseCost - savings.tiles);
       }
-      rows.push([`  -> Phase: ${k}`, `${pct}% structural allocation`, formatCurrency(phaseCost)]);
+      rows.push([`  -> Phase: ${k}`, `${pct}% structural allocation`, fmtRs(phaseCost)]);
     });
 
-    downloadSpreadsheetPDF(`HDE-Estimate-${area}sqft`, ["Est. Item","Parameters","Amount"], rows, "TOTAL ESTIMATE", formatCurrency(finalTotalCost));
+    downloadSpreadsheetPDF(`HDE-Estimate-${area}sqft`, ["Est. Item","Parameters","Amount"], rows, "TOTAL ESTIMATE", fmtRs(finalTotalCost));
   };
 
   const handleNextStep = () => {

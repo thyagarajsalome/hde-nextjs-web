@@ -251,18 +251,27 @@ export const useProjectActions = (projectType: string) => {
       doc.setLineWidth(0.5);
       doc.line(14, specY + 2, pageWidth - 14, specY + 2);
 
+      // Sanitize Unicode currency symbols (e.g. ₹ becomes superscript 1 in jsPDF Helvetica)
+      const cleanVal = (val: any): string => {
+        if (val === null || val === undefined) return "";
+        return String(val).replace(/₹\s?/g, "Rs. ");
+      };
+
+      const cleanHeaders = headers.map(h => cleanVal(h));
+      const cleanRows = rows.map(r => r.map(c => cleanVal(c)));
+
       let footData = undefined;
       if (footerLabel && footerValue !== undefined) {
         const footRow = Array(headers.length).fill("");
-        footRow[headers.length - 2] = footerLabel;
-        footRow[headers.length - 1] = footerValue.toString();
+        footRow[headers.length - 2] = cleanVal(footerLabel);
+        footRow[headers.length - 1] = cleanVal(footerValue);
         footData = [footRow];
       }
 
       autoTable(doc, {
         startY: specY + 8,
-        head: [headers],
-        body: rows,
+        head: [cleanHeaders],
+        body: cleanRows,
         theme: "striped", 
         styles: {
           font: "helvetica",
