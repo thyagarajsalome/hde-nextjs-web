@@ -9,6 +9,7 @@ import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 import { openRazorpayCheckout } from "../../lib/razorpayClient";
 import { generateBankEstimatePDF } from "../../services/bankEstimatePdfService";
+import { getUserLicense } from "../../services/licenseService";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
@@ -126,17 +127,43 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   const [hasPaidBankReport, setHasPaidBankReport] = useState(false);
   const [paymentFeedback, setPaymentFeedback] = useState<string | null>(null);
 
+  // Existing paid members (Pro tier, active licenses, admins, or prior report purchasers) are NEVER blocked
+  const hasAccessToBankReport = Boolean(
+    isUserPaid ||
+    hasPaidBankReport ||
+    (typeof window !== "undefined" && (
+      window.sessionStorage.getItem("hde_bank_report_paid") === "true" ||
+      window.localStorage.getItem("hde_bank_report_paid") === "true" ||
+      window.localStorage.getItem("hde_user_has_paid") === "true"
+    ))
+  );
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const host = window.location.hostname.toLowerCase();
       const isUS = host.startsWith("us.") || host.includes("us.localhost") || region === "US";
       setIsIndia(!isUS);
 
-      if (window.sessionStorage.getItem("hde_bank_report_paid") === "true") {
+      if (
+        window.sessionStorage.getItem("hde_bank_report_paid") === "true" ||
+        window.localStorage.getItem("hde_bank_report_paid") === "true" ||
+        window.localStorage.getItem("hde_user_has_paid") === "true"
+      ) {
         setHasPaidBankReport(true);
       }
     }
   }, [region]);
+
+  // Check if existing user has an active desktop or web license in Supabase
+  useEffect(() => {
+    if (user?.id) {
+      getUserLicense(user.id).then((lic) => {
+        if (lic && lic.status === "active") {
+          setHasPaidBankReport(true);
+        }
+      }).catch(() => {});
+    }
+  }, [user]);
 
   const handleDownloadBankReport = async () => {
     setIsGeneratingBankPdf(true);
@@ -158,6 +185,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
       setPaymentFeedback("PDF downloaded successfully! Ready for bank loan submission.");
       if (typeof window !== "undefined") {
         window.sessionStorage.setItem("hde_bank_report_paid", "true");
+        window.localStorage.setItem("hde_bank_report_paid", "true");
       }
       setHasPaidBankReport(true);
     } catch (err) {
@@ -169,7 +197,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
   };
 
   const handleInitiateBankReportPayment = () => {
-    if (hasPaidBankReport) {
+    if (hasAccessToBankReport) {
       handleDownloadBankReport();
       return;
     }
@@ -1146,17 +1174,33 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 </div>
 
                 <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-amber-300/30 dark:border-zinc-700/60">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                      ₹299
-                    </span>
-                    <span className="text-xs line-through text-gray-400">
-                      ₹2,500
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
-                      Save 90% vs Valuer
-                    </span>
-                  </div>
+                  {hasAccessToBankReport ? (
+                    <div className="flex items-center gap-2">
+                      <span className="w-7 h-7 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs shrink-0">
+                        <i className="fas fa-crown"></i>
+                      </span>
+                      <div>
+                        <p className="text-xs font-black text-emerald-700 dark:text-emerald-400">
+                          Pro Member Access Unlocked
+                        </p>
+                        <p className="text-[10px] text-gray-500 dark:text-zinc-400">
+                          Included with your account • Free downloads
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                        ₹299
+                      </span>
+                      <span className="text-xs line-through text-gray-400">
+                        ₹2,500
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
+                        Save 90% vs Valuer
+                      </span>
+                    </div>
+                  )}
 
                   <button
                     type="button"
@@ -1169,7 +1213,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                     className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
                   >
                     <i className="fas fa-file-invoice-dollar text-sm"></i>
-                    <span>{hasPaidBankReport ? "Download Bank Report Again (PDF) ✓" : "Download Bank Report (PDF) — ₹299"}</span>
+                    <span>{hasAccessToBankReport ? "Download Bank Report (PDF) ✓" : "Download Bank Report (PDF) — ₹299"}</span>
                   </button>
                 </div>
               </div>
@@ -1320,16 +1364,28 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
 
             {/* Pricing Callout & Checkout Action */}
             <div className="pt-2 border-t border-gray-100 dark:border-zinc-800 space-y-3">
-              <div className="flex items-center justify-between text-xs">
-                <div>
-                  <span className="text-gray-500">Official Report Fee:</span>
-                  <span className="ml-2 line-through text-gray-400">₹2,500</span>
-                  <span className="ml-2 font-black text-slate-900 dark:text-white text-base">₹299</span>
+              {hasAccessToBankReport ? (
+                <div className="flex items-center justify-between text-xs p-2.5 bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-300">
+                  <div className="flex items-center gap-2 font-bold">
+                    <i className="fas fa-crown text-emerald-600 dark:text-emerald-400"></i>
+                    <span>Pro Account Access Active</span>
+                  </div>
+                  <span className="text-[11px] font-extrabold bg-emerald-200/70 dark:bg-emerald-900/80 px-2 py-0.5 rounded-md">
+                    Free / Unlocked
+                  </span>
                 </div>
-                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
-                  Instant Download
-                </span>
-              </div>
+              ) : (
+                <div className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-gray-500">Official Report Fee:</span>
+                    <span className="ml-2 line-through text-gray-400">₹2,500</span>
+                    <span className="ml-2 font-black text-slate-900 dark:text-white text-base">₹299</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
+                    Instant Download
+                  </span>
+                </div>
+              )}
 
               <button
                 type="button"
@@ -1342,10 +1398,10 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                     <i className="fas fa-spinner fa-spin"></i>
                     <span>Compiling Bank PDF...</span>
                   </>
-                ) : hasPaidBankReport ? (
+                ) : hasAccessToBankReport ? (
                   <>
                     <i className="fas fa-download"></i>
-                    <span>Download Bank Report (PDF) Now</span>
+                    <span>Generate &amp; Download Bank Report (PDF)</span>
                   </>
                 ) : (
                   <>
@@ -1356,9 +1412,15 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
               </button>
 
               <div className="flex items-center justify-center gap-3 text-[10px] text-gray-400 dark:text-zinc-500">
-                <span><i className="fas fa-shield-alt text-emerald-500 mr-1"></i>Razorpay Secure</span>
-                <span>•</span>
-                <span>UPI, GPay, PhonePe, Cards, NetBanking</span>
+                {hasAccessToBankReport ? (
+                  <span><i className="fas fa-check-circle text-emerald-500 mr-1"></i>Included with your active account • No payment required</span>
+                ) : (
+                  <>
+                    <span><i className="fas fa-shield-alt text-emerald-500 mr-1"></i>Razorpay Secure</span>
+                    <span>•</span>
+                    <span>UPI, GPay, PhonePe, Cards, NetBanking</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
