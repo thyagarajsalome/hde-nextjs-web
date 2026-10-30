@@ -43,6 +43,11 @@ const nextConfig: NextConfig = {
         destination: '/?region=US&calc=:calc#tools',
         permanent: true,
       },
+      {
+        source: '/winter-home-guide',
+        destination: '/blog/winter-home-improvement-projects-cost-checklist',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

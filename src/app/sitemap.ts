@@ -8,13 +8,7 @@ import { HOUSE_PLAN_SEO_DATA } from '@/data/housePlanSeoData';
 import { PARTNER_SEO_SLUGS } from '@/data/dubaiPartnerSeoData';
 import { BANGALORE_LOCALITIES } from '@/data/bangaloreLocalities';
 import { TARGET_CATEGORY_TEMPLATES } from '@/data/bangaloreMarketData';
-
-const USA_CITIES_FALLBACK = [
-  'dallas-texas', 'miami-florida', 'atlanta-georgia', 'seattle-washington',
-  'phoenix-arizona', 'chicago-illinois', 'denver-colorado', 'charlotte-north-carolina',
-  'orlando-florida', 'nashville-tennessee', 'las-vegas-nevada', 'tampa-florida',
-  'raleigh-north-carolina', 'salt-lake-city-utah', 'san-diego-california'
-];
+import { USA_CITY_SLUGS_FALLBACK as USA_CITIES_FALLBACK } from '@/data/usaCities';
 
 const INDIA_CITIES_FALLBACK = [
   'mumbai', 'bengaluru', 'delhi-ncr', 'chennai', 'hyderabad', 'pune',
