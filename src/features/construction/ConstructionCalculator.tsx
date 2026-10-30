@@ -1190,18 +1190,26 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 buttonText="Share Estimate via WhatsApp"
               />
 
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <button onClick={handleDownloadPDF} disabled={isDownloading}
-                  className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border-2 border-[#0f2042] dark:border-zinc-700 text-[#0f2042] dark:text-zinc-100 font-bold rounded-xl hover:bg-[#0f2042] hover:text-white transition-all duration-200 shadow-xs cursor-pointer text-xs sm:text-sm">
-                  <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf text-red-500"}`}></i>
-                  <span>Export PDF</span>
-                </button>
+              {isIndia ? (
                 <button onClick={handleSave} disabled={isSaving}
-                  className="flex items-center justify-center gap-2 py-3.5 px-4 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer text-xs sm:text-sm">
-                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
-                  <span>{isSaving ? "Saving..." : "Save Project"}</span>
+                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-zinc-200 font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all duration-200 shadow-xs cursor-pointer text-xs sm:text-sm">
+                  <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save text-primary"}`}></i>
+                  <span>{isSaving ? "Saving Project..." : "Save Project to Account"}</span>
                 </button>
-              </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <button onClick={handleDownloadPDF} disabled={isDownloading}
+                    className="flex items-center justify-center gap-2 py-3.5 px-4 bg-white dark:bg-zinc-900 border-2 border-[#0f2042] dark:border-zinc-700 text-[#0f2042] dark:text-zinc-100 font-bold rounded-xl hover:bg-[#0f2042] hover:text-white transition-all duration-200 shadow-xs cursor-pointer text-xs sm:text-sm">
+                    <i className={`fas ${isDownloading ? "fa-spinner fa-spin" : "fa-file-pdf text-red-500"}`}></i>
+                    <span>Export PDF</span>
+                  </button>
+                  <button onClick={handleSave} disabled={isSaving}
+                    className="flex items-center justify-center gap-2 py-3.5 px-4 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 font-bold rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer text-xs sm:text-sm">
+                    <i className={`fas ${isSaving ? "fa-spinner fa-spin" : "fa-save"}`}></i>
+                    <span>{isSaving ? "Saving..." : "Save Project"}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </>
         ) : (
