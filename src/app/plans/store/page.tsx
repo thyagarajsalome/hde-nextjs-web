@@ -172,21 +172,15 @@ export default function HousePlanDrawingStorePage() {
             </Link>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-            <div className="space-y-3.5 max-w-3xl">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-3xl">
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100/80 text-amber-900 border border-amber-300/80 shadow-xs">
                 <i className="fas fa-compass-drafting text-amber-700"></i>
                 HDE Working Drawings &amp; Vector Blueprint Store
               </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-[#0f2042]">
-                Architectural House Plans &amp; <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-amber-700 to-amber-900">
-                  Ready-to-Build Vector PDF Drawings
-                </span>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#0f2042]">
+                Architectural House Plans
               </h1>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed max-w-2xl">
-                Download verified architectural working drawings for Indian plot sizes. Every design features room-by-room dimensions, cross-ventilation alignment, electrical points, and direct integration with our turnkey construction cost calculator.
-              </p>
             </div>
 
             {/* Value Highlights */}
