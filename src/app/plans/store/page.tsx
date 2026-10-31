@@ -479,20 +479,20 @@ export default function HousePlanDrawingStorePage() {
 
       {/* Plan Details & Watermark Modal */}
       {activePlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-5xl bg-[#FFFDF9] rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto border border-[#E8DFC8] animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-[#FFFDF9] rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 max-h-[94vh] overflow-y-auto border border-[#E8DFC8] animate-fadeIn">
             {/* Modal Header */}
-            <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200 dark:border-zinc-800">
-              <div>
+            <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#E8DFC8]/60">
+              <div className="min-w-0 pr-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-600 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
                     {activePlan.dimensions} Blueprint Pack
                   </span>
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400">
+                  <span className="text-[10px] font-bold text-slate-500">
                     {activePlan.floors || 'G+1'} Structure
                   </span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 mt-1">
+                <h2 className="text-base sm:text-lg font-black text-slate-900 mt-1 truncate">
                   {activePlan.title}
                 </h2>
               </div>
@@ -500,9 +500,9 @@ export default function HousePlanDrawingStorePage() {
               <button
                 type="button"
                 onClick={() => setActivePlan(null)}
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-500 dark:text-zinc-300 flex items-center justify-center transition cursor-pointer shrink-0"
+                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition cursor-pointer shrink-0"
               >
-                <i className="fas fa-times text-sm"></i>
+                <i className="fas fa-times text-xs"></i>
               </button>
             </div>
 
@@ -543,11 +543,11 @@ export default function HousePlanDrawingStorePage() {
                 </Link>
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   type="button"
                   onClick={() => setActivePlan(null)}
-                  className="px-4 py-2.5 text-xs font-bold rounded-xl border border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition"
+                  className="px-3.5 py-1.5 text-xs font-bold rounded-lg border border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition"
                 >
                   Close
                 </button>
@@ -564,20 +564,20 @@ export default function HousePlanDrawingStorePage() {
                         window.open(target, '_blank');
                       }
                     }}
-                    className="px-5 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    <i className="fas fa-file-pdf"></i>
-                    Download Clean PDF
+                    <i className="fas fa-file-pdf text-[11px]"></i>
+                    <span>Download Clean PDF</span>
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handlePurchasePlan(activePlan)}
                     disabled={checkoutInProgress}
-                    className="px-6 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md shadow-amber-950/20 transition flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-1.5 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xs transition flex items-center gap-1.5 cursor-pointer"
                   >
-                    <i className="fas fa-unlock-alt"></i>
-                    Unlock Vector PDF (₹{activePlan.price_inr || 499})
+                    <i className="fas fa-lock-open text-[11px]"></i>
+                    <span>Unlock Vector PDF (₹{activePlan.price_inr || 499})</span>
                   </button>
                 )}
               </div>

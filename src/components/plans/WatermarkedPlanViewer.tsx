@@ -55,61 +55,61 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
 
   return (
     <div
-      className={`relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-700/60 select-none shadow-xl ${className}`}
+      className={`relative rounded-xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 select-none shadow-sm ${className}`}
       onContextMenu={(e) => {
         if (!isUnlocked) e.preventDefault();
       }}
     >
-      {/* Top Status Bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-        <div className="flex items-center gap-2">
+      {/* Sleek Floating Top Controls Bar */}
+      <div className="absolute top-2 left-2 right-2 z-30 flex items-center justify-between gap-2 pointer-events-none">
+        <div className="pointer-events-auto">
           {isUnlocked ? (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 backdrop-blur-md">
-              <i className="fas fa-check-circle text-[11px]"></i>
-              Pristine Vector Unlocked
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/60 shadow-xs backdrop-blur-xs">
+              <i className="fas fa-check-circle text-[9px]"></i>
+              Pristine Unlocked
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 backdrop-blur-md">
-              <i className="fas fa-lock text-[11px]"></i>
-              Protected Preview (HDE Watermark)
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/90 text-slate-700 border border-slate-200/90 dark:bg-zinc-900/90 dark:text-zinc-300 dark:border-zinc-700 shadow-xs backdrop-blur-xs">
+              <i className="fas fa-shield-halved text-[9px] text-slate-500"></i>
+              Protected Preview
             </span>
           )}
         </div>
 
-        {/* Zoom Controls */}
-        <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md rounded-lg p-1 border border-white/10">
+        {/* Minimal Zoom Controls */}
+        <div className="pointer-events-auto flex items-center gap-1 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xs rounded-lg p-0.5 border border-slate-200 dark:border-zinc-700 shadow-xs">
           <button
             type="button"
             onClick={() => setZoomLevel((prev) => Math.max(1, prev - 0.25))}
             disabled={zoomLevel <= 1}
-            className="w-7 h-7 flex items-center justify-center text-white/80 hover:text-white disabled:opacity-30 rounded hover:bg-white/10 transition text-xs"
+            className="w-6 h-6 flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 rounded transition text-[10px]"
             title="Zoom Out"
           >
-            <i className="fas fa-search-minus"></i>
+            <i className="fas fa-minus"></i>
           </button>
-          <span className="text-[11px] font-mono text-white/90 px-1 font-bold min-w-[36px] text-center">
+          <span className="text-[10px] font-mono font-bold text-slate-700 dark:text-zinc-200 px-1 min-w-[32px] text-center">
             {Math.round(zoomLevel * 100)}%
           </span>
           <button
             type="button"
             onClick={() => setZoomLevel((prev) => Math.min(2.5, prev + 0.25))}
             disabled={zoomLevel >= 2.5}
-            className="w-7 h-7 flex items-center justify-center text-white/80 hover:text-white disabled:opacity-30 rounded hover:bg-white/10 transition text-xs"
+            className="w-6 h-6 flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 rounded transition text-[10px]"
             title="Zoom In"
           >
-            <i className="fas fa-search-plus"></i>
+            <i className="fas fa-plus"></i>
           </button>
         </div>
       </div>
 
-      {/* Main Blueprint Viewport */}
+      {/* Main Blueprint Viewport - Crisp White / Light Drafting Surface */}
       <div
-        className="relative w-full aspect-[4/3] sm:aspect-[16/11] overflow-auto flex items-center justify-center bg-zinc-950 p-2"
+        className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[56vh] sm:max-h-[62vh] overflow-auto flex items-center justify-center bg-slate-50/70 dark:bg-zinc-950 p-2 sm:p-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div
-          className="relative transition-transform duration-200 ease-out flex items-center justify-center"
+          className="relative transition-transform duration-200 ease-out flex items-center justify-center max-w-full max-h-full"
           style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center center' }}
         >
           {/* Blueprint Image or PDF embed */}
@@ -117,73 +117,71 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
             <iframe
               src={`${normalizedImageUrl}#toolbar=0&navpanes=0`}
               title={title}
-              className="w-[85vw] max-w-[750px] h-[540px] rounded shadow-2xl border-0 bg-white"
+              className="w-[85vw] max-w-[700px] h-[480px] rounded border border-slate-200 dark:border-zinc-800 bg-white shadow-xs"
             />
           ) : (
             <img
               src={normalizedImageUrl}
               alt={title}
-              className="max-h-[580px] w-auto object-contain rounded shadow-2xl pointer-events-none"
+              className="max-h-[480px] w-auto max-w-full object-contain rounded bg-white shadow-xs pointer-events-none"
+              style={{ imageRendering: '-webkit-optimize-contrast' }}
               loading="lazy"
               draggable={false}
             />
           )}
 
-          {/* Semi-transparent Diagonal Watermark (Only active when NOT unlocked) */}
+          {/* Clean Subtle Neutral Watermark (NO Yellow — Professional Crisp Drafting Style) */}
           {!isUnlocked && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-around opacity-45 select-none z-10">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-around opacity-30 select-none z-10">
               {/* Row 1 */}
-              <div className="transform -rotate-25 whitespace-nowrap text-[13px] sm:text-base font-black tracking-[0.25em] text-white/40 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex gap-8">
-                <span>HOME DESIGN ENGLISH • PREVIEW BLUEPRINT</span>
-                <span>• HDE ARCHITECTURAL STORE •</span>
-                <span>DO NOT DISTRIBUTE •</span>
+              <div className="transform -rotate-25 whitespace-nowrap text-[11px] sm:text-xs font-black tracking-[0.2em] text-slate-500 dark:text-slate-400 flex gap-6">
+                <span>HOME DESIGN ENGLISH</span>
+                <span>• ARCHITECTURAL PREVIEW •</span>
+                <span>DO NOT DISTRIBUTE</span>
               </div>
-              {/* Row 2 (Prominent Center) */}
-              <div className="transform -rotate-25 whitespace-nowrap text-base sm:text-xl font-black tracking-[0.3em] text-amber-300/50 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] flex gap-10">
-                <span>★ PREVIEW ONLY — LICENSED ARCHITECTURAL DRAWING ★</span>
-                <span>★ UNREGISTERED SPECIFICATION ★</span>
+              {/* Row 2 (Subtle Neutral Center - Clean Gray, NO Yellow) */}
+              <div className="transform -rotate-25 whitespace-nowrap text-xs sm:text-sm font-black tracking-[0.25em] text-slate-600 dark:text-slate-300 flex gap-8">
+                <span>★ PREVIEW ONLY — LICENSED ARCHITECTURAL SPECIFICATION ★</span>
               </div>
               {/* Row 3 */}
-              <div className="transform -rotate-25 whitespace-nowrap text-[13px] sm:text-base font-black tracking-[0.25em] text-white/40 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex gap-8">
-                <span>WWW.HOMEDESIGNENGLISH.COM • WORKING DRAWINGS PACK</span>
-                <span>• ALL RIGHTS RESERVED •</span>
+              <div className="transform -rotate-25 whitespace-nowrap text-[11px] sm:text-xs font-black tracking-[0.2em] text-slate-500 dark:text-slate-400 flex gap-6">
+                <span>WWW.HOMEDESIGNENGLISH.COM</span>
+                <span>• BLUEPRINT WORKING DRAWING •</span>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Bottom Action Drawer */}
-      <div className="px-5 py-3.5 bg-slate-900/95 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="text-left w-full sm:w-auto">
-          <p className="text-xs text-slate-400 font-medium truncate max-w-sm">
+      {/* Sleek, Compact & Responsive Bottom Bar */}
+      <div className="px-3 sm:px-4 py-2 sm:py-2.5 bg-white dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="text-left w-full sm:w-auto min-w-0">
+          <p className="text-xs font-bold text-slate-800 dark:text-zinc-200 truncate max-w-xs">
             {title}
           </p>
-          <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[11px] font-bold text-slate-300">
-              Format: High-Res 300 DPI Vector PDF + Detailed Floor Layout
-            </span>
-          </div>
+          <span className="text-[10px] text-slate-500 dark:text-zinc-400 block sm:inline">
+            High-Res Vector PDF Working Drawing
+          </span>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
           {isUnlocked ? (
             <button
               type="button"
               onClick={handleDownload}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/40 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+              className="w-full sm:w-auto px-3.5 py-1.5 rounded-lg font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
             >
-              <i className="fas fa-file-pdf text-sm"></i>
-              Download Pristine Vector PDF
+              <i className="fas fa-download text-[11px]"></i>
+              <span>Download PDF</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={onUnlockClick}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg shadow-amber-950/40 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+              className="w-full sm:w-auto px-4 py-1.5 rounded-lg font-bold text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
             >
-              <i className="fas fa-unlock-alt text-sm"></i>
-              <span>Unlock Clean PDF (₹{priceInr})</span>
+              <i className="fas fa-lock-open text-[11px]"></i>
+              <span>Unlock Vector PDF (₹{priceInr})</span>
             </button>
           )}
         </div>

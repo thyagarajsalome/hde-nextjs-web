@@ -1151,23 +1151,23 @@ export const AdminPlansManager: React.FC = () => {
 
       {/* Developer/Admin Interactive Preview Modal */}
       {previewPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto border border-slate-300 dark:border-zinc-700">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-zinc-800">
-              <div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
+          <div className="relative w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 max-h-[94vh] overflow-y-auto border border-slate-200 dark:border-zinc-800 animate-fadeIn">
+            <div className="flex items-center justify-between pb-2 sm:pb-3 border-b border-slate-200 dark:border-zinc-800">
+              <div className="min-w-0 pr-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">
                   Previewing Plan: {previewPlan.dimensions}
                 </span>
-                <h3 className="text-base font-black text-slate-900 dark:text-zinc-100">
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-zinc-100 truncate">
                   {previewPlan.title}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setPreviewPlan(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 p-2"
+                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-500 dark:text-zinc-400 flex items-center justify-center transition shrink-0"
               >
-                <i className="fas fa-times text-lg"></i>
+                <i className="fas fa-times text-sm"></i>
               </button>
             </div>
 
