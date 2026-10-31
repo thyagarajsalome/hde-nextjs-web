@@ -29,6 +29,7 @@ const FACING_OPTIONS = [
 
 export default function HousePlanDrawingStorePage() {
   const { user, hasPaid, planTier, isDeveloper } = useUser();
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
   const [plans, setPlans] = useState<HousePlanRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -163,14 +164,16 @@ export default function HousePlanDrawingStorePage() {
               <span className="text-amber-800 font-bold">Drawing Store</span>
             </div>
 
-            {/* Direct Link to Upload PDF Plans */}
-            <Link
-              href="/admin/plans"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-[#0f2042] hover:bg-blue-900 text-white shadow-sm transition border border-blue-900/40 w-fit"
-            >
-              <i className="fas fa-cloud-arrow-up text-amber-400"></i>
-              <span>Upload PDF Plans (Admin) →</span>
-            </Link>
+            {/* Direct Link to Upload PDF Plans - Strictly for thyagaraja1983@gmail.com */}
+            {isAdmin && (
+              <Link
+                href="/admin/plans"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-[#0f2042] hover:bg-blue-900 text-white shadow-sm transition border border-blue-900/40 w-fit"
+              >
+                <i className="fas fa-cloud-arrow-up text-amber-400"></i>
+                <span>Upload PDF Plans (Admin) →</span>
+              </Link>
+            )}
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -275,13 +278,15 @@ export default function HousePlanDrawingStorePage() {
               <span className="text-[11px] font-mono text-slate-400">
                 Cloudflare R2 Vector Storage
               </span>
-              <Link
-                href="/admin/plans"
-                className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3 py-1 rounded-lg border border-amber-300 flex items-center gap-1.5 shadow-2xs transition"
-              >
-                <i className="fas fa-plus text-amber-700 text-[10px]"></i>
-                <span>Upload New PDF Plan</span>
-              </Link>
+              {isAdmin && (
+                <Link
+                  href="/admin/plans"
+                  className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3 py-1 rounded-lg border border-amber-300 flex items-center gap-1.5 shadow-2xs transition"
+                >
+                  <i className="fas fa-plus text-amber-700 text-[10px]"></i>
+                  <span>Upload New PDF Plan</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>

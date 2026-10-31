@@ -218,6 +218,7 @@ export const PlanGallery: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   const { user, hasPaid, planTier, role } = useUser();
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
   const { showToast } = useToast();
   const navigate = useRouter();
 
@@ -826,7 +827,7 @@ export const PlanGallery: React.FC = () => {
         </a>
       </div>
 
-      {role === 'admin' && <PlanUploader onUploadSuccess={() => fetchPlans(0)} />}
+      {isAdmin && <PlanUploader onUploadSuccess={() => fetchPlans(0)} />}
 
       {/* Modern Interactive Search & Filter System */}
       <div className="bg-white dark:bg-zinc-900 rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 dark:border-zinc-800 mb-8 space-y-5">
@@ -1084,7 +1085,7 @@ export const PlanGallery: React.FC = () => {
             return (
               <div key={plan.id} className="group bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1.5 border border-gray-150/80 dark:border-zinc-800 overflow-hidden flex flex-col relative transition-all duration-300">
                 {/* Admin Delete Action */}
-                {role === 'admin' && (
+                {isAdmin && (
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDelete(plan); }} 
                     className="absolute top-2.5 right-2.5 z-20 bg-red-600/90 hover:bg-red-700 text-white w-7 h-7 rounded-lg flex items-center justify-center shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
@@ -1326,7 +1327,7 @@ export const PlanGallery: React.FC = () => {
 
               <div className="flex justify-between items-center border-b border-gray-100 dark:border-zinc-800 pb-2 mb-4">
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Key Specifications</h4>
-                {role === 'admin' && (
+                {isAdmin && (
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => handleDelete(selectedPlan)} 
