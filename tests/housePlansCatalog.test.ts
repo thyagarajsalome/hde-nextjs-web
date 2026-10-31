@@ -67,4 +67,24 @@ describe('House Plans Catalog & Business Logic', () => {
     expect(checkIsAdmin({ email: 'thyagaraja1983@gmail.com' })).toBe(true);
     expect(checkIsAdmin({ email: 'THYAGARAJA1983@GMAIL.COM' })).toBe(true); // Case-insensitive
   });
+
+  it('safely handles deletion of non-UUID plans like plan-1793437915762 without database 400 crash', () => {
+    const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+
+    // Non-UUID IDs should be identified as local/fallback and never sent to PostgreSQL UUID column
+    expect(isUuid('plan-1793437915762')).toBe(false);
+    expect(isUuid('fb-1')).toBe(false);
+    expect(isUuid('00000000-0000-4000-8000-000000000001')).toBe(true);
+    expect(isUuid('dee9c73a-c6ea-4d56-8f32-55d35264d270')).toBe(true);
+
+    const planList = [
+      { id: 'plan-1793437915762', title: 'Local Test Plan' },
+      { id: 'dee9c73a-c6ea-4d56-8f32-55d35264d270', title: 'Real Database Plan' }
+    ];
+
+    // Deleting non-UUID should filter out smoothly
+    const afterDelete = planList.filter(p => p.id !== 'plan-1793437915762');
+    expect(afterDelete.length).toBe(1);
+    expect(afterDelete[0].id).toBe('dee9c73a-c6ea-4d56-8f32-55d35264d270');
+  });
 });

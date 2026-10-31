@@ -349,7 +349,13 @@ export const HousePlanStoreService = {
    * Create a new plan: saves to Supabase and syncs to local storage
    */
   async createPlan(input: Partial<HousePlanRecord>): Promise<{ success: boolean; data?: HousePlanRecord; error?: string }> {
-    const id = input.id || `plan-${Date.now()}`;
+    const isUuid = (val?: string) => Boolean(val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val));
+    const generatedId = isUuid(input.id)
+      ? input.id!
+      : (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : '00000000-0000-4000-8000-' + Date.now().toString(16).padStart(12, '0'));
+    const id = generatedId;
     const metrics = calculateSmartPlanMetrics(
       input.dimensions || '30x40',
       input.floors || 'G+1',
@@ -385,8 +391,6 @@ export const HousePlanStoreService = {
 
     // Always save to local storage immediately so it shows up on store without delay
     saveLocalPlan(fullRecord);
-
-    const isUuid = (val?: string) => Boolean(val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val));
 
     try {
       // 1. Prepare Supabase payload: omit non-uuid id so database generates random uuid
@@ -460,7 +464,8 @@ export const HousePlanStoreService = {
         saveLocalPlan({ ...existing, ...updates });
       }
 
-      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-');
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-') || id.startsWith('plan-') || !isUuid;
       if (isFallback) {
         return { success: true };
       }
@@ -486,11 +491,22 @@ export const HousePlanStoreService = {
   async deletePlan(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       if (typeof window !== 'undefined') {
-        const local = getLocalPlans().filter(p => p.id !== id);
-        localStorage.setItem('hde_custom_house_plans', JSON.stringify(local));
+        try {
+          const local = getLocalPlans().filter(p => p.id !== id);
+          localStorage.setItem('hde_custom_house_plans', JSON.stringify(local));
+        } catch {}
+
+        try {
+          const fbRaw = localStorage.getItem("deleted_fb_plans");
+          const fbList: string[] = fbRaw ? JSON.parse(fbRaw) : [];
+          if (!fbList.includes(id)) {
+            localStorage.setItem("deleted_fb_plans", JSON.stringify([...fbList, id]));
+          }
+        } catch {}
       }
 
-      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-');
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-') || id.startsWith('plan-') || !isUuid;
       if (isFallback) {
         return { success: true };
       }

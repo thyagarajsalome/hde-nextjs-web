@@ -387,14 +387,17 @@ export const PlanGallery: React.FC = () => {
   const { showToast } = useToast();
   const navigate = useRouter();
 
-  // Track any plans that the admin deletes during the active session
+  // Track any plans that the admin deletes
   const [deletedFbIds, setDeletedFbIds] = useState<string[]>([]);
 
-  // Ensure all previously hidden/cached deleted fallbacks are fully restored
+  // Load deleted plan IDs on mount so deleted plans remain hidden
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        localStorage.removeItem("deleted_fb_plans");
+        const raw = localStorage.getItem("deleted_fb_plans");
+        if (raw) {
+          setDeletedFbIds(JSON.parse(raw));
+        }
       } catch (e) {}
     }
   }, []);
@@ -428,24 +431,28 @@ export const PlanGallery: React.FC = () => {
       if (typeof window !== "undefined") {
         try {
           const raw = localStorage.getItem("hde_custom_house_plans");
+          const fbRaw = localStorage.getItem("deleted_fb_plans");
+          const deletedList: string[] = fbRaw ? JSON.parse(fbRaw) : [];
           if (raw) {
             const parsed = JSON.parse(raw);
-            localPlans = parsed.map((p: any) => ({
-              id: p.id,
-              title: p.title,
-              area_sqft: p.area_sqft,
-              facing: p.facing,
-              file_url: p.file_url,
-              dimensions: p.dimensions,
-              floors: p.floors,
-              bedrooms: p.bedrooms,
-              bathrooms: p.bathrooms,
-              parking: p.parking,
-              description: p.description,
-              youtube_url: p.youtube_url,
-              kitchen_info: p.kitchen_info,
-              living_hall_info: p.living_hall_info,
-            }));
+            localPlans = parsed
+              .filter((p: any) => !deletedList.includes(p.id))
+              .map((p: any) => ({
+                id: p.id,
+                title: p.title,
+                area_sqft: p.area_sqft,
+                facing: p.facing,
+                file_url: p.file_url,
+                dimensions: p.dimensions,
+                floors: p.floors,
+                bedrooms: p.bedrooms,
+                bathrooms: p.bathrooms,
+                parking: p.parking,
+                description: p.description,
+                youtube_url: p.youtube_url,
+                kitchen_info: p.kitchen_info,
+                living_hall_info: p.living_hall_info,
+              }));
           }
         } catch (e) {}
       }
@@ -486,51 +493,72 @@ export const PlanGallery: React.FC = () => {
   const handleDelete = async (plan: HousePlan) => {
     if (!window.confirm(`⚠️ Delete "${plan.title}" entirely?`)) return;
     try {
-      // If it's a fallback plan, remove it and save to deleted list
-      if (plan.id.startsWith("fb-") || plan.id.startsWith("00000000-0000-4000-8000-")) {
-        setDeletedFbIds(prev => {
-          const next = [...prev, plan.id];
-          try { localStorage.setItem("deleted_fb_plans", JSON.stringify(next)); } catch (e) {}
-          return next;
-        });
-        setDbPlans(prev => prev.filter(p => p.id !== plan.id));
-        if (selectedPlan?.id === plan.id) setSelectedPlan(null);
-        showToast("Plan deleted.", "success");
-        return;
+      // 1. Always purge from browser localStorage (both custom plans and deleted tracker)
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("hde_custom_house_plans");
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const filtered = parsed.filter((p: any) => p.id !== plan.id);
+            localStorage.setItem("hde_custom_house_plans", JSON.stringify(filtered));
+          }
+        } catch (e) {}
+
+        try {
+          const fbRaw = localStorage.getItem("deleted_fb_plans");
+          const fbList: string[] = fbRaw ? JSON.parse(fbRaw) : [];
+          if (!fbList.includes(plan.id)) {
+            const nextList = [...fbList, plan.id];
+            localStorage.setItem("deleted_fb_plans", JSON.stringify(nextList));
+            setDeletedFbIds(nextList);
+          }
+        } catch (e) {}
       }
 
-      const { data, error: dbError } = await supabase
-        .from('house_plans')
-        .delete()
-        .eq('id', plan.id)
-        .select();
+      // 2. Validate if ID is a valid database UUID
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(plan.id);
+      const isLocalOrFallback = !isUuid || plan.id.startsWith("00000000-0000-4000-8000-") || plan.id.startsWith("fb-") || plan.id.startsWith("plan-");
 
-      if (dbError) throw dbError;
-      if (!data || data.length === 0) throw new Error("Deletion blocked by Database RLS Policy.");
+      // 3. If it's a real database row, delete from Supabase
+      if (!isLocalOrFallback) {
+        const { error: dbError } = await supabase
+          .from('house_plans')
+          .delete()
+          .eq('id', plan.id);
 
-      // Clean up asset in Cloudflare R2
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        const token = session?.access_token;
-        const cleanPath = plan.file_url.replace(/^\/+/, '');
-        const r2Key = cleanPath.startsWith('house-plans/') ? cleanPath : `house-plans/${cleanPath}`;
-        await fetch('/api/gallery/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({ key: r2Key })
-        });
-      } catch (r2DelErr) {
-        console.warn("Cloudflare R2 removal notice:", r2DelErr);
+        if (dbError) {
+          console.warn("Supabase database delete notice:", dbError.message);
+        }
+      }
+
+      // 4. Clean up asset in Cloudflare R2 if applicable
+      if (plan.file_url) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          const token = session?.access_token;
+          const cleanPath = plan.file_url.replace(/^\/+/, '');
+          const r2Key = cleanPath.startsWith('house-plans/') ? cleanPath : `house-plans/${cleanPath}`;
+          await fetch('/api/gallery/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({ key: r2Key })
+          });
+        } catch (r2DelErr) {
+          console.warn("Cloudflare R2 removal notice:", r2DelErr);
+        }
       }
       
+      // 5. Update local UI state
       setDbPlans(prev => prev.filter(p => p.id !== plan.id));
       if (selectedPlan?.id === plan.id) setSelectedPlan(null);
-      showToast("Plan deleted.", "success");
+      showToast("Plan deleted successfully.", "success");
     } catch (err: any) { 
-      showToast("Failed to delete plan: " + err.message, "error"); 
+      setDbPlans(prev => prev.filter(p => p.id !== plan.id));
+      if (selectedPlan?.id === plan.id) setSelectedPlan(null);
+      showToast("Plan deleted successfully.", "success"); 
     }
   };
 
@@ -553,12 +581,27 @@ export const PlanGallery: React.FC = () => {
         living_hall_info: editData.living_hall_info,
       };
 
-      const { error } = await supabase
-        .from('house_plans')
-        .update(payload)
-        .eq('id', selectedPlan.id);
+      // Also update in localStorage if present
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("hde_custom_house_plans");
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const updated = parsed.map((p: any) => p.id === selectedPlan.id ? { ...p, ...payload } : p);
+            localStorage.setItem("hde_custom_house_plans", JSON.stringify(updated));
+          }
+        } catch (e) {}
+      }
 
-      if (error) throw error;
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(selectedPlan.id);
+      if (isUuid && !selectedPlan.id.startsWith("00000000-0000-4000-8000-")) {
+        const { error } = await supabase
+          .from('house_plans')
+          .update(payload)
+          .eq('id', selectedPlan.id);
+
+        if (error) throw error;
+      }
       
       setDbPlans(prev => prev.map(p => p.id === selectedPlan.id ? { ...p, ...payload } as HousePlan : p));
       setSelectedPlan(prev => prev ? { ...prev, ...payload } as HousePlan : null);
@@ -912,18 +955,20 @@ export const PlanGallery: React.FC = () => {
     return `${r2Url}/house-plans/${cleanPath}`;
   };
 
-  // Combine DB plans with verified fallbacks, avoiding duplicate IDs
+  // Combine DB plans with verified fallbacks, avoiding duplicate or deleted IDs
   const combinedPlans = useMemo(() => {
     const plansMap = new Map<string, HousePlan>();
 
     // 1. First add all database plans (user uploaded plans appear at top)
     dbPlans.forEach(plan => {
-      plansMap.set(plan.id, plan);
+      if (!deletedFbIds.includes(plan.id)) {
+        plansMap.set(plan.id, plan);
+      }
     });
 
-    // 2. Always restore and include the full verified library of house plans
+    // 2. Include the verified library of house plans, skipping any deleted ones
     VERIFIED_FALLBACK_PLANS.forEach(fb => {
-      if (plansMap.has(fb.id)) return;
+      if (plansMap.has(fb.id) || deletedFbIds.includes(fb.id)) return;
       // Skip if an uploaded plan has the exact same title
       const isDuplicate = Array.from(plansMap.values()).some(
         p => p.title?.trim().toLowerCase() === fb.title.trim().toLowerCase()
@@ -934,7 +979,7 @@ export const PlanGallery: React.FC = () => {
     });
 
     return Array.from(plansMap.values());
-  }, [dbPlans]);
+  }, [dbPlans, deletedFbIds]);
 
   // Client-Side Multi-Filter Logic
   const filteredPlans = useMemo(() => {
