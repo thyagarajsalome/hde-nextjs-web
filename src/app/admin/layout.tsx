@@ -11,7 +11,7 @@ export default function GlobalAdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useUser();
+  const { user, loading, isDeveloper } = useUser();
 
   // Show verifying state while checking Supabase auth session
   if (loading) {
@@ -28,8 +28,11 @@ export default function GlobalAdminLayout({
     );
   }
 
-  // Strict email whitelist verification
-  const isAdmin = Boolean(user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+  // Strict email whitelist verification or Developer Access
+  const isAdmin = Boolean(
+    (user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ||
+    isDeveloper
+  );
 
   if (!isAdmin) {
     return (

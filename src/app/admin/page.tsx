@@ -26,6 +26,18 @@ export default function AdminPortalHubPage() {
       ],
     },
     {
+      title: 'Architectural Plans & Drawing Store',
+      description: 'Manage 2D house blueprints, Cloudflare R2 vector working drawing PDFs, watermarked preview assets, and integrated trade budgets.',
+      href: '/admin/plans',
+      icon: 'fa-compass-drafting',
+      badge: 'PDF Blueprints',
+      accent: 'border-blue-600/40 bg-blue-600/5 text-blue-700',
+      links: [
+        { label: 'Manage House Plans (CRUD)', href: '/admin/plans' },
+        { label: 'Public Drawing Store', href: '/plans/store' },
+      ],
+    },
+    {
       title: 'Bangalore Real Estate Admin',
       description: 'Review and manage verified property listings, community scout leads, direct owner contacts, and deal closures.',
       href: '/admin/real-estate',

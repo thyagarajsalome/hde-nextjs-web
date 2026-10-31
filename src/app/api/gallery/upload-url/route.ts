@@ -32,18 +32,18 @@ export async function POST(request: Request) {
     }
 
     const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans'];
-    const ALLOWED_CONTENT_TYPES = ['image/webp', 'image/jpeg', 'image/png', 'image/avif'];
+    const ALLOWED_CONTENT_TYPES = ['image/webp', 'image/jpeg', 'image/png', 'image/avif', 'application/pdf'];
 
     if (!ALLOWED_CATEGORIES.includes(category)) {
       return NextResponse.json({ error: `Invalid category: ${category}` }, { status: 400 });
     }
 
     if (!ALLOWED_CONTENT_TYPES.includes(contentType)) {
-      return NextResponse.json({ error: `Unsupported contentType: ${contentType}. Allowed: image/webp, image/jpeg, image/png` }, { status: 400 });
+      return NextResponse.json({ error: `Unsupported contentType: ${contentType}. Allowed: images or PDF` }, { status: 400 });
     }
 
-    if (fileSize && fileSize > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File size exceeds 10 MB limit' }, { status: 400 });
+    if (fileSize && fileSize > 30 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size exceeds 30 MB limit' }, { status: 400 });
     }
 
     if (!isR2Configured) {
