@@ -149,16 +149,27 @@ export default function HousePlanDrawingStorePage() {
       {/* Hero Header - Warm Light Cream Architectural Theme */}
       <section className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-[#E8DFC8]">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold">
-            <Link href="/" className="hover:text-blue-600">
-              Home
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold">
+              <Link href="/" className="hover:text-blue-600">
+                Home
+              </Link>
+              <span>/</span>
+              <Link href="/plans" className="hover:text-blue-600">
+                House Plans
+              </Link>
+              <span>/</span>
+              <span className="text-amber-800 font-bold">Drawing Store</span>
+            </div>
+
+            {/* Direct Link to Upload PDF Plans */}
+            <Link
+              href="/admin/plans"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-[#0f2042] hover:bg-blue-900 text-white shadow-sm transition border border-blue-900/40 w-fit"
+            >
+              <i className="fas fa-cloud-arrow-up text-amber-400"></i>
+              <span>Upload PDF Plans (Admin) →</span>
             </Link>
-            <span>/</span>
-            <Link href="/plans" className="hover:text-blue-600">
-              House Plans
-            </Link>
-            <span>/</span>
-            <span className="text-amber-800 font-bold">Drawing Store</span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
@@ -265,13 +276,22 @@ export default function HousePlanDrawingStorePage() {
             </div>
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-zinc-400 flex items-center justify-between pt-2 border-t border-slate-100 dark:border-zinc-800">
+          <div className="text-xs text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
             <span>
               Showing <strong className="text-blue-600 font-black">{filteredPlans.length}</strong> available drawing packs
             </span>
-            <span className="text-[11px] font-mono text-slate-400">
-              Vector Blueprints stored securely in Cloudflare R2
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono text-slate-400">
+                Cloudflare R2 Vector Storage
+              </span>
+              <Link
+                href="/admin/plans"
+                className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3 py-1 rounded-lg border border-amber-300 flex items-center gap-1.5 shadow-2xs transition"
+              >
+                <i className="fas fa-plus text-amber-700 text-[10px]"></i>
+                <span>Upload New PDF Plan</span>
+              </Link>
+            </div>
           </div>
         </div>
 
