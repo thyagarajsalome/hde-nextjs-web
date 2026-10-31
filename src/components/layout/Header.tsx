@@ -95,7 +95,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800 shadow-sm transition-colors duration-200">
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center gap-1.5 group no-underline">
@@ -115,192 +115,225 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-2 xl:space-x-4 text-sm">
-            <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap">Home</Link>
-            
-            {/* India-only links */}
-            {activeRegion.code === 'IN' && (
-              <>
-                <Link href="/bangalore/properties" className={`${pathname.startsWith('/bangalore') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>
-                  Real Estate
-                </Link>
-
-                {/* Separate Dedicated Navbar Link for House Plans Store */}
-                <Link
-                  href="/plans/store"
-                  className={`flex items-center gap-1.5 ${pathname.startsWith('/plans') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
-                >
-                  <i className="fas fa-compass-drafting text-xs text-primary"></i>
-                  <span>House Plans Store</span>
-                </Link>
-                
-                {/* Gallery Dropdown (Strictly Photos - Kitchen & Bathroom) */}
-                <div className="relative" ref={galleryDropdownRef}>
-                  <button
-                    onClick={() => setGalleryDropdownOpen(!galleryDropdownOpen)}
-                    onMouseEnter={() => setGalleryDropdownOpen(true)}
-                    className={`flex items-center gap-1.5 ${pathname.startsWith('/gallery') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline py-1 cursor-pointer`}
-                  >
-                    <span>Gallery</span>
-                    <i className={`fas fa-chevron-down text-[10px] transition-transform ${galleryDropdownOpen ? 'rotate-180 text-primary' : 'text-gray-400'}`}></i>
-                  </button>
-
-                  {galleryDropdownOpen && (
-                    <div 
-                      onMouseLeave={() => setGalleryDropdownOpen(false)}
-                      className="absolute left-0 top-full mt-2 w-60 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl shadow-xl py-2 z-50 animate-fadeIn"
-                    >
-                      <Link
-                        href="/gallery/kitchen-designs"
-                        onClick={() => setGalleryDropdownOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/kitchen-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-sm shrink-0">
-                          <i className="fas fa-kitchen-set"></i>
-                        </div>
-                        <div>
-                          <p className="font-bold text-xs leading-tight">Kitchen Designs</p>
-                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">Modular & L/U-Shape</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/gallery/bathroom-designs"
-                        onClick={() => setGalleryDropdownOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/bathroom-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm shrink-0">
-                          <i className="fas fa-bath"></i>
-                        </div>
-                        <div>
-                          <p className="font-bold text-xs leading-tight">Bathroom Designs</p>
-                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet & Dry / Vanities</p>
-                        </div>
-                      </Link>
-
-                      {isAdmin && (
-                        <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
-                          <Link
-                            href="/admin/gallery"
-                            onClick={() => setGalleryDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
-                          >
-                            <i className="fas fa-cloud-arrow-up text-xs"></i>
-                            <span>Upload &amp; Manage Designs</span>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline">HDE App</Link>
-              </>
-            )}
-
-            {/* USA-only links */}
-            {activeRegion.code === 'US' && (
-              <>
-                <Link href="/real-estate" prefetch={false} className={`${pathname === '/real-estate' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>All Calculators</Link>
-                <Link href="/real-estate/texas" prefetch={false} className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
-                <Link href="/real-estate/florida" prefetch={false} className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
-                <Link href="/real-estate/california" prefetch={false} className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
-              </>
-            )}
-
-            {/* UAE-only links */}
-            {activeRegion.code === 'AE' && (
-              <>
-                <Link href="/dubai-property" prefetch={false} className={`${pathname === '/dubai-property' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Dubai Property</Link>
-                <Link href="/dubai-property/calculator" prefetch={false} className={`${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Cost Calculator</Link>
-                <Link href="/dubai-property/partners" prefetch={false} className={`${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Partner Network</Link>
-              </>
-            )}
-
-            {/* Shared links */}
-            <Link 
-              href="/download" 
-              className={`flex items-center gap-1.5 ${pathname === '/download' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
-            >
-              <i className="fas fa-cube text-xs text-primary"></i>
-              <span>CAD Studio</span>
-            </Link>
-
-            {/* Pro Account Button - Always visible, region-aware */}
-            <Link
-              href="/upgrade"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
-            >
-              <i className="fas fa-crown text-[11px] text-white"></i>
-              <span>{hasPaid ? "Pro Member" : "Go Pro"}</span>
-            </Link>
-
-            {user ? (
-               <>
-                <Link href="/dashboard" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary font-medium transition-colors no-underline whitespace-nowrap shrink-0">Dashboard</Link>
-                <button onClick={handleLogout} className="px-4 py-2 text-sm font-medium text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer whitespace-nowrap shrink-0">
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <Link href="/signin" className="px-5 py-2 text-sm font-medium text-white dark:text-zinc-950 bg-primary rounded-full shadow-md hover:shadow-lg transition-all no-underline whitespace-nowrap shrink-0">
-                Sign In
+          {/* Desktop Navigation & Actions */}
+          <div className="hidden lg:flex items-center gap-3 xl:gap-5">
+            {/* Primary Navigation Links */}
+            <nav className="flex items-center gap-2.5 lg:gap-3 xl:gap-4.5 text-[13px] xl:text-sm font-medium">
+              <Link href="/" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap">
+                Home
               </Link>
-            )}
-            
-            {/* Region Selector — Amazon-style dropdown */}
-            <div className="relative ml-2 xl:ml-3 shrink-0" ref={dropdownRef}>
-              <button 
-                onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 hover:border-primary dark:hover:border-primary transition-all cursor-pointer whitespace-nowrap shrink-0"
-              >
-                <img 
-                  src={`https://flagcdn.com/w20/${activeRegion.flag}.png`} 
-                  srcSet={`https://flagcdn.com/w40/${activeRegion.flag}.png 2x`} 
-                  width="18" 
-                  alt={activeRegion.label} 
-                  className="rounded-sm" 
-                />
-                <span className="text-xs font-bold text-gray-800 dark:text-zinc-200">{activeRegion.short}</span>
-                <i className={`fas fa-chevron-down text-[10px] text-gray-400 transition-transform ${regionDropdownOpen ? 'rotate-180' : ''}`}></i>
-              </button>
+              
+              {/* India-only links */}
+              {activeRegion.code === 'IN' && (
+                <>
+                  <Link href="/bangalore/properties" className={`${pathname.startsWith('/bangalore') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>
+                    Real Estate
+                  </Link>
 
-              {regionDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
-                  <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800">
-                    <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">Select Region</p>
-                  </div>
-                  {REGIONS.map((r) => (
+                  {/* Separate Dedicated Navbar Link for House Plans (/plans) */}
+                  <Link
+                    href="/plans"
+                    className={`flex items-center gap-1.5 ${pathname === '/plans' || (pathname.startsWith('/plans/') && !pathname.startsWith('/plans/store')) ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
+                  >
+                    <i className="fas fa-drafting-compass text-xs text-amber-500"></i>
+                    <span>House Plans</span>
+                  </Link>
+
+                  {/* Dedicated Navbar Link for PDF Drawing Store (/plans/store) */}
+                  <Link
+                    href="/plans/store"
+                    className={`flex items-center gap-1.5 ${pathname.startsWith('/plans/store') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
+                  >
+                    <i className="fas fa-file-pdf text-xs text-rose-500"></i>
+                    <span>Drawing Store</span>
+                  </Link>
+                  
+                  {/* Gallery Dropdown (Strictly Photos - Kitchen & Bathroom) */}
+                  <div className="relative" ref={galleryDropdownRef}>
                     <button
-                      key={r.code}
-                      onClick={() => handleRegionSelect(r.code)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${
-                        activeRegion.code === r.code 
-                          ? 'bg-primary/5 dark:bg-primary/10 border-l-2 border-primary' 
-                          : 'hover:bg-gray-50 dark:hover:bg-zinc-800 border-l-2 border-transparent'
-                      }`}
+                      onClick={() => setGalleryDropdownOpen(!galleryDropdownOpen)}
+                      onMouseEnter={() => setGalleryDropdownOpen(true)}
+                      className={`flex items-center gap-1.5 ${pathname.startsWith('/gallery') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline py-1 cursor-pointer`}
                     >
-                      <img 
-                        src={`https://flagcdn.com/w20/${r.flag}.png`} 
-                        srcSet={`https://flagcdn.com/w40/${r.flag}.png 2x`} 
-                        width="20" 
-                        alt={r.label} 
-                        className="rounded-sm shadow-sm" 
-                      />
-                      <div>
-                        <p className={`text-sm font-semibold ${activeRegion.code === r.code ? 'text-primary' : 'text-gray-800 dark:text-zinc-200'}`}>
-                          {r.label}
-                        </p>
-                      </div>
-                      {activeRegion.code === r.code && (
-                        <i className="fas fa-check text-primary ml-auto text-xs"></i>
-                      )}
+                      <span>Gallery</span>
+                      <i className={`fas fa-chevron-down text-[10px] transition-transform ${galleryDropdownOpen ? 'rotate-180 text-primary' : 'text-gray-400'}`}></i>
                     </button>
-                  ))}
-                </div>
+
+                    {galleryDropdownOpen && (
+                      <div 
+                        onMouseLeave={() => setGalleryDropdownOpen(false)}
+                        className="absolute left-0 top-full mt-2 w-60 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl shadow-xl py-2 z-50 animate-fadeIn"
+                      >
+                        <Link
+                          href="/gallery/kitchen-designs"
+                          onClick={() => setGalleryDropdownOpen(false)}
+                          className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/kitchen-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-sm shrink-0">
+                            <i className="fas fa-kitchen-set"></i>
+                          </div>
+                          <div>
+                            <p className="font-bold text-xs leading-tight">Kitchen Designs</p>
+                            <p className="text-[10px] text-gray-400 dark:text-zinc-400">Modular &amp; L/U-Shape</p>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/gallery/bathroom-designs"
+                          onClick={() => setGalleryDropdownOpen(false)}
+                          className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === '/gallery/bathroom-designs' ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                            <i className="fas fa-bath"></i>
+                          </div>
+                          <div>
+                            <p className="font-bold text-xs leading-tight">Bathroom Designs</p>
+                            <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet &amp; Dry / Vanities</p>
+                          </div>
+                        </Link>
+
+                        {isAdmin && (
+                          <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
+                            <Link
+                              href="/admin/gallery"
+                              onClick={() => setGalleryDropdownOpen(false)}
+                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
+                            >
+                              <i className="fas fa-cloud-arrow-up text-xs"></i>
+                              <span>Upload &amp; Manage Designs</span>
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <Link href="/app" className="text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap">
+                    HDE App
+                  </Link>
+                </>
               )}
+
+              {/* USA-only links */}
+              {activeRegion.code === 'US' && (
+                <>
+                  <Link href="/real-estate" prefetch={false} className={`${pathname === '/real-estate' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>All Calculators</Link>
+                  <Link href="/real-estate/texas" prefetch={false} className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
+                  <Link href="/real-estate/florida" prefetch={false} className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
+                  <Link href="/real-estate/california" prefetch={false} className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
+                </>
+              )}
+
+              {/* UAE-only links */}
+              {activeRegion.code === 'AE' && (
+                <>
+                  <Link href="/dubai-property" prefetch={false} className={`${pathname === '/dubai-property' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Dubai Property</Link>
+                  <Link href="/dubai-property/calculator" prefetch={false} className={`${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Cost Calculator</Link>
+                  <Link href="/dubai-property/partners" prefetch={false} className={`${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Partner Network</Link>
+                </>
+              )}
+
+              {/* Shared links */}
+              <Link 
+                href="/download" 
+                className={`flex items-center gap-1.5 ${pathname === '/download' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
+              >
+                <i className="fas fa-cube text-xs text-primary"></i>
+                <span>CAD Studio</span>
+              </Link>
+            </nav>
+
+            {/* Subtle Vertical Divider between Navigation Links and User Actions */}
+            <div className="hidden lg:block h-5 w-px bg-gray-200 dark:bg-zinc-800 shrink-0 mx-0.5 xl:mx-1" aria-hidden="true" />
+
+            {/* Action Buttons & Utility Group with Proper Spacing */}
+            <div className="flex items-center gap-2.5 xl:gap-3.5 shrink-0">
+              {/* Pro Account Button */}
+              <Link
+                href="/upgrade"
+                className="flex items-center gap-1.5 px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#c5a059] hover:bg-[#b38e47] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#b38e47]/30"
+              >
+                <i className="fas fa-crown text-[11px] text-white"></i>
+                <span>{hasPaid ? "Pro Member" : "Go Pro"}</span>
+              </Link>
+
+              {user ? (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className="px-2 py-1.5 text-xs xl:text-sm font-medium text-gray-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors no-underline whitespace-nowrap shrink-0"
+                  >
+                    Dashboard
+                  </Link>
+                  <button 
+                    onClick={handleLogout} 
+                    className="px-3 xl:px-3.5 py-1.5 text-xs xl:text-sm font-medium text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  href="/signin" 
+                  className="px-4 py-1.5 text-xs xl:text-sm font-medium text-white dark:text-zinc-950 bg-primary rounded-full shadow-sm hover:shadow-md transition-all no-underline whitespace-nowrap shrink-0"
+                >
+                  Sign In
+                </Link>
+              )}
+              
+              {/* Region Selector — Amazon-style dropdown */}
+              <div className="relative shrink-0 ml-0.5 xl:ml-1" ref={dropdownRef}>
+                <button 
+                  onClick={() => setRegionDropdownOpen(!regionDropdownOpen)}
+                  className="flex items-center gap-1.5 xl:gap-2 px-2.5 xl:px-3 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 hover:border-primary dark:hover:border-primary transition-all cursor-pointer whitespace-nowrap shrink-0 text-xs font-bold text-gray-800 dark:text-zinc-200"
+                >
+                  <img 
+                    src={`https://flagcdn.com/w20/${activeRegion.flag}.png`} 
+                    srcSet={`https://flagcdn.com/w40/${activeRegion.flag}.png 2x`} 
+                    width="18" 
+                    alt={activeRegion.label} 
+                    className="rounded-sm" 
+                  />
+                  <span>{activeRegion.short}</span>
+                  <i className={`fas fa-chevron-down text-[10px] text-gray-400 transition-transform ${regionDropdownOpen ? 'rotate-180' : ''}`}></i>
+                </button>
+
+                {regionDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-xl overflow-hidden z-50">
+                    <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800">
+                      <p className="text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest">Select Region</p>
+                    </div>
+                    {REGIONS.map((r) => (
+                      <button
+                        key={r.code}
+                        onClick={() => handleRegionSelect(r.code)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${
+                          activeRegion.code === r.code 
+                            ? 'bg-primary/5 dark:bg-primary/10 border-l-2 border-primary' 
+                            : 'hover:bg-gray-50 dark:hover:bg-zinc-800 border-l-2 border-transparent'
+                        }`}
+                      >
+                        <img 
+                          src={`https://flagcdn.com/w20/${r.flag}.png`} 
+                          srcSet={`https://flagcdn.com/w40/${r.flag}.png 2x`} 
+                          width="20" 
+                          alt={r.label} 
+                          className="rounded-sm shadow-sm" 
+                        />
+                        <div>
+                          <p className={`text-sm font-semibold ${activeRegion.code === r.code ? 'text-primary' : 'text-gray-800 dark:text-zinc-200'}`}>
+                            {r.label}
+                          </p>
+                        </div>
+                        {activeRegion.code === r.code && (
+                          <i className="fas fa-check text-primary ml-auto text-xs"></i>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </nav>
+          </div>
 
           <div className="lg:hidden flex items-center gap-2 sm:gap-3">
             {/* Mobile Pro button */}
@@ -406,14 +439,24 @@ const Header = () => {
                   Bangalore Real Estate
                 </Link>
 
-                {/* Dedicated Mobile Link for House Plans Store */}
+                {/* Dedicated Mobile Link for House Plans (/plans) */}
                 <Link
-                  href="/plans/store"
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-base font-bold ${pathname.startsWith('/plans') ? 'text-primary bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                  href="/plans"
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-base font-bold ${pathname === '/plans' || (pathname.startsWith('/plans/') && !pathname.startsWith('/plans/store')) ? 'text-primary bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <i className="fas fa-compass-drafting text-sm text-primary"></i>
-                  <span>House Plans Store</span>
+                  <i className="fas fa-drafting-compass text-sm text-amber-500"></i>
+                  <span>House Plans (2D Layouts)</span>
+                </Link>
+
+                {/* Dedicated Mobile Link for PDF Drawing Store */}
+                <Link
+                  href="/plans/store"
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-base font-bold ${pathname.startsWith('/plans/store') ? 'text-primary bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <i className="fas fa-file-pdf text-sm text-rose-500"></i>
+                  <span>PDF Drawing Store</span>
                 </Link>
 
                 {/* Mobile Gallery Accordion (Strictly Photos - Kitchen & Bathroom) */}
