@@ -112,14 +112,22 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
           className="relative transition-transform duration-200 ease-out flex items-center justify-center"
           style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center center' }}
         >
-          {/* Blueprint Image */}
-          <img
-            src={normalizedImageUrl}
-            alt={title}
-            className="max-h-[580px] w-auto object-contain rounded shadow-2xl pointer-events-none"
-            loading="lazy"
-            draggable={false}
-          />
+          {/* Blueprint Image or PDF embed */}
+          {normalizedImageUrl?.toLowerCase().endsWith('.pdf') ? (
+            <iframe
+              src={`${normalizedImageUrl}#toolbar=0&navpanes=0`}
+              title={title}
+              className="w-[85vw] max-w-[750px] h-[540px] rounded shadow-2xl border-0 bg-white"
+            />
+          ) : (
+            <img
+              src={normalizedImageUrl}
+              alt={title}
+              className="max-h-[580px] w-auto object-contain rounded shadow-2xl pointer-events-none"
+              loading="lazy"
+              draggable={false}
+            />
+          )}
 
           {/* Semi-transparent Diagonal Watermark (Only active when NOT unlocked) */}
           {!isUnlocked && (

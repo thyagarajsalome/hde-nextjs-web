@@ -320,16 +320,26 @@ export default function HousePlanDrawingStorePage() {
                     className="relative aspect-[4/3] bg-slate-950 overflow-hidden cursor-pointer"
                     onClick={() => setActivePlan(plan)}
                   >
-                    <img
-                      src={
-                        plan.file_url?.startsWith('http')
-                          ? plan.file_url
-                          : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${plan.file_url?.replace(/^\/+/, '')}`
-                      }
-                      alt={plan.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
-                      loading="lazy"
-                    />
+                    {plan.file_url?.toLowerCase().endsWith('.pdf') ? (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-6 text-center">
+                        <i className="fas fa-file-pdf text-rose-500 text-4xl mb-3"></i>
+                        <span className="text-xs font-black text-white line-clamp-2 px-2">{plan.title}</span>
+                        <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-2 bg-white/10 px-2 py-0.5 rounded">
+                          Vector PDF Blueprint
+                        </span>
+                      </div>
+                    ) : (
+                      <img
+                        src={
+                          plan.file_url?.startsWith('http')
+                            ? plan.file_url
+                            : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${plan.file_url?.replace(/^\/+/, '')}`
+                        }
+                        alt={plan.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+                        loading="lazy"
+                      />
+                    )}
 
                     {/* Watermark badge on thumbnail if locked */}
                     {!unlocked && (

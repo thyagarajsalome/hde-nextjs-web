@@ -56,6 +56,9 @@ export const AdminPlansManager: React.FC = () => {
   // File Upload Handlers
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfThumbnailPreview, setPdfThumbnailPreview] = useState<string | null>(null);
+  const [isExtractingThumbnail, setIsExtractingThumbnail] = useState(false);
+  const [showCustomImageUpload, setShowCustomImageUpload] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
 
@@ -113,6 +116,95 @@ export const AdminPlansManager: React.FC = () => {
     }
 
     showToast(`✨ Auto-populated spatial metrics: ${metrics.builtUpAreaSqft} sq.ft built-up, ${metrics.electricalPointsCount} electrical points.`);
+  };
+
+  // Load PDF.js dynamically on demand from CDN
+  const loadPdfJs = async (): Promise<any> => {
+    if (typeof window === 'undefined') return null;
+    if ((window as any).pdfjsLib) return (window as any).pdfjsLib;
+
+    return new Promise((resolve, reject) => {
+      const existing = document.getElementById('pdfjs-cdn-script');
+      if (existing) {
+        existing.addEventListener('load', () => resolve((window as any).pdfjsLib));
+        existing.addEventListener('error', reject);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = 'pdfjs-cdn-script';
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => {
+        const pdfjs = (window as any).pdfjsLib;
+        if (pdfjs) {
+          pdfjs.GlobalWorkerOptions.workerSrc =
+            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+        resolve(pdfjs);
+      };
+      script.onerror = () => reject(new Error('Failed to load PDF engine'));
+      document.head.appendChild(script);
+    });
+  };
+
+  // Auto-extract Page 1 thumbnail from uploaded PDF
+  const handlePdfSelect = async (file: File) => {
+    setPdfFile(file);
+    setIsExtractingThumbnail(true);
+
+    // Auto-populate title if empty
+    if (!title.trim()) {
+      const cleanName = file.name
+        .replace(/\.pdf$/i, '')
+        .replace(/[-_]+/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+      setTitle(`${cleanName} Architectural Plan`);
+    }
+
+    try {
+      const pdfjs = await loadPdfJs();
+      if (!pdfjs) throw new Error('PDF engine unavailable');
+
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjs.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+
+      // Render crisp blueprint at ~900px width
+      const unscaledViewport = page.getViewport({ scale: 1 });
+      const targetWidth = 900;
+      const scale = Math.max(1, targetWidth / unscaledViewport.width);
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas render context unavailable');
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      // Convert to compressed WebP (typically 35-50 KB)
+      const blob: Blob | null = await new Promise((res) => {
+        canvas.toBlob((b) => res(b), 'image/webp', 0.85);
+      });
+
+      if (blob) {
+        const generatedFile = new File(
+          [blob],
+          file.name.replace(/\.pdf$/i, '-preview.webp'),
+          { type: 'image/webp' }
+        );
+        setImageFile(generatedFile);
+        setPdfThumbnailPreview(URL.createObjectURL(blob));
+        showToast('✨ Page 1 thumbnail auto-extracted from PDF! No extra image needed.', 'success');
+      }
+    } catch (err) {
+      console.warn('PDF thumbnail auto-extraction notice:', err);
+      showToast('Could not auto-extract PDF thumbnail. You can optionally upload a preview image below.', 'error');
+    } finally {
+      setIsExtractingThumbnail(false);
+    }
   };
 
   // Upload file to Cloudflare R2
@@ -190,6 +282,9 @@ export const AdminPlansManager: React.FC = () => {
     setIsFeatured(false);
     setImageFile(null);
     setPdfFile(null);
+    setPdfThumbnailPreview(null);
+    setIsExtractingThumbnail(false);
+    setShowCustomImageUpload(false);
     setIsFormOpen(false);
     setUploadStatus(null);
   };
@@ -219,6 +314,9 @@ export const AdminPlansManager: React.FC = () => {
     setIsFeatured(Boolean(plan.is_featured));
     setImageFile(null);
     setPdfFile(null);
+    setPdfThumbnailPreview(null);
+    setIsExtractingThumbnail(false);
+    setShowCustomImageUpload(false);
     setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -276,7 +374,7 @@ export const AdminPlansManager: React.FC = () => {
         orientation_notes: orientationNotes.trim(),
         price_inr: Number(priceInr) || 499,
         description: description.trim(),
-        file_url: finalImageUrl || 'full-plans/1775572207976-plan.webp',
+        file_url: finalImageUrl || finalPdfUrl || 'full-plans/1775572207976-plan.webp',
         pdf_url: finalPdfUrl,
         youtube_url: youtubeUrl.trim() || undefined,
         is_active: isActive,
@@ -692,81 +790,141 @@ export const AdminPlansManager: React.FC = () => {
               </div>
             </div>
 
-            {/* File Upload Section: Primary Vector PDF + Preview Thumbnail */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* PRIMARY: Vector PDF File */}
-              <div className="bg-amber-50/70 dark:bg-amber-950/20 p-4 rounded-xl border-2 border-dashed border-amber-300 dark:border-amber-800 space-y-2">
-                <div className="flex items-center gap-2">
-                  <i className="fas fa-file-pdf text-rose-600 text-lg"></i>
-                  <label className="text-xs font-black text-slate-800 dark:text-zinc-200">
-                    ★ Primary Working Drawing (PDF Blueprint)
-                  </label>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-zinc-400">
-                  Upload your vector drawing pack or AutoCAD PDF. Downloaded by customers upon unlock.
-                </p>
-                <div className="flex items-center gap-3 pt-1">
+            {/* File Upload Section: Single PDF Upload with Auto-Extracted Page 1 Thumbnail */}
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-amber-50/90 via-white to-amber-50/60 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900 p-5 rounded-2xl border-2 border-dashed border-amber-400 dark:border-amber-600/60 shadow-xs space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-start sm:items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-rose-500/10 dark:bg-rose-500/20 flex items-center justify-center text-rose-600 shrink-0">
+                      <i className="fas fa-file-pdf text-xl"></i>
+                    </div>
+                    <div>
+                      <label className="text-sm font-black text-slate-900 dark:text-zinc-100 block">
+                        Architectural Working Drawing (PDF Blueprint) *
+                      </label>
+                      <p className="text-xs text-slate-600 dark:text-zinc-400">
+                        ⚡ Single-file upload: Page 1 thumbnail is automatically extracted from your PDF — no separate image needed!
+                      </p>
+                    </div>
+                  </div>
+
                   <input
                     ref={pdfInputRef}
                     type="file"
                     accept="application/pdf"
                     onChange={(e) => {
-                      if (e.target.files?.[0]) setPdfFile(e.target.files[0]);
+                      if (e.target.files?.[0]) handlePdfSelect(e.target.files[0]);
                     }}
                     className="hidden"
                   />
                   <button
                     type="button"
                     onClick={() => pdfInputRef.current?.click()}
-                    className="px-4 py-2.5 text-xs font-bold bg-white dark:bg-zinc-800 border border-amber-300 dark:border-zinc-600 rounded-xl hover:bg-amber-50 transition cursor-pointer flex items-center gap-2 shadow-2xs"
+                    disabled={isExtractingThumbnail}
+                    className="px-5 py-2.5 text-xs font-black bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition cursor-pointer flex items-center gap-2 shadow-sm shrink-0 disabled:opacity-50"
                   >
-                    <i className="fas fa-file-arrow-up text-rose-600"></i>
-                    {pdfFile ? pdfFile.name : 'Choose Vector PDF Plan'}
+                    <i className="fas fa-cloud-arrow-up"></i>
+                    {pdfFile ? 'Change PDF Drawing' : 'Choose Architectural PDF'}
                   </button>
-                  {pdfUrl && !pdfFile && (
-                    <span className="text-[11px] text-emerald-600 font-bold truncate max-w-[150px]">
-                      ✓ Current PDF Attached
-                    </span>
-                  )}
                 </div>
+
+                {/* Extraction Spinner */}
+                {isExtractingThumbnail && (
+                  <div className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300 p-3 bg-amber-100/80 dark:bg-amber-950/40 rounded-xl animate-pulse">
+                    <i className="fas fa-circle-notch fa-spin text-sm"></i>
+                    <span>Extracting high-resolution Page 1 thumbnail from PDF...</span>
+                  </div>
+                )}
+
+                {/* Thumbnail Preview Area */}
+                {(pdfThumbnailPreview || imageFile || fileUrl || pdfFile || pdfUrl) && (
+                  <div className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
+                    <div className="relative w-36 aspect-[4/3] rounded-lg overflow-hidden bg-slate-950 border border-slate-300 dark:border-zinc-700 shrink-0 shadow-inner flex items-center justify-center">
+                      {pdfThumbnailPreview ? (
+                        <img
+                          src={pdfThumbnailPreview}
+                          alt="Extracted PDF Page 1 Preview"
+                          className="w-full h-full object-contain"
+                        />
+                      ) : fileUrl && !fileUrl.endsWith('.pdf') ? (
+                        <img
+                          src={
+                            fileUrl.startsWith('http')
+                              ? fileUrl
+                              : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${fileUrl.replace(/^\/+/, '')}`
+                          }
+                          alt="Current Preview"
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-2 text-center">
+                          <i className="fas fa-file-pdf text-rose-500 text-2xl mb-1"></i>
+                          <span className="text-[10px] font-bold">Vector PDF</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-black text-slate-800 dark:text-zinc-200 truncate">
+                          {pdfFile ? pdfFile.name : (pdfUrl ? pdfUrl.split('/').pop() : 'Attached PDF Blueprint')}
+                        </span>
+                        {pdfThumbnailPreview && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                            ✓ Auto Page 1 Thumbnail Ready (~35 KB)
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+                        This drawing will be displayed in the store with the protective HDE watermark overlay, while customers receive the pristine vector PDF on unlock.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setShowCustomImageUpload(!showCustomImageUpload)}
+                        className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
+                      >
+                        <i className={`fas ${showCustomImageUpload ? 'fa-chevron-up' : 'fa-image'}`}></i>
+                        <span>{showCustomImageUpload ? 'Hide custom image override' : 'Want to use a 3D Elevation photo instead? Click here'}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* SECONDARY: Preview Thumbnail for Watermarked Preview */}
-              <div className="bg-slate-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-slate-200 dark:border-zinc-700 space-y-2">
-                <div className="flex items-center gap-2">
-                  <i className="fas fa-image text-blue-600 text-lg"></i>
-                  <label className="text-xs font-black text-slate-800 dark:text-zinc-200">
-                    Preview Thumbnail (WebP / JPG / PNG)
-                  </label>
+              {/* Optional Custom Image Override Drawer */}
+              {showCustomImageUpload && (
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200 dark:border-zinc-700 space-y-2 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-xs font-bold text-slate-700 dark:text-zinc-300 block">
+                        Optional: Custom 3D Elevation / Render Image
+                      </label>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+                        Only upload if you want to replace the auto-extracted 2D drawing with an external 3D render photo.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => imageInputRef.current?.click()}
+                      className="px-3.5 py-1.5 text-xs font-bold bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-600 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+                    >
+                      {imageFile ? imageFile.name : 'Select Custom Image'}
+                    </button>
+                    <input
+                      ref={imageInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) {
+                          setImageFile(e.target.files[0]);
+                          setPdfThumbnailPreview(URL.createObjectURL(e.target.files[0]));
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </div>
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-zinc-400">
-                  Displayed on the store with the diagonal HDE watermark overlay for unpaid viewers.
-                </p>
-                <div className="flex items-center gap-3 pt-1">
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files?.[0]) setImageFile(e.target.files[0]);
-                    }}
-                    className="hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => imageInputRef.current?.click()}
-                    className="px-4 py-2.5 text-xs font-bold bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-600 rounded-xl hover:bg-slate-100 transition cursor-pointer flex items-center gap-2 shadow-2xs"
-                  >
-                    <i className="fas fa-image text-blue-600"></i>
-                    {imageFile ? imageFile.name : 'Choose Preview Image'}
-                  </button>
-                  {fileUrl && !imageFile && (
-                    <span className="text-[11px] text-slate-500 truncate max-w-[150px]">
-                      Current: {fileUrl.split('/').pop()}
-                    </span>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Checkbox Toggles & Submitting Status */}
