@@ -63,7 +63,7 @@ export default function Footer() {
               <span className="text-gray-300">&bull;</span>
               <Link href="/gallery/bathroom-designs" className="text-primary hover:underline font-semibold">Modern Bathroom Designs</Link>
               <span className="text-gray-300">&bull;</span>
-              <Link href="/plans" className="text-gray-600 hover:text-primary transition-colors">Architectural House Plans</Link>
+              <Link href="/plans/store" className="text-primary hover:underline font-semibold">House Plans Store</Link>
             </div>
 
             {/* Real Estate Quick Links (India Mode Only) */}

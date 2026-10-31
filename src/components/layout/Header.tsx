@@ -125,8 +125,17 @@ const Header = () => {
                 <Link href="/bangalore/properties" className={`${pathname.startsWith('/bangalore') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>
                   Real Estate
                 </Link>
+
+                {/* Separate Dedicated Navbar Link for House Plans Store */}
+                <Link
+                  href="/plans/store"
+                  className={`flex items-center gap-1.5 ${pathname.startsWith('/plans') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
+                >
+                  <i className="fas fa-compass-drafting text-xs text-primary"></i>
+                  <span>House Plans Store</span>
+                </Link>
                 
-                {/* Gallery Dropdown */}
+                {/* Gallery Dropdown (Strictly Photos - Kitchen & Bathroom) */}
                 <div className="relative" ref={galleryDropdownRef}>
                   <button
                     onClick={() => setGalleryDropdownOpen(!galleryDropdownOpen)}
@@ -166,19 +175,6 @@ const Header = () => {
                         <div>
                           <p className="font-bold text-xs leading-tight">Bathroom Designs</p>
                           <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet & Dry / Vanities</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/plans"
-                        onClick={() => setGalleryDropdownOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname.startsWith('/plans') ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center text-sm shrink-0">
-                          <i className="fas fa-drafting-compass"></i>
-                        </div>
-                        <div>
-                          <p className="font-bold text-xs leading-tight">House Plans (2D Layouts)</p>
-                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">100+ Floor Blueprints</p>
                         </div>
                       </Link>
 
@@ -410,7 +406,17 @@ const Header = () => {
                   Bangalore Real Estate
                 </Link>
 
-                {/* Mobile Gallery Accordion */}
+                {/* Dedicated Mobile Link for House Plans Store */}
+                <Link
+                  href="/plans/store"
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-base font-bold ${pathname.startsWith('/plans') ? 'text-primary bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <i className="fas fa-compass-drafting text-sm text-primary"></i>
+                  <span>House Plans Store</span>
+                </Link>
+
+                {/* Mobile Gallery Accordion (Strictly Photos - Kitchen & Bathroom) */}
                 <div>
                   <button
                     onClick={() => setMobileGalleryOpen(!mobileGalleryOpen)}
@@ -436,14 +442,6 @@ const Header = () => {
                       >
                         <i className="fas fa-bath text-xs text-blue-500"></i>
                         <span>Bathroom Designs</span>
-                      </Link>
-                      <Link
-                        href="/plans"
-                        onClick={() => setMenuOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${pathname.startsWith('/plans') ? 'text-primary font-bold bg-primary/5' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
-                      >
-                        <i className="fas fa-drafting-compass text-xs text-amber-500"></i>
-                        <span>House Plans (2D Layouts)</span>
                       </Link>
                       {isAdmin && (
                         <Link
