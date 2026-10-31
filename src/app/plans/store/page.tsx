@@ -173,11 +173,7 @@ export default function HousePlanDrawingStorePage() {
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-3xl">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100/80 text-amber-900 border border-amber-300/80 shadow-xs">
-                <i className="fas fa-compass-drafting text-amber-700"></i>
-                HDE Working Drawings &amp; Vector Blueprint Store
-              </span>
+            <div className="max-w-3xl">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#0f2042]">
                 Architectural House Plans
               </h1>

@@ -92,7 +92,7 @@ export function calculateSmartPlanMetrics(
  */
 const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
   {
-    id: "fb-store-1",
+    id: "00000000-0000-4000-8000-000000000001",
     title: "1200 Sqft 3 BHK Duplex House Plan (30×40)",
     dimensions: "30x40",
     area_sqft: 1200,
@@ -115,7 +115,7 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     pdf_url: "full-plans/1775572207976-plan.webp",
   },
   {
-    id: "fb-store-2",
+    id: "00000000-0000-4000-8000-000000000002",
     title: "600 Sqft 2 BHK Small Plot House Plan (20×30)",
     dimensions: "20x30",
     area_sqft: 600,
@@ -138,7 +138,7 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     pdf_url: "full-plans/1775572207976-plan.webp",
   },
   {
-    id: "fb-store-3",
+    id: "00000000-0000-4000-8000-000000000003",
     title: "1500 Sqft 3 BHK Luxury Duplex Layout (30×50)",
     dimensions: "30x50",
     area_sqft: 1500,
@@ -161,7 +161,7 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     pdf_url: "full-plans/1775658424321-plan.webp",
   },
   {
-    id: "fb-store-4",
+    id: "00000000-0000-4000-8000-000000000004",
     title: "2400 Sqft 4 BHK Luxury Villa Blueprint (40×60)",
     dimensions: "40x60",
     area_sqft: 2400,
@@ -184,7 +184,7 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     pdf_url: "full-plans/1775658424321-plan.webp",
   },
   {
-    id: "fb-store-5",
+    id: "00000000-0000-4000-8000-000000000005",
     title: "1000 Sqft Compact Townhouse Floor Plan (25×40)",
     dimensions: "25x40",
     area_sqft: 1000,
@@ -207,7 +207,7 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     pdf_url: "full-plans/1775623303178-plan.webp",
   },
   {
-    id: "fb-store-6",
+    id: "00000000-0000-4000-8000-000000000006",
     title: "800 Sqft 2 BHK Linear Plot House Plan (20×40)",
     dimensions: "20x40",
     area_sqft: 800,
@@ -379,21 +379,30 @@ export const HousePlanStoreService = {
     // Always save to local storage immediately so it shows up on store without delay
     saveLocalPlan(fullRecord);
 
+    const isUuid = (val?: string) => Boolean(val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val));
+
     try {
-      // 1. Try full insert to Supabase
+      // 1. Prepare Supabase payload: omit non-uuid id so database generates random uuid
+      const dbPayload: any = { ...fullRecord };
+      if (!isUuid(dbPayload.id)) {
+        delete dbPayload.id;
+      }
+
       const { data, error } = await supabase
         .from('house_plans')
-        .insert([fullRecord])
+        .insert([dbPayload])
         .select()
         .single();
 
       if (!error && data) {
+        // Update local plan with the official Supabase UUID
+        saveLocalPlan({ ...fullRecord, id: data.id });
         return { success: true, data: { ...fullRecord, ...data } };
       }
 
       // 2. If error is column not found (code 42703), retry with only standard columns
       if (error && (error.code === '42703' || error.message?.includes('column'))) {
-        const standardPayload = {
+        const standardPayload: any = {
           title: fullRecord.title,
           area_sqft: fullRecord.area_sqft,
           facing: fullRecord.facing,
@@ -413,7 +422,8 @@ export const HousePlanStoreService = {
           .single();
 
         if (!stdError && stdData) {
-          return { success: true, data: fullRecord };
+          saveLocalPlan({ ...fullRecord, id: stdData.id });
+          return { success: true, data: { ...fullRecord, id: stdData.id } };
         }
       }
 
@@ -427,8 +437,7 @@ export const HousePlanStoreService = {
 
       return { success: true, data: fullRecord };
     } catch (err: any) {
-      console.warn('Supabase createPlan error:', err);
-      // Return success with local copy so the user is never blocked
+      console.warn('Supabase createPlan notice:', err);
       return { success: true, data: fullRecord };
     }
   },
@@ -442,6 +451,11 @@ export const HousePlanStoreService = {
       const existing = local.find(p => p.id === id);
       if (existing) {
         saveLocalPlan({ ...existing, ...updates });
+      }
+
+      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-');
+      if (isFallback) {
+        return { success: true };
       }
 
       const { error } = await supabase
@@ -467,6 +481,11 @@ export const HousePlanStoreService = {
       if (typeof window !== 'undefined') {
         const local = getLocalPlans().filter(p => p.id !== id);
         localStorage.setItem('hde_custom_house_plans', JSON.stringify(local));
+      }
+
+      const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-');
+      if (isFallback) {
+        return { success: true };
       }
 
       await supabase

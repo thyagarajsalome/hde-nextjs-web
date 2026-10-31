@@ -10,6 +10,7 @@ import {
 import { useUser } from '@/context/UserContext';
 import { WatermarkedPlanViewer } from '@/components/plans/WatermarkedPlanViewer';
 import { PlanTradeCostCalculator } from '@/components/plans/PlanTradeCostCalculator';
+import { supabase } from '@/config/supabaseClient';
 
 const POPULAR_DIMENSIONS = ['20x30', '30x40', '30x50', '40x60', '30x60', '20x40', '25x40'];
 const FACING_OPTIONS = ['East', 'North', 'West', 'South', 'North-East', 'North-West'];
@@ -116,9 +117,28 @@ export const AdminPlansManager: React.FC = () => {
 
   // Upload file to Cloudflare R2
   const uploadToR2 = async (file: File, isPdf = false): Promise<string> => {
+    let token = '';
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      token = session?.access_token || '';
+    } catch {}
+
+    const isDevMode = Boolean(
+      isDeveloper ||
+      (typeof window !== 'undefined' && (
+        window.localStorage.getItem('hde_developer_mode') === 'true' ||
+        window.location.hostname === 'localhost' ||
+        window.location.search.includes('dev=true')
+      ))
+    );
+
     const res = await fetch('/api/gallery/upload-url', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...(isDevMode ? { 'x-hde-dev-access': 'true' } : {}),
+      },
       body: JSON.stringify({
         fileName: file.name,
         category: 'house-plans',

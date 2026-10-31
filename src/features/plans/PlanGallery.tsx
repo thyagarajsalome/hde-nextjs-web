@@ -288,7 +288,7 @@ export const PlanGallery: React.FC = () => {
     if (!window.confirm(`⚠️ Delete "${plan.title}" entirely?`)) return;
     try {
       // If it's a fallback plan, remove it and save to deleted list
-      if (plan.id.startsWith("fb-")) {
+      if (plan.id.startsWith("fb-") || plan.id.startsWith("00000000-0000-4000-8000-")) {
         setDeletedFbIds(prev => {
           const next = [...prev, plan.id];
           try { localStorage.setItem("deleted_fb_plans", JSON.stringify(next)); } catch (e) {}
