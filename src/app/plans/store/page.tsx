@@ -56,8 +56,9 @@ export default function HousePlanDrawingStorePage() {
   const loadPlans = async () => {
     setLoading(true);
     try {
-      const allPlans = await HousePlanStoreService.getAllPlans({ activeOnly: true, includeFallbacks: true });
-      setPlans(allPlans);
+      // Do not show default mock plans with no PDF files attached. Only load real uploaded plans.
+      const realPlans = await HousePlanStoreService.getAllPlans({ activeOnly: true, includeFallbacks: false });
+      setPlans(realPlans);
     } catch (err) {
       console.error('Failed to load store plans:', err);
     } finally {

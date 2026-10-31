@@ -1,6 +1,5 @@
 import React from 'react';
 import { Metadata } from 'next';
-import Link from 'next/link';
 import PlanGallery from '@/features/plans/PlanGallery';
 
 export const metadata: Metadata = {
@@ -36,24 +35,6 @@ export default function PlanGalleryRoute() {
             <p className="text-sm sm:text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
               Explore modern architectural floor plans tailored for Indian plot sizes, municipal setback bylaws, and family living requirements.
             </p>
-
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/plans/store"
-                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md shadow-amber-950/20 transition transform hover:-translate-y-0.5"
-              >
-                <i className="fas fa-compass-drafting text-sm"></i>
-                <span>Visit Architectural Working Drawings &amp; Vector PDF Store →</span>
-              </Link>
-
-              <Link
-                href="/admin/plans"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white shadow-sm transition border border-slate-700"
-              >
-                <i className="fas fa-cloud-arrow-up text-amber-400"></i>
-                <span>Upload PDF Plans (Admin)</span>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
