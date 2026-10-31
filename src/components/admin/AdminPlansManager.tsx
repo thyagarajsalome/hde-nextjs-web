@@ -458,21 +458,6 @@ export const AdminPlansManager: React.FC = () => {
             </p>
           </div>
         </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              resetForm();
-              setIsFormOpen(true);
-              handleSmartAutoPopulate('30x40', 'G+1', 3, 3, 'East');
-            }}
-            className="px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
-          >
-            <i className="fas fa-cloud-arrow-up"></i>
-            <span>Upload PDF Plan</span>
-          </button>
-        </div>
       </div>
 
       {/* Top Action Bar */}
@@ -504,10 +489,10 @@ export const AdminPlansManager: React.FC = () => {
               setIsFormOpen(true);
               handleSmartAutoPopulate('30x40', 'G+1', 3, 3, 'East');
             }}
-            className="px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 transition flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 text-xs font-black rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 transition flex items-center gap-2 cursor-pointer"
           >
             <i className="fas fa-plus"></i>
-            Add New Plan
+            Upload New Plan
           </button>
         </div>
       </div>
