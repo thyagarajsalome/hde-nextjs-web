@@ -253,7 +253,7 @@ export const HousePlanStoreService = {
   /**
    * Fetch all house plans with optional filtering (never fails, falls back gracefully)
    */
-  async getAllPlans(options?: { activeOnly?: boolean; dimension?: string; facing?: string }): Promise<HousePlanRecord[]> {
+  async getAllPlans(options?: { activeOnly?: boolean; dimension?: string; facing?: string; includeFallbacks?: boolean }): Promise<HousePlanRecord[]> {
     let dbData: any[] = [];
     const localPlans = getLocalPlans();
 
@@ -279,7 +279,7 @@ export const HousePlanStoreService = {
       console.warn('Supabase house_plans query notice:', err);
     }
 
-    // Merge database plans + local plans + fallback templates
+    // Merge database plans + local plans
     const combinedMap = new Map<string, HousePlanRecord>();
 
     // Add local uploaded plans first (highest priority)
@@ -308,12 +308,14 @@ export const HousePlanStoreService = {
       });
     });
 
-    // If combined has no plans or few plans, supplement with verified fallbacks
-    VERIFIED_STORE_FALLBACKS.forEach(fb => {
-      if (!combinedMap.has(fb.id)) {
-        combinedMap.set(fb.id, fb);
-      }
-    });
+    // Only add starter fallback templates if explicitly requested and no real plans exist
+    if (options?.includeFallbacks && combinedMap.size === 0) {
+      VERIFIED_STORE_FALLBACKS.forEach(fb => {
+        if (!combinedMap.has(fb.id)) {
+          combinedMap.set(fb.id, fb);
+        }
+      });
+    }
 
     let results = Array.from(combinedMap.values());
 

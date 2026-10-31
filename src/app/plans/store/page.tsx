@@ -56,8 +56,13 @@ export default function HousePlanDrawingStorePage() {
   const loadPlans = async () => {
     setLoading(true);
     try {
-      const data = await HousePlanStoreService.getAllPlans({ activeOnly: true });
-      setPlans(data);
+      const realPlans = await HousePlanStoreService.getAllPlans({ activeOnly: true, includeFallbacks: false });
+      if (realPlans.length > 0) {
+        setPlans(realPlans);
+      } else {
+        const fallbackPlans = await HousePlanStoreService.getAllPlans({ activeOnly: true, includeFallbacks: true });
+        setPlans(fallbackPlans);
+      }
     } catch (err) {
       console.error('Failed to load store plans:', err);
     } finally {

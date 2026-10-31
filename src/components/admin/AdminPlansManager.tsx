@@ -73,8 +73,12 @@ export const AdminPlansManager: React.FC = () => {
   const loadPlans = async () => {
     setLoading(true);
     try {
-      const data = await HousePlanStoreService.getAllPlans();
-      setPlans(data);
+      const data = await HousePlanStoreService.getAllPlans({ includeFallbacks: false });
+      // Strictly display only actual uploaded plans in admin (never fallback templates)
+      const realPlans = data.filter(
+        (p) => !p.id.startsWith('00000000-0000-4000-8000-') && !p.id.startsWith('fb-')
+      );
+      setPlans(realPlans);
     } catch (err: any) {
       showToast(err.message || 'Failed to load plans from Supabase', 'error');
     } finally {
