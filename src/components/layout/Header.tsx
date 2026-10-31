@@ -169,6 +169,19 @@ const Header = () => {
                           <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet & Dry / Vanities</p>
                         </div>
                       </Link>
+                      <Link
+                        href="/plans"
+                        onClick={() => setGalleryDropdownOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname.startsWith('/plans') ? 'bg-primary/5 text-primary font-bold' : 'text-gray-700 dark:text-zinc-200'} hover:bg-gray-50 dark:hover:bg-zinc-800/60 hover:text-primary transition-colors no-underline`}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center text-sm shrink-0">
+                          <i className="fas fa-drafting-compass"></i>
+                        </div>
+                        <div>
+                          <p className="font-bold text-xs leading-tight">House Plans (2D Layouts)</p>
+                          <p className="text-[10px] text-gray-400 dark:text-zinc-400">100+ Floor Blueprints</p>
+                        </div>
+                      </Link>
 
                       {isAdmin && (
                         <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
@@ -427,6 +440,14 @@ const Header = () => {
                       >
                         <i className="fas fa-bath text-xs text-blue-500"></i>
                         <span>Bathroom Designs</span>
+                      </Link>
+                      <Link
+                        href="/plans"
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${pathname.startsWith('/plans') ? 'text-primary font-bold bg-primary/5' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
+                      >
+                        <i className="fas fa-drafting-compass text-xs text-amber-500"></i>
+                        <span>House Plans (2D Layouts)</span>
                       </Link>
                       {isAdmin && (
                         <Link

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Interior Design Gallery — Modular Kitchen & Bathroom Designs | HDE',
-  description: 'Explore trending modular kitchen layouts and modern bathroom designs in India. View real-time turnkey budget estimates, materials (IS:710 Marine Ply, Quartz, Vitrified Tiles), and 3D floor dimensions.',
+  title: 'Architectural & Interior Design Gallery — House Plans, Kitchen & Bathroom | HDE',
+  description: 'Explore 100+ architectural house plans, modular kitchen layouts, and modern bathroom designs in India. View real-time turnkey budget estimates, 2D floor dimensions, and material specifications.',
   keywords: 'interior design gallery, modular kitchen designs india, modern bathroom designs, u shape kitchen, l shape kitchen, wet dry bathroom partition, turnkey interior cost calculator',
   alternates: {
     canonical: 'https://www.homedesignenglish.com/gallery',
@@ -58,6 +58,24 @@ export default function GalleryHubPage() {
       ],
       ctaText: 'Explore Bathroom Gallery',
     },
+    {
+      id: 'plans',
+      title: 'Architectural House Plans',
+      tagline: 'Vastu-Compliant 2D Layouts, Duplex Blueprints & Turnkey Budgets',
+      description: 'Explore 100+ standard Indian architectural floor designs for 30×40, 20×30, 30×50, and 40×60 plots. Complete with room dimensions, car porch layouts, and estimated building budgets.',
+      href: '/plans',
+      image: '/images/cad/architectural-30x40-floor-plan.webp',
+      badge: '100+ Blueprints',
+      badgeColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+      icon: 'fas fa-drafting-compass',
+      highlights: [
+        'Standard plot sizes (30×40, 20×30, 30×50, 40×60)',
+        '1, 2, 3 BHK duplex & independent villa layouts',
+        'East, North, West & South Vastu orientations',
+        'Interactive turnkey construction budget calculations'
+      ],
+      ctaText: 'Explore House Plans Gallery',
+    },
   ];
 
   return (
@@ -74,12 +92,12 @@ export default function GalleryHubPage() {
             Interior Design Galleries
           </h1>
           <p className="text-sm sm:text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
-            Browse verified Indian modular kitchen and modern bathroom designs. Every card includes interactive square-foot budget calculations, material grades, and turnkey execution costs.
+            Browse verified Indian house plans, modular kitchen layouts, and modern bathroom designs. Every card includes interactive square-foot budget calculations, material grades, and turnkey execution costs.
           </p>
         </div>
 
         {/* Main Category Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {galleryHubs.map((hub) => (
             <div
               key={hub.id}
