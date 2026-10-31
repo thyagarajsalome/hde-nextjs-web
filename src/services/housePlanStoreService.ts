@@ -308,11 +308,16 @@ export const HousePlanStoreService = {
       });
     });
 
-    // Only add starter fallback templates if explicitly requested and no real plans exist
-    if (options?.includeFallbacks && combinedMap.size === 0) {
+    // Include verified fallback blueprints alongside uploaded plans so the store is fully stocked
+    if (options?.includeFallbacks) {
       VERIFIED_STORE_FALLBACKS.forEach(fb => {
         if (!combinedMap.has(fb.id)) {
-          combinedMap.set(fb.id, fb);
+          const isDuplicate = Array.from(combinedMap.values()).some(
+            p => p.title?.trim().toLowerCase() === fb.title.trim().toLowerCase()
+          );
+          if (!isDuplicate) {
+            combinedMap.set(fb.id, fb);
+          }
         }
       });
     }

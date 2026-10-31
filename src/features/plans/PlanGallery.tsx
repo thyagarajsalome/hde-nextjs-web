@@ -221,17 +221,17 @@ export const PlanGallery: React.FC = () => {
   const { showToast } = useToast();
   const navigate = useRouter();
 
-  // Track any fallback plans that the admin has deleted locally
-  const [deletedFbIds, setDeletedFbIds] = useState<string[]>(() => {
+  // Track any plans that the admin deletes during the active session
+  const [deletedFbIds, setDeletedFbIds] = useState<string[]>([]);
+
+  // Ensure all previously hidden/cached deleted fallbacks are fully restored
+  useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        return JSON.parse(localStorage.getItem("deleted_fb_plans") || "[]");
-      } catch (e) {
-        return [];
-      }
+        localStorage.removeItem("deleted_fb_plans");
+      } catch (e) {}
     }
-    return [];
-  });
+  }, []);
 
   // Read URL params on mount if present (e.g. /plans?area=1200&facing=East)
   useEffect(() => {
@@ -715,13 +715,27 @@ export const PlanGallery: React.FC = () => {
 
   // Combine DB plans with verified fallbacks, avoiding duplicate IDs
   const combinedPlans = useMemo(() => {
-    // If database has real plans, use ONLY the database plans to eliminate duplicate cards!
-    if (dbPlans.length > 0) {
-      return dbPlans;
-    }
-    // Only if database has 0 plans (or network fails), display fallbacks (excluding any deleted ones)
-    return VERIFIED_FALLBACK_PLANS.filter(fb => !deletedFbIds.includes(fb.id));
-  }, [dbPlans, deletedFbIds]);
+    const plansMap = new Map<string, HousePlan>();
+
+    // 1. First add all database plans (user uploaded plans appear at top)
+    dbPlans.forEach(plan => {
+      plansMap.set(plan.id, plan);
+    });
+
+    // 2. Always restore and include the full verified library of house plans
+    VERIFIED_FALLBACK_PLANS.forEach(fb => {
+      if (plansMap.has(fb.id)) return;
+      // Skip if an uploaded plan has the exact same title
+      const isDuplicate = Array.from(plansMap.values()).some(
+        p => p.title?.trim().toLowerCase() === fb.title.trim().toLowerCase()
+      );
+      if (!isDuplicate) {
+        plansMap.set(fb.id, fb);
+      }
+    });
+
+    return Array.from(plansMap.values());
+  }, [dbPlans]);
 
   // Client-Side Multi-Filter Logic
   const filteredPlans = useMemo(() => {
