@@ -59,7 +59,6 @@ export const AdminPlansManager: React.FC = () => {
   const [pdfThumbnailPreview, setPdfThumbnailPreview] = useState<string | null>(null);
   const [isExtractingThumbnail, setIsExtractingThumbnail] = useState(false);
   const [showCustomImageUpload, setShowCustomImageUpload] = useState(false);
-  const [showStarterTemplates, setShowStarterTemplates] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,27 +70,20 @@ export const AdminPlansManager: React.FC = () => {
     setTimeout(() => setToastMessage(null), 4000);
   };
 
-  const loadPlans = async (includeTemplates = showStarterTemplates) => {
+  const loadPlans = async () => {
     setLoading(true);
     try {
-      const data = await HousePlanStoreService.getAllPlans({ includeFallbacks: includeTemplates });
-      const visiblePlans = includeTemplates
-        ? data
-        : data.filter(
-            (p) => !p.id.startsWith('00000000-0000-4000-8000-') && !p.id.startsWith('fb-')
-          );
+      // Strictly load real uploaded plans with no starter mock templates
+      const data = await HousePlanStoreService.getAllPlans({ includeFallbacks: false });
+      const visiblePlans = data.filter(
+        (p) => !p.id.startsWith('00000000-0000-4000-8000-') && !p.id.startsWith('fb-')
+      );
       setPlans(visiblePlans);
     } catch (err: any) {
       showToast(err.message || 'Failed to load plans from Supabase', 'error');
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleStarterTemplates = () => {
-    const nextVal = !showStarterTemplates;
-    setShowStarterTemplates(nextVal);
-    loadPlans(nextVal);
   };
 
   useEffect(() => {
@@ -1017,19 +1009,6 @@ export const AdminPlansManager: React.FC = () => {
               </option>
             ))}
           </select>
-
-          <button
-            type="button"
-            onClick={toggleStarterTemplates}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition flex items-center gap-1.5 cursor-pointer ${
-              showStarterTemplates
-                ? 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-200'
-                : 'bg-white text-slate-600 border-slate-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700 hover:bg-slate-50'
-            }`}
-          >
-            <i className={`fas ${showStarterTemplates ? 'fa-eye-slash text-amber-600' : 'fa-images text-slate-400'}`}></i>
-            <span>{showStarterTemplates ? 'Hide Starter WebP Plans' : 'Show Starter WebP Plans (6)'}</span>
-          </button>
         </div>
 
         <span className="text-xs font-bold text-slate-500 dark:text-zinc-400">
