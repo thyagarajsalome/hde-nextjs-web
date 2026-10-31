@@ -176,30 +176,30 @@ export const PlanTradeCostCalculator: React.FC<PlanTradeCostCalculatorProps> = (
         </div>
       </div>
 
-      {/* Turnkey Summary & 20-Year EMI Callout */}
-      <div className="p-4 bg-gradient-to-r from-slate-900 to-blue-950 text-white rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Turnkey Summary & 20-Year EMI Callout - Warm Light Cream White Architectural Theme */}
+      <div className="p-4 bg-gradient-to-r from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-slate-900 rounded-xl border border-[#E8DFC8] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
         <div>
-          <span className="text-[10px] font-bold tracking-wider uppercase text-blue-300 block">
+          <span className="text-[10px] font-bold tracking-wider uppercase text-amber-800 block">
             Estimated Complete Construction Budget
           </span>
-          <div className="text-2xl font-black mt-0.5">
+          <div className="text-2xl font-black text-[#0f2042] mt-0.5">
             ₹{breakdown.totalTurnkeyCostLakhs} Lakhs
-            <span className="text-xs font-normal text-blue-200 ml-2">
+            <span className="text-xs font-semibold text-slate-600 ml-2">
               (~₹{Math.round(breakdown.totalTurnkeyCost / builtUpArea).toLocaleString('en-IN')}/sq.ft built-up)
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 bg-white/10 px-4 py-2.5 rounded-lg border border-white/10">
+        <div className="flex items-center gap-3.5 bg-white px-4 py-2.5 rounded-xl border border-[#E8DFC8] shadow-xs">
           <div>
-            <span className="text-[10px] text-slate-300 block uppercase font-bold tracking-wider">
+            <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">
               20-Yr Home Loan EMI
             </span>
-            <span className="text-base font-black text-amber-300">
+            <span className="text-base font-black text-[#0f2042]">
               {monthlyEmiFormatted}/mo
             </span>
           </div>
-          <span className="text-[10px] text-slate-300 font-mono">
+          <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
             @ 8.5% p.a.
           </span>
         </div>
