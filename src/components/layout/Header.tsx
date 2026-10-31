@@ -205,19 +205,19 @@ const Header = () => {
             {/* USA-only links */}
             {activeRegion.code === 'US' && (
               <>
-                <Link href="/real-estate" className={`${pathname === '/real-estate' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>All Calculators</Link>
-                <Link href="/real-estate/texas" className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
-                <Link href="/real-estate/florida" className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
-                <Link href="/real-estate/california" className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
+                <Link href="/real-estate" prefetch={false} className={`${pathname === '/real-estate' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>All Calculators</Link>
+                <Link href="/real-estate/texas" prefetch={false} className={`${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Texas Hub</Link>
+                <Link href="/real-estate/florida" prefetch={false} className={`${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Florida Hub</Link>
+                <Link href="/real-estate/california" prefetch={false} className={`${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>California Hub</Link>
               </>
             )}
 
             {/* UAE-only links */}
             {activeRegion.code === 'AE' && (
               <>
-                <Link href="/dubai-property" className={`${pathname === '/dubai-property' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Dubai Property</Link>
-                <Link href="/dubai-property/calculator" className={`${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Cost Calculator</Link>
-                <Link href="/dubai-property/partners" className={`${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Partner Network</Link>
+                <Link href="/dubai-property" prefetch={false} className={`${pathname === '/dubai-property' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Dubai Property</Link>
+                <Link href="/dubai-property/calculator" prefetch={false} className={`${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Cost Calculator</Link>
+                <Link href="/dubai-property/partners" prefetch={false} className={`${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400 font-medium'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}>Partner Network</Link>
               </>
             )}
 
@@ -471,16 +471,16 @@ const Header = () => {
             {/* USA-only mobile links */}
             {activeRegion.code === 'US' && (
               <>
-                <Link href="/real-estate" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/real-estate" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   All Real Estate Calculators
                 </Link>
-                <Link href="/real-estate/texas" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/real-estate/texas" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/texas' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Texas Real Estate Hub
                 </Link>
-                <Link href="/real-estate/florida" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/real-estate/florida" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/florida' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Florida Real Estate Hub
                 </Link>
-                <Link href="/real-estate/california" className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/real-estate/california" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/real-estate/california' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   California Real Estate Hub
                 </Link>
               </>
@@ -489,13 +489,13 @@ const Header = () => {
             {/* UAE-only mobile links */}
             {activeRegion.code === 'AE' && (
               <>
-                <Link href="/dubai-property" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/dubai-property" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Dubai Property
                 </Link>
-                <Link href="/dubai-property/calculator" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/dubai-property/calculator" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/calculator' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Cost Calculator
                 </Link>
-                <Link href="/dubai-property/partners" className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
+                <Link href="/dubai-property/partners" prefetch={false} className={`block px-3 py-2 rounded-md text-base ${pathname === '/dubai-property/partners' ? 'text-primary font-bold' : 'font-medium text-gray-700 dark:text-zinc-300'} hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`} onClick={() => setMenuOpen(false)}>
                   Partner Network
                 </Link>
               </>

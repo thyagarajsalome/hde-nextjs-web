@@ -35,7 +35,7 @@ export default function Footer() {
               <span className="text-gray-300">|</span>
               <Link href="/upgrade" className="text-gray-500 hover:text-primary transition-colors no-underline">Pricing &amp; Plans</Link>
               <span className="text-gray-300">|</span>
-              <Link href="/home-planning" className="text-primary font-semibold hover:underline">Home Planning Guide</Link>
+              <Link href="/plans" className="text-primary font-semibold hover:underline">House Plans Guide</Link>
               <span className="text-gray-300">|</span>
               <Link href="/blog" className="text-gray-500 hover:text-primary transition-colors no-underline">Blog & Guides</Link>
               {!isUSRoute && (
@@ -124,41 +124,41 @@ export default function Footer() {
                 <span>USA Real Estate Tools</span>
               </p>
               <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
-                <Link href="/real-estate" className="hover:text-primary font-bold text-primary">All USA Calculators</Link>
+                <Link href="/real-estate" prefetch={false} className="hover:text-primary font-bold text-primary">All USA Calculators</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/texas" className="hover:text-primary font-semibold">Texas Hub</Link>
+                <Link href="/real-estate/texas" prefetch={false} className="hover:text-primary font-semibold">Texas Hub</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/florida" className="hover:text-primary font-semibold">Florida Hub</Link>
+                <Link href="/real-estate/florida" prefetch={false} className="hover:text-primary font-semibold">Florida Hub</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/california" className="hover:text-primary font-semibold">California Hub</Link>
+                <Link href="/real-estate/california" prefetch={false} className="hover:text-primary font-semibold">California Hub</Link>
               </div>
               <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
-                <Link href="/real-estate/rent-vs-buy-in-austin-texas" className="hover:text-primary transition-colors">Austin</Link>
+                <Link href="/real-estate/rent-vs-buy-in-austin-texas" prefetch={false} className="hover:text-primary transition-colors">Austin</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/property-tax-in-dallas-texas" className="hover:text-primary transition-colors">Dallas</Link>
+                <Link href="/real-estate/property-tax-in-dallas-texas" prefetch={false} className="hover:text-primary transition-colors">Dallas</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/salary-needed-to-buy-in-houston-texas" className="hover:text-primary transition-colors">Houston</Link>
+                <Link href="/real-estate/salary-needed-to-buy-in-houston-texas" prefetch={false} className="hover:text-primary transition-colors">Houston</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/rent-vs-buy-in-los-angeles-california" className="hover:text-primary transition-colors">Los Angeles</Link>
+                <Link href="/real-estate/rent-vs-buy-in-los-angeles-california" prefetch={false} className="hover:text-primary transition-colors">Los Angeles</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/property-tax-in-chicago-illinois" className="hover:text-primary transition-colors">Chicago</Link>
+                <Link href="/real-estate/property-tax-in-chicago-illinois" prefetch={false} className="hover:text-primary transition-colors">Chicago</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" className="hover:text-primary transition-colors">Miami</Link>
+                <Link href="/real-estate/salary-needed-to-buy-in-miami-florida" prefetch={false} className="hover:text-primary transition-colors">Miami</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/rent-vs-buy-in-seattle-washington" className="hover:text-primary transition-colors">Seattle</Link>
+                <Link href="/real-estate/rent-vs-buy-in-seattle-washington" prefetch={false} className="hover:text-primary transition-colors">Seattle</Link>
               </div>
               <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
-                <Link href="/real-estate/barndominium-cost-in-dallas-texas" className="hover:text-primary transition-colors">Barndominium Dallas</Link>
+                <Link href="/real-estate/barndominium-cost-in-dallas-texas" prefetch={false} className="hover:text-primary transition-colors">Barndominium Dallas</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/kitchen-remodel-in-austin-texas" className="hover:text-primary transition-colors">Kitchen Austin</Link>
+                <Link href="/real-estate/kitchen-remodel-in-austin-texas" prefetch={false} className="hover:text-primary transition-colors">Kitchen Austin</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/swimming-pool-cost-in-miami-florida" className="hover:text-primary transition-colors">Pool Miami</Link>
+                <Link href="/real-estate/swimming-pool-cost-in-miami-florida" prefetch={false} className="hover:text-primary transition-colors">Pool Miami</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/home-addition-in-los-angeles-california" className="hover:text-primary transition-colors">Addition LA</Link>
+                <Link href="/real-estate/home-addition-in-los-angeles-california" prefetch={false} className="hover:text-primary transition-colors">Addition LA</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/pickleball-court-cost-in-phoenix-arizona" className="hover:text-primary transition-colors">Pickleball Phoenix</Link>
+                <Link href="/real-estate/pickleball-court-cost-in-phoenix-arizona" prefetch={false} className="hover:text-primary transition-colors">Pickleball Phoenix</Link>
                 <span>&bull;</span>
-                <Link href="/real-estate/outdoor-kitchen-cost-in-tampa-florida" className="hover:text-primary transition-colors">Outdoor Kitchen Tampa</Link>
+                <Link href="/real-estate/outdoor-kitchen-cost-in-tampa-florida" prefetch={false} className="hover:text-primary transition-colors">Outdoor Kitchen Tampa</Link>
               </div>
             </div>
 
@@ -170,24 +170,24 @@ export default function Footer() {
                   <span>Dubai Property Advisor</span>
                 </p>
                 <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500">
-                  <Link href="/dubai-property" className="hover:text-primary font-semibold">Dubai Overview</Link>
+                  <Link href="/dubai-property" prefetch={false} className="hover:text-primary font-semibold">Dubai Overview</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/calculator" className="hover:text-primary font-semibold">Buying Cost Calculator</Link>
+                  <Link href="/dubai-property/calculator" prefetch={false} className="hover:text-primary font-semibold">Buying Cost Calculator</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/partners" className="hover:text-primary font-semibold">Partner Agents</Link>
+                  <Link href="/dubai-property/partners" prefetch={false} className="hover:text-primary font-semibold">Partner Agents</Link>
                 </div>
                 <div className="flex flex-wrap gap-x-2 gap-y-1 text-gray-500 pt-1">
-                  <Link href="/dubai-property/areas/dubai-marina" className="hover:text-primary transition-colors">Dubai Marina</Link>
+                  <Link href="/dubai-property/areas/dubai-marina" prefetch={false} className="hover:text-primary transition-colors">Dubai Marina</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/areas/downtown-dubai" className="hover:text-primary transition-colors">Downtown Dubai</Link>
+                  <Link href="/dubai-property/areas/downtown-dubai" prefetch={false} className="hover:text-primary transition-colors">Downtown Dubai</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/areas/business-bay" className="hover:text-primary transition-colors">Business Bay</Link>
+                  <Link href="/dubai-property/areas/business-bay" prefetch={false} className="hover:text-primary transition-colors">Business Bay</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/areas/jvc" className="hover:text-primary transition-colors">JVC</Link>
+                  <Link href="/dubai-property/areas/jvc" prefetch={false} className="hover:text-primary transition-colors">JVC</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/areas/palm-jumeirah" className="hover:text-primary transition-colors">Palm Jumeirah</Link>
+                  <Link href="/dubai-property/areas/palm-jumeirah" prefetch={false} className="hover:text-primary transition-colors">Palm Jumeirah</Link>
                   <span>&bull;</span>
-                  <Link href="/dubai-property/areas/dubai-hills" className="hover:text-primary transition-colors">Dubai Hills</Link>
+                  <Link href="/dubai-property/areas/dubai-hills" prefetch={false} className="hover:text-primary transition-colors">Dubai Hills</Link>
                 </div>
               </div>
             )}
