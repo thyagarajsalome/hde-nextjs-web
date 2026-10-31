@@ -14,27 +14,27 @@ export const metadata: Metadata = {
 export default function AdminPortalHubPage() {
   const sections = [
     {
-      title: 'Gallery Management Hub',
-      description: 'Manage modular kitchen designs, modern bathroom photo assets, layout specifications, and budget ranges.',
-      href: '/admin/gallery',
-      icon: 'fa-images',
-      badge: 'Galleries',
-      accent: 'border-blue-500/40 bg-blue-500/5 text-[#4165af]',
+      title: 'Architectural Plans & Blueprints (UPLOAD PDF PLANS HERE)',
+      description: '★ OFFICIAL PLACE TO UPLOAD PDF PLANS. Upload high-res vector working drawing PDFs to Cloudflare R2, set ₹499/₹999 prices, auto-calculate room dimensions, and sell downloadable house designs.',
+      href: '/admin/plans',
+      icon: 'fa-file-pdf',
+      badge: '★ Upload PDF Plans Here',
+      accent: 'border-blue-600/50 bg-blue-50 text-blue-800 ring-2 ring-blue-500/20',
       links: [
-        { label: 'Modular Kitchens', href: '/admin/gallery/kitchen' },
-        { label: 'Bathroom Designs', href: '/admin/gallery/bathroom' },
+        { label: '📄 Upload & Manage PDF Plans (CRUD)', href: '/admin/plans' },
+        { label: '🛒 View Public Drawing Store', href: '/plans/store' },
       ],
     },
     {
-      title: 'Architectural Plans & Drawing Store',
-      description: 'Manage 2D house blueprints, Cloudflare R2 vector working drawing PDFs, watermarked preview assets, and integrated trade budgets.',
-      href: '/admin/plans',
-      icon: 'fa-compass-drafting',
-      badge: 'PDF Blueprints',
-      accent: 'border-blue-600/40 bg-blue-600/5 text-blue-700',
+      title: 'Photo Inspiration Galleries (9:16 Vertical Images Only)',
+      description: 'Upload 9:16 vertical mobile photos and reels for Modular Kitchens and Bathroom Galleries (for interior design inspiration, NOT for floor plans or PDFs).',
+      href: '/admin/gallery',
+      icon: 'fa-images',
+      badge: '9:16 Vertical Photos',
+      accent: 'border-slate-300/60 bg-slate-500/5 text-slate-700',
       links: [
-        { label: 'Manage House Plans (CRUD)', href: '/admin/plans' },
-        { label: 'Public Drawing Store', href: '/plans/store' },
+        { label: 'Modular Kitchen Photos', href: '/admin/gallery/kitchen' },
+        { label: 'Bathroom Photos', href: '/admin/gallery/bathroom' },
       ],
     },
     {

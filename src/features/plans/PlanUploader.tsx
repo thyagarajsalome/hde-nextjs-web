@@ -46,13 +46,19 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
   // Handle file selection and preview
   const handleFileChange = (file: File | null) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      showToast("Please select a valid image file (JPG, PNG, WEBP).", "error");
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    const isImage = file.type.startsWith("image/");
+    if (!isImage && !isPdf) {
+      showToast("Please select a valid blueprint image (JPG, PNG, WEBP) or Vector PDF.", "error");
       return;
     }
     setFullFile(file);
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
+    if (isImage) {
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+    } else {
+      setPreviewUrl(null);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -107,7 +113,7 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
         body: JSON.stringify({
           fileName: fullPath,
           category: 'house-plans',
-          contentType: fullFile.type || 'image/webp',
+          contentType: fullFile.type || (fullFile.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/webp'),
           fileSize: fullFile.size
         })
       });
@@ -117,14 +123,16 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
         throw new Error(r2Data.error || "Failed to generate Cloudflare R2 upload URL");
       }
 
+      const isPdf = fullFile.type === "application/pdf" || fullFile.name.toLowerCase().endsWith(".pdf");
+
       const uploadRes = await fetch(r2Data.uploadUrl, {
         method: 'PUT',
-        headers: { 'Content-Type': fullFile.type || 'image/webp' },
+        headers: { 'Content-Type': isPdf ? 'application/pdf' : (fullFile.type || 'image/webp') },
         body: fullFile
       });
 
       if (!uploadRes.ok) {
-        throw new Error("Failed to upload blueprint image to Cloudflare R2.");
+        throw new Error("Failed to upload blueprint to Cloudflare R2.");
       }
 
       setUploadProgress(90);
@@ -143,7 +151,8 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
         bathrooms: parseInt(bathrooms) || 0,
         parking,
         description: finalDescription,
-        file_url: fullPath,
+        file_url: isPdf ? 'full-plans/1775572207976-plan.webp' : fullPath,
+        pdf_url: isPdf ? fullPath : null,
         youtube_url: youtubeUrl.trim() || null
       });
       if (dbError) throw dbError;
@@ -445,12 +454,12 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
                     {fullFile ? `${(fullFile.size / 1024 / 1024).toFixed(2)} MB` : ""}
                   </div>
                   <label htmlFor={fileInputId} className="inline-block px-3 py-1.5 bg-white dark:bg-zinc-700 border border-gray-200 dark:border-zinc-600 rounded-lg text-xs font-bold text-gray-700 dark:text-zinc-300 hover:bg-gray-50 cursor-pointer shadow-2xs">
-                    Change Image
+                    Change File
                   </label>
                   <input
                     id={fileInputId}
                     type="file"
-                    accept="image/*"
+                    accept="image/*,application/pdf"
                     onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
                     disabled={isUploading}
                     className="hidden"
@@ -464,13 +473,13 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
                 </div>
                 <div>
                   <label htmlFor={fileInputId} className="font-bold text-sm text-slate-800 dark:text-zinc-200 hover:text-primary cursor-pointer">
-                    Click to select high-res plan image
+                    Click to select high-res plan image or Vector PDF
                   </label>
-                  <span className="text-xs text-gray-500 block mt-0.5">or drag and drop your image file here</span>
+                  <span className="text-xs text-gray-500 block mt-0.5">supports PNG, JPG, WebP, or AutoCAD Vector PDF blueprint</span>
                   <input
                     id={fileInputId}
                     type="file"
-                    accept="image/*"
+                    accept="image/*,application/pdf"
                     onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
                     required
                     disabled={isUploading}

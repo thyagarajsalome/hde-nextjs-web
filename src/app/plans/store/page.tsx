@@ -145,59 +145,59 @@ export default function HousePlanDrawingStorePage() {
   }, [plans, selectedDim, selectedFacing, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950">
-      {/* Hero Header */}
-      <section className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+    <div className="min-h-screen bg-[#FAF7F2]">
+      {/* Hero Header - Warm Light Cream Architectural Theme */}
+      <section className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-[#E8DFC8]">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center gap-2 text-xs text-slate-400 font-semibold">
-            <Link href="/" className="hover:text-blue-400">
+          <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold">
+            <Link href="/" className="hover:text-blue-600">
               Home
             </Link>
             <span>/</span>
-            <Link href="/plans" className="hover:text-blue-400">
+            <Link href="/plans" className="hover:text-blue-600">
               House Plans
             </Link>
             <span>/</span>
-            <span className="text-amber-400 font-bold">Drawing Store</span>
+            <span className="text-amber-800 font-bold">Drawing Store</span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-            <div className="space-y-3 max-w-3xl">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                <i className="fas fa-compass-drafting text-amber-400"></i>
+            <div className="space-y-3.5 max-w-3xl">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100/80 text-amber-900 border border-amber-300/80 shadow-xs">
+                <i className="fas fa-compass-drafting text-amber-700"></i>
                 HDE Working Drawings &amp; Vector Blueprint Store
               </span>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-[#0f2042]">
                 Architectural House Plans &amp; <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-amber-300 to-amber-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-amber-700 to-amber-900">
                   Ready-to-Build Vector PDF Drawings
                 </span>
               </h1>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-700 leading-relaxed max-w-2xl">
                 Download verified architectural working drawings for Indian plot sizes. Every design features room-by-room dimensions, cross-ventilation alignment, electrical points, and direct integration with our turnkey construction cost calculator.
               </p>
             </div>
 
             {/* Value Highlights */}
-            <div className="bg-white/5 border border-white/10 p-5 rounded-2xl backdrop-blur-md space-y-3 shrink-0 lg:max-w-xs w-full">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300 block">
+            <div className="bg-white/90 border border-[#E8DFC8] p-5 rounded-2xl shadow-sm backdrop-blur-md space-y-3 shrink-0 lg:max-w-xs w-full">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 block">
                 Drawing Pack Highlights:
               </span>
-              <ul className="space-y-2 text-xs text-slate-200">
+              <ul className="space-y-2 text-xs text-slate-700">
                 <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-400 text-xs shrink-0"></i>
+                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
                   <span>300 DPI High-Res Vector PDF</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-400 text-xs shrink-0"></i>
+                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
                   <span>Solar &amp; Cross-Ventilation Compliant</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-400 text-xs shrink-0"></i>
+                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
                   <span>Room &amp; Electrical Points Schedule</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-400 text-xs shrink-0"></i>
+                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
                   <span>Instant Download for ₹499 (or Free with Pro)</span>
                 </li>
               </ul>
@@ -209,7 +209,7 @@ export default function HousePlanDrawingStorePage() {
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         {/* Filter & Search Bar */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-slate-200 dark:border-zinc-800 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl p-5 border border-[#E8DFC8] shadow-xs space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Search Input */}
             <div className="relative flex-grow max-w-md">
@@ -303,7 +303,7 @@ export default function HousePlanDrawingStorePage() {
               return (
                 <div
                   key={plan.id}
-                  className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200/90 dark:border-zinc-800 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
+                  className="bg-white rounded-2xl border border-[#E8DFC8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
                   {/* Thumbnail with Watermark Trigger */}
                   <div
@@ -460,7 +460,7 @@ export default function HousePlanDrawingStorePage() {
       {/* Plan Details & Watermark Modal */}
       {activePlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-5xl bg-white dark:bg-zinc-900 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto border border-slate-300 dark:border-zinc-700 animate-fadeIn">
+          <div className="relative w-full max-w-5xl bg-[#FFFDF9] rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto border border-[#E8DFC8] animate-fadeIn">
             {/* Modal Header */}
             <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-200 dark:border-zinc-800">
               <div>

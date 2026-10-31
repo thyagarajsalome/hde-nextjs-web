@@ -320,6 +320,43 @@ export const AdminPlansManager: React.FC = () => {
         </div>
       )}
 
+      {/* Admin Clarification Banner: Explaining the two admins */}
+      <div className="bg-gradient-to-r from-blue-50 to-amber-50 dark:from-blue-950/40 dark:to-amber-950/30 border border-blue-200 dark:border-blue-900/50 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <i className="fas fa-file-pdf text-lg"></i>
+          </div>
+          <div className="space-y-1">
+            <span className="text-[11px] font-black uppercase tracking-wider text-blue-700 dark:text-blue-300 flex items-center gap-1.5">
+              <span>★ Dedicated PDF Architectural Blueprints Admin</span>
+              <span className="bg-blue-600 text-white text-[9px] px-2 py-0.5 rounded-full">Active</span>
+            </span>
+            <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed max-w-3xl">
+              <strong>This is where you upload PDF House Plans.</strong> Here you upload downloadable <strong>Vector AutoCAD/PDF Working Drawings</strong> for 20×30, 30×40, etc., with automatic spatial calculations and watermarked previews.
+              <br />
+              <span className="text-slate-500 text-[11px]">
+                (The other admin at <Link href="/admin/gallery" className="underline text-blue-600 font-bold hover:text-blue-800">/admin/gallery</Link> is strictly for <strong>9:16 vertical photos</strong> for Instagram-style kitchen &amp; bathroom inspiration).
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              resetForm();
+              setIsFormOpen(true);
+              handleSmartAutoPopulate('30x40', 'G+1', 3, 3, 'East');
+            }}
+            className="px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+          >
+            <i className="fas fa-cloud-arrow-up"></i>
+            <span>Upload PDF Plan</span>
+          </button>
+        </div>
+      </div>
+
       {/* Top Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-xs">
         <div>
@@ -635,45 +672,20 @@ export const AdminPlansManager: React.FC = () => {
               </div>
             </div>
 
-            {/* File Upload Section: Preview Image & Vector PDF to Cloudflare R2 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-slate-200 dark:border-zinc-700">
-              {/* Preview Image */}
-              <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-300 block mb-1">
-                  Blueprint Preview Image (WebP / PNG / JPG)
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files?.[0]) setImageFile(e.target.files[0]);
-                    }}
-                    className="hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => imageInputRef.current?.click()}
-                    className="px-3.5 py-2 text-xs font-bold bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-600 rounded-xl hover:bg-slate-50 transition cursor-pointer flex items-center gap-2"
-                  >
-                    <i className="fas fa-image text-blue-600"></i>
-                    {imageFile ? imageFile.name : 'Choose Preview Image'}
-                  </button>
-                  {fileUrl && !imageFile && (
-                    <span className="text-[11px] text-slate-500 truncate max-w-[150px]">
-                      Current: {fileUrl.split('/').pop()}
-                    </span>
-                  )}
+            {/* File Upload Section: Primary Vector PDF + Preview Thumbnail */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* PRIMARY: Vector PDF File */}
+              <div className="bg-amber-50/70 dark:bg-amber-950/20 p-4 rounded-xl border-2 border-dashed border-amber-300 dark:border-amber-800 space-y-2">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-file-pdf text-rose-600 text-lg"></i>
+                  <label className="text-xs font-black text-slate-800 dark:text-zinc-200">
+                    ★ Primary Working Drawing (PDF Blueprint)
+                  </label>
                 </div>
-              </div>
-
-              {/* Vector PDF File */}
-              <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-300 block mb-1">
-                  Architectural Working Drawings Pack (PDF)
-                </label>
-                <div className="flex items-center gap-3">
+                <p className="text-[11px] text-slate-600 dark:text-zinc-400">
+                  Upload your vector drawing pack or AutoCAD PDF. Downloaded by customers upon unlock.
+                </p>
+                <div className="flex items-center gap-3 pt-1">
                   <input
                     ref={pdfInputRef}
                     type="file"
@@ -686,14 +698,51 @@ export const AdminPlansManager: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => pdfInputRef.current?.click()}
-                    className="px-3.5 py-2 text-xs font-bold bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-600 rounded-xl hover:bg-slate-50 transition cursor-pointer flex items-center gap-2"
+                    className="px-4 py-2.5 text-xs font-bold bg-white dark:bg-zinc-800 border border-amber-300 dark:border-zinc-600 rounded-xl hover:bg-amber-50 transition cursor-pointer flex items-center gap-2 shadow-2xs"
                   >
-                    <i className="fas fa-file-pdf text-rose-600"></i>
-                    {pdfFile ? pdfFile.name : 'Choose Vector PDF'}
+                    <i className="fas fa-file-arrow-up text-rose-600"></i>
+                    {pdfFile ? pdfFile.name : 'Choose Vector PDF Plan'}
                   </button>
                   {pdfUrl && !pdfFile && (
                     <span className="text-[11px] text-emerald-600 font-bold truncate max-w-[150px]">
-                      ✓ PDF Attached
+                      ✓ Current PDF Attached
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* SECONDARY: Preview Thumbnail for Watermarked Preview */}
+              <div className="bg-slate-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-slate-200 dark:border-zinc-700 space-y-2">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-image text-blue-600 text-lg"></i>
+                  <label className="text-xs font-black text-slate-800 dark:text-zinc-200">
+                    Preview Thumbnail (WebP / JPG / PNG)
+                  </label>
+                </div>
+                <p className="text-[11px] text-slate-600 dark:text-zinc-400">
+                  Displayed on the store with the diagonal HDE watermark overlay for unpaid viewers.
+                </p>
+                <div className="flex items-center gap-3 pt-1">
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) setImageFile(e.target.files[0]);
+                    }}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => imageInputRef.current?.click()}
+                    className="px-4 py-2.5 text-xs font-bold bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-600 rounded-xl hover:bg-slate-100 transition cursor-pointer flex items-center gap-2 shadow-2xs"
+                  >
+                    <i className="fas fa-image text-blue-600"></i>
+                    {imageFile ? imageFile.name : 'Choose Preview Image'}
+                  </button>
+                  {fileUrl && !imageFile && (
+                    <span className="text-[11px] text-slate-500 truncate max-w-[150px]">
+                      Current: {fileUrl.split('/').pop()}
                     </span>
                   )}
                 </div>
