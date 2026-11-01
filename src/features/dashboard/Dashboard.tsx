@@ -7,9 +7,8 @@ import { useUser } from "../../context/UserContext";
 import { ProjectService } from "../../services/projectService";
 import { useToast } from "../../context/ToastContext";
 import { useRegion } from "../../context/RegionContext";
-import { HeroManager } from "./HeroManager";
 import WhatsAppShareButton from "../../components/ui/WhatsAppShareButton";
-import { DesktopLicense, getUserLicense, claimOrCreateLicense } from "../../services/licenseService";
+import { DesktopLicense, getUserLicense } from "../../services/licenseService";
 
 interface CalculatorMeta {
   label: string;
@@ -20,421 +19,48 @@ interface CalculatorMeta {
 
 const CALCULATOR_META: Record<string, CalculatorMeta> = {
   // India Calculators
-  construction:   { label: "House Construction",   icon: "fas fa-home",         color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200", category: "structure" },
-  "india-emi":    { label: "Home Loan EMI",        icon: "fas fa-university",   color: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200", category: "finance" },
-  materials:      { label: "Materials BOQ",        icon: "fas fa-cubes",        color: "bg-stone-50 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400 border-stone-200", category: "structure" },
-  interior:       { label: "Interior Design",      icon: "fas fa-couch",        color: "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-rose-200", category: "interiors" },
-  "doors-windows":{ label: "Doors & Windows",     icon: "fas fa-door-open",    color: "bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 border-sky-200", category: "finishes" },
-  flooring:       { label: "Flooring",             icon: "fas fa-layer-group",  color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 border-teal-200", category: "finishes" },
-  painting:       { label: "House Painting",       icon: "fas fa-paint-roller", color: "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border-purple-200", category: "finishes" },
-  plumbing:       { label: "Plumbing",             icon: "fas fa-bath",         color: "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 border-cyan-200", category: "systems" },
-  electrical:     { label: "Electrical",           icon: "fas fa-bolt",         color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 border-yellow-200", category: "systems" },
+  construction:    { label: "House Construction",    icon: "fas fa-home",         color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200", category: "structure" },
+  "india-emi":     { label: "Home Loan EMI",         icon: "fas fa-university",   color: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200", category: "finance" },
+  materials:       { label: "Materials BOQ",         icon: "fas fa-cubes",        color: "bg-stone-50 dark:bg-stone-900/40 text-stone-600 dark:text-stone-400 border-stone-200", category: "structure" },
+  interior:        { label: "Interior Design",       icon: "fas fa-couch",        color: "bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border-rose-200", category: "interiors" },
+  "doors-windows": { label: "Doors & Windows",      icon: "fas fa-door-open",    color: "bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 border-sky-200", category: "finishes" },
+  flooring:        { label: "Flooring",              icon: "fas fa-layer-group",  color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 border-teal-200", category: "finishes" },
+  painting:        { label: "House Painting",        icon: "fas fa-paint-roller", color: "bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 border-purple-200", category: "finishes" },
+  plumbing:        { label: "Plumbing",              icon: "fas fa-bath",         color: "bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 border-cyan-200", category: "systems" },
+  electrical:      { label: "Electrical",            icon: "fas fa-bolt",         color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 border-yellow-200", category: "systems" },
   
   // USA Calculators
-  "usa-framing":  { label: "Framing & Lumber",     icon: "fas fa-ruler-combined",color: "bg-amber-50 text-amber-600 border-amber-200", category: "structure" },
-  "usa-roofing":  { label: "Roofing & Shingles",   icon: "fas fa-warehouse",   color: "bg-blue-50 text-blue-600 border-blue-200", category: "structure" },
-  "usa-accent-wall":{ label: "Accent Wall",        icon: "fas fa-border-all",  color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "interiors" },
-  "usa-rent-vs-buy":{ label: "Rent vs Buy",        icon: "fas fa-balance-scale",color: "bg-green-50 text-green-600 border-green-200", category: "finance" },
-  "usa-property-tax":{ label: "Property Tax",      icon: "fas fa-file-invoice-dollar", color: "bg-red-50 text-red-600 border-red-200", category: "finance" },
-  "usa-salary-calculator":{ label: "Salary Needed", icon: "fas fa-money-bill-wave", color: "bg-emerald-50 text-emerald-600 border-emerald-200", category: "finance" },
-  "usa-remodel-roi":{ label: "Remodel ROI",        icon: "fas fa-chart-line",   color: "bg-violet-50 text-violet-600 border-violet-200", category: "finance" },
-  "usa-swimming-pool":{ label: "Swimming Pool",    icon: "fas fa-swimming-pool",color: "bg-sky-50 text-sky-600 border-sky-200", category: "luxury" },
+  "usa-framing":   { label: "Framing & Lumber",      icon: "fas fa-ruler-combined",color: "bg-amber-50 text-amber-600 border-amber-200", category: "structure" },
+  "usa-roofing":   { label: "Roofing & Shingles",    icon: "fas fa-warehouse",   color: "bg-blue-50 text-blue-600 border-blue-200", category: "structure" },
+  "usa-accent-wall":{ label: "Accent Wall",         icon: "fas fa-border-all",  color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "interiors" },
+  "usa-rent-vs-buy":{ label: "Rent vs Buy",         icon: "fas fa-balance-scale",color: "bg-green-50 text-green-600 border-green-200", category: "finance" },
+  "usa-property-tax":{ label: "Property Tax",       icon: "fas fa-file-invoice-dollar", color: "bg-red-50 text-red-600 border-red-200", category: "finance" },
+  "usa-salary-calculator":{ label: "Salary Needed",  icon: "fas fa-money-bill-wave", color: "bg-emerald-50 text-emerald-600 border-emerald-200", category: "finance" },
+  "usa-remodel-roi":{ label: "Remodel ROI",         icon: "fas fa-chart-line",   color: "bg-violet-50 text-violet-600 border-violet-200", category: "finance" },
+  "usa-swimming-pool":{ label: "Swimming Pool",     icon: "fas fa-swimming-pool",color: "bg-sky-50 text-sky-600 border-sky-200", category: "luxury" },
   "usa-pickleball-court":{ label: "Pickleball Court", icon: "fas fa-table-tennis", color: "bg-orange-50 text-orange-600 border-orange-200", category: "luxury" },
-  "usa-outdoor-kitchen":{ label: "Outdoor Kitchen", icon: "fas fa-fire-burner", color: "bg-rose-50 text-rose-600 border-rose-200", category: "luxury" },
-  "usa-kitchen-remodel":{ label: "Kitchen Remodel", icon: "fas fa-utensils", color: "bg-amber-50 text-amber-600 border-amber-200", category: "interiors" },
-  "usa-home-addition":{ label: "Home Addition",    icon: "fas fa-house-user", color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "structure" },
-  "usa-garden-bed":{ label: "Garden Bed",          icon: "fas fa-leaf", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
-  "usa-flooring": { label: "USA Flooring",         icon: "fas fa-layer-group", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
-  "usa-plumbing": { label: "USA Plumbing",         icon: "fas fa-bath", color: "bg-cyan-50 text-cyan-600 border-cyan-200", category: "systems" },
-  "usa-electrical":{ label: "USA Electrical",      icon: "fas fa-bolt", color: "bg-yellow-50 text-yellow-600 border-yellow-200", category: "systems" },
-  "usa-interior-design":{ label: "USA Interiors",  icon: "fas fa-couch", color: "bg-rose-50 text-rose-600 border-rose-200", category: "interiors" },
+  "usa-outdoor-kitchen":{ label: "Outdoor Kitchen",  icon: "fas fa-fire-burner", color: "bg-rose-50 text-rose-600 border-rose-200", category: "luxury" },
+  "usa-kitchen-remodel":{ label: "Kitchen Remodel",  icon: "fas fa-utensils", color: "bg-amber-50 text-amber-600 border-amber-200", category: "interiors" },
+  "usa-home-addition":{ label: "Home Addition",     icon: "fas fa-house-user", color: "bg-indigo-50 text-indigo-600 border-indigo-200", category: "structure" },
+  "usa-garden-bed":{ label: "Garden Bed",           icon: "fas fa-leaf", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
+  "usa-flooring":  { label: "USA Flooring",          icon: "fas fa-layer-group", color: "bg-teal-50 text-teal-600 border-teal-200", category: "finishes" },
+  "usa-plumbing":  { label: "USA Plumbing",          icon: "fas fa-bath", color: "bg-cyan-50 text-cyan-600 border-cyan-200", category: "systems" },
+  "usa-electrical":{ label: "USA Electrical",       icon: "fas fa-bolt", color: "bg-yellow-50 text-yellow-600 border-yellow-200", category: "systems" },
+  "usa-interior-design":{ label: "USA Interiors",   icon: "fas fa-couch", color: "bg-rose-50 text-rose-600 border-rose-200", category: "interiors" },
 
   // UAE / Dubai
-  "dubai-property": { label: "Dubai Property",     icon: "fas fa-city", color: "bg-amber-50 text-amber-600 border-amber-200", category: "finance" },
+  "dubai-property":{ label: "Dubai Property",      icon: "fas fa-city", color: "bg-amber-50 text-amber-600 border-amber-200", category: "finance" },
 };
 
-interface QuickTool {
-  id: string;
-  name: string;
-  subtitle: string;
-  icon: string;
-  badge?: string | null;
-  route?: string;
-  color: string;
-  textColor: string;
-  bgColor: string;
-}
-
-const INDIA_QUICK_TOOLS: QuickTool[] = [
-  {
-    id: "construction",
-    name: "House Construction",
-    subtitle: "Complete BOQ & materials",
-    icon: "fas fa-home",
-    badge: "Most Popular",
-    color: "from-[#c5a059] to-[#b38e47]",
-    textColor: "text-[#0f2042] dark:text-[#c5a059]",
-    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
-  },
-  {
-    id: "india-emi",
-    name: "Home Loan EMI",
-    subtitle: "SBI, HDFC, ICICI rates",
-    icon: "fas fa-university",
-    badge: "Free",
-    color: "from-emerald-500 to-emerald-600",
-    textColor: "text-emerald-600",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200",
-  },
-  {
-    id: "materials",
-    name: "Material Quantity",
-    subtitle: "Cement, steel, sand bags",
-    icon: "fas fa-cubes",
-    badge: "Essential",
-    color: "from-stone-500 to-stone-600",
-    textColor: "text-stone-600",
-    bgColor: "bg-stone-50 dark:bg-stone-900/30 border-stone-200",
-  },
-  {
-    id: "interior",
-    name: "Interior Design",
-    subtitle: "1BHK, 2BHK, 3BHK, Villa",
-    icon: "fas fa-couch",
-    badge: "Pro",
-    color: "from-rose-500 to-rose-600",
-    textColor: "text-rose-600",
-    bgColor: "bg-rose-50 dark:bg-rose-950/20 border-rose-200",
-  },
-  {
-    id: "flooring",
-    name: "Flooring Cost",
-    subtitle: "Vitrified tiles & marble",
-    icon: "fas fa-layer-group",
-    badge: null,
-    color: "from-teal-500 to-teal-600",
-    textColor: "text-teal-600",
-    bgColor: "bg-teal-50 dark:bg-teal-950/20 border-teal-200",
-  },
-  {
-    id: "painting",
-    name: "House Painting",
-    subtitle: "Interior, exterior & primer",
-    icon: "fas fa-paint-roller",
-    badge: null,
-    color: "from-purple-500 to-purple-600",
-    textColor: "text-purple-600",
-    bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
-  },
-  {
-    id: "doors-windows",
-    name: "Doors & Windows",
-    subtitle: "Teak, UPVC, aluminum",
-    icon: "fas fa-door-open",
-    badge: "Pro",
-    color: "from-sky-500 to-sky-600",
-    textColor: "text-sky-600",
-    bgColor: "bg-sky-50 dark:bg-sky-950/20 border-sky-200",
-  },
-  {
-    id: "plumbing",
-    name: "Plumbing & Piping",
-    subtitle: "Bathrooms, CPVC fixtures",
-    icon: "fas fa-bath",
-    badge: "Pro",
-    color: "from-cyan-500 to-cyan-600",
-    textColor: "text-cyan-600",
-    bgColor: "bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200",
-  },
-  {
-    id: "electrical",
-    name: "Electrical Wiring",
-    subtitle: "Switches, DB, points",
-    icon: "fas fa-bolt",
-    badge: "Pro",
-    color: "from-[#c5a059] to-[#916d28]",
-    textColor: "text-[#0f2042] dark:text-[#c5a059]",
-    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
-  },
-  {
-    id: "land-converter",
-    name: "Land Unit Converter",
-    subtitle: "Gunta, Cent, Bigha to SqFt",
-    icon: "fas fa-vector-square",
-    badge: "New",
-    route: "/land-converter",
-    color: "from-indigo-500 to-indigo-600",
-    textColor: "text-indigo-600",
-    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
-  },
-  {
-    id: "plans",
-    name: "House Plans & CAD",
-    subtitle: "Vetted 2D/3D elevations",
-    icon: "fas fa-drafting-compass",
-    badge: "Popular",
-    route: "/plans",
-    color: "from-blue-500 to-blue-600",
-    textColor: "text-blue-600",
-    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
-  },
-  {
-    id: "gallery-kitchen",
-    name: "Kitchen Designs",
-    subtitle: "Explore 9:16 modular designs",
-    icon: "fas fa-kitchen-set",
-    badge: "Gallery",
-    route: "/gallery/kitchen-designs",
-    color: "from-amber-500 to-amber-600",
-    textColor: "text-amber-600",
-    bgColor: "bg-amber-50 dark:bg-amber-950/20 border-amber-200",
-  },
-  {
-    id: "gallery-bathroom",
-    name: "Bathroom Designs",
-    subtitle: "Explore 9:16 bathroom concepts",
-    icon: "fas fa-bath",
-    badge: "Gallery",
-    route: "/gallery/bathroom-designs",
-    color: "from-blue-500 to-blue-600",
-    textColor: "text-blue-600",
-    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
-  },
-];
-
-const USA_QUICK_TOOLS: QuickTool[] = [
-  {
-    id: "usa-rent-vs-buy",
-    name: "Rent vs. Buy",
-    subtitle: "5-year equity vs PITI costs",
-    icon: "fas fa-balance-scale",
-    badge: "Essential",
-    color: "from-green-500 to-green-600",
-    textColor: "text-green-600",
-    bgColor: "bg-green-50 dark:bg-green-950/20 border-green-200",
-  },
-  {
-    id: "usa-property-tax",
-    name: "Property Tax",
-    subtitle: "County tax & escrow rates",
-    icon: "fas fa-file-invoice-dollar",
-    badge: "Popular",
-    color: "from-red-500 to-red-600",
-    textColor: "text-red-600",
-    bgColor: "bg-red-50 dark:bg-red-950/20 border-red-200",
-  },
-  {
-    id: "usa-salary-calculator",
-    name: "Salary Needed to Buy",
-    subtitle: "28/36 DTI income math",
-    icon: "fas fa-money-bill-wave",
-    badge: "Finance",
-    color: "from-emerald-500 to-emerald-600",
-    textColor: "text-emerald-600",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200",
-  },
-  {
-    id: "usa-kitchen-remodel",
-    name: "Kitchen Remodel",
-    subtitle: "Cabinets, counters, labor",
-    icon: "fas fa-utensils",
-    badge: "Top ROI",
-    color: "from-[#c5a059] to-[#b38e47]",
-    textColor: "text-[#0f2042] dark:text-[#c5a059]",
-    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
-  },
-  {
-    id: "usa-home-addition",
-    name: "Home Addition",
-    subtitle: "Master suite & bump-outs",
-    icon: "fas fa-house-user",
-    badge: null,
-    color: "from-indigo-500 to-indigo-600",
-    textColor: "text-indigo-600",
-    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
-  },
-  {
-    id: "usa-framing",
-    name: "Framing & Lumber",
-    subtitle: "Studs, joists, drywall",
-    icon: "fas fa-ruler-combined",
-    badge: "Trade",
-    color: "from-stone-500 to-stone-600",
-    textColor: "text-stone-600",
-    bgColor: "bg-stone-50 dark:bg-stone-900/30 border-stone-200",
-  },
-  {
-    id: "usa-roofing",
-    name: "Roofing & Shingles",
-    subtitle: "Asphalt, metal & tile",
-    icon: "fas fa-warehouse",
-    badge: null,
-    color: "from-blue-500 to-blue-600",
-    textColor: "text-blue-600",
-    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
-  },
-  {
-    id: "usa-swimming-pool",
-    name: "Swimming Pool",
-    subtitle: "Gunite, fiberglass, coping",
-    icon: "fas fa-swimming-pool",
-    badge: "Luxury",
-    color: "from-sky-500 to-sky-600",
-    textColor: "text-sky-600",
-    bgColor: "bg-sky-50 dark:bg-sky-950/20 border-sky-200",
-  },
-  {
-    id: "usa-pickleball-court",
-    name: "Pickleball Court",
-    subtitle: "Post-tension concrete & mesh",
-    icon: "fas fa-table-tennis",
-    badge: "Trending",
-    color: "from-orange-500 to-orange-600",
-    textColor: "text-orange-600",
-    bgColor: "bg-orange-50 dark:bg-orange-950/20 border-orange-200",
-  },
-  {
-    id: "usa-outdoor-kitchen",
-    name: "Outdoor Kitchen",
-    subtitle: "Masonry, grill & appliances",
-    icon: "fas fa-fire-burner",
-    badge: "Luxury",
-    color: "from-rose-500 to-rose-600",
-    textColor: "text-rose-600",
-    bgColor: "bg-rose-50 dark:bg-rose-950/20 border-rose-200",
-  },
-  {
-    id: "permits",
-    name: "Permit & Code Portals",
-    subtitle: "City zoning regulations",
-    icon: "fas fa-clipboard-check",
-    badge: "Guides",
-    route: "/permits",
-    color: "from-purple-500 to-purple-600",
-    textColor: "text-purple-600",
-    bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
-  },
-  {
-    id: "usa-garden-bed",
-    name: "Raised Garden Bed",
-    subtitle: "Cedar & soil cubic yards",
-    icon: "fas fa-leaf",
-    badge: null,
-    color: "from-teal-500 to-teal-600",
-    textColor: "text-teal-600",
-    bgColor: "bg-teal-50 dark:bg-teal-950/20 border-teal-200",
-  },
-];
-
-const UAE_QUICK_TOOLS: QuickTool[] = [
-  {
-    id: "dubai-calc",
-    name: "Dubai Buying Cost Calc",
-    subtitle: "DLD 4%, Trustee, Mortgage fee",
-    icon: "fas fa-calculator",
-    badge: "Essential",
-    route: "/dubai-property/calculator",
-    color: "from-[#0f2042] to-[#1a3360]",
-    textColor: "text-[#0f2042] dark:text-[#c5a059]",
-    bgColor: "bg-[#c5a059]/10 border-[#c5a059]/30",
-  },
-  {
-    id: "dubai-hub",
-    name: "Investment Advisor",
-    subtitle: "Zero tax & freehold rules",
-    icon: "fas fa-city",
-    badge: "Advisor",
-    route: "/dubai-property",
-    color: "from-blue-500 to-blue-600",
-    textColor: "text-blue-600",
-    bgColor: "bg-blue-50 dark:bg-blue-950/20 border-blue-200",
-  },
-  {
-    id: "dubai-partners",
-    name: "RERA Partner Network",
-    subtitle: "Broker co-brokerage & leads",
-    icon: "fas fa-handshake",
-    badge: "Brokers",
-    route: "/dubai-property/partners",
-    color: "from-slate-600 to-slate-700",
-    textColor: "text-slate-700 dark:text-slate-300",
-    bgColor: "bg-slate-50 dark:bg-slate-900/30 border-slate-200",
-  },
-  {
-    id: "dubai-areas",
-    name: "15+ Freehold Area Guides",
-    subtitle: "Prices, ROI & lifestyle",
-    icon: "fas fa-map-marked-alt",
-    badge: "Intelligence",
-    route: "/dubai-property#areas",
-    color: "from-emerald-500 to-emerald-600",
-    textColor: "text-emerald-600",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200",
-  },
-  {
-    id: "dubai-marina",
-    name: "Dubai Marina Guide",
-    subtitle: "Waterfront luxury & rental yields",
-    icon: "fas fa-water",
-    badge: "Top Yield",
-    route: "/dubai-property/areas/dubai-marina",
-    color: "from-cyan-500 to-cyan-600",
-    textColor: "text-cyan-600",
-    bgColor: "bg-cyan-50 dark:bg-cyan-950/20 border-cyan-200",
-  },
-  {
-    id: "dubai-downtown",
-    name: "Downtown Dubai",
-    subtitle: "Burj Khalifa prime district",
-    icon: "fas fa-gem",
-    badge: "Prime",
-    route: "/dubai-property/areas/downtown-dubai",
-    color: "from-purple-500 to-purple-600",
-    textColor: "text-purple-600",
-    bgColor: "bg-purple-50 dark:bg-purple-950/20 border-purple-200",
-  },
-  {
-    id: "dubai-jvc",
-    name: "JVC Community",
-    subtitle: "Affordable high rental yield",
-    icon: "fas fa-home",
-    badge: "Best Value",
-    route: "/dubai-property/areas/jumeirah-village-circle",
-    color: "from-teal-500 to-teal-600",
-    textColor: "text-teal-600",
-    bgColor: "bg-teal-50 dark:bg-teal-950/20 border-teal-200",
-  },
-  {
-    id: "dubai-business-bay",
-    name: "Business Bay",
-    subtitle: "Commercial & corporate living",
-    icon: "fas fa-briefcase",
-    badge: "Hot Hub",
-    route: "/dubai-property/areas/business-bay",
-    color: "from-indigo-500 to-indigo-600",
-    textColor: "text-indigo-600",
-    bgColor: "bg-indigo-50 dark:bg-indigo-950/20 border-indigo-200",
-  },
-  {
-    id: "dubai-hills",
-    name: "Dubai Hills Estate",
-    subtitle: "Golf course & family luxury",
-    icon: "fas fa-tree",
-    badge: "Green",
-    route: "/dubai-property/areas/dubai-hills-estate",
-    color: "from-stone-500 to-stone-600",
-    textColor: "text-stone-600",
-    bgColor: "bg-stone-50 dark:bg-stone-900/30 border-stone-200",
-  },
-];
+const ADMIN_EMAIL = "thyagaraja1983@gmail.com";
 
 export default function Dashboard() {
-  const { user, hasPaid, role, credits, planTier, loading, whatsappNumber, updateWhatsAppNumber } = useUser();
+  const { user, hasPaid, credits, planTier, loading, whatsappNumber, updateWhatsAppNumber } = useUser();
   const { region, setRegion } = useRegion();
   const { showToast } = useToast();
   const router = useRouter();
 
-  const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
+  const isAdmin = Boolean(user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase());
 
   const [projects, setProjects] = useState<any[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
@@ -446,9 +72,6 @@ export default function Dashboard() {
   const [showWaPrompt, setShowWaPrompt] = useState(true);
   const [desktopLicense, setDesktopLicense] = useState<DesktopLicense | null>(null);
   const [keyCopied, setKeyCopied] = useState(false);
-  const [claimingLicense, setClaimingLicense] = useState(false);
-
-  const isIndiaMode = region === "IN" || !region;
 
   const fetchProjects = async () => {
     try {
@@ -465,14 +88,15 @@ export default function Dashboard() {
   useEffect(() => {
     if (user) {
       fetchProjects();
-      getUserLicense(user.id).then((lic) => {
-        // Only reveal license key if user has an active PAID commercial license
-        if (lic && lic.status === 'active' && lic.edition === 'GLOBAL_PRO') {
-          setDesktopLicense(lic);
-        } else {
-          setDesktopLicense(null);
-        }
-      }).catch(err => console.error("License fetch error:", err));
+      getUserLicense(user.id)
+        .then((lic) => {
+          if (lic && lic.status === "active" && lic.edition === "GLOBAL_PRO") {
+            setDesktopLicense(lic);
+          } else {
+            setDesktopLicense(null);
+          }
+        })
+        .catch((err) => console.error("License fetch error:", err));
     }
   }, [user, region, planTier]);
 
@@ -482,22 +106,6 @@ export default function Dashboard() {
     setKeyCopied(true);
     showToast("License key copied to clipboard!", "success");
     setTimeout(() => setKeyCopied(false), 3000);
-  };
-
-  const handleClaimLicense = async () => {
-    if (!user) return;
-    setClaimingLicense(true);
-    try {
-      const lic = await claimOrCreateLicense(user.id, user.email || "", region || "IN", planTier);
-      if (lic) {
-        setDesktopLicense(lic);
-        showToast("HDE Studio Desktop License generated!", "success");
-      }
-    } catch {
-      showToast("Could not generate license. Please try again.", "error");
-    } finally {
-      setClaimingLicense(false);
-    }
   };
 
   // Format Indian currency cleanly with Lakhs / Crores
@@ -516,42 +124,6 @@ export default function Dashboard() {
       return `${formatted} (${(amount / 100000).toFixed(2)} L)`;
     }
     return formatted;
-  };
-
-  // Active country mode (defaults to IN if null)
-  const activeCountryMode: "IN" | "US" | "AE" = region === "US" ? "US" : region === "AE" ? "AE" : "IN";
-
-  // Format currency based on region or project type
-  const formatCurrencyByRegion = (amount: number, targetCountry?: "IN" | "US" | "AE") => {
-    const c = targetCountry || activeCountryMode;
-    if (!amount || isNaN(amount)) return "—";
-    if (c === "US") {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-      }).format(amount);
-    }
-    if (c === "AE") {
-      return `AED ${amount.toLocaleString("en-AE", { maximumFractionDigits: 0 })}`;
-    }
-    return formatIndianCurrency(amount);
-  };
-
-  // Launch a calculator directly and enforce country mode
-  const launchCalculator = (calcId: string, targetCountry: "IN" | "US" | "AE" = "IN", route?: string) => {
-    setRegion(targetCountry);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("hde_region", targetCountry);
-    }
-    if (route) {
-      router.push(route);
-      return;
-    }
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("hde_active_calc", calcId);
-    }
-    router.push(`/#tools`);
   };
 
   // Open a saved project in its live calculator with strict regional isolation
@@ -576,7 +148,7 @@ export default function Dashboard() {
       setProjects((prev) => prev.filter((p) => p.id !== projectId));
       if (selectedProject?.id === projectId) setSelectedProject(null);
       showToast("Estimate deleted successfully!", "success");
-    } catch (error) {
+    } catch {
       showToast("Failed to delete estimate.", "error");
     }
   };
@@ -634,7 +206,7 @@ export default function Dashboard() {
           </p>
           <Link
             href="/signin"
-            className="block w-full py-3.5 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 rounded-xl font-bold shadow-md transition"
+            className="block w-full py-3.5 bg-primary hover:bg-primary-hover text-white dark:text-zinc-950 rounded-xl font-bold shadow-md transition no-underline"
           >
             Sign In Now
           </Link>
@@ -644,13 +216,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 dark:bg-zinc-950 py-8">
-      <div className="container mx-auto px-4 max-w-7xl space-y-8 animate-fade-in">
-        {/* WhatsApp Connect Banner (for users who have not yet added WhatsApp) */}
+    <div className="min-h-screen bg-slate-50/70 dark:bg-zinc-950 py-8">
+      <div className="container mx-auto px-4 max-w-6xl space-y-6 animate-fade-in">
+
+        {/* WhatsApp Notification Banner (dismissible) */}
         {!whatsappNumber && showWaPrompt && (
-          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xl shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xl shadow-xs">
                 <i className="fab fa-whatsapp"></i>
               </div>
               <div>
@@ -665,12 +238,13 @@ export default function Dashboard() {
             <div className="flex items-center gap-2 sm:self-center">
               <input
                 type="tel"
-                placeholder={region === 'AE' ? '+971 50 123 4567' : region === 'US' ? '+1 (555) 123-4567' : '+91 98765 43210'}
+                placeholder={region === "AE" ? "+971 50 123 4567" : region === "US" ? "+1 (555) 123-4567" : "+91 98765 43210"}
                 value={waInput}
                 onChange={(e) => setWaInput(e.target.value)}
                 className="px-3 py-1.5 text-xs rounded-lg border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 w-44 sm:w-52"
               />
               <button
+                type="button"
                 onClick={async () => {
                   if (!waInput.trim()) return;
                   setSavingWa(true);
@@ -681,13 +255,14 @@ export default function Dashboard() {
                   }
                 }}
                 disabled={savingWa || !waInput.trim()}
-                className="px-3.5 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-sm disabled:opacity-50 cursor-pointer"
+                className="px-3.5 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition shadow-xs disabled:opacity-50 cursor-pointer"
               >
                 {savingWa ? "Saving..." : "Connect"}
               </button>
               <button
+                type="button"
                 onClick={() => setShowWaPrompt(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 text-xs"
+                className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 text-xs cursor-pointer"
                 title="Dismiss"
               >
                 <i className="fas fa-times"></i>
@@ -696,86 +271,53 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Top Header & Context Bar */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6 sm:p-8">
+        {/* Dashboard Header Bar */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xs border border-gray-150 dark:border-zinc-800 p-6 sm:p-7">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-zinc-800">
             <div>
-              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-0.5 rounded-full border border-emerald-200/60">
-                  {isIndiaMode ? "🇮🇳 India Builder Workspace" : `${region} Workspace`}
-                </span>
-                <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
                   Tier: {planTier.toUpperCase()}
                 </span>
                 {whatsappNumber && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                     <i className="fab fa-whatsapp text-emerald-500"></i>
                     <span>{whatsappNumber}</span>
                   </span>
                 )}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300/80 dark:border-amber-700/60 px-2.5 py-0.5 rounded-full hover:bg-amber-100 transition no-underline"
+                    title="Open Developer Admin Command Center"
+                  >
+                    <i className="fas fa-shield-halved text-amber-600"></i>
+                    <span>Superadmin Hub →</span>
+                  </Link>
+                )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-zinc-100 tracking-tight">
-                Project Dashboard &amp; Estimator Hub
+                My Projects &amp; Saved Estimates
               </h1>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-                Manage saved BOQ estimates, monitor project budgets, and launch specialized Indian construction tools.
+                Access your saved BOQs, inspect cost breakdowns, and manage your account credits.
               </p>
             </div>
 
+            {/* Header Call-To-Action Buttons */}
             <div className="flex items-center gap-3 flex-wrap">
-              {/* Region quick switch pill */}
-              <div className="flex items-center bg-gray-100 dark:bg-zinc-800 rounded-xl p-1 text-xs font-bold">
-                <button
-                  onClick={() => setRegion("IN")}
-                  className={`px-3 py-1.5 rounded-lg transition ${
-                    isIndiaMode ? "bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
-                  }`}
-                >
-                  🇮🇳 India
-                </button>
-                <button
-                  onClick={() => setRegion("US")}
-                  className={`px-3 py-1.5 rounded-lg transition ${
-                    region === "US" ? "bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
-                  }`}
-                >
-                  🇺🇸 USA
-                </button>
-                <button
-                  onClick={() => setRegion("AE")}
-                  className={`px-3 py-1.5 rounded-lg transition ${
-                    region === "AE" ? "bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-xs" : "text-gray-500 hover:text-gray-900"
-                  }`}
-                >
-                  🇦🇪 UAE
-                </button>
-              </div>
-
-              {isAdmin && (
-                <>
-                  <Link
-                    href="/admin/gallery"
-                    className="px-3.5 py-2.5 rounded-xl bg-[#c5a059]/15 hover:bg-[#c5a059]/25 text-[#0f2042] dark:text-[#c5a059] border border-[#c5a059]/35 text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs"
-                    title="Upload & Manage Gallery Designs (Kitchen & Bathroom)"
-                  >
-                    <i className="fas fa-cloud-arrow-up text-primary"></i>
-                    <span className="hidden sm:inline">Upload to Gallery</span>
-                  </Link>
-
-                  <Link
-                    href="/admin/health"
-                    className="px-3.5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-xs"
-                    title="View Real-Time Platform Health & Diagnostics"
-                  >
-                    <i className="fas fa-heartbeat text-emerald-500 animate-pulse"></i>
-                    <span className="hidden sm:inline">Platform Health</span>
-                  </Link>
-                </>
-              )}
+              <Link
+                href="/#tools"
+                className="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-100 transition flex items-center gap-2 no-underline cursor-pointer"
+                title="Go to Home page to explore calculators"
+              >
+                <i className="fas fa-calculator text-primary"></i>
+                <span>+ New Calculation</span>
+              </Link>
 
               <Link
                 href="/upgrade"
-                className="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-md transition flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-xs transition flex items-center gap-2 no-underline cursor-pointer"
               >
                 <i className="fas fa-plus-circle"></i>
                 <span>Add Credits / Upgrade</span>
@@ -783,9 +325,9 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Quick Metrics Cards */}
+          {/* Core Metrics: Credits, Saved Projects, Portfolio Total, Plan Tier */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-            {/* Credits */}
+            {/* 1. Available Credits */}
             <div className={`p-4 rounded-xl border transition ${
               credits === 0
                 ? "bg-red-50/70 border-red-200 dark:bg-red-950/20"
@@ -803,7 +345,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Total Saved Projects */}
+            {/* 2. Total Saved Projects */}
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800">
               <div className="flex items-center justify-between text-xs font-bold text-gray-500 dark:text-zinc-400 mb-1">
                 <span>Saved Projects</span>
@@ -817,27 +359,27 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Total Portfolio Value */}
+            {/* 3. Total Portfolio Value */}
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800">
               <div className="flex items-center justify-between text-xs font-bold text-gray-500 dark:text-zinc-400 mb-1">
                 <span>Total Portfolio Value</span>
                 <i className="fas fa-chart-pie text-emerald-500"></i>
               </div>
               <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-zinc-100 truncate">
-                {activeCountryMode === "US"
+                {region === "US"
                   ? `$${portfolioStats.totalCostSum.toLocaleString()}`
-                  : activeCountryMode === "AE"
+                  : region === "AE"
                   ? `AED ${portfolioStats.totalCostSum.toLocaleString()}`
                   : portfolioStats.totalCostSum >= 100000
                   ? `₹${(portfolioStats.totalCostSum / 100000).toFixed(1)} L`
                   : `₹${portfolioStats.totalCostSum.toLocaleString("en-IN")}`}
               </div>
               <div className="text-[10px] text-gray-400 mt-1 truncate">
-                Across {portfolioStats.totalCount} calculations
+                Across {portfolioStats.totalCount} saved calculations
               </div>
             </div>
 
-            {/* Account Status */}
+            {/* 4. Plan Tier */}
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800">
               <div className="flex items-center justify-between text-xs font-bold text-gray-500 dark:text-zinc-400 mb-1">
                 <span>Plan Tier</span>
@@ -854,7 +396,7 @@ export default function Dashboard() {
 
           {/* Credits Alert if Exhausted */}
           {credits === 0 && (
-            <div className="mt-5 p-4 rounded-xl bg-red-50 border border-red-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-red-900 text-xs">
+            <div className="mt-5 p-4 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-red-900 dark:text-red-300 text-xs">
               <div className="flex items-center gap-3">
                 <i className="fas fa-exclamation-triangle text-red-600 text-base shrink-0"></i>
                 <div>
@@ -863,415 +405,57 @@ export default function Dashboard() {
               </div>
               <Link
                 href="/upgrade"
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg whitespace-nowrap shadow-sm transition"
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg whitespace-nowrap shadow-xs transition no-underline"
               >
                 Buy Credits (From ₹199)
               </Link>
             </div>
           )}
-        </div>
 
-        {/* --- HDE STUDIO DESKTOP CAD SUITE WIDGET --- */}
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl shadow-sm p-6 sm:p-7 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl -z-0 pointer-events-none"></div>
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-3 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-200 dark:border-amber-800 text-[10px] font-black uppercase tracking-wider">
-                  Desktop Software v2.1
-                </span>
-                <span className="text-xs text-gray-500 dark:text-zinc-400 flex items-center gap-1.5">
-                  <i className="fas fa-check-circle text-emerald-500"></i> Windows • macOS • Linux
-                </span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2.5">
-                <i className="fas fa-cube text-primary"></i>
-                <span>HDE Studio Architectural CAD</span>
-              </h2>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 max-w-xl">
-                Design custom floor plans, 2D AutoCAD room sets, and export high-resolution vector blueprints directly from your desktop.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              {desktopLicense ? (
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                  <div className="bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-3.5 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider flex items-center justify-between gap-3 text-gray-900 dark:text-white">
-                    <span className="text-primary font-mono">{desktopLicense.license_key}</span>
-                    <button
-                      onClick={handleCopyLicenseKey}
-                      className="text-xs text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-white transition p-1 cursor-pointer"
-                      title="Copy Key"
-                    >
-                      <i className={keyCopied ? "fas fa-check text-emerald-500" : "fas fa-copy"}></i>
-                    </button>
-                  </div>
+          {/* Desktop CAD License Key (Compact, only visible if user has an active Pro license) */}
+          {desktopLicense && (
+            <div className="mt-5 p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">
+                  <i className="fas fa-cube"></i>
                 </div>
-              ) : (
-                <Link
-                  href="/download#pricing"
-                  className="px-4 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-bold text-xs transition flex items-center justify-center gap-2 no-underline cursor-pointer"
-                >
-                  <i className="fas fa-lock"></i>
-                  <span>Unlock CAD License</span>
-                </Link>
-              )}
-
-              <Link
-                href="/download"
-                className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-xs transition shadow-sm flex items-center justify-center gap-2 no-underline cursor-pointer"
-              >
-                <i className="fas fa-download"></i>
-                <span>Download App</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* --- USEFUL PLATFORM & ADMIN HUBS --- */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-gray-100 dark:border-zinc-800">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 flex items-center justify-center text-sm">
-                <i className="fas fa-toolbox"></i>
-              </div>
-              <div>
-                <h3 className="font-extrabold text-slate-900 dark:text-zinc-100 text-sm sm:text-base">
-                  Platform Hubs &amp; Management Utilities
-                </h3>
-                <p className="text-gray-500 dark:text-zinc-400 text-xs">
-                  Direct access to system monitoring, developer tools, and regional content hubs.
-                </p>
-              </div>
-            </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/50 self-start sm:self-auto flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Admin &amp; Dev Tools
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {/* 1. Platform Health & Diagnostics */}
-            <Link
-              href="/admin/health"
-              className="group p-3.5 rounded-xl border border-emerald-200/70 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/10 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-heartbeat text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
-                    Platform Health &amp; Diagnostics
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-emerald-600 transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  Live Supabase status, calculation math smoke-tests, and server health.
-                </p>
-              </div>
-            </Link>
-
-            {/* 2. Developer SEO URL Matrix */}
-            <Link
-              href="/dev-links"
-              className="group p-3.5 rounded-xl border border-blue-200/70 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/10 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-sitemap text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                    Developer SEO URL Matrix
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-blue-600 transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  Access 769+ programmatic city routes, state hubs, and bulk URL exporter.
-                </p>
-              </div>
-            </Link>
-
-            {/* 3. House Plans Architectural Gallery */}
-            <Link
-              href="/plans"
-              className="group p-3.5 rounded-xl border border-[#c5a059]/30 dark:border-[#c5a059]/20 bg-[#c5a059]/5 dark:bg-[#c5a059]/10 hover:bg-[#c5a059]/10 dark:hover:bg-[#c5a059]/20 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-[#c5a059]/15 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-compass-drafting text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-[#0f2042] dark:group-hover:text-[#c5a059] transition">
-                    House Plans Gallery
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-[#c5a059] transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  30x40, 20x30, 30x50 architectural layouts, filters, and design ideas.
-                </p>
-              </div>
-            </Link>
-
-            {/* 4. Dubai Property Advisor */}
-            <Link
-              href="/dubai-property"
-              className="group p-3.5 rounded-xl border border-purple-200/70 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-950/10 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-city text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-purple-600 dark:group-hover:text-purple-400 transition">
-                    Dubai Property Advisor
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-purple-600 transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  15+ Dubai area guides, buying cost calculator, and investment portal.
-                </p>
-              </div>
-            </Link>
-
-            {/* 5. Land Area Converter (India Only) */}
-            {region !== 'US' && (
-              <Link
-                href="/land-converter"
-                className="group p-3.5 rounded-xl border border-teal-200/70 dark:border-teal-900/40 bg-teal-50/40 dark:bg-teal-950/10 hover:bg-teal-50 dark:hover:bg-teal-950/30 transition flex items-start gap-3 shadow-2xs"
-              >
-                <div className="w-9 h-9 rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                  <i className="fas fa-vector-square text-base"></i>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">
-                      Land Unit Converter
-                    </h4>
-                    <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-teal-600 transition"></i>
-                  </div>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                    Convert Gunta, Bigha, Cent, Acres, and Square Meters to Sq Ft.
-                  </p>
-                </div>
-              </Link>
-            )}
-
-            {/* 6. SEO Blog & Editorial Guides */}
-            <Link
-              href="/blog"
-              className="group p-3.5 rounded-xl border border-rose-200/70 dark:border-rose-900/40 bg-rose-50/40 dark:bg-rose-950/10 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-newspaper text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
-                    SEO Blog &amp; Guides
-                  </h4>
-                  <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-rose-600 transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  Published 2026 home construction, interest rate, and remodeling pillar posts.
-                </p>
-              </div>
-            </Link>
-
-            {/* 7. HDE Studio Desktop CAD */}
-            <Link
-              href="/download"
-              className="group p-3.5 rounded-xl border border-[#c5a059]/40 dark:border-[#c5a059]/30 bg-[#c5a059]/10 dark:bg-[#c5a059]/15 hover:bg-[#c5a059]/20 transition flex items-start gap-3 shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-[#c5a059]/20 text-[#0f2042] dark:text-[#c5a059] flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                <i className="fas fa-cube text-base"></i>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-[#c5a059] transition">
-                    HDE Studio CAD App
-                  </h4>
-                  <i className="fas fa-download text-[10px] text-gray-400 group-hover:text-[#c5a059] transition"></i>
-                </div>
-                <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                  Download desktop software, view your license key, and plan 2D architectural rooms.
-                </p>
-              </div>
-            </Link>
-
-            {isAdmin && (
-              <>
-                {/* 7. Kitchen Gallery & Upload Manager */}
-                <Link
-                  href="/admin/gallery/kitchen"
-                  className="group p-3.5 rounded-xl border border-amber-200/70 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/10 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition flex items-start gap-3 shadow-2xs"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                    <i className="fas fa-kitchen-set text-base"></i>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
-                        Kitchen Gallery Upload
-                      </h4>
-                      <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-amber-600 transition"></i>
-                    </div>
-                    <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                      Upload 9:16 modular kitchen photo cards, set layouts, materials &amp; INR budgets.
-                    </p>
-                  </div>
-                </Link>
-
-                {/* 8. Bathroom Gallery & Upload Manager */}
-                <Link
-                  href="/admin/gallery/bathroom"
-                  className="group p-3.5 rounded-xl border border-blue-200/70 dark:border-blue-900/40 bg-blue-50/40 dark:bg-blue-950/10 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition flex items-start gap-3 shadow-2xs"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition">
-                    <i className="fas fa-bath text-base"></i>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-slate-900 dark:text-zinc-100 text-xs sm:text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                        Bathroom Gallery Upload
-                      </h4>
-                      <i className="fas fa-arrow-right text-[10px] text-gray-400 group-hover:text-blue-600 transition"></i>
-                    </div>
-                    <p className="text-[11px] text-gray-500 dark:text-zinc-400 line-clamp-2 mt-0.5">
-                      Upload 9:16 bathroom concepts, configure partitions, vanity &amp; CP fittings.
-                    </p>
-                  </div>
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* --- REGIONAL QUICK LAUNCHPAD --- */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
-                  {activeCountryMode === "IN" ? "🇮🇳 India Mode" : activeCountryMode === "US" ? "🇺🇸 USA Mode" : "🇦🇪 UAE Mode"}
-                </span>
-                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
-                  <i className="fas fa-bolt text-primary"></i>
-                  <span>
-                    {activeCountryMode === "IN"
-                      ? "India Construction & Property Calculators"
-                      : activeCountryMode === "US"
-                      ? "USA Home & Real Estate Calculators"
-                      : "UAE & Dubai Property Intelligence"}
-                  </span>
-                </h2>
-              </div>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                {activeCountryMode === "IN"
-                  ? "Select an Indian construction BOQ, home loan EMI, interior, or land measurement tool."
-                  : activeCountryMode === "US"
-                  ? "Select a US framing, roofing, rent vs buy, property tax, or luxury remodel tool."
-                  : "Calculate true Dubai property buying costs, browse 15+ freehold area guides, and evaluate ROI."}
-              </p>
-            </div>
-
-            {/* Country Selector Pills */}
-            <div className="flex items-center gap-1.5 p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  setRegion("IN");
-                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "IN");
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  activeCountryMode === "IN"
-                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
-                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
-              >
-                <span>🇮🇳</span>
-                <span>India</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRegion("US");
-                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "US");
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  activeCountryMode === "US"
-                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
-                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
-              >
-                <span>🇺🇸</span>
-                <span>USA</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRegion("AE");
-                  if (typeof window !== "undefined") localStorage.setItem("hde_region", "AE");
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  activeCountryMode === "AE"
-                    ? "bg-white dark:bg-zinc-900 text-primary shadow-sm"
-                    : "text-gray-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
-              >
-                <span>🇦🇪</span>
-                <span>UAE / Dubai</span>
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {(activeCountryMode === "US" ? USA_QUICK_TOOLS : activeCountryMode === "AE" ? UAE_QUICK_TOOLS : INDIA_QUICK_TOOLS).map((tool) => (
-              <button
-                key={tool.id}
-                type="button"
-                onClick={() => launchCalculator(tool.id, activeCountryMode, tool.route)}
-                className={`p-4 rounded-2xl border text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-md bg-white dark:bg-zinc-900 ${tool.bgColor} flex flex-col justify-between cursor-pointer group`}
-              >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tool.color} text-white flex items-center justify-center text-sm shadow-sm group-hover:scale-110 transition-transform`}>
-                      <i className={tool.icon}></i>
-                    </div>
-                    {tool.badge && (
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white/80 dark:bg-zinc-800 text-slate-800 dark:text-zinc-200 shadow-2xs">
-                        {tool.badge}
-                      </span>
-                    )}
+                  <div className="text-xs font-bold text-slate-200">HDE Studio CAD Pro License</div>
+                  <div className="font-mono text-xs text-amber-400 mt-0.5 select-all">
+                    {desktopLicense.license_key}
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-sm group-hover:text-primary transition-colors">
-                    {tool.name}
-                  </h3>
-                  <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-0.5 leading-snug">
-                    {tool.subtitle}
-                  </p>
                 </div>
-
-                <div className="mt-4 pt-2 border-t border-gray-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-bold text-primary">
-                  <span>{tool.route ? "Open Tool" : "Launch Calculator"}</span>
-                  <i className="fas fa-arrow-right text-[10px] transform group-hover:translate-x-1 transition-transform"></i>
-                </div>
-              </button>
-            ))}
-          </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopyLicenseKey}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <i className={keyCopied ? "fas fa-check text-emerald-400" : "fas fa-copy"}></i>
+                  <span>{keyCopied ? "Copied" : "Copy Key"}</span>
+                </button>
+                <Link
+                  href="/download"
+                  className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition no-underline"
+                >
+                  Download App
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* --- SAVED ESTIMATES DIRECTORY --- */}
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6 sm:p-8 space-y-6">
+        {/* --- SAVED ESTIMATES & PROJECTS WORKSPACE --- */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xs border border-gray-150 dark:border-zinc-800 p-6 sm:p-7 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100 dark:border-zinc-800">
             <div>
               <h2 className="text-xl font-extrabold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
                 <i className="fas fa-history text-primary"></i>
-                <span>Saved Cost Estimates &amp; Plans</span>
+                <span>Saved Cost Estimates &amp; Project Reports</span>
               </h2>
               <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
-                Click any saved estimate to inspect its itemized breakdown, download PDF, or resume calculation.
+                Click any saved estimate to inspect its itemized breakdown, share on WhatsApp, or recalculate.
               </p>
             </div>
 
@@ -1400,16 +584,15 @@ export default function Dashboard() {
               <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200">No saved estimates found</h3>
               <p className="text-xs text-gray-400 max-w-sm mx-auto">
                 {searchQuery || categoryFilter !== "all"
-                  ? "No projects match your search or filter. Try clearing filters."
-                  : "You haven't saved any calculations yet. Launch any tool above to save your first estimate."}
+                  ? "No estimates match your search or filter criteria. Try clearing filters."
+                  : "You haven't saved any calculations yet. Visit our homepage tools to create and save your first project."}
               </p>
-              <button
-                type="button"
-                onClick={() => launchCalculator(activeCountryMode === "US" ? "usa-framing" : "construction", activeCountryMode)}
-                className="mt-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
+              <Link
+                href="/#tools"
+                className="inline-block mt-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-xs transition no-underline cursor-pointer"
               >
-                {activeCountryMode === "US" ? "Calculate US Framing Now" : activeCountryMode === "AE" ? "Open Dubai Cost Calculator" : "Calculate House Construction Now"}
-              </button>
+                + Start a New Calculation on Home Page
+              </Link>
             </div>
           )}
         </div>
@@ -1431,8 +614,9 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setSelectedProject(null)}
-                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-500 flex items-center justify-center cursor-pointer"
                 >
                   <i className="fas fa-times text-xs"></i>
                 </button>
@@ -1514,18 +698,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Admin Controls */}
-        {role === "admin" && (
-          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-zinc-800">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                <i className="fas fa-tools"></i>
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100">Admin Controls</h3>
-            </div>
-            <HeroManager />
-          </div>
-        )}
       </div>
     </div>
   );
