@@ -231,34 +231,23 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
   }
 ];
 
-function getLocalPlans(): HousePlanRecord[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem('hde_custom_house_plans');
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveLocalPlan(plan: HousePlanRecord) {
+// Clean up any legacy localStorage ghost data
+function purgeLegacyLocalPlans() {
   if (typeof window === 'undefined') return;
   try {
-    const current = getLocalPlans().filter(p => p.id !== plan.id);
-    localStorage.setItem('hde_custom_house_plans', JSON.stringify([plan, ...current]));
+    localStorage.removeItem('hde_custom_house_plans');
   } catch {}
 }
 
 export const HousePlanStoreService = {
   /**
-   * Fetch all house plans with optional filtering (never fails, falls back gracefully)
+   * Fetch all house plans strictly from the Supabase PostgreSQL database
    */
   async getAllPlans(options?: { activeOnly?: boolean; dimension?: string; facing?: string; includeFallbacks?: boolean }): Promise<HousePlanRecord[]> {
+    purgeLegacyLocalPlans();
     let dbData: any[] = [];
-    const localPlans = getLocalPlans();
 
     try {
-      // 1. Try query with is_active
       let query = supabase
         .from('house_plans')
         .select('*')
@@ -279,13 +268,9 @@ export const HousePlanStoreService = {
       console.warn('Supabase house_plans query notice:', err);
     }
 
-    // Merge database plans + local plans
     const combinedMap = new Map<string, HousePlanRecord>();
 
-    // Add local uploaded plans first (highest priority)
-    localPlans.forEach(p => combinedMap.set(p.id, p));
-
-    // Add database rows
+    // Add database rows (single source of truth)
     dbData.forEach((row: any) => {
       const metrics = calculateSmartPlanMetrics(
         row.dimensions || '30x40',
@@ -308,7 +293,7 @@ export const HousePlanStoreService = {
       });
     });
 
-    // Include verified fallback blueprints alongside uploaded plans so the store is fully stocked
+    // Fallbacks only when explicitly requested (e.g. for marketing preview)
     if (options?.includeFallbacks) {
       VERIFIED_STORE_FALLBACKS.forEach(fb => {
         if (!combinedMap.has(fb.id)) {
@@ -346,9 +331,10 @@ export const HousePlanStoreService = {
   },
 
   /**
-   * Create a new plan: saves to Supabase and syncs to local storage
+   * Create a new plan strictly in Supabase database
    */
   async createPlan(input: Partial<HousePlanRecord>): Promise<{ success: boolean; data?: HousePlanRecord; error?: string }> {
+    purgeLegacyLocalPlans();
     const isUuid = (val?: string) => Boolean(val && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val));
     const generatedId = isUuid(input.id)
       ? input.id!
@@ -389,11 +375,8 @@ export const HousePlanStoreService = {
       created_at: new Date().toISOString(),
     };
 
-    // Always save to local storage immediately so it shows up on store without delay
-    saveLocalPlan(fullRecord);
-
     try {
-      // 1. Prepare Supabase payload: omit non-uuid id so database generates random uuid
+      // Prepare Supabase payload
       const dbPayload: any = { ...fullRecord };
       if (!isUuid(dbPayload.id)) {
         delete dbPayload.id;
@@ -406,12 +389,10 @@ export const HousePlanStoreService = {
         .single();
 
       if (!error && data) {
-        // Update local plan with the official Supabase UUID
-        saveLocalPlan({ ...fullRecord, id: data.id });
         return { success: true, data: { ...fullRecord, ...data } };
       }
 
-      // 2. If error is column not found (code 42703), retry with only standard columns
+      // Retry with standard columns if custom columns don't exist
       if (error && (error.code === '42703' || error.message?.includes('column'))) {
         const standardPayload: any = {
           title: fullRecord.title,
@@ -433,37 +414,23 @@ export const HousePlanStoreService = {
           .single();
 
         if (!stdError && stdData) {
-          saveLocalPlan({ ...fullRecord, id: stdData.id });
           return { success: true, data: { ...fullRecord, id: stdData.id } };
         }
       }
 
-      if (error?.code === '42501') {
-        return {
-          success: true,
-          data: fullRecord,
-          error: 'Saved locally. To enable cloud database sync, please run the SQL script in Supabase SQL editor.'
-        };
-      }
-
-      return { success: true, data: fullRecord };
+      return { success: !error, data: fullRecord, error: error?.message };
     } catch (err: any) {
       console.warn('Supabase createPlan notice:', err);
-      return { success: true, data: fullRecord };
+      return { success: false, error: err.message };
     }
   },
 
   /**
-   * Update an existing plan
+   * Update an existing plan strictly in Supabase
    */
   async updatePlan(id: string, updates: Partial<HousePlanRecord>): Promise<{ success: boolean; error?: string }> {
+    purgeLegacyLocalPlans();
     try {
-      const local = getLocalPlans();
-      const existing = local.find(p => p.id === id);
-      if (existing) {
-        saveLocalPlan({ ...existing, ...updates });
-      }
-
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
       const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-') || id.startsWith('plan-') || !isUuid;
       if (isFallback) {
@@ -477,48 +444,72 @@ export const HousePlanStoreService = {
 
       if (error) {
         console.warn('Supabase update notice:', error.message);
+        return { success: false, error: error.message };
       }
 
       return { success: true };
     } catch (err: any) {
-      return { success: true };
+      return { success: false, error: err.message };
     }
   },
 
   /**
-   * Delete a plan
+   * Delete a plan permanently from Supabase database AND Cloudflare R2 storage
    */
-  async deletePlan(id: string): Promise<{ success: boolean; error?: string }> {
+  async deletePlan(
+    id: string,
+    fileInfo?: { file_url?: string; pdf_url?: string }
+  ): Promise<{ success: boolean; error?: string }> {
+    purgeLegacyLocalPlans();
     try {
-      if (typeof window !== 'undefined') {
-        try {
-          const local = getLocalPlans().filter(p => p.id !== id);
-          localStorage.setItem('hde_custom_house_plans', JSON.stringify(local));
-        } catch {}
+      // 1. Clean up associated binary assets in Cloudflare R2
+      const keysToPurge: string[] = [];
+      if (fileInfo?.file_url) keysToPurge.push(fileInfo.file_url);
+      if (fileInfo?.pdf_url) keysToPurge.push(fileInfo.pdf_url);
 
+      if (typeof window !== 'undefined' && keysToPurge.length > 0) {
         try {
-          const fbRaw = localStorage.getItem("deleted_fb_plans");
-          const fbList: string[] = fbRaw ? JSON.parse(fbRaw) : [];
-          if (!fbList.includes(id)) {
-            localStorage.setItem("deleted_fb_plans", JSON.stringify([...fbList, id]));
+          const { data: { session } } = await supabase.auth.getSession();
+          const token = session?.access_token;
+          for (const rawUrl of keysToPurge) {
+            if (!rawUrl || (rawUrl.startsWith('http') && !rawUrl.includes('r2.dev'))) continue;
+            const cleanPath = rawUrl.replace(/^https?:\/\/[^\/]+\//, '').replace(/^\/+/, '');
+            const r2Key = cleanPath.startsWith('house-plans/') ? cleanPath : `house-plans/${cleanPath}`;
+            await fetch('/api/gallery/delete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+              },
+              body: JSON.stringify({ key: r2Key })
+            });
           }
-        } catch {}
+        } catch (r2Err) {
+          console.warn('R2 purge notice:', r2Err);
+        }
       }
 
+      // 2. Validate UUID before attempting Supabase delete
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
       const isFallback = id.startsWith('00000000-0000-4000-8000-') || id.startsWith('fb-') || id.startsWith('plan-') || !isUuid;
       if (isFallback) {
         return { success: true };
       }
 
-      await supabase
+      // 3. Delete row from Supabase database
+      const { error } = await supabase
         .from('house_plans')
         .delete()
         .eq('id', id);
 
+      if (error) {
+        console.warn('Supabase delete error:', error.message);
+        return { success: false, error: error.message };
+      }
+
       return { success: true };
     } catch (err: any) {
-      return { success: true };
+      return { success: false, error: err.message };
     }
   },
 };

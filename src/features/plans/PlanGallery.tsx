@@ -426,38 +426,14 @@ export const PlanGallery: React.FC = () => {
     const to = from + PLANS_PER_PAGE - 1;
 
     try {
-      // 1. Read any plans saved in browser local storage
-      let localPlans: HousePlan[] = [];
+      // Purge any legacy localStorage cache
       if (typeof window !== "undefined") {
         try {
-          const raw = localStorage.getItem("hde_custom_house_plans");
-          const fbRaw = localStorage.getItem("deleted_fb_plans");
-          const deletedList: string[] = fbRaw ? JSON.parse(fbRaw) : [];
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            localPlans = parsed
-              .filter((p: any) => !deletedList.includes(p.id))
-              .map((p: any) => ({
-                id: p.id,
-                title: p.title,
-                area_sqft: p.area_sqft,
-                facing: p.facing,
-                file_url: p.file_url,
-                dimensions: p.dimensions,
-                floors: p.floors,
-                bedrooms: p.bedrooms,
-                bathrooms: p.bathrooms,
-                parking: p.parking,
-                description: p.description,
-                youtube_url: p.youtube_url,
-                kitchen_info: p.kitchen_info,
-                living_hall_info: p.living_hall_info,
-              }));
-          }
+          localStorage.removeItem("hde_custom_house_plans");
         } catch (e) {}
       }
 
-      // 2. Fetch live rows from Supabase house_plans table
+      // Fetch live rows strictly from Supabase house_plans table
       const { data, error } = await supabase
         .from('house_plans')
         .select('*')
@@ -469,7 +445,7 @@ export const PlanGallery: React.FC = () => {
       if (remote.length < PLANS_PER_PAGE) setHasMore(false);
 
       setDbPlans(prev => {
-        const pool = pageNum === 0 ? [...localPlans, ...remote] : [...prev, ...remote];
+        const pool = pageNum === 0 ? remote : [...prev, ...remote];
         const map = new Map<string, HousePlan>();
         pool.forEach(item => map.set(item.id, item));
         return Array.from(map.values());
@@ -581,15 +557,10 @@ export const PlanGallery: React.FC = () => {
         living_hall_info: editData.living_hall_info,
       };
 
-      // Also update in localStorage if present
+      // Purge any legacy localStorage cache
       if (typeof window !== "undefined") {
         try {
-          const raw = localStorage.getItem("hde_custom_house_plans");
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            const updated = parsed.map((p: any) => p.id === selectedPlan.id ? { ...p, ...payload } : p);
-            localStorage.setItem("hde_custom_house_plans", JSON.stringify(updated));
-          }
+          localStorage.removeItem("hde_custom_house_plans");
         } catch (e) {}
       }
 

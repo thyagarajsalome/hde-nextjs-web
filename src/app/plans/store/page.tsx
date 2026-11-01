@@ -57,7 +57,7 @@ export default function HousePlanDrawingStorePage() {
   const loadPlans = async () => {
     setLoading(true);
     try {
-      // Do not show default mock plans with no PDF files attached. Only load real uploaded plans.
+      // Do not show default mock plans with no PDF files attached. Only load real uploaded plans from Supabase.
       const realPlans = await HousePlanStoreService.getAllPlans({ activeOnly: true, includeFallbacks: false });
       setPlans(realPlans);
     } catch (err) {
@@ -68,8 +68,26 @@ export default function HousePlanDrawingStorePage() {
   };
 
   useEffect(() => {
+    try {
+      localStorage.removeItem('hde_custom_house_plans');
+    } catch {}
     loadPlans();
   }, []);
+
+  const handleAdminDeletePlan = async (plan: HousePlanRecord) => {
+    if (!window.confirm(`⚠️ Permanently delete plan "${plan.title}" from Supabase database AND Cloudflare R2 storage?`)) return;
+    try {
+      const res = await HousePlanStoreService.deletePlan(plan.id, {
+        file_url: plan.file_url,
+        pdf_url: plan.pdf_url,
+      });
+      if (!res.success) throw new Error(res.error || 'Failed to delete plan');
+      setPlans((prev) => prev.filter((p) => p.id !== plan.id));
+      alert(`Plan "${plan.title}" deleted permanently from database and Cloudflare storage.`);
+    } catch (err: any) {
+      alert(`Deletion error: ${err.message}`);
+    }
+  };
 
   // Determine if a plan is unlocked for current visitor
   const isPlanUnlocked = (planId: string) => {
@@ -445,6 +463,20 @@ export default function HousePlanDrawingStorePage() {
                       </div>
 
                       <div className="flex items-center gap-2">
+                        {isAdmin && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAdminDeletePlan(plan);
+                            }}
+                            className="p-2 text-xs font-bold rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 transition cursor-pointer"
+                            title="Delete plan permanently from Supabase & Cloudflare storage"
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        )}
+
                         <button
                           type="button"
                           onClick={() => setActivePlan(plan)}

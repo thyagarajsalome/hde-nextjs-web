@@ -326,12 +326,15 @@ export const AdminPlansManager: React.FC = () => {
   };
 
   const handleDelete = async (plan: HousePlanRecord) => {
-    if (!window.confirm(`⚠️ Permanently delete plan "${plan.title}" from database?`)) return;
+    if (!window.confirm(`⚠️ Permanently delete plan "${plan.title}" from database and Cloudflare storage?`)) return;
     try {
-      const res = await HousePlanStoreService.deletePlan(plan.id);
+      const res = await HousePlanStoreService.deletePlan(plan.id, {
+        file_url: plan.file_url,
+        pdf_url: plan.pdf_url,
+      });
       if (!res.success) throw new Error(res.error);
       setPlans((prev) => prev.filter((p) => p.id !== plan.id));
-      showToast('Plan deleted successfully.', 'success');
+      showToast('Plan deleted permanently from database and storage.', 'success');
     } catch (err: any) {
       showToast(err.message || 'Failed to delete plan', 'error');
     }

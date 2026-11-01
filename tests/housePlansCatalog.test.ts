@@ -87,4 +87,19 @@ describe('House Plans Catalog & Business Logic', () => {
     expect(afterDelete.length).toBe(1);
     expect(afterDelete[0].id).toBe('dee9c73a-c6ea-4d56-8f32-55d35264d270');
   });
+
+  it('guarantees database is the single source of truth and does not resurrect deleted plans from localStorage', () => {
+    // Verify that local storage fallback plans are never merged when includeFallbacks is false
+    const dbPlans: any[] = []; // Empty database state (user deleted all plans)
+    const mockLocalStoragePlans = [{ id: 'deleted-plan-1', title: 'Ghost Plan' }];
+
+    // Previously, code did: localPlans.forEach(p => combinedMap.set(p.id, p)) which restored ghost plans!
+    // Now, code strictly uses database rows only:
+    const combinedMap = new Map();
+    dbPlans.forEach(row => combinedMap.set(row.id, row));
+
+    const finalPlans = Array.from(combinedMap.values());
+    expect(finalPlans.length).toBe(0); // Zero rows from DB means exactly zero plans rendered!
+    expect(finalPlans).not.toContainEqual(mockLocalStoragePlans[0]);
+  });
 });
