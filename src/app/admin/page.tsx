@@ -27,6 +27,19 @@ export default function AdminPortalHubPage() {
       ],
     },
     {
+      title: 'Homepage Hero Banners (Full-Width Slides)',
+      description: 'Upload high-resolution architectural background images, custom titles, and subtitles displayed on the main HDE homepage slider.',
+      href: '/admin/hero',
+      icon: 'fa-images',
+      badge: 'Hero Banners',
+      accent: 'border-amber-200/80 bg-gradient-to-br from-amber-50/40 via-white to-slate-50',
+      iconColor: 'text-[#0f2042]',
+      links: [
+        { label: '🖼️ Manage Hero Banners', href: '/admin/hero' },
+        { label: '🌐 View Live Homepage', href: '/' },
+      ],
+    },
+    {
       title: 'Photo Inspiration Galleries (9:16 Vertical Photos)',
       description: 'Upload 9:16 vertical photos and reels for Modular Kitchens and Modern Bathrooms (interior design photo inspiration, not floor plans).',
       href: '/admin/gallery/kitchen',

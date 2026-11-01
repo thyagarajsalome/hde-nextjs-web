@@ -11,6 +11,7 @@ export const ADMIN_EMAIL = "thyagaraja1983@gmail.com";
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard Hub", icon: "fa-gauge-high" },
   { href: "/admin/plans", label: "PDF Blueprints & Store", icon: "fa-file-pdf", highlight: true },
+  { href: "/admin/hero", label: "Homepage Hero Banners", icon: "fa-images" },
   { href: "/admin/gallery/kitchen", label: "Modular Kitchen Gallery", icon: "fa-kitchen-set" },
   { href: "/admin/gallery/bathroom", label: "Bathroom Designs", icon: "fa-bath" },
   { href: "/admin/real-estate", label: "Real Estate & Leads", icon: "fa-building-user" },
