@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'fileName is required' }, { status: 400 });
     }
 
-    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans'];
+    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans', 'pdf-plans', 'vertical-images'];
     const ALLOWED_CONTENT_TYPES = ['image/webp', 'image/jpeg', 'image/png', 'image/avif', 'application/pdf'];
 
     if (!ALLOWED_CATEGORIES.includes(category)) {
@@ -65,12 +65,26 @@ export async function POST(request: Request) {
     // Clean and sanitize filename to prevent path traversal or special character issues
     const cleanFileName = fileName
       .toLowerCase()
+      .replace(/^.*[\\\/]/, '') // Strip incoming path prefixes
       .replace(/[^a-z0-9.-]/g, '-')
       .replace(/-+/g, '-');
       
-    const key = category === 'house-plans'
-      ? (fileName.startsWith('full-plans/') ? `house-plans/${fileName}` : `house-plans/full-plans/${Date.now()}-${cleanFileName}`)
-      : `gallery/${category}/${Date.now()}-${cleanFileName}`;
+    let key = '';
+    const isPdfAsset = category === 'pdf-plans' || 
+                       contentType === 'application/pdf' || 
+                       cleanFileName.endsWith('.pdf') || 
+                       cleanFileName.includes('-preview.webp') ||
+                       fileName.includes('pdf-plans');
+
+    if (isPdfAsset) {
+      // Exclusively for PDF plans and their Page-1 extracted WebP thumbnails
+      key = `house-plans/pdf-plans/${Date.now()}-${cleanFileName}`;
+    } else if (category === 'vertical-images' || category === 'house-plans') {
+      // Exclusively for 2D vertical floor plan images
+      key = `house-plans/vertical-images/${Date.now()}-${cleanFileName}`;
+    } else {
+      key = `gallery/${category}/${Date.now()}-${cleanFileName}`;
+    }
 
     const { uploadUrl, publicUrl } = await getR2PresignedUploadUrl(key, contentType);
 

@@ -112,7 +112,7 @@ export const PlanUploader: React.FC<PlanUploaderProps> = ({ onUploadSuccess }) =
         },
         body: JSON.stringify({
           fileName: fullPath,
-          category: 'house-plans',
+          category: fullFile.name.toLowerCase().endsWith('.pdf') ? 'pdf-plans' : 'vertical-images',
           contentType: fullFile.type || (fullFile.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/webp'),
           fileSize: fullFile.size
         })

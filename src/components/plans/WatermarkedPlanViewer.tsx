@@ -27,10 +27,16 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
   // Normalize image URL to R2 if needed
   const normalizedImageUrl = imageUrl?.startsWith('http')
     ? imageUrl
-    : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${imageUrl?.replace(/^\/+/, '')}`;
+    : imageUrl?.startsWith('house-plans/')
+      ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${imageUrl.replace(/^\/+/, '')}`
+      : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${imageUrl?.replace(/^\/+/, '')}`;
 
   const normalizedPdfUrl = pdfUrl
-    ? (pdfUrl.startsWith('http') ? pdfUrl : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${pdfUrl.replace(/^\/+/, '')}`)
+    ? (pdfUrl.startsWith('http')
+        ? pdfUrl
+        : pdfUrl.startsWith('house-plans/')
+          ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${pdfUrl.replace(/^\/+/, '')}`
+          : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${pdfUrl.replace(/^\/+/, '')}`)
     : null;
 
   const handleDownload = (e: React.MouseEvent) => {

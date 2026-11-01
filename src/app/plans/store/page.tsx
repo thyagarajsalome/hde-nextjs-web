@@ -357,7 +357,9 @@ export default function HousePlanDrawingStorePage() {
                         src={
                           plan.file_url?.startsWith('http')
                             ? plan.file_url
-                            : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${plan.file_url?.replace(/^\/+/, '')}`
+                            : plan.file_url?.startsWith('house-plans/')
+                              ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${plan.file_url.replace(/^\/+/, '')}`
+                              : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${plan.file_url?.replace(/^\/+/, '')}`
                         }
                         alt={plan.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
@@ -598,7 +600,9 @@ export default function HousePlanDrawingStorePage() {
                       if (url) {
                         const target = url.startsWith('http')
                           ? url
-                          : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${url.replace(/^\/+/, '')}`;
+                          : url.startsWith('house-plans/')
+                            ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${url.replace(/^\/+/, '')}`
+                            : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${url.replace(/^\/+/, '')}`;
                         window.open(target, '_blank');
                       }
                     }}

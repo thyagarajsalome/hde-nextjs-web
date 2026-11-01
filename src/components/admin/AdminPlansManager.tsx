@@ -237,7 +237,7 @@ export const AdminPlansManager: React.FC = () => {
       },
       body: JSON.stringify({
         fileName: file.name,
-        category: 'house-plans',
+        category: 'pdf-plans',
         contentType: isPdf ? 'application/pdf' : (file.type || 'image/webp'),
         fileSize: file.size,
       }),
