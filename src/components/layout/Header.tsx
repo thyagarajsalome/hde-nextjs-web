@@ -12,7 +12,7 @@ const REGIONS = [
 ] as const;
 
 const Header = () => {
-  const { user, hasPaid, signOut } = useUser();
+  const { user, hasPaid, signOut, isDeveloper } = useUser();
   const { region, setRegion } = useRegion();
   const navigate = useRouter();
   const pathname = usePathname();
@@ -27,7 +27,10 @@ const Header = () => {
 
   const currentRegion = REGIONS.find(r => r.code === region) || REGIONS[0];
   const isDubaiRoute = pathname.includes('/dubai-property');
-  const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
+  const isAdmin = Boolean(
+    (user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com') ||
+    isDeveloper
+  );
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -190,19 +193,6 @@ const Header = () => {
                             <p className="text-[10px] text-gray-400 dark:text-zinc-400">Wet &amp; Dry / Vanities</p>
                           </div>
                         </Link>
-
-                        {isAdmin && (
-                          <div className="border-t border-gray-100 dark:border-zinc-800 my-1 pt-1">
-                            <Link
-                              href="/admin/gallery"
-                              onClick={() => setGalleryDropdownOpen(false)}
-                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 transition-colors no-underline"
-                            >
-                              <i className="fas fa-cloud-arrow-up text-xs"></i>
-                              <span>Upload &amp; Manage Designs</span>
-                            </Link>
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>
@@ -247,6 +237,18 @@ const Header = () => {
 
             {/* Action Buttons & Utility Group with Proper Spacing */}
             <div className="flex items-center gap-2.5 xl:gap-3.5 shrink-0">
+              {/* Dedicated Developer-Admin Button */}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-1.5 px-3 xl:px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-[#0f2042] hover:bg-[#1a3360] text-white shadow-xs hover:shadow-md hover:scale-105 transition-all no-underline shrink-0 cursor-pointer border border-[#c5a059]/40"
+                  title="Open Developer Admin Command Center"
+                >
+                  <i className="fas fa-shield-halved text-[11px] text-[#c5a059]"></i>
+                  <span>Developer-Admin</span>
+                </Link>
+              )}
+
               {/* Pro Account Button */}
               <Link
                 href="/upgrade"
@@ -428,6 +430,28 @@ const Header = () => {
               </span>
             </Link>
 
+            {/* Developer-Admin Mobile Banner */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between p-3.5 mb-2 rounded-xl bg-[#0f2042] border border-[#c5a059]/40 text-white shadow-sm font-bold no-underline cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#c5a059]/20 border border-[#c5a059]/30 flex items-center justify-center shrink-0">
+                    <i className="fas fa-shield-halved text-[#c5a059] text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-sm font-black leading-tight text-white">Developer-Admin</div>
+                    <div className="text-[11px] text-slate-300 font-medium">Command Center &amp; DB Backups</div>
+                  </div>
+                </div>
+                <span className="text-xs bg-[#c5a059] text-white px-2.5 py-1 rounded-full font-black shrink-0">
+                  Open →
+                </span>
+              </Link>
+            )}
+
             <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline" onClick={() => setMenuOpen(false)}>
               Home
             </Link>
@@ -486,16 +510,6 @@ const Header = () => {
                         <i className="fas fa-bath text-xs text-blue-500"></i>
                         <span>Bathroom Designs</span>
                       </Link>
-                      {isAdmin && (
-                        <Link
-                          href="/admin/gallery"
-                          onClick={() => setMenuOpen(false)}
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-bold text-primary hover:bg-primary/5 no-underline"
-                        >
-                          <i className="fas fa-cloud-arrow-up text-xs"></i>
-                          <span>Upload &amp; Manage Designs</span>
-                        </Link>
-                      )}
                     </div>
                   )}
                 </div>

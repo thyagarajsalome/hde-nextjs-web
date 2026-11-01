@@ -54,6 +54,8 @@ export default function Footer() {
               <Link href="/privacy" className="text-gray-500 hover:text-primary transition-colors no-underline">Privacy Policy</Link>
               <span className="text-gray-300">|</span>
               <Link href="/terms" className="text-gray-500 hover:text-primary transition-colors no-underline">Terms of Service</Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/admin" className="text-gray-500 hover:text-primary transition-colors no-underline font-semibold">Developer Admin</Link>
             </div>
 
             {/* Design Galleries Quick Links */}
