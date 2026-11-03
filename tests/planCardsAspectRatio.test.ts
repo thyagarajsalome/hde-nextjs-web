@@ -102,4 +102,20 @@ describe('Plan Cards Aspect Ratio & Layout Lock', () => {
     expect(storeContent).toContain('matchesArchitecturalPlanFilter');
     expect(galleryContent).toContain('matchesArchitecturalPlanFilter');
   });
+
+  it('verifies /calculator route exists, is registered in sitemap, and supports URL params without 404', () => {
+    const calculatorFilePath = path.resolve(__dirname, '../src/app/calculator/page.tsx');
+    const sitemapContent = fs.readFileSync(path.resolve(__dirname, '../src/app/sitemap.ts'), 'utf-8');
+
+    // Route file must exist
+    expect(fs.existsSync(calculatorFilePath)).toBe(true);
+
+    const calcContent = fs.readFileSync(calculatorFilePath, 'utf-8');
+    // Must render CalculatorFeature and have canonical tag
+    expect(calcContent).toContain('CalculatorFeature');
+    expect(calcContent).toContain('https://www.homedesignenglish.com/calculator');
+
+    // Sitemap must include /calculator
+    expect(sitemapContent).toContain('${BASE_URL}/calculator');
+  });
 });

@@ -248,11 +248,19 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
     const state = location.state as { projectData?: any } | null;
     const data  = projectData || state?.projectData;
 
-    // Check if area is passed via URL query parameters (e.g. /?calc=construction&area=1800)
+    // Check if area or floors are passed via URL query parameters (e.g. /calculator?area=1500&floors=Ground+Only&facing=East)
     let urlArea: string | null = null;
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       urlArea = urlParams.get("area");
+      const urlFloors = urlParams.get("floors");
+      if (urlFloors) {
+        const f = urlFloors.toLowerCase();
+        if (f.includes("ground only") || f === "1") setNumFloors(1);
+        else if (f.includes("g+1") || f === "2") setNumFloors(2);
+        else if (f.includes("g+2") || f === "3") setNumFloors(3);
+        else if (f.includes("g+3") || f === "4") setNumFloors(4);
+      }
     }
 
     if (urlArea && !isNaN(Number(urlArea)) && Number(urlArea) > 0) {
