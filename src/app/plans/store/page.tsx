@@ -27,6 +27,112 @@ const FACING_OPTIONS = [
   { label: 'South-Facing (Thermal Mass)', value: 'South' },
 ];
 
+/**
+ * Interactive 16:9 Architectural Blueprint Thumbnail with Cursor-Tracked Pan & Zoom
+ */
+const PlanCardThumbnail: React.FC<{
+  plan: HousePlanRecord;
+  onClick: () => void;
+}> = ({ plan, onClick }) => {
+  const [zoomOrigin, setZoomOrigin] = useState<{ x: number; y: number } | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+    setZoomOrigin({ x, y });
+  };
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setZoomOrigin(null);
+  };
+
+  const imageUrl = plan.file_url?.startsWith('http')
+    ? plan.file_url
+    : plan.file_url?.startsWith('pdf-plans/')
+      ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${plan.file_url.replace(/^\/+/, '')}`
+      : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${plan.file_url?.replace(/^\/+/, '')}`;
+
+  const isPdf = plan.file_url?.toLowerCase().endsWith('.pdf');
+
+  return (
+    <div
+      className="relative aspect-video bg-white dark:bg-zinc-900 overflow-hidden cursor-crosshair border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-center select-none"
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {isPdf ? (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-4 text-center">
+          <i className="fas fa-file-pdf text-rose-500 text-3xl mb-2"></i>
+          <span className="text-xs font-bold text-white line-clamp-1 px-2">{plan.title}</span>
+          <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-1 bg-white/10 px-2 py-0.5 rounded">
+            Vector PDF Blueprint
+          </span>
+        </div>
+      ) : (
+        <img
+          src={imageUrl}
+          alt={plan.title}
+          className="w-full h-full object-contain p-1 pointer-events-none will-change-transform"
+          loading="lazy"
+          width={854}
+          height={480}
+          style={{
+            transformOrigin: zoomOrigin ? `${zoomOrigin.x}% ${zoomOrigin.y}%` : 'center center',
+            transform: zoomOrigin ? 'scale(2.3)' : 'scale(1)',
+            transition: zoomOrigin ? 'transform 0.08s ease-out' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+          }}
+        />
+      )}
+
+      {/* Top Badges (Subtle opacity reduction on hover so drawing is unobstructed) */}
+      <div
+        className={`absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none transition-opacity duration-200 ${
+          isHovered ? 'opacity-35' : 'opacity-100'
+        }`}
+      >
+        <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#0f2042]/90 text-white shadow-xs">
+          {plan.dimensions} Plot
+        </span>
+
+        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/90 text-[#0f2042] border border-slate-200/90 shadow-xs flex items-center gap-1">
+          <i className="fas fa-compass text-[9px] text-[#c5a059]"></i>
+          {plan.facing}
+        </span>
+      </div>
+
+      {/* Dynamic Hover Inspection Pill */}
+      {isHovered && (
+        <div className="absolute top-2.5 inset-x-0 flex justify-center pointer-events-none z-20 animate-fadeIn">
+          <div className="bg-[#0f2042]/90 text-[#c5a059] px-2.5 py-1 rounded-full text-[10px] font-black tracking-wide shadow-md backdrop-blur-xs flex items-center gap-1.5 border border-[#c5a059]/40">
+            <i className="fas fa-magnifying-glass-plus text-[9px] animate-pulse"></i>
+            <span>Move cursor to pan rooms • Click to expand</span>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom subtle bar */}
+      <div
+        className={`absolute bottom-0 inset-x-0 px-2.5 py-1 bg-gradient-to-t from-slate-950/85 via-slate-900/40 to-transparent flex items-center justify-between text-white text-[10px] transition-opacity duration-200 ${
+          isHovered ? 'opacity-90' : 'opacity-100'
+        }`}
+      >
+        <span className="font-semibold">
+          {plan.floors || 'G+1'} • {plan.bedrooms} BHK
+        </span>
+        <span className="text-amber-300 font-bold flex items-center gap-1">
+          <i className="fas fa-expand text-[9px]"></i> Click to Expand
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export default function HousePlanDrawingStorePage() {
   const { user, hasPaid, planTier, isDeveloper } = useUser();
   const isAdmin = Boolean(user && user.email?.toLowerCase() === 'thyagaraja1983@gmail.com');
@@ -339,58 +445,11 @@ export default function HousePlanDrawingStorePage() {
                   key={plan.id}
                   className="bg-white rounded-2xl border border-[#E8DFC8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
-                  {/* 16:9 Architectural Blueprint Preview (854x480 standard lightweight ratio) */}
-                  <div
-                    className="relative aspect-video bg-white dark:bg-zinc-900 overflow-hidden cursor-pointer border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-center"
+                  {/* Interactive 16:9 Architectural Blueprint Thumbnail with Pan-Zoom on Hover */}
+                  <PlanCardThumbnail
+                    plan={plan}
                     onClick={() => setActivePlan(plan)}
-                  >
-                    {plan.file_url?.toLowerCase().endsWith('.pdf') ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-4 text-center">
-                        <i className="fas fa-file-pdf text-rose-500 text-3xl mb-2"></i>
-                        <span className="text-xs font-bold text-white line-clamp-1 px-2">{plan.title}</span>
-                        <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-1 bg-white/10 px-2 py-0.5 rounded">
-                          Vector PDF Blueprint
-                        </span>
-                      </div>
-                    ) : (
-                      <img
-                        src={
-                          plan.file_url?.startsWith('http')
-                            ? plan.file_url
-                            : plan.file_url?.startsWith('pdf-plans/')
-                              ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${plan.file_url.replace(/^\/+/, '')}`
-                              : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${plan.file_url?.replace(/^\/+/, '')}`
-                        }
-                        alt={plan.title}
-                        className="w-full h-full object-contain p-1 group-hover:scale-[1.02] transition-transform duration-300"
-                        loading="lazy"
-                        width={854}
-                        height={480}
-                      />
-                    )}
-
-                    {/* Top Badges */}
-                    <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#0f2042]/90 text-white shadow-xs">
-                        {plan.dimensions} Plot
-                      </span>
-
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/90 text-[#0f2042] border border-slate-200/90 shadow-xs flex items-center gap-1">
-                        <i className="fas fa-compass text-[9px] text-[#c5a059]"></i>
-                        {plan.facing}
-                      </span>
-                    </div>
-
-                    {/* Bottom subtle bar */}
-                    <div className="absolute bottom-0 inset-x-0 px-2.5 py-1 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-transparent flex items-center justify-between text-white text-[10px]">
-                      <span className="font-semibold">
-                        {plan.floors || 'G+1'} • {plan.bedrooms} BHK
-                      </span>
-                      <span className="text-amber-300 font-bold flex items-center gap-1">
-                        <i className="fas fa-eye text-[9px]"></i> View Details
-                      </span>
-                    </div>
-                  </div>
+                  />
 
                   {/* Body Content - Compact, crisp, highlighted around the plan */}
                   <div className="p-3.5 sm:p-4 flex-grow flex flex-col justify-between space-y-2.5">
