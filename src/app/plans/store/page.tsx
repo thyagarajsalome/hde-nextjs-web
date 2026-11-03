@@ -241,85 +241,45 @@ export default function HousePlanDrawingStorePage() {
   }, [plans, filters]);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
-      {/* Hero Header - Warm Light Cream Architectural Theme */}
-      <section className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-slate-900 py-12 px-4 sm:px-6 lg:px-8 border-b border-[#E8DFC8]">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold">
-              <Link href="/" className="hover:text-blue-600">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/plans" className="hover:text-blue-600">
-                House Plans
-              </Link>
-              <span>/</span>
-              <span className="text-amber-800 font-bold">pdf-plans</span>
-            </div>
-
-            {/* Direct Link to Upload PDF Plans - Strictly for thyagaraja1983@gmail.com */}
-            {isAdmin && (
+    <div className="min-h-screen bg-slate-50/60 dark:bg-zinc-950">
+      {/* SEO Discovery Header */}
+      <section className="bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 py-10">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3.5 py-1.5 rounded-full inline-block">
+              📐 300 DPI Vector PDF Working Drawings
+            </span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-zinc-100 tracking-tight">
+              Architectural PDF Plans &amp; Blueprints
+            </h1>
+            <p className="text-sm sm:text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
+              Download high-resolution 300 DPI vector PDF architectural blueprints, municipal sanction drawings, and 2D floor plans with structural setbacks, electrical schedules, and bill of quantities for Indian plots.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <Link
-                href="/admin/plans"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black bg-[#0f2042] hover:bg-blue-900 text-white shadow-sm transition border border-blue-900/40 w-fit"
+                href="/plans"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0f2042] text-amber-300 hover:bg-[#1a3260] text-xs font-bold shadow-xs transition no-underline border border-amber-300/30"
               >
-                <i className="fas fa-cloud-arrow-up text-amber-400"></i>
-                <span>Upload PDF Plans (Admin) →</span>
+                <i className="fas fa-images text-amber-400"></i>
+                <span>Browse Free House Plans Gallery (100+ Concepts)</span>
+                <i className="fas fa-arrow-right text-[10px]"></i>
               </Link>
-            )}
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="max-w-3xl">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#0f2042]">
-                Architectural pdf-plans
-              </h1>
-            </div>
-
-            {/* Value Highlights */}
-            <div className="bg-white/90 border border-[#E8DFC8] p-5 rounded-2xl shadow-sm backdrop-blur-md space-y-3 shrink-0 lg:max-w-xs w-full">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-900 block">
-                Drawing Pack Highlights:
-              </span>
-              <ul className="space-y-2 text-xs text-slate-700">
-                <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
-                  <span>300 DPI High-Res Vector PDF</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
-                  <span>Solar &amp; Cross-Ventilation Compliant</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
-                  <span>Room &amp; Electrical Points Schedule</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <i className="fas fa-check-circle text-emerald-600 text-xs shrink-0"></i>
-                  <span>Instant Download for ₹499 (or Free with Pro)</span>
-                </li>
-              </ul>
+              {isAdmin && (
+                <Link
+                  href="/admin/plans"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-100/90 hover:bg-amber-200 text-[#0f2042] text-xs font-bold shadow-xs transition no-underline border border-amber-300"
+                >
+                  <i className="fas fa-cloud-arrow-up text-amber-700"></i>
+                  <span>Upload PDF Plans (Admin)</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {/* Admin Bar & Storage Info */}
-        {isAdmin && (
-          <div className="flex justify-end">
-            <Link
-              href="/admin/plans"
-              className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3.5 py-2 rounded-xl border border-amber-300 flex items-center gap-2 shadow-xs transition"
-            >
-              <i className="fas fa-plus text-amber-700 text-xs"></i>
-              <span>Admin: Upload New PDF Plan</span>
-            </Link>
-          </div>
-        )}
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Universal Architectural Plans Filter (Zero-Redundancy Component) */}
         <ArchitecturalPlansFilter
           filters={filters}
@@ -368,7 +328,7 @@ export default function HousePlanDrawingStorePage() {
               return (
                 <div
                   key={plan.id}
-                  className="bg-white rounded-2xl border border-[#E8DFC8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
+                  className="bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/80 dark:border-zinc-800 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
                   {/* Interactive 16:9 Architectural Blueprint Thumbnail with Pan-Zoom on Hover */}
                   <PlanCardThumbnail
@@ -496,9 +456,9 @@ export default function HousePlanDrawingStorePage() {
       {/* Plan Details & Watermark Modal */}
       {activePlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
-          <div className="relative w-full max-w-4xl bg-[#FFFDF9] rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 max-h-[94vh] overflow-y-auto border border-[#E8DFC8] animate-fadeIn">
+          <div className="relative w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 max-h-[94vh] overflow-y-auto border border-slate-200 dark:border-zinc-800 animate-fadeIn">
             {/* Modal Header */}
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#E8DFC8]/60">
+            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-200 dark:border-zinc-800">
               <div className="min-w-0 pr-2">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
