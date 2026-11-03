@@ -174,9 +174,9 @@ export const AdminPlansManager: React.FC = () => {
       const pdf = await loadingTask.promise;
       const page = await pdf.getPage(1);
 
-      // Render 16:9 (854x480 standard) lightweight blueprint thumbnail for minimal bandwidth and mobile speed
-      const targetW = 854;
-      const targetH = 480;
+      // Render 4:3 (900x675 standard) blueprint thumbnail for clear architectural readability
+      const targetW = 900;
+      const targetH = 675;
       const unscaledViewport = page.getViewport({ scale: 1 });
       const scale = Math.min(targetW / unscaledViewport.width, targetH / unscaledViewport.height);
       const viewport = page.getViewport({ scale });
@@ -191,7 +191,7 @@ export const AdminPlansManager: React.FC = () => {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, targetW, targetH);
 
-      // Center the blueprint page within the 16:9 canvas
+      // Center the blueprint page within the 4:3 canvas
       const offsetX = Math.max(0, (targetW - viewport.width) / 2);
       const offsetY = Math.max(0, (targetH - viewport.height) / 2);
 

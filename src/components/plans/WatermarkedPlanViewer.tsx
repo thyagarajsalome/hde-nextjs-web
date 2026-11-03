@@ -108,9 +108,9 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
         </div>
       </div>
 
-      {/* Main Blueprint Viewport - Crisp White 16:9 Surface */}
+      {/* Main Blueprint Viewport - Crisp White Surface */}
       <div
-        className="relative w-full aspect-video max-h-[58vh] overflow-auto flex items-center justify-center bg-white dark:bg-zinc-950 p-2 sm:p-4"
+        className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[64vh] overflow-auto flex items-center justify-center bg-white dark:bg-zinc-950 p-2 sm:p-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

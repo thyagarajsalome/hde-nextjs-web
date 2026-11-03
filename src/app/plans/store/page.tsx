@@ -28,7 +28,7 @@ const FACING_OPTIONS = [
 ];
 
 /**
- * Interactive 16:9 Architectural Blueprint Thumbnail with Cursor-Tracked Pan & Zoom
+ * Interactive 4:3 Architectural Blueprint Thumbnail with Generous Height & Cursor-Tracked Pan & Zoom
  */
 const PlanCardThumbnail: React.FC<{
   plan: HousePlanRecord;
@@ -60,15 +60,15 @@ const PlanCardThumbnail: React.FC<{
 
   return (
     <div
-      className="relative aspect-video bg-white dark:bg-zinc-900 overflow-hidden cursor-crosshair border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-center select-none"
+      className="relative aspect-[4/3] min-h-[240px] sm:min-h-[265px] bg-white dark:bg-zinc-900 overflow-hidden cursor-crosshair border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-center select-none"
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {isPdf ? (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-4 text-center">
-          <i className="fas fa-file-pdf text-rose-500 text-3xl mb-2"></i>
+        <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-6 text-center">
+          <i className="fas fa-file-pdf text-rose-500 text-4xl mb-3"></i>
           <span className="text-xs font-bold text-white line-clamp-1 px-2">{plan.title}</span>
           <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-1 bg-white/10 px-2 py-0.5 rounded">
             Vector PDF Blueprint
@@ -78,13 +78,11 @@ const PlanCardThumbnail: React.FC<{
         <img
           src={imageUrl}
           alt={plan.title}
-          className="w-full h-full object-contain p-1 pointer-events-none will-change-transform"
+          className="w-full h-full object-contain p-2 pointer-events-none will-change-transform"
           loading="lazy"
-          width={854}
-          height={480}
           style={{
             transformOrigin: zoomOrigin ? `${zoomOrigin.x}% ${zoomOrigin.y}%` : 'center center',
-            transform: zoomOrigin ? 'scale(2.3)' : 'scale(1)',
+            transform: zoomOrigin ? 'scale(2.2)' : 'scale(1)',
             transition: zoomOrigin ? 'transform 0.08s ease-out' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
           }}
         />
