@@ -517,7 +517,15 @@ export default async function HousePlanSeoPage({ params }: Props) {
               })}
             </div>
 
-            <div className="text-center pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+              <Link
+                href="/plans/store"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0f2042] text-amber-300 font-extrabold text-xs shadow-md hover:bg-[#1a3260] transition no-underline border border-amber-300/30"
+              >
+                <i className="fas fa-file-pdf text-rose-400"></i>
+                <span>Download Vector PDF Working Drawings</span>
+                <i className="fas fa-arrow-right text-[10px]"></i>
+              </Link>
               <Link
                 href="/plans"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-extrabold text-xs shadow-md hover:bg-primary-hover transition no-underline"

@@ -76,4 +76,17 @@ describe('Plan Cards Aspect Ratio & Layout Lock', () => {
     // Must contain max-h constraint for high-res blueprint inspection
     expect(fileContent).toContain('max-h-[64vh]');
   });
+
+  it('verifies SEO sitemap and canonical metadata for /plans/store', () => {
+    const sitemapContent = fs.readFileSync(path.resolve(__dirname, '../src/app/sitemap.ts'), 'utf-8');
+    const layoutContent = fs.readFileSync(path.resolve(__dirname, '../src/app/plans/store/layout.tsx'), 'utf-8');
+
+    // Sitemap must include /plans/store
+    expect(sitemapContent).toContain('${BASE_URL}/plans/store');
+
+    // Layout must export canonical metadata and CollectionPage schema
+    expect(layoutContent).toContain('https://www.homedesignenglish.com/plans/store');
+    expect(layoutContent).toContain('CollectionPage');
+    expect(layoutContent).toContain('Store');
+  });
 });
