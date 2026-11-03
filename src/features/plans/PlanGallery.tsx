@@ -48,7 +48,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 3,
     parking: "1 Car",
     description: "Modern 30x40 duplex plan with front portico, double-height ceiling living hall, open kitchen with breakfast counter, and master suite.",
-    file_url: "vertical-images/1789138216838-modern-30x40-duplex-house-plan.webp",
+    file_url: "full-plans/1789138216838-modern-30x40-duplex-house-plan.webp",
     kitchen_info: "1 Modular",
     living_hall_info: "1 Double Height",
   },
@@ -63,7 +63,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 2,
     parking: "Two-Wheeler",
     description: "Highly efficient 20x30 duplex plan for urban plots. Ground floor living room and kitchen, first floor with 2 cozy bedrooms and central light shaft.",
-    file_url: "vertical-images/1789533795653-compact-20x30-2bhk-house-plan.webp",
+    file_url: "full-plans/1789533795653-compact-20x30-2bhk-house-plan.webp",
     kitchen_info: "1 Compact",
     living_hall_info: "1",
   },
@@ -78,7 +78,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 2,
     parking: "1 Car",
     description: "Linear 20x40 architectural layout with central light cut-out, separate kitchen and utility, ground floor bedroom, and upper master bedroom.",
-    file_url: "vertical-images/1788934738135-modern-20x40-house-plan.webp",
+    file_url: "full-plans/1788934738135-modern-20x40-house-plan.webp",
     kitchen_info: "1",
     living_hall_info: "1",
   },
@@ -93,7 +93,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 2,
     parking: "1 Car + Bike",
     description: "Optimal single-floor 30x40 layout with front covered car porch, open concept living and dining, dedicated home office space, and rear utility yard.",
-    file_url: "vertical-images/1789819618245-house-plan-30x40-ground-floor-.webp",
+    file_url: "full-plans/1789819618245-house-plan-30x40-ground-floor-.webp",
     kitchen_info: "1 Semi-modular",
     living_hall_info: "1",
   },
@@ -108,7 +108,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 3,
     parking: "1 SUV",
     description: "Spacious 30x50 duplex with double-height ceiling over living hall, large modular kitchen with pantry, master suite with walk-in closet, and terrace garden.",
-    file_url: "vertical-images/1790348686262-spacious-30x50-3bhk-house-plan.webp",
+    file_url: "full-plans/1790348686262-spacious-30x50-3bhk-house-plan.webp",
     kitchen_info: "1 + Pantry",
     living_hall_info: "1 Double Height",
   },
@@ -123,7 +123,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 5,
     parking: "2 Cars",
     description: "Grand 40x80 luxury villa with twin car garage, water courtyard, home theater room, formal dining hall, and executive study suite.",
-    file_url: "vertical-images/1788838391390-grand-40x80-luxury-villa-plan.webp",
+    file_url: "full-plans/1788838391390-grand-40x80-luxury-villa-plan.webp",
     kitchen_info: "1 Island Kitchen",
     living_hall_info: "1 Grand Foyer",
   },
@@ -138,7 +138,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 5,
     parking: "2 Cars",
     description: "Palatial 40x80 mansion featuring a traditional central courtyard (Brahmasthana open shaft), 5 master bedrooms, elevator shaft, and wrap-around terrace.",
-    file_url: "vertical-images/1789138512542-grand-40x80-luxury-mansion-pla.webp",
+    file_url: "full-plans/1789138512542-grand-40x80-luxury-mansion-pla.webp",
     kitchen_info: "1 Grand Kitchen",
     living_hall_info: "1 Courtyard Hall",
   },
@@ -153,7 +153,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 2,
     parking: "1 Car",
     description: "Smart space-saving 25x40 floor plan with excellent cross-ventilation, open kitchen, two well-proportioned bedrooms, and upper family lounge.",
-    file_url: "vertical-images/1790234841843-house-plan---1000-sqft.webp",
+    file_url: "full-plans/1790234841843-house-plan---1000-sqft.webp",
     kitchen_info: "1",
     living_hall_info: "1",
   },
@@ -168,7 +168,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 3,
     parking: "1 Car",
     description: "Contemporary 30x40 duplex with north-facing main entry, open concept dining, side setback for utility wash, and shaded terrace.",
-    file_url: "vertical-images/1789642643971-modern-30x40-duplex-house-plan.webp",
+    file_url: "full-plans/1789642643971-modern-30x40-duplex-house-plan.webp",
     kitchen_info: "1 Modular",
     living_hall_info: "1",
   },
@@ -183,7 +183,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 3,
     parking: "1 Car",
     description: "South-facing 30x40 architectural layout with deep front porch overhang to block intense noon sun while maximizing cross-ventilation.",
-    file_url: "vertical-images/1790495946459-modern-30x40-duplex-house-plan.webp",
+    file_url: "full-plans/1790495946459-modern-30x40-duplex-house-plan.webp",
     kitchen_info: "1",
     living_hall_info: "1",
   },
@@ -198,7 +198,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 3,
     parking: "1 Car",
     description: "West-facing 30x40 layout featuring louvered front facade for evening heat mitigation, spacious family room, and modern open kitchen.",
-    file_url: "vertical-images/1790912303860-modern-30x40-duplex-house-plan.webp",
+    file_url: "full-plans/1790912303860-modern-30x40-duplex-house-plan.webp",
     kitchen_info: "1",
     living_hall_info: "1",
   },
@@ -213,7 +213,7 @@ const VERIFIED_FALLBACK_PLANS: HousePlan[] = [
     bathrooms: 2,
     parking: "1 Car",
     description: "20x40 compact plan with central ventilation cut-out, private bedroom suites, and covered balcony.",
-    file_url: "vertical-images/1791177268480-modern-20x40-house-plan.webp",
+    file_url: "full-plans/1791177268480-modern-20x40-house-plan.webp",
     kitchen_info: "1",
     living_hall_info: "1",
   },
@@ -903,7 +903,9 @@ export const PlanGallery: React.FC = () => {
   const getImageUrl = (path: string) => {
     if (!path) return "";
     if (path.startsWith("http://") || path.startsWith("https://")) return path;
-    const cleanPath = path.replace(/^\/+/, "");
+    // Normalize any legacy vertical-images references to full-plans folder in Cloudflare R2
+    const normalized = path.replace(/^(\/?house-plans\/)?vertical-images\//, "full-plans/");
+    const cleanPath = normalized.replace(/^\/+/, "");
     const r2Url = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev";
     if (cleanPath.startsWith("house-plans/")) {
       return `${r2Url}/${cleanPath}`;
