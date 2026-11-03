@@ -7,6 +7,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error("Missing Supabase URL or Anon Key. Database features will not work.");
 }
 
+// Fallback for Node.js test runners (Node < 22 or Vitest environments where global WebSocket isn't defined)
+if (typeof globalThis.WebSocket === 'undefined') {
+  class WebSocketStub {}
+  (globalThis as any).WebSocket = WebSocketStub;
+}
+
 // Fallback to placeholder strings so the app doesn't crash on load, 
 // though actual login/database features will fail gracefully.
 export const supabase = createClient(
