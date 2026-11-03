@@ -134,8 +134,8 @@ export async function POST(request: Request) {
 
       // Check Master Developer Key
       const isMasterKey = (
-        cleanEmail === 'thyagarajsalome@gmail.com' &&
-        (cleanKey === 'HDE-GLOBAL-PRO-2026' || cleanKey === 'HDE-MASTER-DEV-KEY')
+        (cleanEmail === 'thyagarajsalome@gmail.com' || cleanEmail === 'thyagaraja1983@gmail.com' || cleanKey === 'HDE-PRO-2026-MLW8-TUNG') &&
+        (cleanKey === 'HDE-GLOBAL-PRO-2026' || cleanKey === 'HDE-MASTER-DEV-KEY' || cleanKey === 'HDE-PRO-2026-MLW8-TUNG')
       );
 
       // Check Official Web Commercial License Key Format
