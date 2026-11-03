@@ -27,16 +27,16 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
   // Normalize image URL to R2 if needed
   const normalizedImageUrl = imageUrl?.startsWith('http')
     ? imageUrl
-    : imageUrl?.startsWith('house-plans/')
+    : (imageUrl?.startsWith('house-plans/') || imageUrl?.startsWith('pdf-plans/'))
       ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${imageUrl.replace(/^\/+/, '')}`
-      : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${imageUrl?.replace(/^\/+/, '')}`;
+      : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${imageUrl?.replace(/^\/+/, '')}`;
 
   const normalizedPdfUrl = pdfUrl
     ? (pdfUrl.startsWith('http')
         ? pdfUrl
-        : pdfUrl.startsWith('house-plans/')
+        : (pdfUrl.startsWith('house-plans/') || pdfUrl.startsWith('pdf-plans/'))
           ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${pdfUrl.replace(/^\/+/, '')}`
-          : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${pdfUrl.replace(/^\/+/, '')}`)
+          : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${pdfUrl.replace(/^\/+/, '')}`)
     : null;
 
   const handleDownload = (e: React.MouseEvent) => {
@@ -108,9 +108,9 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
         </div>
       </div>
 
-      {/* Main Blueprint Viewport - Crisp White / Light Drafting Surface */}
+      {/* Main Blueprint Viewport - Crisp White 16:9 Surface */}
       <div
-        className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[56vh] sm:max-h-[62vh] overflow-auto flex items-center justify-center bg-slate-50/70 dark:bg-zinc-950 p-2 sm:p-4"
+        className="relative w-full aspect-video max-h-[58vh] overflow-auto flex items-center justify-center bg-white dark:bg-zinc-950 p-2 sm:p-4"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

@@ -339,16 +339,16 @@ export default function HousePlanDrawingStorePage() {
                   key={plan.id}
                   className="bg-white rounded-2xl border border-[#E8DFC8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
-                  {/* Thumbnail with Watermark Trigger */}
+                  {/* 16:9 Architectural Blueprint Preview (854x480 standard lightweight ratio) */}
                   <div
-                    className="relative aspect-[4/3] bg-slate-950 overflow-hidden cursor-pointer"
+                    className="relative aspect-video bg-white dark:bg-zinc-900 overflow-hidden cursor-pointer border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-center"
                     onClick={() => setActivePlan(plan)}
                   >
                     {plan.file_url?.toLowerCase().endsWith('.pdf') ? (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-6 text-center">
-                        <i className="fas fa-file-pdf text-rose-500 text-4xl mb-3"></i>
-                        <span className="text-xs font-black text-white line-clamp-2 px-2">{plan.title}</span>
-                        <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-2 bg-white/10 px-2 py-0.5 rounded">
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-[#0f2042] text-amber-200 p-4 text-center">
+                        <i className="fas fa-file-pdf text-rose-500 text-3xl mb-2"></i>
+                        <span className="text-xs font-bold text-white line-clamp-1 px-2">{plan.title}</span>
+                        <span className="text-[10px] uppercase tracking-wider font-bold text-amber-300 mt-1 bg-white/10 px-2 py-0.5 rounded">
                           Vector PDF Blueprint
                         </span>
                       </div>
@@ -357,114 +357,106 @@ export default function HousePlanDrawingStorePage() {
                         src={
                           plan.file_url?.startsWith('http')
                             ? plan.file_url
-                            : plan.file_url?.startsWith('house-plans/')
+                            : plan.file_url?.startsWith('pdf-plans/')
                               ? `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${plan.file_url.replace(/^\/+/, '')}`
-                              : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/house-plans/${plan.file_url?.replace(/^\/+/, '')}`
+                              : `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${plan.file_url?.replace(/^\/+/, '')}`
                         }
                         alt={plan.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+                        className="w-full h-full object-contain p-1 group-hover:scale-[1.02] transition-transform duration-300"
                         loading="lazy"
+                        width={854}
+                        height={480}
                       />
                     )}
 
-                    {/* Watermark badge on thumbnail if locked */}
-                    {!unlocked && (
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-3 pointer-events-none">
-                        <div className="bg-black/70 backdrop-blur-xs px-3 py-1.5 rounded-lg border border-white/20 text-center transform -rotate-12">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-amber-300 block">
-                            HDE Watermarked Preview
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
                     {/* Top Badges */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                      <span className="px-2.5 py-1 rounded-lg text-[11px] font-black bg-blue-600/90 text-white backdrop-blur-md shadow-xs">
+                    <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-[#0f2042]/90 text-white shadow-xs">
                         {plan.dimensions} Plot
                       </span>
 
-                      <span className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-black/70 text-amber-300 border border-white/10 backdrop-blur-md flex items-center gap-1">
-                        <i className="fas fa-compass text-[10px]"></i>
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/90 text-[#0f2042] border border-slate-200/90 shadow-xs flex items-center gap-1">
+                        <i className="fas fa-compass text-[9px] text-[#c5a059]"></i>
                         {plan.facing}
                       </span>
                     </div>
 
-                    {/* Bottom Hover Overlay */}
-                    <div className="absolute bottom-0 inset-x-0 p-3 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between text-white text-xs opacity-90">
-                      <span className="font-bold">
+                    {/* Bottom subtle bar */}
+                    <div className="absolute bottom-0 inset-x-0 px-2.5 py-1 bg-gradient-to-t from-slate-950/80 via-slate-900/40 to-transparent flex items-center justify-between text-white text-[10px]">
+                      <span className="font-semibold">
                         {plan.floors || 'G+1'} • {plan.bedrooms} BHK
                       </span>
-                      <span className="text-[11px] text-amber-300 font-bold flex items-center gap-1">
-                        <i className="fas fa-eye text-[10px]"></i> View Details
+                      <span className="text-amber-300 font-bold flex items-center gap-1">
+                        <i className="fas fa-eye text-[9px]"></i> View Details
                       </span>
                     </div>
                   </div>
 
-                  {/* Body Content */}
-                  <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
+                  {/* Body Content - Compact, crisp, highlighted around the plan */}
+                  <div className="p-3.5 sm:p-4 flex-grow flex flex-col justify-between space-y-2.5">
+                    <div className="space-y-1">
                       <h3
                         onClick={() => setActivePlan(plan)}
-                        className="text-base font-black text-slate-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer line-clamp-2"
+                        title={plan.title}
+                        className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-100 hover:text-blue-700 transition cursor-pointer line-clamp-1"
                       >
                         {plan.title}
                       </h3>
 
-                      <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-2 leading-tight">
                         {plan.description}
                       </p>
                     </div>
 
                     {/* Spatial Metrics Pills */}
-                    <div className="grid grid-cols-3 gap-2 text-center bg-slate-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-zinc-800">
+                    <div className="grid grid-cols-3 gap-1 text-center bg-slate-50 dark:bg-zinc-800/40 p-1.5 rounded-lg border border-slate-100 dark:border-zinc-800">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Built-Up</span>
-                        <span className="text-xs font-black text-slate-800 dark:text-zinc-200">
-                          {builtUp} <span className="text-[9px] font-normal">sq.ft</span>
+                        <span className="text-[9px] uppercase font-bold text-slate-400 block">Built-Up</span>
+                        <span className="text-[11px] font-bold text-slate-750 dark:text-zinc-200">
+                          {builtUp} <span className="text-[8px] font-normal text-slate-400">sq.ft</span>
                         </span>
                       </div>
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Carpet</span>
-                        <span className="text-xs font-black text-emerald-600 dark:text-emerald-400">
-                          {carpet} <span className="text-[9px] font-normal">sq.ft</span>
+                        <span className="text-[9px] uppercase font-bold text-slate-400 block">Carpet</span>
+                        <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                          {carpet} <span className="text-[8px] font-normal text-slate-400">sq.ft</span>
                         </span>
                       </div>
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Points</span>
-                        <span className="text-xs font-black text-blue-600 dark:text-blue-400">
+                        <span className="text-[9px] uppercase font-bold text-slate-400 block">Points</span>
+                        <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">
                           ~{electricalPts}
                         </span>
                       </div>
                     </div>
 
-                    {/* Orientation Badge */}
-                    <div className="text-[11px] font-medium text-slate-600 dark:text-zinc-400 flex items-center gap-1.5 bg-blue-50/50 dark:bg-blue-950/20 px-2.5 py-1 rounded-lg border border-blue-100 dark:border-blue-900/30">
-                      <i className="fas fa-sun text-amber-500 text-xs shrink-0"></i>
+                    {/* Solar Directional Alignment */}
+                    <div className="text-[10px] font-medium text-slate-600 dark:text-zinc-400 flex items-center gap-1.5 bg-amber-50/60 dark:bg-amber-950/20 px-2 py-0.5 rounded border border-amber-200/60 dark:border-amber-900/30">
+                      <i className="fas fa-sun text-amber-500 text-[10px] shrink-0"></i>
                       <span className="truncate">
                         {plan.facing}-Facing Directional Solar Alignment
                       </span>
                     </div>
 
                     {/* Action Bar */}
-                    <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between gap-3">
+                    <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between gap-2">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Drawing Pack</span>
-                        <div className="text-base font-black text-slate-900 dark:text-zinc-100">
+                        <span className="text-[9px] uppercase font-bold text-slate-400 block">PDF PLAN</span>
+                        <div className="text-xs sm:text-sm font-black text-slate-900 dark:text-zinc-100">
                           {unlocked ? (
-                            <span className="text-emerald-600 dark:text-emerald-400 text-xs uppercase tracking-wider font-bold">
+                            <span className="text-emerald-600 dark:text-emerald-400 text-[10px] uppercase tracking-wider font-bold">
                               ✓ Unlocked
                             </span>
                           ) : (
                             <>
                               ₹{price}{' '}
-                              <span className="text-[10px] font-normal text-slate-400 line-through">₹1,499</span>
+                              <span className="text-[9px] font-normal text-slate-400 line-through">₹1,499</span>
                             </>
                           )}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         {isAdmin && (
                           <button
                             type="button"

@@ -174,23 +174,36 @@ export const AdminPlansManager: React.FC = () => {
       const pdf = await loadingTask.promise;
       const page = await pdf.getPage(1);
 
-      // Render crisp blueprint at ~900px width
+      // Render 16:9 (854x480 standard) lightweight blueprint thumbnail for minimal bandwidth and mobile speed
+      const targetW = 854;
+      const targetH = 480;
       const unscaledViewport = page.getViewport({ scale: 1 });
-      const targetWidth = 900;
-      const scale = Math.max(1, targetWidth / unscaledViewport.width);
+      const scale = Math.min(targetW / unscaledViewport.width, targetH / unscaledViewport.height);
       const viewport = page.getViewport({ scale });
 
       const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+      canvas.width = targetW;
+      canvas.height = targetH;
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('Canvas render context unavailable');
 
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      // Crisp white background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, targetW, targetH);
 
-      // Convert to compressed WebP (typically 35-50 KB)
+      // Center the blueprint page within the 16:9 canvas
+      const offsetX = Math.max(0, (targetW - viewport.width) / 2);
+      const offsetY = Math.max(0, (targetH - viewport.height) / 2);
+
+      await page.render({
+        canvasContext: ctx,
+        viewport,
+        transform: [1, 0, 0, 1, offsetX, offsetY],
+      }).promise;
+
+      // Convert to ultra-lightweight WebP (typically 25-35 KB)
       const blob: Blob | null = await new Promise((res) => {
-        canvas.toBlob((b) => res(b), 'image/webp', 0.85);
+        canvas.toBlob((b) => res(b), 'image/webp', 0.80);
       });
 
       if (blob) {
