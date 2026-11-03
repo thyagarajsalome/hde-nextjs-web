@@ -10,22 +10,12 @@ import { useUser } from '@/context/UserContext';
 import { WatermarkedPlanViewer } from '@/components/plans/WatermarkedPlanViewer';
 import { PlanTradeCostCalculator } from '@/components/plans/PlanTradeCostCalculator';
 import { openRazorpayCheckout } from '@/lib/razorpayClient';
-
-const POPULAR_DIMENSIONS = [
-  { label: 'All Dimensions', value: 'all' },
-  { label: '20×30 (600 Sq.ft)', value: '20x30' },
-  { label: '30×40 (1,200 Sq.ft)', value: '30x40' },
-  { label: '30×50 (1,500 Sq.ft)', value: '30x50' },
-  { label: '40×60 (2,400 Sq.ft)', value: '40x60' },
-];
-
-const FACING_OPTIONS = [
-  { label: 'All Directions', value: 'all' },
-  { label: 'East-Facing (Morning Solar)', value: 'East' },
-  { label: 'North-Facing (Diffused Daylighting)', value: 'North' },
-  { label: 'West-Facing (Cross-Breeze)', value: 'West' },
-  { label: 'South-Facing (Thermal Mass)', value: 'South' },
-];
+import {
+  ArchitecturalPlansFilter,
+  ArchitecturalFilterState,
+  INITIAL_ARCHITECTURAL_FILTER_STATE,
+  matchesArchitecturalPlanFilter,
+} from '@/components/plans/ArchitecturalPlansFilter';
 
 /**
  * Interactive 4:3 Architectural Blueprint Thumbnail with Generous Height & Cursor-Tracked Pan & Zoom
@@ -137,10 +127,8 @@ export default function HousePlanDrawingStorePage() {
   const [plans, setPlans] = useState<HousePlanRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filter States
-  const [selectedDim, setSelectedDim] = useState('all');
-  const [selectedFacing, setSelectedFacing] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  // Filter States (Universal Architectural Filter State)
+  const [filters, setFilters] = useState<ArchitecturalFilterState>(INITIAL_ARCHITECTURAL_FILTER_STATE);
 
   // Selected Plan Modal State
   const [activePlan, setActivePlan] = useState<HousePlanRecord | null>(null);
@@ -247,26 +235,10 @@ export default function HousePlanDrawingStorePage() {
     });
   };
 
-  // Filtered Plans List
+  // Filtered Plans List using shared architectural matcher
   const filteredPlans = useMemo(() => {
-    return plans.filter((plan) => {
-      if (selectedDim !== 'all' && !plan.dimensions?.toLowerCase().includes(selectedDim.toLowerCase())) {
-        return false;
-      }
-      if (selectedFacing !== 'all' && !plan.facing?.toLowerCase().includes(selectedFacing.toLowerCase())) {
-        return false;
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesTitle = plan.title?.toLowerCase().includes(q);
-        const matchesDim = plan.dimensions?.toLowerCase().includes(q);
-        const matchesDesc = plan.description?.toLowerCase().includes(q);
-        const matchesFacing = plan.facing?.toLowerCase().includes(q);
-        if (!matchesTitle && !matchesDim && !matchesDesc && !matchesFacing) return false;
-      }
-      return true;
-    });
-  }, [plans, selectedDim, selectedFacing, searchQuery]);
+    return plans.filter((plan) => matchesArchitecturalPlanFilter(plan, filters));
+  }, [plans, filters]);
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
@@ -335,83 +307,38 @@ export default function HousePlanDrawingStorePage() {
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {/* Filter & Search Bar */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E8DFC8] shadow-xs space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            {/* Search Input */}
-            <div className="relative flex-grow max-w-md">
-              <i className="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by plot size, BHK, facing direction..."
-                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* Filter Dropdowns */}
-            <div className="flex flex-wrap items-center gap-3">
-              <select
-                value={selectedDim}
-                onChange={(e) => setSelectedDim(e.target.value)}
-                className="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200"
-              >
-                {POPULAR_DIMENSIONS.map((d) => (
-                  <option key={d.value} value={d.value}>
-                    {d.label}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedFacing}
-                onChange={(e) => setSelectedFacing(e.target.value)}
-                className="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200"
-              >
-                {FACING_OPTIONS.map((f) => (
-                  <option key={f.value} value={f.value}>
-                    {f.label}
-                  </option>
-                ))}
-              </select>
-
-              {(selectedDim !== 'all' || selectedFacing !== 'all' || searchQuery) && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedDim('all');
-                    setSelectedFacing('all');
-                    setSearchQuery('');
-                  }}
-                  className="text-xs font-bold text-rose-600 hover:underline px-2 py-1"
-                >
-                  Reset
-                </button>
-              )}
-            </div>
+        {/* Admin Bar & Storage Info */}
+        {isAdmin && (
+          <div className="flex justify-end">
+            <Link
+              href="/admin/plans"
+              className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3.5 py-2 rounded-xl border border-amber-300 flex items-center gap-2 shadow-xs transition"
+            >
+              <i className="fas fa-plus text-amber-700 text-xs"></i>
+              <span>Admin: Upload New PDF Plan</span>
+            </Link>
           </div>
+        )}
 
-          <div className="text-xs text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
-            <span>
-              Showing <strong className="text-blue-600 font-black">{filteredPlans.length}</strong> available pdf-plans
-            </span>
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] font-mono text-slate-400">
-                Cloudflare R2 Vector Storage
-              </span>
-              {isAdmin && (
-                <Link
-                  href="/admin/plans"
-                  className="text-xs font-black text-[#0f2042] hover:text-blue-900 bg-amber-100/90 hover:bg-amber-200/90 px-3 py-1 rounded-lg border border-amber-300 flex items-center gap-1.5 shadow-2xs transition"
-                >
-                  <i className="fas fa-plus text-amber-700 text-[10px]"></i>
-                  <span>Upload New PDF Plan</span>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* Universal Architectural Plans Filter (Zero-Redundancy Component) */}
+        <ArchitecturalPlansFilter
+          filters={filters}
+          onFilterChange={(updates) => setFilters((prev) => ({ ...prev, ...updates }))}
+          onResetFilters={() => setFilters(INITIAL_ARCHITECTURAL_FILTER_STATE)}
+          onSetSpecificFilter={(area, facing, dim = 'all') => {
+            setFilters({
+              areaFilter: area,
+              facingFilter: facing,
+              dimensionFilter: dim,
+              bhkFilter: 'all',
+              searchQuery: '',
+            });
+          }}
+          totalCount={filteredPlans.length}
+          itemLabel={filteredPlans.length === 1 ? 'available pdf-plan' : 'available pdf-plans'}
+          title="Filter Architectural PDF Plans"
+          subtitle="Filter vector blueprints by exact plot size, entrance facing, dimensions, and BHK."
+        />
 
         {/* Blueprint Cards Grid */}
         {loading ? (

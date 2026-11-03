@@ -89,4 +89,17 @@ describe('Plan Cards Aspect Ratio & Layout Lock', () => {
     expect(layoutContent).toContain('CollectionPage');
     expect(layoutContent).toContain('Store');
   });
+
+  it('verifies both /plans and /plans/store use the unified ArchitecturalPlansFilter with zero redundancy', () => {
+    const storeContent = fs.readFileSync(storeFilePath, 'utf-8');
+    const galleryContent = fs.readFileSync(galleryFilePath, 'utf-8');
+
+    // Both files must import ArchitecturalPlansFilter
+    expect(storeContent).toContain('ArchitecturalPlansFilter');
+    expect(galleryContent).toContain('ArchitecturalPlansFilter');
+
+    // Both must use matchesArchitecturalPlanFilter
+    expect(storeContent).toContain('matchesArchitecturalPlanFilter');
+    expect(galleryContent).toContain('matchesArchitecturalPlanFilter');
+  });
 });

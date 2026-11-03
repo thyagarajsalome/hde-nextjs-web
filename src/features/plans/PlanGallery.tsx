@@ -10,6 +10,12 @@ import { Button } from "../../components/ui/Button";
 import { PlanUploader } from "./PlanUploader";
 import { getHousePlanEstimate, getHousePlanTradeBreakdown } from "../../utils/calculatorEngines";
 import { numberToIndianWords } from "../../utils/currency";
+import {
+  ArchitecturalPlansFilter,
+  ArchitecturalFilterState,
+  INITIAL_ARCHITECTURAL_FILTER_STATE,
+  matchesArchitecturalPlanFilter,
+} from "../../components/plans/ArchitecturalPlansFilter";
 
 const PLANS_PER_PAGE = 60;
 
@@ -334,12 +340,8 @@ export const PlanGallery: React.FC = () => {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  // Filter States
-  const [searchQuery, setSearchQuery] = useState("");
-  const [facingFilter, setFacingFilter] = useState("all");
-  const [areaFilter, setAreaFilter] = useState("all");
-  const [dimensionFilter, setDimensionFilter] = useState("all");
-  const [bhkFilter, setBhkFilter] = useState("all");
+  // Filter States (Universal Architectural Filter State)
+  const [filters, setFilters] = useState<ArchitecturalFilterState>(INITIAL_ARCHITECTURAL_FILTER_STATE);
   
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -382,11 +384,16 @@ export const PlanGallery: React.FC = () => {
       const bhk = params.get("bhk");
       const q = params.get("q") || params.get("search");
 
-      if (facing) setFacingFilter(facing);
-      if (area) setAreaFilter(area);
-      if (dim) setDimensionFilter(dim);
-      if (bhk) setBhkFilter(bhk);
-      if (q) setSearchQuery(q);
+      if (facing || area || dim || bhk || q) {
+        setFilters((prev) => ({
+          ...prev,
+          ...(facing ? { facingFilter: facing } : {}),
+          ...(area ? { areaFilter: area } : {}),
+          ...(dim ? { dimensionFilter: dim } : {}),
+          ...(bhk ? { bhkFilter: bhk } : {}),
+          ...(q ? { searchQuery: q } : {}),
+        }));
+      }
     }
   }, []);
 
@@ -930,83 +937,19 @@ export const PlanGallery: React.FC = () => {
     return Array.from(plansMap.values());
   }, [dbPlans, deletedFbIds]);
 
-  // Client-Side Multi-Filter Logic
+  // Client-Side Multi-Filter Logic using shared architectural matcher
   const filteredPlans = useMemo(() => {
-    return combinedPlans.filter((plan) => {
-      // 1. Search Query Filter
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matchesQuery =
-          plan.title?.toLowerCase().includes(q) ||
-          plan.dimensions?.toLowerCase().includes(q) ||
-          plan.facing?.toLowerCase().includes(q) ||
-          plan.description?.toLowerCase().includes(q) ||
-          plan.area_sqft?.toString().includes(q) ||
-          `${plan.bedrooms} bhk`.toLowerCase().includes(q);
-        if (!matchesQuery) return false;
-      }
+    return combinedPlans.filter((plan) => matchesArchitecturalPlanFilter(plan, filters));
+  }, [combinedPlans, filters]);
 
-      // 2. Facing Filter
-      if (facingFilter !== "all") {
-        if (!plan.facing || !plan.facing.toLowerCase().includes(facingFilter.toLowerCase())) {
-          return false;
-        }
-      }
+  const hasActiveFilters =
+    filters.searchQuery.trim() !== "" ||
+    filters.facingFilter !== "all" ||
+    filters.areaFilter !== "all" ||
+    filters.dimensionFilter !== "all" ||
+    filters.bhkFilter !== "all";
 
-      // 3. Area Filter
-      if (areaFilter !== "all") {
-        const area = plan.area_sqft || 0;
-        if (areaFilter === "600" && (area < 500 || area > 700)) return false;
-        if (areaFilter === "800" && (area < 701 || area > 900)) return false;
-        if (areaFilter === "1000" && (area < 901 || area > 1100)) return false;
-        if (areaFilter === "1200" && (area < 1101 || area > 1350)) return false;
-        if (areaFilter === "1500" && (area < 1351 || area > 1650)) return false;
-        if (areaFilter === "1800" && (area < 1651 || area > 2000)) return false;
-        if (areaFilter === "2400" && (area < 2001 || area > 2800)) return false;
-        if ((areaFilter === "3200+" || areaFilter === "3200" || areaFilter === "4000+") && area <= 2800) return false;
-      }
-
-      // 4. Dimension Filter
-      if (dimensionFilter !== "all") {
-        const cleanTarget = dimensionFilter.toLowerCase().replace(/[^0-9x]/g, "");
-        const cleanDim = (plan.dimensions || "").toLowerCase().replace(/[^0-9x]/g, "");
-        if (!cleanDim.includes(cleanTarget)) return false;
-      }
-
-      // 5. BHK Filter
-      if (bhkFilter !== "all") {
-        if (bhkFilter === "4+") {
-          if ((plan.bedrooms || 0) < 4) return false;
-        } else {
-          if (plan.bedrooms !== parseInt(bhkFilter, 10)) return false;
-        }
-      }
-
-      return true;
-    });
-  }, [combinedPlans, searchQuery, facingFilter, areaFilter, dimensionFilter, bhkFilter]);
-
-  const hasActiveFilters = 
-    searchQuery.trim() !== "" || 
-    facingFilter !== "all" || 
-    areaFilter !== "all" || 
-    dimensionFilter !== "all" || 
-    bhkFilter !== "all";
-
-  const resetFilters = () => {
-    setSearchQuery("");
-    setFacingFilter("all");
-    setAreaFilter("all");
-    setDimensionFilter("all");
-    setBhkFilter("all");
-  };
-
-  const setSpecificFilter = (area: string, facing: string, dim: string = "all") => {
-    setAreaFilter(area);
-    setFacingFilter(facing);
-    setDimensionFilter(dim);
-    setSearchQuery("");
-  };
+  const resetFilters = () => setFilters(INITIAL_ARCHITECTURAL_FILTER_STATE);
 
   const currentTier = planTier || (hasPaid ? 'pro' : 'free');
   const isLockedForUser = currentTier === 'free' && role !== 'admin';
@@ -1021,238 +964,25 @@ export const PlanGallery: React.FC = () => {
 
       {isAdmin && <PlanUploader onUploadSuccess={() => fetchPlans(0)} />}
 
-      {/* Modern Interactive Search & Filter System */}
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 dark:border-zinc-800 mb-8 space-y-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-zinc-800 pb-4">
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-zinc-100 flex items-center gap-2">
-              <i className="fas fa-sliders text-primary text-base"></i>
-              <span>Filter Architectural Plans</span>
-            </h2>
-            <p className="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">
-              Filter blueprints by exact plot size, entrance facing, dimensions, and BHK.
-            </p>
-          </div>
-
-          {hasActiveFilters && (
-            <button
-              onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200/60 dark:border-red-800/40 px-3.5 py-1.5 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40 transition w-fit"
-            >
-              <i className="fas fa-rotate-left text-[11px]"></i> Reset Filters
-            </button>
-          )}
-        </div>
-
-        {/* Filter Controls Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-          {/* Keyword Search */}
-          <div className="lg:col-span-2 relative">
-            <label className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-1.5">
-              Search Blueprint
-            </label>
-            <div className="relative">
-              <i className="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="e.g. 1200 sqft, 30x40, East, Duplex..."
-                className="w-full pl-9 pr-8 py-2.5 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition text-slate-900 dark:text-zinc-100"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs"
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Plot Area Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-1.5">
-              Plot Area (Sq Ft)
-            </label>
-            <select
-              value={areaFilter}
-              onChange={(e) => setAreaFilter(e.target.value)}
-              className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200"
-            >
-              <option value="all">All Plot Sizes</option>
-              <option value="600">600 sq ft (20×30)</option>
-              <option value="800">800 sq ft (20×40)</option>
-              <option value="1000">1,000 sq ft (20×50 / 25×40)</option>
-              <option value="1200">1,200 sq ft (30×40)</option>
-              <option value="1500">1,500 sq ft (30×50)</option>
-              <option value="1800">1,800 sq ft (30×60)</option>
-              <option value="2400">2,400 sq ft (40×60)</option>
-              <option value="3200+">3,200+ sq ft (40×80)</option>
-            </select>
-          </div>
-
-          {/* Facing Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-1.5">
-              Plot Orientation
-            </label>
-            <select
-              value={facingFilter}
-              onChange={(e) => setFacingFilter(e.target.value)}
-              className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200"
-            >
-              <option value="all">All Facings</option>
-              <option value="East">🌅 East Facing</option>
-              <option value="North">🧭 North Facing</option>
-              <option value="West">🌇 West Facing</option>
-              <option value="South">☀️ South Facing</option>
-            </select>
-          </div>
-
-          {/* Bedrooms / BHK Dropdown */}
-          <div>
-            <label className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-1.5">
-              Bedrooms (BHK)
-            </label>
-            <select
-              value={bhkFilter}
-              onChange={(e) => setBhkFilter(e.target.value)}
-              className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200"
-            >
-              <option value="all">All BHK Configurations</option>
-              <option value="1">1 BHK Plan</option>
-              <option value="2">2 BHK Plan</option>
-              <option value="3">3 BHK Plan</option>
-              <option value="4+">4+ BHK Luxury</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Quick One-Click Filter Pills */}
-        <div className="pt-2">
-          <span className="text-[11px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block mb-2">
-            Popular One-Click Filters:
-          </span>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={resetFilters}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                !hasActiveFilters
-                  ? "bg-slate-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-transparent shadow-sm"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300"
-              }`}
-            >
-              ⭐ All Plans
-            </button>
-
-            {/* 1200 Sqft East Facing - Specific User Request */}
-            <button
-              onClick={() => setSpecificFilter("1200", "East", "30x40")}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "1200" && facingFilter === "East"
-                  ? "bg-primary text-white border-primary shadow-sm"
-                  : "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border-emerald-300/60 hover:bg-emerald-600 hover:text-white"
-              }`}
-            >
-              🎯 1200 sqft East Facing
-            </button>
-
-            <button
-              onClick={() => setSpecificFilter("600", "all", "20x30")}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "600"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              📐 20×30 (600 sqft)
-            </button>
-
-            <button
-              onClick={() => setSpecificFilter("1200", "all", "30x40")}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "1200" && facingFilter === "all"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              📐 30×40 (1200 sqft)
-            </button>
-
-            <button
-              onClick={() => setSpecificFilter("1500", "all", "30x50")}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "1500"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              📐 30×50 (1500 sqft)
-            </button>
-
-            <button
-              onClick={() => setSpecificFilter("2400", "all", "40x60")}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                areaFilter === "2400"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              📐 40×60 (2400 sqft)
-            </button>
-
-            <button
-              onClick={() => { setFacingFilter("East"); setAreaFilter("all"); setDimensionFilter("all"); }}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                facingFilter === "East" && areaFilter === "all"
-                  ? "bg-amber-600 text-white border-amber-600"
-                  : "bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 border-amber-200/60 hover:bg-amber-600 hover:text-white"
-              }`}
-            >
-              🌅 East Facing Only
-            </button>
-
-            <button
-              onClick={() => { setFacingFilter("North"); setAreaFilter("all"); setDimensionFilter("all"); }}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                facingFilter === "North" && areaFilter === "all"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-300 border-blue-200/60 hover:bg-blue-600 hover:text-white"
-              }`}
-            >
-              🧭 North Facing Only
-            </button>
-
-            <button
-              onClick={() => { setBhkFilter("3"); setAreaFilter("all"); setFacingFilter("all"); setDimensionFilter("all"); }}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition border ${
-                bhkFilter === "3" && areaFilter === "all" && facingFilter === "all"
-                  ? "bg-primary text-white border-primary"
-                  : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
-              }`}
-            >
-              🛏️ 3 BHK Duplex
-            </button>
-          </div>
-        </div>
-
-        {/* Results Counter Bar */}
-        <div className="flex items-center justify-between pt-2 text-xs text-gray-500 dark:text-zinc-400 font-medium">
-          <p>
-            Showing <strong className="text-slate-900 dark:text-zinc-100 font-bold">{filteredPlans.length}</strong> {filteredPlans.length === 1 ? "architectural plan" : "architectural plans"}
-            {hasActiveFilters && (
-              <span> matching active filters</span>
-            )}
-          </p>
-          {hasActiveFilters && (
-            <span className="text-[11px] text-primary font-bold">
-              Filters Active
-            </span>
-          )}
-        </div>
-      </div>
+      {/* Modern Interactive Search & Filter System (Shared Universal Component) */}
+      <ArchitecturalPlansFilter
+        filters={filters}
+        onFilterChange={(updates) => setFilters((prev) => ({ ...prev, ...updates }))}
+        onResetFilters={() => setFilters(INITIAL_ARCHITECTURAL_FILTER_STATE)}
+        onSetSpecificFilter={(area, facing, dim = "all") => {
+          setFilters({
+            areaFilter: area,
+            facingFilter: facing,
+            dimensionFilter: dim,
+            bhkFilter: "all",
+            searchQuery: "",
+          });
+        }}
+        totalCount={filteredPlans.length}
+        itemLabel={filteredPlans.length === 1 ? "architectural plan" : "architectural plans"}
+        title="Filter Architectural Plans"
+        subtitle="Filter blueprints by exact plot size, entrance facing, dimensions, and BHK."
+      />
 
       {/* Architectural Concept Disclaimer Banner */}
       <div className="bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 rounded-2xl p-4 sm:p-5 mb-8 flex items-start gap-3.5 shadow-xs">
