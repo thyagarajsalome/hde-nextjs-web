@@ -86,7 +86,7 @@ function printHelp() {
 
   ${c.gold}hde health${c.reset}              Verify Supabase & Cloudflare R2 live status and table counts
   ${c.gold}hde backup${c.reset}              Export complete snapshot of all database tables to /backups
-  ${c.gold}hde plans${c.reset}               List all house plans, store PDF blueprints, and prices
+  ${c.gold}hde plans${c.reset}               List all architectural pdf-plans, vector blueprints, and prices
   ${c.gold}hde hero${c.reset}                List active homepage hero banners
   ${c.gold}hde hero:add${c.reset} <url> [t]  Add a new homepage hero banner (image URL, title, subtitle)
   ${c.gold}hde hero:del${c.reset} <id>       Remove a hero banner by ID
@@ -209,12 +209,12 @@ async function cmdBackup() {
 // 3. Plans Command
 async function cmdPlans() {
   printBanner();
-  console.log(`📐 ${c.bold}Architectural Plans & Blueprints (Supabase):${c.reset}\n`);
+  console.log(`📐 ${c.bold}Architectural pdf-plans & Blueprints (Supabase):${c.reset}\n`);
 
   try {
     const { data, error } = await supabase
       .from('house_plans')
-      .select('id, title, dimensions, facing, builtup_area, is_store_ready, price_inr, pdf_url')
+      .select('id, title, dimensions, facing, built_up_area_sqft, price_inr, pdf_url')
       .order('created_at', { ascending: false });
 
     if (error) throw error;

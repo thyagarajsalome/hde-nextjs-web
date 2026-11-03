@@ -10,7 +10,7 @@ export const ADMIN_EMAIL = "thyagaraja1983@gmail.com";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard Hub", icon: "fa-gauge-high" },
-  { href: "/admin/plans", label: "PDF Blueprints & Store", icon: "fa-file-pdf", highlight: true },
+  { href: "/admin/plans", label: "pdf-plans Manager", icon: "fa-file-pdf", highlight: true },
   { href: "/admin/hero", label: "Homepage Hero Banners", icon: "fa-images" },
   { href: "/admin/gallery/kitchen", label: "Modular Kitchen Gallery", icon: "fa-kitchen-set" },
   { href: "/admin/gallery/bathroom", label: "Bathroom Designs", icon: "fa-bath" },
@@ -283,27 +283,27 @@ export default function GlobalAdminLayout({
             </span>
             <div className="space-y-1 pt-1 text-[11px] font-semibold">
               <a
-                href="https://dash.cloudflare.com/aecd4a2eaf3342cb721dfd1717a810a2/r2/default/buckets/hde-gallery/objects?prefix=house-plans%2Fpdf-plans%2F"
+                href="https://dash.cloudflare.com/aecd4a2eaf3342cb721dfd1717a810a2/r2/default/buckets/hde-gallery/objects?prefix=pdf-plans%2F"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 hover:text-[#0f2042] hover:bg-slate-100 transition no-underline"
               >
                 <span className="flex items-center gap-2">
                   <i className="fas fa-folder-open text-rose-500 text-xs"></i>
-                  <span>pdf-plans/</span>
+                  <span>pdf-plans/ (Root)</span>
                 </span>
                 <i className="fas fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
               </a>
 
               <a
-                href="https://dash.cloudflare.com/aecd4a2eaf3342cb721dfd1717a810a2/r2/default/buckets/hde-gallery/objects?prefix=house-plans%2Fvertical-images%2F"
+                href="https://dash.cloudflare.com/aecd4a2eaf3342cb721dfd1717a810a2/r2/default/buckets/hde-gallery/objects?prefix=house-plans%2Ffull-plans%2F"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 hover:text-[#0f2042] hover:bg-slate-100 transition no-underline"
               >
                 <span className="flex items-center gap-2">
                   <i className="fas fa-folder-open text-amber-500 text-xs"></i>
-                  <span>vertical-images/</span>
+                  <span>house-plans/full-plans/</span>
                 </span>
                 <i className="fas fa-arrow-up-right-from-square text-[10px] text-slate-400"></i>
               </a>

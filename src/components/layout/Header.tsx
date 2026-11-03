@@ -142,13 +142,13 @@ const Header = () => {
                     <span>House Plans</span>
                   </Link>
 
-                  {/* Dedicated Navbar Link for PDF Drawing Store (/plans/store) */}
+                  {/* Dedicated Navbar Link for pdf-plans (/plans/store) */}
                   <Link
                     href="/plans/store"
                     className={`flex items-center gap-1.5 ${pathname.startsWith('/plans/store') ? 'text-primary font-bold' : 'text-gray-600 dark:text-zinc-400'} hover:text-primary dark:hover:text-primary transition-colors no-underline whitespace-nowrap`}
                   >
                     <i className="fas fa-file-pdf text-xs text-rose-500"></i>
-                    <span>Drawing Store</span>
+                    <span>pdf-plans</span>
                   </Link>
                   
                   {/* Gallery Dropdown (Strictly Photos - Kitchen & Bathroom) */}
@@ -473,14 +473,14 @@ const Header = () => {
                   <span>House Plans (2D Layouts)</span>
                 </Link>
 
-                {/* Dedicated Mobile Link for PDF Drawing Store */}
+                {/* Dedicated Mobile Link for pdf-plans */}
                 <Link
                   href="/plans/store"
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-base font-bold ${pathname.startsWith('/plans/store') ? 'text-primary bg-primary/5' : 'text-gray-700 dark:text-zinc-300'} hover:text-primary hover:bg-gray-50 dark:hover:bg-zinc-900 no-underline`}
                   onClick={() => setMenuOpen(false)}
                 >
                   <i className="fas fa-file-pdf text-sm text-rose-500"></i>
-                  <span>PDF Drawing Store</span>
+                  <span>pdf-plans</span>
                 </Link>
 
                 {/* Mobile Gallery Accordion (Strictly Photos - Kitchen & Bathroom) */}

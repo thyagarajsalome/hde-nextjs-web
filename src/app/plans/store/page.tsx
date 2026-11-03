@@ -179,7 +179,7 @@ export default function HousePlanDrawingStorePage() {
                 House Plans
               </Link>
               <span>/</span>
-              <span className="text-amber-800 font-bold">Drawing Store</span>
+              <span className="text-amber-800 font-bold">pdf-plans</span>
             </div>
 
             {/* Direct Link to Upload PDF Plans - Strictly for thyagaraja1983@gmail.com */}
@@ -197,7 +197,7 @@ export default function HousePlanDrawingStorePage() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="max-w-3xl">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#0f2042]">
-                Architectural House Plans
+                Architectural pdf-plans
               </h1>
             </div>
 
@@ -290,7 +290,7 @@ export default function HousePlanDrawingStorePage() {
 
           <div className="text-xs text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-100">
             <span>
-              Showing <strong className="text-blue-600 font-black">{filteredPlans.length}</strong> available drawing packs
+              Showing <strong className="text-blue-600 font-black">{filteredPlans.length}</strong> available pdf-plans
             </span>
             <div className="flex items-center gap-3">
               <span className="text-[11px] font-mono text-slate-400">

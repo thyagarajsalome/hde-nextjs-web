@@ -14,16 +14,16 @@ export const metadata: Metadata = {
 export default function AdminPortalHubPage() {
   const sections = [
     {
-      title: 'Architectural Plans & Blueprints (Store Manager)',
+      title: 'Architectural pdf-plans Manager (Vector Blueprints)',
       description: 'Official upload center for vector working drawing PDFs to Cloudflare R2, pricing tiers (₹499/₹999), and blueprint catalog management.',
       href: '/admin/plans',
       icon: 'fa-file-pdf',
-      badge: '★ PDF Blueprints',
+      badge: '★ pdf-plans',
       accent: 'border-[#c5a059]/40 bg-gradient-to-br from-amber-50/40 via-white to-slate-50',
       iconColor: 'text-[#0f2042]',
       links: [
-        { label: '📄 Upload & Manage PDF Plans (CRUD)', href: '/admin/plans' },
-        { label: '🛒 View Public Drawing Store', href: '/plans/store' },
+        { label: '📄 Upload & Manage pdf-plans (CRUD)', href: '/admin/plans' },
+        { label: '🛒 View Public pdf-plans Store', href: '/plans/store' },
       ],
     },
     {

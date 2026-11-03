@@ -403,7 +403,7 @@ export const PlanGallery: React.FC = () => {
         } catch (e) {}
       }
 
-      // Fetch live rows strictly from Supabase house_plans table
+      // Fetch live rows strictly from Supabase house_plans table (excluding PDF store drawings)
       const { data, error } = await supabase
         .from('house_plans')
         .select('*')
@@ -411,7 +411,12 @@ export const PlanGallery: React.FC = () => {
         .range(from, to);
 
       if (error) throw error;
-      const remote = data || [];
+      // Strictly filter out any PDF plans - they belong exclusively to pdf-plans folder & store
+      const remote = (data || []).filter((item: any) => {
+        const hasPdf = Boolean(item.pdf_url && String(item.pdf_url).trim() !== '');
+        const isPdfStorage = Boolean(item.file_url && String(item.file_url).includes('pdf-plans'));
+        return !hasPdf && !isPdfStorage;
+      });
       if (remote.length < PLANS_PER_PAGE) setHasMore(false);
 
       setDbPlans(prev => {

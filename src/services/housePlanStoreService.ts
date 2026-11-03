@@ -270,8 +270,10 @@ export const HousePlanStoreService = {
 
     const combinedMap = new Map<string, HousePlanRecord>();
 
-    // Add database rows (single source of truth)
-    dbData.forEach((row: any) => {
+    // Add database rows (single source of truth for pdf-plans store)
+    dbData
+      .filter((row: any) => Boolean(row.pdf_url || row.file_url?.includes('pdf-plans')))
+      .forEach((row: any) => {
       const metrics = calculateSmartPlanMetrics(
         row.dimensions || '30x40',
         row.floors || 'G+1',
@@ -474,7 +476,9 @@ export const HousePlanStoreService = {
           for (const rawUrl of keysToPurge) {
             if (!rawUrl || (rawUrl.startsWith('http') && !rawUrl.includes('r2.dev'))) continue;
             const cleanPath = rawUrl.replace(/^https?:\/\/[^\/]+\//, '').replace(/^\/+/, '');
-            const r2Key = cleanPath.startsWith('house-plans/') ? cleanPath : `house-plans/${cleanPath}`;
+            const r2Key = (cleanPath.startsWith('house-plans/') || cleanPath.startsWith('pdf-plans/')) 
+              ? cleanPath 
+              : `pdf-plans/${cleanPath}`;
             await fetch('/api/gallery/delete', {
               method: 'POST',
               headers: {

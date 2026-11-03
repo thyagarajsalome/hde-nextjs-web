@@ -472,7 +472,7 @@ export const AdminPlansManager: React.FC = () => {
         <div>
           <h2 className="text-xl font-black text-slate-900 dark:text-zinc-100 flex items-center gap-2">
             <i className="fas fa-layer-group text-blue-600"></i>
-            Architectural Drawing Store Manager
+            Architectural pdf-plans Manager
           </h2>
           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
             Manage vector PDF working drawings, preview watermarks, spatial dimensions, and trade budgets.
@@ -486,7 +486,7 @@ export const AdminPlansManager: React.FC = () => {
             className="px-4 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 transition flex items-center gap-2"
           >
             <i className="fas fa-external-link-alt text-[10px]"></i>
-            View Live Store
+            View Live pdf-plans (/plans/store)
           </Link>
 
           <button

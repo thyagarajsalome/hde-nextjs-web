@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'fileName is required' }, { status: 400 });
     }
 
-    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans', 'pdf-plans', 'vertical-images'];
+    const ALLOWED_CATEGORIES = ['kitchen', 'bathroom', 'gallery', 'house-plans', 'full-plans', 'pdf-plans', 'vertical-images'];
     const ALLOWED_CONTENT_TYPES = ['image/webp', 'image/jpeg', 'image/png', 'image/avif', 'application/pdf'];
 
     if (!ALLOWED_CATEGORIES.includes(category)) {
@@ -77,11 +77,11 @@ export async function POST(request: Request) {
                        fileName.includes('pdf-plans');
 
     if (isPdfAsset) {
-      // Exclusively for PDF plans and their Page-1 extracted WebP thumbnails
-      key = `house-plans/pdf-plans/${Date.now()}-${cleanFileName}`;
-    } else if (category === 'vertical-images' || category === 'house-plans') {
-      // Exclusively for 2D vertical floor plan images
-      key = `house-plans/vertical-images/${Date.now()}-${cleanFileName}`;
+      // Exclusively for PDF plans and their Page-1 extracted WebP thumbnails (Root pdf-plans folder)
+      key = `pdf-plans/${Date.now()}-${cleanFileName}`;
+    } else if (category === 'vertical-images' || category === 'house-plans' || category === 'full-plans') {
+      // Exclusively for 2D floor plan images in house-plans folder
+      key = `house-plans/full-plans/${Date.now()}-${cleanFileName}`;
     } else {
       key = `gallery/${category}/${Date.now()}-${cleanFileName}`;
     }
