@@ -959,8 +959,8 @@ export const PlanGallery: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 animate-fade-in relative max-w-7xl">
       <div className="mb-6">
-        <a href="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors font-bold bg-white dark:bg-zinc-900 px-5 py-2.5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 hover:shadow-md w-fit text-sm">
-          <i className="fas fa-arrow-left"></i> Back to Calculator
+        <a href="/" className="inline-flex items-center gap-2 text-[#0f2042] hover:text-amber-800 transition-colors font-bold bg-[#FFFDF9] hover:bg-amber-50 px-5 py-2.5 rounded-xl shadow-xs border border-[#E8DFC8] hover:border-[#c5a059] hover:shadow-md w-fit text-sm">
+          <i className="fas fa-arrow-left text-amber-600"></i> Back to Calculator
         </a>
       </div>
 

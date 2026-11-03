@@ -340,17 +340,17 @@ const AppPromoPage = () => {
         <hr className="border-gray-100 dark:border-zinc-800/80 my-12" />
 
         {/* BOTTOM CALL TO ACTION CONTAINER */}
-        <section className="my-16 bg-gradient-to-r from-secondary to-[#1c3563] dark:from-zinc-900 dark:to-zinc-800/80 text-white rounded-3xl py-12 px-8 md:py-16 md:px-16 shadow-xl relative overflow-hidden">
+        <section className="my-16 bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-slate-900 rounded-3xl py-12 px-8 md:py-16 md:px-16 shadow-md border border-[#E8DFC8] relative overflow-hidden">
           {/* Decorative shapes */}
           <div className="absolute right-0 top-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute left-10 bottom-0 w-32 h-32 bg-secondary/35 rounded-full filter blur-2xl translate-y-1/2"></div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4 text-center lg:text-left">
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight !text-white" style={{ color: '#ffffff' }}>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-[#0f2042]">
                 Ready to Simplify Your House Construction?
               </h2>
-              <p className="text-gray-300 font-medium max-w-xl text-base sm:text-lg">
+              <p className="text-slate-600 font-medium max-w-xl text-base sm:text-lg">
                 Join thousands of Indian homeowners and builders who estimate smarter, save material costs, and connect with trusted professionals. Download HDE Construction App for free today!
               </p>
             </div>
@@ -360,7 +360,7 @@ const AppPromoPage = () => {
                 href={playStoreLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-3 bg-primary text-white hover:bg-primary-hover px-8 py-4 rounded-2xl font-black text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.03] active:scale-95 text-center no-underline"
+                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#c5a059] to-[#b38e47] hover:from-[#b38e47] hover:to-[#a07c39] text-white px-8 py-4 rounded-2xl font-black text-lg transition-all shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 text-center no-underline border border-[#c5a059]/30"
               >
                 <i className="fab fa-google-play text-2xl"></i>
                 <div className="text-left">
@@ -368,7 +368,7 @@ const AppPromoPage = () => {
                   <p className="text-base font-extrabold m-0 mt-0.5 leading-tight">Get App on Play Store</p>
                 </div>
               </a>
-              <span className="text-[10px] text-gray-400 font-bold uppercase">
+              <span className="text-[11px] text-slate-500 font-bold uppercase tracking-wider">
                 100% Free &bull; No credit card required
               </span>
             </div>

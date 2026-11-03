@@ -241,33 +241,33 @@ export default function HousePlanDrawingStorePage() {
   }, [plans, filters]);
 
   return (
-    <div className="min-h-screen bg-slate-50/60 dark:bg-zinc-950">
-      {/* SEO Discovery Header */}
-      <section className="bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 py-10">
+    <div className="min-h-screen bg-[#FAF7F2]">
+      {/* SEO Discovery Header - Warm Light Cream Architectural Theme */}
+      <section className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] border-b border-[#E8DFC8] py-10">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3.5 py-1.5 rounded-full inline-block">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-900 bg-amber-100/80 px-3.5 py-1.5 rounded-full border border-amber-200/60 inline-block">
               📐 300 DPI Vector PDF Working Drawings
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-zinc-100 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f2042] tracking-tight">
               Architectural PDF Plans &amp; Blueprints
             </h1>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
               Download high-resolution 300 DPI vector PDF architectural blueprints, municipal sanction drawings, and 2D floor plans with structural setbacks, electrical schedules, and bill of quantities for Indian plots.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/plans"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0f2042] text-amber-300 hover:bg-[#1a3260] text-xs font-bold shadow-xs transition no-underline border border-amber-300/30"
+                className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#FFFDF9] hover:bg-amber-50 text-[#0f2042] hover:text-amber-900 text-xs sm:text-sm font-black shadow-xs hover:shadow-md transition no-underline border border-[#E8DFC8] hover:border-[#c5a059]"
               >
-                <i className="fas fa-images text-amber-400"></i>
+                <i className="fas fa-images text-amber-600 text-sm"></i>
                 <span>Browse Free House Plans Gallery (100+ Concepts)</span>
-                <i className="fas fa-arrow-right text-[10px]"></i>
+                <i className="fas fa-arrow-right text-[11px] text-amber-600"></i>
               </Link>
               {isAdmin && (
                 <Link
                   href="/admin/plans"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-100/90 hover:bg-amber-200 text-[#0f2042] text-xs font-bold shadow-xs transition no-underline border border-amber-300"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-100/80 hover:bg-amber-200 text-amber-950 text-xs font-bold shadow-xs transition no-underline border border-amber-300"
                 >
                   <i className="fas fa-cloud-arrow-up text-amber-700"></i>
                   <span>Upload PDF Plans (Admin)</span>
@@ -328,7 +328,7 @@ export default function HousePlanDrawingStorePage() {
               return (
                 <div
                   key={plan.id}
-                  className="bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/80 dark:border-zinc-800 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
+                  className="bg-[#FFFDF9] rounded-3xl border border-[#E8DFC8] overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
                 >
                   {/* Interactive 16:9 Architectural Blueprint Thumbnail with Pan-Zoom on Hover */}
                   <PlanCardThumbnail

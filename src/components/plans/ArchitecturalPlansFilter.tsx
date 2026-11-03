@@ -136,7 +136,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 dark:border-zinc-800 mb-8 space-y-5">
+    <div className="bg-[#FFFDF9] rounded-3xl p-5 sm:p-7 shadow-xs border border-[#E8DFC8] mb-8 space-y-5">
       {/* Header with Title and Reset */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-zinc-800 pb-4">
         <div>
@@ -172,7 +172,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
               value={searchQuery}
               onChange={(e) => onFilterChange({ searchQuery: e.target.value })}
               placeholder="e.g. 1200 sqft, 30x40, East, Duplex..."
-              className="w-full pl-9 pr-8 py-2.5 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition text-slate-900 dark:text-zinc-100"
+              className="w-full pl-9 pr-8 py-2.5 text-xs sm:text-sm bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl outline-none focus:border-primary focus:bg-white transition text-slate-900"
             />
             {searchQuery && (
               <button
@@ -195,7 +195,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
           <select
             value={areaFilter}
             onChange={(e) => onFilterChange({ areaFilter: e.target.value })}
-            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200 cursor-pointer"
+            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl outline-none focus:border-primary focus:bg-white transition font-medium text-slate-800 cursor-pointer"
           >
             <option value="all">All Plot Sizes</option>
             <option value="600">600 sq ft (20×30)</option>
@@ -217,7 +217,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
           <select
             value={facingFilter}
             onChange={(e) => onFilterChange({ facingFilter: e.target.value })}
-            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200 cursor-pointer"
+            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl outline-none focus:border-primary focus:bg-white transition font-medium text-slate-800 cursor-pointer"
           >
             <option value="all">All Facings</option>
             <option value="East">🌅 East Facing</option>
@@ -235,7 +235,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
           <select
             value={bhkFilter}
             onChange={(e) => onFilterChange({ bhkFilter: e.target.value })}
-            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-gray-50 dark:bg-zinc-800/60 border border-gray-200 dark:border-zinc-700 rounded-xl outline-none focus:border-primary focus:bg-white dark:focus:bg-zinc-800 transition font-medium text-slate-800 dark:text-zinc-200 cursor-pointer"
+            className="w-full py-2.5 px-3 text-xs sm:text-sm bg-[#FAF7F2] border border-[#E8DFC8] rounded-xl outline-none focus:border-primary focus:bg-white transition font-medium text-slate-800 cursor-pointer"
           >
             <option value="all">All BHK Configurations</option>
             <option value="1">1 BHK Plan</option>
@@ -257,8 +257,8 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             onClick={onResetFilters}
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               !hasActiveFilters
-                ? "bg-slate-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-transparent shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300"
+                ? "bg-amber-100 text-amber-950 border-amber-300 shadow-xs font-bold"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300"
             }`}
           >
             ⭐ All Plans
@@ -283,7 +283,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               areaFilter === "600"
                 ? "bg-primary text-white border-primary shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
             📐 20×30 (600 sqft)
@@ -295,7 +295,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               areaFilter === "1200" && facingFilter === "all"
                 ? "bg-primary text-white border-primary shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
             📐 30×40 (1200 sqft)
@@ -307,7 +307,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               areaFilter === "1500"
                 ? "bg-primary text-white border-primary shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
             📐 30×50 (1500 sqft)
@@ -319,7 +319,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               areaFilter === "2400"
                 ? "bg-primary text-white border-primary shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
             📐 40×60 (2400 sqft)
@@ -374,7 +374,7 @@ export const ArchitecturalPlansFilter: React.FC<ArchitecturalPlansFilterProps> =
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition border cursor-pointer ${
               bhkFilter === "3" && areaFilter === "all" && facingFilter === "all"
                 ? "bg-primary text-white border-primary shadow-xs"
-                : "bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 border-gray-200 dark:border-zinc-700 hover:bg-gray-200"
+                : "bg-[#FFFDF9] text-slate-700 border-[#E8DFC8] hover:border-amber-300 hover:bg-amber-50/50"
             }`}
           >
             🛏️ 3 BHK Duplex
