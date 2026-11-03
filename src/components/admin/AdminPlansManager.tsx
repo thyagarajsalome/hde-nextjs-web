@@ -405,6 +405,46 @@ export const AdminPlansManager: React.FC = () => {
         setUploadStatus('Updating plan in Supabase...');
         const res = await HousePlanStoreService.updatePlan(editingId, payload);
         if (!res.success) throw new Error(res.error);
+
+        // Prevent orphaned files: If a new image or PDF was uploaded, immediately purge the old replaced asset from Cloudflare R2
+        let token = '';
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          token = session?.access_token || '';
+        } catch {}
+
+        if (imageFile && fileUrl && fileUrl !== finalImageUrl) {
+          try {
+            const cleanKey = fileUrl.replace(/^https?:\/\/[^\/]+\//, '').replace(/^\/+/, '');
+            await fetch('/api/gallery/delete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+              },
+              body: JSON.stringify({ key: cleanKey })
+            });
+          } catch (delErr) {
+            console.warn('Old thumbnail cleanup notice:', delErr);
+          }
+        }
+
+        if (pdfFile && pdfUrl && pdfUrl !== finalPdfUrl) {
+          try {
+            const cleanKey = pdfUrl.replace(/^https?:\/\/[^\/]+\//, '').replace(/^\/+/, '');
+            await fetch('/api/gallery/delete', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+              },
+              body: JSON.stringify({ key: cleanKey })
+            });
+          } catch (delErr) {
+            console.warn('Old PDF cleanup notice:', delErr);
+          }
+        }
+
         setPlans((prev) =>
           prev.map((p) => (p.id === editingId ? ({ ...p, ...payload } as HousePlanRecord) : p))
         );

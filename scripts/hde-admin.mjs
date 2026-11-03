@@ -90,7 +90,8 @@ function printHelp() {
   ${c.gold}hde hero${c.reset}                List active homepage hero banners
   ${c.gold}hde hero:add${c.reset} <url> [t]  Add a new homepage hero banner (image URL, title, subtitle)
   ${c.gold}hde hero:del${c.reset} <id>       Remove a hero banner by ID
-  ${c.gold}hde storage${c.reset} [prefix]    Inspect files inside Cloudflare R2 (e.g. house-plans/pdf-plans)
+  ${c.gold}hde storage${c.reset} [prefix]    Inspect files inside Cloudflare R2 (e.g. pdf-plans)
+  ${c.gold}hde clean${c.reset}                Audit and purge orphaned storage files not linked in Supabase
   ${c.gold}hde help${c.reset}                Show this command manual
 `);
 }
@@ -357,6 +358,57 @@ async function cmdStorage(prefix = '') {
   }
 }
 
+// 8. Storage Clean Command (Audit and delete orphaned files)
+async function cmdCleanStorage() {
+  printBanner();
+  console.log(`🧹 ${c.bold}Storage Orphan Auditor & Cleaner (Bucket: ${R2_BUCKET}):${c.reset}\n`);
+
+  if (!r2Client) {
+    console.log(`  ${c.red}❌ Cloudflare R2 credentials not configured.${c.reset}\n`);
+    return;
+  }
+
+  try {
+    // 1. Fetch all active files from Supabase
+    const { data: plans } = await supabase.from('house_plans').select('file_url, pdf_url');
+    const activeUrls = new Set();
+    (plans || []).forEach(p => {
+      if (p.file_url) activeUrls.add(p.file_url);
+      if (p.pdf_url) activeUrls.add(p.pdf_url);
+    });
+
+    // 2. Fetch all objects in pdf-plans/
+    const { DeleteObjectCommand } = await import('@aws-sdk/client-s3');
+    const cmd = new ListObjectsV2Command({ Bucket: R2_BUCKET, Prefix: 'pdf-plans/' });
+    const res = await r2Client.send(cmd);
+    const objects = res.Contents || [];
+
+    let purged = 0;
+    for (const obj of objects) {
+      if (obj.Key === 'pdf-plans/' || obj.Key === 'pdf-plans/.folder-created') {
+        await r2Client.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: obj.Key }));
+        console.log(`  ${c.yellow}Deleted placeholder:${c.reset} ${obj.Key}`);
+        purged++;
+        continue;
+      }
+
+      const isReferenced = Array.from(activeUrls).some(url => url && url.includes(obj.Key));
+      if (!isReferenced) {
+        console.log(`  ${c.red}✖ Orphan found:${c.reset} ${obj.Key} (${(obj.Size / 1024).toFixed(1)} KB)`);
+        await r2Client.send(new DeleteObjectCommand({ Bucket: R2_BUCKET, Key: obj.Key }));
+        console.log(`    ${c.green}✔ Deleted${c.reset}`);
+        purged++;
+      } else {
+        console.log(`  ${c.green}✔ Active in database:${c.reset} ${obj.Key}`);
+      }
+    }
+
+    console.log(`\n${c.bold}Audit Summary:${c.reset} ${objects.length} scanned, ${purged} orphaned files purged.\n`);
+  } catch (err) {
+    console.error(`  ${c.red}Failed to clean storage:${c.reset}`, err.message);
+  }
+}
+
 // Router for CLI commands
 const args = process.argv.slice(2);
 const command = args[0]?.toLowerCase();
@@ -392,6 +444,11 @@ switch (command) {
   case 'storage':
   case 'r2':
     await cmdStorage(args[1] || '');
+    break;
+
+  case 'clean':
+  case 'storage:clean':
+    await cmdCleanStorage();
     break;
 
   case 'help':
