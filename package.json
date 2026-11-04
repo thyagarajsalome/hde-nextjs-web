@@ -12,8 +12,8 @@
     "check:all": "vitest run && next build",
     "db:backup": "node scripts/backup-db.mjs",
     "hde": "node scripts/hde-admin.mjs",
-    "build:worker": "open-next build",
-    "deploy:worker": "npm run build:worker && wrangler deploy"
+    "build:worker": "opennextjs-cloudflare build",
+    "deploy:worker": "opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1132.0",
