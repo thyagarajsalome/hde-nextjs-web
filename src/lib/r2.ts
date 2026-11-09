@@ -2,7 +2,7 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const accountId = process.env.R2_ACCOUNT_ID || '';
+const accountId = process.env.R2_ACCOUNT_ID || 'aecd4a2eaf3342cb721dfd1717a810a2';
 const accessKeyId = process.env.R2_ACCESS_KEY_ID || '';
 const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || '';
 export const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'hde-gallery';

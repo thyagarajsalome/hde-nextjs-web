@@ -9,5 +9,12 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "vars": {
+    "R2_BUCKET_NAME": "hde-gallery",
+    "R2_ACCOUNT_ID": "aecd4a2eaf3342cb721dfd1717a810a2",
+    "R2_PUBLIC_URL": "https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev",
+    "NEXT_PUBLIC_R2_PUBLIC_URL": "https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://ncontvjtfhsabphxfuhb.supabase.co"
   }
 }
