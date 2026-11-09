@@ -20,6 +20,8 @@ export interface HousePlanRecord {
   description: string;
   file_url: string;        // Preview image in Cloudflare R2
   pdf_url?: string;        // High-res vector drawing pack PDF in Cloudflare R2
+  preview_pages?: Array<{ title?: string; url: string } | string>; // Dynamic multiple preview sheets (Floor Plans, Elevations, Sections)
+  total_pages?: number;    // Number of sheets included in pack
   price_inr?: number;      // Default 499
   is_featured?: boolean;
   is_active?: boolean;
@@ -113,6 +115,12 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     description: "Architectural 30x40 duplex house plan. Ground floor features spacious living hall, modern kitchen, dining space, and 1 guest bedroom. First floor has 2 master bedrooms with en-suite baths and private balcony.",
     file_url: "full-plans/1775572207976-plan.webp",
     pdf_url: "full-plans/1775572207976-plan.webp",
+    preview_pages: [
+      { title: "Ground Floor Plan", url: "full-plans/1775572207976-plan.webp" },
+      { title: "First Floor Plan", url: "full-plans/1775572207976-plan.webp" },
+      { title: "Front Elevation", url: "full-plans/1775572207976-plan.webp" },
+    ],
+    total_pages: 3,
   },
   {
     id: "00000000-0000-4000-8000-000000000002",
@@ -136,6 +144,12 @@ const VERIFIED_STORE_FALLBACKS: HousePlanRecord[] = [
     description: "Highly efficient 20x30 duplex plan for urban plots. Ground floor living room and kitchen, first floor with 2 cozy bedrooms and central light shaft.",
     file_url: "full-plans/1775572207976-plan.webp",
     pdf_url: "full-plans/1775572207976-plan.webp",
+    preview_pages: [
+      { title: "Ground Floor Plan", url: "full-plans/1775572207976-plan.webp" },
+      { title: "First Floor Plan", url: "full-plans/1775572207976-plan.webp" },
+      { title: "Front Elevation", url: "full-plans/1775572207976-plan.webp" },
+    ],
+    total_pages: 3,
   },
   {
     id: "00000000-0000-4000-8000-000000000003",
@@ -282,8 +296,16 @@ export const HousePlanStoreService = {
         row.facing || 'East'
       );
 
+      let previewPages = row.preview_pages;
+      if (typeof previewPages === 'string') {
+        try {
+          previewPages = JSON.parse(previewPages);
+        } catch {}
+      }
+
       combinedMap.set(row.id, {
         ...row,
+        preview_pages: previewPages,
         built_up_area_sqft: row.built_up_area_sqft || metrics.builtUpAreaSqft,
         carpet_area_sqft: row.carpet_area_sqft || metrics.carpetAreaSqft,
         living_hall_sqft: row.living_hall_sqft || metrics.livingHallSqft,

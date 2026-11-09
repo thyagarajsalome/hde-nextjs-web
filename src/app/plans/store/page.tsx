@@ -482,10 +482,11 @@ export default function HousePlanDrawingStorePage() {
               </button>
             </div>
 
-            {/* In-Browser Watermarked Blueprint Viewer */}
+            {/* In-Browser Watermarked Blueprint Viewer with Multi-Sheet Flipping */}
             <WatermarkedPlanViewer
               imageUrl={activePlan.file_url}
               pdfUrl={activePlan.pdf_url}
+              previewPages={activePlan.preview_pages}
               title={activePlan.title}
               isUnlocked={isPlanUnlocked(activePlan.id)}
               priceInr={activePlan.price_inr || 499}
