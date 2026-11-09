@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { loadPdfDocument, renderPdfPageToDataUrl } from '@/lib/pdfClient';
 
 export interface PlanPreviewSheet {
   title?: string;
@@ -33,16 +34,99 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   // Helper to normalize URLs to Cloudflare R2
-  const normalizeUrl = (url?: string) => {
+  const normalizeUrl = useCallback((url?: string) => {
     if (!url) return "";
     if (url.startsWith("http") || url.startsWith("/")) return url;
     if (url.startsWith("house-plans/") || url.startsWith("pdf-plans/")) {
       return `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/${url.replace(/^\/+/, '')}`;
     }
     return `https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev/pdf-plans/${url.replace(/^\/+/, '')}`;
-  };
+  }, []);
 
-  // Compile full list of sheets (supports 1 to N arbitrary sheets)
+  const normalizedPdfUrl = useMemo(() => normalizeUrl(pdfUrl), [pdfUrl, normalizeUrl]);
+
+  // Dynamic discovery of pages directly from PDF if previewPages was not pre-populated
+  const [discoveredPages, setDiscoveredPages] = useState<Array<{ title: string; pageNum: number }>>([]);
+  const [renderedCache, setRenderedCache] = useState<Record<number, string>>({});
+  const [isPdfLoading, setIsPdfLoading] = useState<boolean>(false);
+  const pdfDocRef = useRef<any>(null);
+
+  // Auto-inspect PDF if previewPages is not provided or has <= 1 item
+  useEffect(() => {
+    if (previewPages && previewPages.length > 1) {
+      setDiscoveredPages([]);
+      return;
+    }
+
+    if (!normalizedPdfUrl || !normalizedPdfUrl.toLowerCase().includes('.pdf')) {
+      setDiscoveredPages([]);
+      return;
+    }
+
+    let isMounted = true;
+    setIsPdfLoading(true);
+
+    loadPdfDocument(normalizedPdfUrl)
+      .then(async (pdfDoc) => {
+        if (!isMounted) return;
+        pdfDocRef.current = pdfDoc;
+        const numPages = pdfDoc.numPages || 1;
+        if (numPages > 1) {
+          const pages = Array.from({ length: numPages }, (_, i) => ({
+            title: `Sheet ${i + 1}`,
+            pageNum: i + 1,
+          }));
+          setDiscoveredPages(pages);
+
+          // Pre-render Page 1 & Page 2 in background for instant responsiveness
+          try {
+            const page1DataUrl = await renderPdfPageToDataUrl(pdfDoc, 1, 1400);
+            if (isMounted) {
+              setRenderedCache((prev) => ({ ...prev, 1: page1DataUrl }));
+            }
+          } catch (e) {}
+
+          try {
+            const page2DataUrl = await renderPdfPageToDataUrl(pdfDoc, 2, 1400);
+            if (isMounted) {
+              setRenderedCache((prev) => ({ ...prev, 2: page2DataUrl }));
+            }
+          } catch (e) {}
+        }
+      })
+      .catch((err) => {
+        console.warn('PDF auto-discovery notice:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsPdfLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [normalizedPdfUrl, previewPages]);
+
+  // Render on-demand whenever currentSheetIndex changes for multi-page PDFs
+  useEffect(() => {
+    if (discoveredPages.length <= 1) return;
+    const pageNum = currentSheetIndex + 1;
+    if (renderedCache[pageNum] || !pdfDocRef.current) return;
+
+    let isMounted = true;
+    renderPdfPageToDataUrl(pdfDocRef.current, pageNum, 1400)
+      .then((dataUrl) => {
+        if (isMounted) {
+          setRenderedCache((prev) => ({ ...prev, [pageNum]: dataUrl }));
+        }
+      })
+      .catch((err) => console.warn(`Render error on sheet ${pageNum}:`, err));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentSheetIndex, discoveredPages, renderedCache]);
+
+  // Compile full list of sheets (supports previewPages array OR auto-discovered PDF pages)
   const sheets = useMemo(() => {
     if (previewPages && Array.isArray(previewPages) && previewPages.length > 0) {
       return previewPages.map((page, idx) => {
@@ -58,8 +142,16 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
         };
       });
     }
+
+    if (discoveredPages.length > 1) {
+      return discoveredPages.map((p, idx) => ({
+        title: p.title,
+        url: renderedCache[p.pageNum] || (idx === 0 ? normalizeUrl(imageUrl) : ''),
+      }));
+    }
+
     return [{ title: 'Architectural Blueprint', url: normalizeUrl(imageUrl) }];
-  }, [previewPages, imageUrl]);
+  }, [previewPages, discoveredPages, renderedCache, imageUrl, normalizeUrl]);
 
   const totalSheets = sheets.length;
   const activeSheet = sheets[Math.min(currentSheetIndex, totalSheets - 1)] || sheets[0];
@@ -86,8 +178,6 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
-
-  const normalizedPdfUrl = normalizeUrl(pdfUrl);
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -268,7 +358,7 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
               title={activeSheet.title}
               className="w-[85vw] max-w-[700px] h-[480px] rounded border border-slate-200 dark:border-zinc-800 bg-white shadow-xs"
             />
-          ) : (
+          ) : activeSheet.url ? (
             <img
               src={activeSheet.url}
               alt={`${title} - ${activeSheet.title}`}
@@ -277,6 +367,13 @@ export const WatermarkedPlanViewer: React.FC<WatermarkedPlanViewerProps> = ({
               loading="eager"
               draggable={false}
             />
+          ) : (
+            <div className="flex flex-col items-center justify-center p-12 text-slate-400 space-y-2 min-h-[320px]">
+              <i className="fas fa-circle-notch fa-spin text-2xl text-amber-500"></i>
+              <span className="text-xs font-bold text-slate-600 dark:text-zinc-300">
+                Rendering High-Resolution Sheet {currentSheetIndex + 1}...
+              </span>
+            </div>
           )}
 
           {/* Clean Neutral Watermark Over Active Sheet */}

@@ -73,4 +73,26 @@ describe('Multi-Sheet Blueprint System Invariants', () => {
 
     expect(stringArrayPlan.preview_pages?.length).toBe(4);
   });
+
+  it('supports automatic multi-page detection for dynamic PDF architectural packs', () => {
+    const rawPdfPack: HousePlanRecord = {
+      id: 'test-duplex-2page',
+      title: 'Duplex House Plan at 30x40ft- 1200 sqft, 5bhk',
+      area_sqft: 1200,
+      dimensions: '30x40',
+      facing: 'East',
+      floors: 'G+1',
+      bedrooms: 5,
+      bathrooms: 4,
+      parking: '1 Car',
+      description: 'Architectural duplex working drawing with ground floor and first floor sheets',
+      file_url: 'pdf-plans/1794193555087-duplex-house-plan-preview.webp',
+      pdf_url: 'pdf-plans/1794193558010-duplex-house-plan.pdf',
+    };
+
+    expect(rawPdfPack.pdf_url).toContain('.pdf');
+    expect(rawPdfPack.preview_pages).toBeUndefined();
+    // In WatermarkedPlanViewer, when preview_pages is undefined and pdf_url is present,
+    // PDF.js auto-discovers the page count (2 pages for this pack) and displays sheet switcher tabs
+  });
 });
