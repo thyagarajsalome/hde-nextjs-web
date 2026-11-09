@@ -27,7 +27,7 @@ export async function GET(request: Request) {
       });
       if (ghRes.ok) {
         const ghData = await ghRes.json();
-        const tag = ghData.tag_name || 'v2.2.61';
+        const tag = ghData.tag_name || 'v2.2.62';
         const assets: Array<{ name: string; size: number; browser_download_url: string }> = ghData.assets || [];
 
         const exeAsset = assets.find(a => a.name.toLowerCase().endsWith('.exe'));
