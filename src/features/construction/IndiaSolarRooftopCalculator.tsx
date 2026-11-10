@@ -183,26 +183,26 @@ export default function IndiaSolarRooftopCalculator() {
 
   return (
     <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-[#0f2042] via-[#1e3a6c] to-[#0f2042] text-white p-6 sm:p-8 rounded-2xl shadow-xl border border-emerald-500/30">
+      {/* Top Banner - Light Cream Aesthetic */}
+      <div className="bg-gradient-to-br from-amber-50/80 via-[#fdfbf7] to-emerald-50/40 dark:from-zinc-900 dark:via-zinc-900/90 dark:to-zinc-900 border border-emerald-500/30 dark:border-emerald-500/20 p-6 sm:p-8 rounded-2xl shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-md border border-emerald-400/30 inline-block">
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-400 bg-emerald-500/15 px-2.5 py-1 rounded-md border border-emerald-500/30 inline-block">
               ☀️ Official PM Surya Ghar: Muft Bijli Yojana (2024–2026)
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-zinc-100">
               Rooftop Solar Subsidy &amp; ROI Calculator
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
               Calculate central DBT government subsidies (up to ₹78,000), net-metered zero-electricity bill sizing, and 25-year lifetime wealth savings for Indian independent homes.
             </p>
           </div>
-          <div className="text-left md:text-right bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 shrink-0">
-            <span className="text-[10px] uppercase font-bold text-slate-300 block">Total Govt Subsidy (DBT)</span>
-            <span className="text-2xl sm:text-3xl font-black text-emerald-400">
+          <div className="text-left md:text-right bg-white dark:bg-zinc-800/90 backdrop-blur-md p-4 rounded-xl border border-emerald-500/30 shadow-xs shrink-0">
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-400 block">Total Govt Subsidy (DBT)</span>
+            <span className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">
               +{formatCurrency(analysis.totalSubsidy)}
             </span>
-            <span className="text-[11px] text-slate-300 block mt-0.5">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 block mt-0.5">
               Net Cost: {formatCurrency(analysis.netOwnerCost)}
             </span>
           </div>

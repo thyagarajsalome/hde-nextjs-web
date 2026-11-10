@@ -197,26 +197,26 @@ export default function IndiaBorewellCalculator() {
 
   return (
     <div className="space-y-8 animate-fadeIn max-w-6xl mx-auto">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-r from-[#0f2042] via-[#1a3668] to-[#0f2042] text-white p-6 sm:p-8 rounded-2xl shadow-xl border border-amber-500/30">
+      {/* Header Banner - Light Cream Aesthetic */}
+      <div className="bg-gradient-to-br from-amber-50/80 via-[#fdfbf7] to-amber-100/50 dark:from-zinc-900 dark:via-zinc-900/90 dark:to-zinc-900 border border-[#c5a059]/35 dark:border-[#c5a059]/25 p-6 sm:p-8 rounded-2xl shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#c5a059] bg-[#c5a059]/20 px-2.5 py-1 rounded-md border border-[#c5a059]/40 inline-block">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#0f2042] dark:text-[#c5a059] bg-[#c5a059]/20 dark:bg-[#c5a059]/20 px-2.5 py-1 rounded-md border border-[#c5a059]/40 inline-block">
               🏗️ Day-1 Site Preparation &amp; Groundwater Engine
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-zinc-100">
               Borewell Drilling &amp; Submersible Pump Cost Estimator
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
               Calculate accurate turnkey costs for 6.5&quot; DTH rig drilling, MS/PVC casing pipes, CRI/Texmo submersible pumps, HDPE delivery column, and digital control panels across Indian cities.
             </p>
           </div>
-          <div className="text-left md:text-right bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 shrink-0">
-            <span className="text-[10px] uppercase font-bold text-slate-300 block">Total Estimated Cost</span>
-            <span className="text-2xl sm:text-3xl font-black text-[#c5a059]">
+          <div className="text-left md:text-right bg-white dark:bg-zinc-800/90 backdrop-blur-md p-4 rounded-xl border border-[#c5a059]/30 shadow-xs shrink-0">
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-400 block">Total Estimated Cost</span>
+            <span className="text-2xl sm:text-3xl font-black text-[#0f2042] dark:text-[#c5a059]">
               {formatCurrency(calculation.totalCost)}
             </span>
-            <span className="text-[11px] text-slate-300 block mt-0.5">
+            <span className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 block mt-0.5">
               ₹{calculation.costPerFoot} per foot all-inclusive
             </span>
           </div>
