@@ -91,6 +91,8 @@ export async function generateStaticParams() {
     { slug: `painting-in-${slug}` },
     { slug: `home-loan-emi-in-${slug}` },
     { slug: `building-material-cost-in-${slug}` },
+    { slug: `borewell-drilling-cost-in-${slug}` },
+    { slug: `solar-rooftop-subsidy-in-${slug}` },
   ]);
 }
 
@@ -102,6 +104,8 @@ async function getCityData(slugStr: string): Promise<CityData | null> {
   else if (cityKey.startsWith('painting-in-')) cityKey = cityKey.replace('painting-in-', '');
   else if (cityKey.startsWith('home-loan-emi-in-')) cityKey = cityKey.replace('home-loan-emi-in-', '');
   else if (cityKey.startsWith('building-material-cost-in-')) cityKey = cityKey.replace('building-material-cost-in-', '');
+  else if (cityKey.startsWith('borewell-drilling-cost-in-')) cityKey = cityKey.replace('borewell-drilling-cost-in-', '');
+  else if (cityKey.startsWith('solar-rooftop-subsidy-in-')) cityKey = cityKey.replace('solar-rooftop-subsidy-in-', '');
   cityKey = cityKey.toLowerCase();
   
   // Fetch from Supabase
@@ -143,7 +147,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       !resolvedParams.slug.startsWith('flooring-in-') &&
       !resolvedParams.slug.startsWith('painting-in-') &&
       !resolvedParams.slug.startsWith('home-loan-emi-in-') &&
-      !resolvedParams.slug.startsWith('building-material-cost-in-')) {
+      !resolvedParams.slug.startsWith('building-material-cost-in-') &&
+      !resolvedParams.slug.startsWith('borewell-drilling-cost-in-') &&
+      !resolvedParams.slug.startsWith('solar-rooftop-subsidy-in-')) {
     return { title: "Not Found" };
   }
   
@@ -173,6 +179,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   } else if (resolvedParams.slug.startsWith('building-material-cost-in-')) {
     title = `Building Material Cost in ${cityData.cityName} | HDE`;
     description = `Get building material prices in ${cityData.cityName}. Check cement bag rates, TATA Tiscon steel prices per kg, red bricks, sand, and aggregate rates.`;
+  } else if (resolvedParams.slug.startsWith('borewell-drilling-cost-in-')) {
+    title = `Borewell Drilling & Pump Cost in ${cityData.cityName} (2026) | HDE`;
+    description = `Calculate borewell drilling cost in ${cityData.cityName}, ${cityData.stateName}. Estimate 6.5" DTH rig rates per ft, MS vs PVC casing pipe, CRI/Texmo submersible pumps, and starter panels.`;
+  } else if (resolvedParams.slug.startsWith('solar-rooftop-subsidy-in-')) {
+    title = `PM Surya Ghar Solar Rooftop Subsidy in ${cityData.cityName} | HDE`;
+    description = `Calculate solar rooftop cost and DBT subsidy in ${cityData.cityName}, ${cityData.stateName} under PM Surya Ghar Muft Bijli Yojana. Get up to ₹78,000 central subsidy, DISCOM net metering ROI & savings.`;
   }
 
   const domain = 'https://www.homedesignenglish.com';
@@ -205,7 +217,9 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       !resolvedParams.slug.startsWith('flooring-in-') &&
       !resolvedParams.slug.startsWith('painting-in-') &&
       !resolvedParams.slug.startsWith('home-loan-emi-in-') &&
-      !resolvedParams.slug.startsWith('building-material-cost-in-')) {
+      !resolvedParams.slug.startsWith('building-material-cost-in-') &&
+      !resolvedParams.slug.startsWith('borewell-drilling-cost-in-') &&
+      !resolvedParams.slug.startsWith('solar-rooftop-subsidy-in-')) {
     notFound();
   }
   
@@ -232,6 +246,12 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
   } else if (resolvedParams.slug.startsWith('building-material-cost-in-')) {
     toolType = 'building-material-cost';
     forceCalculator = 'materials';
+  } else if (resolvedParams.slug.startsWith('borewell-drilling-cost-in-')) {
+    toolType = 'borewell';
+    forceCalculator = 'india-borewell';
+  } else if (resolvedParams.slug.startsWith('solar-rooftop-subsidy-in-')) {
+    toolType = 'solar-subsidy';
+    forceCalculator = 'india-solar';
   }
 
   const forceRegion = cityData.country === 'USA' ? 'US' : 'IN';
@@ -314,6 +334,44 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
       {
         question: `Are red bricks or AAC blocks cheaper in ${cityData.cityName}?`,
         answer: `AAC (Autoclaved Aerated Concrete) blocks typically reduce wall construction and joint mortar costs by 15% to 25% in ${cityData.cityName} compared to traditional red wire-cut clay bricks, while offering superior thermal insulation.`
+      }
+    ];
+  } else if (toolType === 'borewell') {
+    dynamicFaqs = [
+      {
+        question: `What is the average borewell drilling cost per foot in ${cityData.cityName}?`,
+        answer: `In ${cityData.cityName}, 6.5-inch DTH (Down-the-Hole) rig drilling typically costs between ₹32 to ₹48 per foot for soft rock/soil, and ₹85 to ₹130 per foot for hard basalt or granite strata. Total cost for an average 600–900 ft borewell ranges from ₹1.4 Lakhs to ₹2.6 Lakhs including casing pipes and submersible pump.`
+      },
+      {
+        question: `What depth is usually required to strike reliable groundwater in ${cityData.cityName}?`,
+        answer: `Depending on your locality across ${cityData.cityName} (${cityData.neighborhoods.split(',').slice(0, 3).join(', ')}), the groundwater table typically yields between 450 ft and 950 ft. In areas with dense rock substrata (${cityData.soilType}), drilling often requires penetrating past 600 ft to hit primary fracture aquifers.`
+      },
+      {
+        question: `Which casing pipe is recommended for borewells in ${cityData.cityName}: MS or PVC?`,
+        answer: `For upper loose overburden, heavy-duty 7-inch Class-4 / Class-6 PVC casing (Supreme/Ashirvad) at ₹350–₹520/ft is recommended to prevent soil collapse without rusting. In unstable boulders or deep collapsed strata, 6-inch Mild Steel (MS ERW) casing at ₹650–₹850/ft provides maximum structural crushing resistance.`
+      },
+      {
+        question: `Which submersible pump rating (HP) is needed for ${cityData.cityName}?`,
+        answer: `For borewell depths under 500 ft, a 3.0 HP (20–25 stage) multi-stage water-filled submersible pump (CRI, Texmo, Kirloskar) suffices. For deeper bores between 600 to 1,000+ ft common in ${cityData.cityName}, a 5.0 HP to 7.5 HP pump with a digital starter panel featuring dry-run and phase-reversal protection is strongly advised.`
+      }
+    ];
+  } else if (toolType === 'solar-subsidy') {
+    dynamicFaqs = [
+      {
+        question: `How much subsidy can I get under PM Surya Ghar Yojana in ${cityData.cityName}?`,
+        answer: `Under the central PM Surya Ghar: Muft Bijli Yojana in ${cityData.cityName}, residential rooftop systems receive ₹30,000 for a 1 kW system, ₹60,000 for 2 kW, and a maximum central subsidy of ₹78,000 for 3 kW and higher systems. The subsidy is directly credited to your Aadhaar-linked bank account via DBT within 30 days of net-meter commissioning.`
+      },
+      {
+        question: `What is the total cost of installing a 3 kW solar rooftop system in ${cityData.cityName}?`,
+        answer: `A 3 kW on-grid solar system in ${cityData.cityName} costs between ₹1,80,000 and ₹2,10,000 before subsidy (including Tier-1 DCR Mono PERC/TOPCon modules, grid-tie inverter, elevated aluminum structure, and installation). After the ₹78,000 central DBT subsidy, your net out-of-pocket investment is only ₹1,02,000 to ₹1,32,000.`
+      },
+      {
+        question: `How long is the payback period for rooftop solar in ${cityData.cityName}, ${cityData.stateName}?`,
+        answer: `With average monthly generation of 360–420 units (kWh) from a 3 kW setup in ${cityData.cityName} and local residential electricity tariffs, you save approximately ₹2,500 to ₹3,500 monthly on power bills. The typical payback period is just 3.2 to 3.8 years, delivering over 21 years of 100% free electricity thereafter.`
+      },
+      {
+        question: `How does net metering work with the local electricity board in ${cityData.stateName}?`,
+        answer: `Your local DISCOM replaces your existing electricity meter with a bidirectional net meter. Surplus solar units generated during peak sunny daytime hours are exported back to the grid and deducted from your monthly consumption units at retail billing rates.`
       }
     ];
   } else {

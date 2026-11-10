@@ -15,7 +15,7 @@ function parseUsaRealEstateSlug(slug: string) {
 function parseIndiaCostSlug(slug: string) {
   if (!slug) return null;
   const match = slug.match(
-    /^(construction|interior-design|flooring|painting|home-loan-emi|building-material-cost)-in-(.+)$/
+    /^(construction|interior-design|flooring|painting|home-loan-emi|building-material-cost|borewell-drilling-cost|solar-rooftop-subsidy)-in-(.+)$/
   );
   if (!match) return null;
   return {
@@ -47,7 +47,7 @@ describe('SEO Routing & Slug Parsers', () => {
     });
   });
 
-  it('correctly parses all 6 India Cost & EMI pSEO route patterns', () => {
+  it('correctly parses all 8 India Cost, Borewell & Solar pSEO route patterns', () => {
     const indiaTools = [
       'construction',
       'interior-design',
@@ -55,6 +55,8 @@ describe('SEO Routing & Slug Parsers', () => {
       'painting',
       'home-loan-emi',
       'building-material-cost',
+      'borewell-drilling-cost',
+      'solar-rooftop-subsidy',
     ];
 
     indiaTools.forEach((tool) => {

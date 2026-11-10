@@ -158,6 +158,10 @@ export default function CityContent({ cityData, toolType = 'construction' }: Cit
         return `Home Loan EMI Calculator for ${cityName}, ${stateName}`;
       case 'building-material-cost':
         return `Building Material Cost in ${cityName}, ${stateName}`;
+      case 'borewell':
+        return `Borewell Drilling & Submersible Pump Cost in ${cityName}, ${stateName}`;
+      case 'solar-subsidy':
+        return `PM Surya Ghar Solar Rooftop Subsidy in ${cityName}, ${stateName}`;
       default:
         return `House Construction Cost in ${cityName}, ${stateName}`;
     }
@@ -175,6 +179,10 @@ export default function CityContent({ cityData, toolType = 'construction' }: Cit
         return `Calculate your monthly housing loan EMI, interest payout, and bank loan feasibility for properties across ${cityName}.`;
       case 'building-material-cost':
         return `Track current cement bag prices, TMT steel rebar per kg, red bricks, sand, and aggregate rates across ${cityName}.`;
+      case 'borewell':
+        return `Calculate 6.5" DTH rig drilling charges, MS/PVC casing pipes, submersible pump HP ratings, and electrical starter costs in ${cityName}.`;
+      case 'solar-subsidy':
+        return `Estimate rooftop solar plant cost, PM Surya Ghar DBT subsidies (up to ₹78,000), monthly DISCOM bill savings, and payback period in ${cityName}.`;
       default:
         return `Estimate the complete residential construction cost including materials, finishes, MEP fitting, and designer fees in ${cityName}. Try our dynamic builder-funnel calculators below.`;
     }
@@ -243,10 +251,16 @@ export default function CityContent({ cityData, toolType = 'construction' }: Cit
               </p>
               <div className="h-px bg-stone-100 my-4"></div>
               <h3 className="text-lg font-bold text-stone-800 mb-3 flex items-center gap-2">
-                <span className="text-xl">🏗️</span> Substructure & Soil Report:
+                <span className="text-xl">{toolType === 'borewell' ? '💧' : toolType === 'solar-subsidy' ? '☀️' : '🏗️'}</span> {toolType === 'borewell' ? 'Groundwater & Hydrogeology Report:' : toolType === 'solar-subsidy' ? 'Solar Insolation & Grid Interconnection:' : 'Substructure & Soil Report:'}
               </h3>
               <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
-                {soilType} It is always recommended to perform a local soil testing survey to customize column steel sizing and depth.
+                {toolType === 'borewell' ? (
+                  `Ground strata across ${cityName} features ${soilType}. Due to local depth variations, 6.5" DTH rig drilling combined with heavy-duty casing pipes is critical to prevent collapse and ensure sustained water yield.`
+                ) : toolType === 'solar-subsidy' ? (
+                  `${cityName} receives high average solar irradiance (~5.2 kWh/m²/day), generating 4 to 4.5 peak units per kW installed daily. Rooftop plants connect seamlessly with the state DISCOM net-metering grid under the PM Surya Ghar scheme.`
+                ) : (
+                  `${soilType} It is always recommended to perform a local soil testing survey to customize column steel sizing and depth.`
+                )}
               </p>
             </div>
 

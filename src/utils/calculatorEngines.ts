@@ -88,6 +88,115 @@ export function calculateIndiaConstruction(
   };
 }
 
+export interface IndiaBorewellResult {
+  depthFt: number;
+  drillingCost: number;
+  casingCost: number;
+  pumpCost: number;
+  accessoriesCost: number;
+  totalCost: number;
+  recommendedMotorHp: number;
+}
+
+export function calculateIndiaBorewell(
+  depthFt: number = 600,
+  casingType: 'PVC' | 'MS' = 'PVC',
+  casingFt: number = 80,
+  motorHp?: number
+): IndiaBorewellResult {
+  const depth = Math.max(100, depthFt);
+  
+  // Tiered drilling rate: first 300ft @ ₹35/ft, 301-600ft @ ₹45/ft, 601-900ft @ ₹65/ft, >900ft @ ₹90/ft
+  let drilling = 0;
+  if (depth <= 300) {
+    drilling = depth * 35;
+  } else if (depth <= 600) {
+    drilling = 300 * 35 + (depth - 300) * 45;
+  } else if (depth <= 900) {
+    drilling = 300 * 35 + 300 * 45 + (depth - 600) * 65;
+  } else {
+    drilling = 300 * 35 + 300 * 45 + 300 * 65 + (depth - 900) * 90;
+  }
+
+  const casingRate = casingType === 'MS' ? 720 : 380;
+  const casingCost = casingFt * casingRate;
+
+  const recHp = motorHp || (depth <= 400 ? 3 : depth <= 750 ? 5 : 7.5);
+  const pumpCost = recHp <= 3 ? 28000 : recHp <= 5 ? 42000 : 58000;
+
+  // HDPE column pipes, 3-core flat cable, starter panel, well cap, chamber, installation
+  const deliveryPipes = depth * 55;
+  const submersibleCable = depth * 48;
+  const starterPanel = 8500;
+  const accessoriesCost = deliveryPipes + submersibleCable + starterPanel + 6000;
+
+  const totalCost = drilling + casingCost + pumpCost + accessoriesCost;
+
+  return {
+    depthFt: depth,
+    drillingCost: Math.round(drilling),
+    casingCost: Math.round(casingCost),
+    pumpCost: Math.round(pumpCost),
+    accessoriesCost: Math.round(accessoriesCost),
+    totalCost: Math.round(totalCost),
+    recommendedMotorHp: recHp,
+  };
+}
+
+export interface IndiaSolarRooftopResult {
+  capacityKw: number;
+  grossCost: number;
+  centralSubsidy: number;
+  stateSubsidy: number;
+  netCost: number;
+  annualGenerationUnits: number;
+  annualSavings: number;
+  paybackYears: number;
+  cumulative25YearSavings: number;
+}
+
+export function calculateIndiaSolarRooftop(
+  capacityKw: number = 3,
+  state: string = 'Karnataka',
+  tariffPerUnit: number = 8.5
+): IndiaSolarRooftopResult {
+  const kw = Math.max(1, capacityKw);
+  const grossCost = kw * 62000; // Average ₹62,000 / kW turnkey DCR setup
+
+  // Official PM Surya Ghar central DBT:
+  // 1 kW = 30,000, 2 kW = 60,000, 3 kW+ = 78,000 ceiling
+  let centralSubsidy = 0;
+  if (kw === 1) centralSubsidy = 30000;
+  else if (kw === 2) centralSubsidy = 60000;
+  else centralSubsidy = 78000;
+
+  // State extra subsidy
+  let stateSubsidy = 0;
+  if (state.toLowerCase().includes('uttar pradesh')) {
+    stateSubsidy = Math.min(30000, kw * 15000);
+  } else if (state.toLowerCase().includes('delhi')) {
+    stateSubsidy = Math.min(10000, kw * 2000);
+  }
+
+  const netCost = Math.max(0, grossCost - centralSubsidy - stateSubsidy);
+  const annualGenerationUnits = kw * 1440; // ~4 units/day/kW * 360 days
+  const annualSavings = annualGenerationUnits * tariffPerUnit;
+  const paybackYears = Number((netCost / annualSavings).toFixed(1));
+  const cumulative25YearSavings = Math.round(annualSavings * 25 - netCost);
+
+  return {
+    capacityKw: kw,
+    grossCost,
+    centralSubsidy,
+    stateSubsidy,
+    netCost,
+    annualGenerationUnits,
+    annualSavings: Math.round(annualSavings),
+    paybackYears,
+    cumulative25YearSavings,
+  };
+}
+
 export interface HousePlanCostEstimate {
   plotAreaSqft: number;
   builtUpAreaSqft: number;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useUser } from "../../context/UserContext";
 import { useRegion } from "../../context/RegionContext";
 
-type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "usa-barndominium";
+type CalculatorType = "construction" | "india-emi" | "india-kitchen" | "india-bathroom" | "india-borewell" | "india-solar" | "interior" | "doors-windows" | "flooring" | "painting" | "plumbing" | "electrical" | "materials" | "usa-framing" | "usa-roofing" | "usa-accent-wall" | "usa-flooring" | "usa-plumbing" | "usa-electrical" | "usa-rent-vs-buy" | "usa-salary-calculator" | "usa-property-tax" | "usa-remodel-roi" | "usa-garden-bed" | "usa-interior-design" | "usa-kitchen-remodel" | "usa-bathroom-remodel" | "usa-home-addition" | "usa-swimming-pool" | "usa-pickleball-court" | "usa-outdoor-kitchen" | "usa-barndominium";
 
 interface CalculatorTabsProps {
   activeCalculator: CalculatorType;
@@ -31,6 +31,7 @@ const INDIA_CATEGORIES = [
 const INDIA_CALCULATORS: TabItem[] = [
   // 🏗️ Civil Construction & Core Trades (Full New House Construction - 100% FREE FOR ALL)
   { id: "construction",    name: "Civil Construction",  icon: "fas fa-home",        reqTier: 0, category: "civil", tagline: "7-Phase structural RCC build" },
+  { id: "india-borewell",  name: "Borewell & Pump",     icon: "fas fa-faucet-drip", reqTier: 0, category: "civil", tagline: "6.5\" DTH rig, casing & motor" },
   { id: "materials",       name: "Materials BOQ",       icon: "fas fa-cubes",       reqTier: 1, category: "civil", tagline: "Detailed 7-phase structural BOQ" },
   { id: "plumbing",        name: "Plumbing & Sump",     icon: "fas fa-faucet",      reqTier: 0, category: "civil", tagline: "Whole-house water lines & motor" },
   { id: "electrical",      name: "Electrical & Conduit",icon: "fas fa-bolt",        reqTier: 0, category: "civil", tagline: "Concealed wiring points & board" },
@@ -44,6 +45,7 @@ const INDIA_CALCULATORS: TabItem[] = [
   { id: "painting",        name: "Painting & Putty",    icon: "fas fa-paint-roller",reqTier: 1, category: "interiors", tagline: "Interior emulsion & exterior apex" },
 
   // 💰 Finance & Planning
+  { id: "india-solar",     name: "Rooftop Solar (DBT)", icon: "fas fa-solar-panel", reqTier: 0, category: "finance", tagline: "PM Surya Ghar ₹78k subsidy" },
   { id: "india-emi",       name: "Home Loan EMI",       icon: "fas fa-university",  reqTier: 0, category: "finance", tagline: "SBI/HDFC bank comparison & schedule" },
 ];
 

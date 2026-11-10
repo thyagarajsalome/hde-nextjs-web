@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   calculateIndiaEMI,
   calculateIndiaConstruction,
+  calculateIndiaBorewell,
+  calculateIndiaSolarRooftop,
   calculateUSARentVsBuy,
   calculateUSAPropertyTax,
   calculateUSASwimmingPool,
@@ -42,6 +44,45 @@ describe('India Calculation Engines', () => {
       result.breakdown.electricalPlumbing +
       result.breakdown.misc;
     expect(sum).toBe(result.standardCost);
+  });
+
+  it('calculates Borewell Drilling & Submersible Pump turnkey costs accurately', () => {
+    // 600 ft borewell with 80 ft PVC casing
+    const result = calculateIndiaBorewell(600, 'PVC', 80);
+
+    // Drilling: 300*35 + 300*45 = 10,500 + 13,500 = 24,000
+    expect(result.drillingCost).toBe(24000);
+    // Casing: 80 * 380 = 30,400
+    expect(result.casingCost).toBe(30400);
+    // 600ft recommends 5 HP pump (42,000)
+    expect(result.recommendedMotorHp).toBe(5);
+    expect(result.pumpCost).toBe(42000);
+    // Accessories: 600*55 (delivery pipes) + 600*48 (cable) + 8500 (starter) + 6000 (chamber/cap)
+    expect(result.accessoriesCost).toBe(600 * 55 + 600 * 48 + 8500 + 6000);
+    expect(result.totalCost).toBe(
+      result.drillingCost + result.casingCost + result.pumpCost + result.accessoriesCost
+    );
+  });
+
+  it('calculates PM Surya Ghar Solar Rooftop DBT subsidy and payback ROI accurately', () => {
+    // 3 kW residential setup in Karnataka at ₹8.5/unit
+    const result = calculateIndiaSolarRooftop(3, 'Karnataka', 8.5);
+
+    // Gross cost: 3 * 62,000 = 1,86,000
+    expect(result.grossCost).toBe(186000);
+    // Official central DBT subsidy for 3 kW = ₹78,000
+    expect(result.centralSubsidy).toBe(78000);
+    // Net out-of-pocket: 1,86,000 - 78,000 = 1,08,000
+    expect(result.netCost).toBe(108000);
+    // Annual units: 3 * 1440 = 4,320 kWh
+    expect(result.annualGenerationUnits).toBe(4320);
+    // Annual savings: 4320 * 8.5 = ₹36,720
+    expect(result.annualSavings).toBe(4320 * 8.5);
+    // Payback period ~ 2.9 years
+    expect(result.paybackYears).toBeLessThan(3.5);
+    expect(result.paybackYears).toBeGreaterThan(2.5);
+    // 25-year cumulative savings > ₹7 Lakhs
+    expect(result.cumulative25YearSavings).toBeGreaterThan(700000);
   });
 });
 
