@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { marked } from 'marked';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -59,7 +60,7 @@ function normalizeCategory(slug, rawCategory) {
   return 'Construction Guide';
 }
 
-function generate() {
+async function generate() {
   if (!fs.existsSync(contentDir)) {
     console.error(`Content directory ${contentDir} does not exist.`);
     process.exit(1);
@@ -68,7 +69,8 @@ function generate() {
   const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.mdx'));
   console.log(`Found ${files.length} MDX blog posts.`);
 
-  const posts = files.map(filename => {
+  const posts = [];
+  for (const filename of files) {
     const realSlug = filename.replace(/\.mdx$/, '');
     const filePath = path.join(contentDir, filename);
     const fileContents = fs.readFileSync(filePath, 'utf8');
@@ -96,12 +98,16 @@ function generate() {
       featured: Boolean(data.featured || isFlagship),
     };
 
-    return {
+    // Pre-render markdown to HTML for instant, eval-free rendering in Edge/Cloudflare Workers
+    const html = await marked.parse(content, { gfm: true, breaks: true });
+
+    posts.push({
       slug: realSlug,
       meta: normalizedMeta,
       content,
-    };
-  });
+      html,
+    });
+  }
 
   // Sort descending by date
   posts.sort((p1, p2) => (p1.meta.date > p2.meta.date ? -1 : 1));
@@ -130,6 +136,7 @@ export interface BlogPost {
   slug: string;
   meta: BlogPostMeta;
   content: string;
+  html: string;
 }
 
 export const BLOG_POSTS: BlogPost[] = ${JSON.stringify(posts, null, 2)};
@@ -140,7 +147,7 @@ export const BLOG_POSTS_BY_SLUG: Record<string, BlogPost> = Object.fromEntries(
 `;
 
   fs.writeFileSync(outputFile, fileContent, 'utf8');
-  console.log(`Successfully generated ${outputFile} with ${posts.length} posts.`);
+  console.log(`Successfully generated ${outputFile} with ${posts.length} posts and pre-rendered HTML.`);
 }
 
 generate();

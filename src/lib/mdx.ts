@@ -22,6 +22,7 @@ export interface BlogPost {
   slug: string;
   meta: BlogPostMeta;
   content: string;
+  html?: string;
 }
 
 const US_SLUGS = new Set([

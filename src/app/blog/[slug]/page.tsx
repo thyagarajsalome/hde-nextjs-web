@@ -1,5 +1,4 @@
 import { getPostBySlug, getAllPosts, getRelatedPosts } from '@/lib/mdx';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
@@ -194,9 +193,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
         {/* Article Body */}
         <div className="bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-gray-200/80 shadow-xs">
-          <div className="prose prose-base sm:prose-lg prose-indigo max-w-none text-slate-700 prose-headings:font-bold prose-headings:text-slate-900 prose-th:text-slate-900 prose-thead:bg-slate-100 prose-th:p-3.5 prose-td:p-3 prose-img:rounded-2xl prose-a:text-[#4165af] prose-a:font-semibold">
-            <MDXRemote source={post.content} />
-          </div>
+          <div
+            className="prose prose-base sm:prose-lg prose-indigo max-w-none text-slate-700 prose-headings:font-bold prose-headings:text-slate-900 prose-th:text-slate-900 prose-thead:bg-slate-100 prose-th:p-3.5 prose-td:p-3 prose-img:rounded-2xl prose-a:text-[#4165af] prose-a:font-semibold"
+            dangerouslySetInnerHTML={{ __html: post.html || post.content }}
+          />
 
           {/* Friendly Reminder Box */}
           <div className="mt-14 p-5 sm:p-6 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">

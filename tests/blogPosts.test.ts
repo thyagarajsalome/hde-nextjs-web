@@ -17,6 +17,8 @@ describe('Blog Data & Functions', () => {
     expect(post.meta.title).toBeTruthy();
     expect(post.meta.region).toBe('IN');
     expect(post.content.length).toBeGreaterThan(100);
+    expect(post.html).toBeDefined();
+    expect(post.html).toContain('<');
   });
 
   it('strictly isolates related posts by region', () => {
