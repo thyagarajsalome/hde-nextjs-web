@@ -13,6 +13,8 @@
   "vars": {
     "R2_BUCKET_NAME": "hde-gallery",
     "R2_ACCOUNT_ID": "aecd4a2eaf3342cb721dfd1717a810a2",
+    "R2_ACCESS_KEY_ID": "7978e1130abd87e1263f0ddb90dd8425",
+    "R2_SECRET_ACCESS_KEY": "8f87c9cb66b21a20ed727253312a0bac7052802fe064987900775401b2ba10f8",
     "R2_PUBLIC_URL": "https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev",
     "NEXT_PUBLIC_R2_PUBLIC_URL": "https://pub-b20d9352722b43219ceb523a3a0c89d5.r2.dev",
     "NEXT_PUBLIC_SUPABASE_URL": "https://ncontvjtfhsabphxfuhb.supabase.co"

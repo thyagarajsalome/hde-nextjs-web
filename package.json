@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
+    "prebuild": "node scripts/generateBlogData.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
