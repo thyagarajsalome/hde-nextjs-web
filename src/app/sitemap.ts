@@ -191,25 +191,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${BASE_URL}/dubai-property`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
-        priority: 0.9,
+        priority: 0.95,
       },
       {
         url: `${BASE_URL}/dubai-property/calculator`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
-        priority: 0.9,
+        priority: 0.95,
       },
       {
         url: `${BASE_URL}/dubai-property/partners`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
-        priority: 0.8,
+        priority: 0.85,
+      },
+      {
+        url: `${BASE_URL}/dubai-property/partners/agreement`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.7,
       },
       ...DUBAI_AREAS.map(slug => ({
         url: `${BASE_URL}/dubai-property/areas/${slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
-        priority: 0.8,
+        priority: 0.85,
       } as const))
     ];
 
@@ -232,14 +238,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     const blogPosts = getAllPosts();
-    const dubaiBlogRoutes: MetadataRoute.Sitemap = blogPosts
-      .filter(p => p.meta.region?.toUpperCase() === 'UAE' || p.meta.region?.toUpperCase() === 'GLOBAL')
-      .map(p => ({
-        url: `${BASE_URL}/blog/${p.slug}`,
-        lastModified: p.meta.date && !isNaN(Date.parse(p.meta.date)) ? new Date(p.meta.date) : new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-      }));
+    const dubaiBlogRoutes: MetadataRoute.Sitemap = [
+      {
+        url: `${BASE_URL}/blog`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.85,
+      },
+      ...blogPosts
+        .filter(p => {
+          const r = p.meta.region?.toUpperCase();
+          return r === 'AE' || r === 'UAE' || r === 'GLOBAL';
+        })
+        .map(p => ({
+          url: `${BASE_URL}/blog/${p.slug}`,
+          lastModified: p.meta.date && !isNaN(Date.parse(p.meta.date)) ? new Date(p.meta.date) : new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.8,
+        }))
+    ];
 
     return [
       {

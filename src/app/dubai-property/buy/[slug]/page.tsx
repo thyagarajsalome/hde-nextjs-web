@@ -12,7 +12,7 @@ const PROPERTY_TYPES = [
   { id: 'off-plan-properties', label: 'Off-Plan Properties' },
 ];
 
-const BASE_URL = 'https://www.homedesignenglish.com';
+const BASE_URL = 'https://dubai.homedesignenglish.com';
 
 function getUniquePropertyContent(typeId: string, areaName: string) {
   switch (typeId) {

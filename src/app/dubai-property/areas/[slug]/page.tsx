@@ -18,12 +18,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${area.name} Area Guide & Property Prices | HDE`,
     description: `Comprehensive guide to ${area.name}. Explore property prices, rental yields, amenities, and lifestyle for ${area.name}, Dubai.`,
     alternates: {
-      canonical: `/dubai-property/areas/${slug}`,
+      canonical: `https://dubai.homedesignenglish.com/dubai-property/areas/${slug}`,
     },
     openGraph: {
       title: `${area.name} Area Guide & Property Prices | HDE`,
       description: `Comprehensive guide to ${area.name}. Explore property prices, rental yields, amenities, and lifestyle for ${area.name}, Dubai.`,
-      url: `/dubai-property/areas/${slug}`,
+      url: `https://dubai.homedesignenglish.com/dubai-property/areas/${slug}`,
       type: 'website',
     },
   };
@@ -54,10 +54,9 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.homedesignenglish.com' },
-      { '@type': 'ListItem', position: 2, name: 'Dubai Property', item: 'https://www.homedesignenglish.com/dubai-property' },
-      { '@type': 'ListItem', position: 3, name: 'Areas', item: 'https://www.homedesignenglish.com/dubai-property/areas' },
-      { '@type': 'ListItem', position: 4, name: area.name, item: `https://www.homedesignenglish.com/dubai-property/areas/${area.slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://dubai.homedesignenglish.com' },
+      { '@type': 'ListItem', position: 2, name: 'Dubai Property', item: 'https://dubai.homedesignenglish.com/dubai-property' },
+      { '@type': 'ListItem', position: 3, name: area.name, item: `https://dubai.homedesignenglish.com/dubai-property/areas/${area.slug}` },
     ],
   };
 

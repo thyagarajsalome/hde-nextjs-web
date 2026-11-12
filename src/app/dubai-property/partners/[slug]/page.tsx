@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  const canonicalUrl = `https://www.homedesignenglish.com/dubai-property/partners/${slug}`;
+  const canonicalUrl = `https://dubai.homedesignenglish.com/dubai-property/partners/${slug}`;
 
   return {
     title: item.title,
@@ -53,25 +53,25 @@ export default async function DubaiPartnerSlugPage({ params }: { params: Promise
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://www.homedesignenglish.com/',
+        item: 'https://dubai.homedesignenglish.com/',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Dubai Property',
-        item: 'https://www.homedesignenglish.com/dubai-property',
+        item: 'https://dubai.homedesignenglish.com/dubai-property',
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: 'Partner Network',
-        item: 'https://www.homedesignenglish.com/dubai-property/partners',
+        item: 'https://dubai.homedesignenglish.com/dubai-property/partners',
       },
       {
         '@type': 'ListItem',
         position: 4,
         name: item.areaName || item.headline,
-        item: `https://www.homedesignenglish.com/dubai-property/partners/${slug}`,
+        item: `https://dubai.homedesignenglish.com/dubai-property/partners/${slug}`,
       },
     ],
   };

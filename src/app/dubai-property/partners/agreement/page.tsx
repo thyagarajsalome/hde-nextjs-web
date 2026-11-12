@@ -6,6 +6,16 @@ import PrintAgreementButton from "./PrintButton";
 export const metadata: Metadata = {
   title: "Partner Referral Agreement | Home Design English (HDE)",
   description: "Official introductory referral agreement and terms of partnership between Home Design English and licensed Dubai RERA real estate brokers.",
+  alternates: {
+    canonical: "https://dubai.homedesignenglish.com/dubai-property/partners/agreement",
+  },
+  openGraph: {
+    title: "Partner Referral Agreement | Home Design English (HDE)",
+    description: "Official introductory referral agreement and terms of partnership between Home Design English and licensed Dubai RERA real estate brokers.",
+    url: "https://dubai.homedesignenglish.com/dubai-property/partners/agreement",
+    siteName: "Home Design English",
+    type: "website",
+  },
 };
 
 export default function PartnerAgreementPage() {

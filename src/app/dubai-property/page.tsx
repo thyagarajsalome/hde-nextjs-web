@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   description: 'Free Dubai property buying cost calculator, area guides, and personalized property recommendations. Compare areas like Dubai Marina, Business Bay, JVC, Downtown Dubai, and more.',
   keywords: 'dubai property, buy property in dubai, dubai real estate, dubai apartments, dubai property investment, dubai property calculator',
   alternates: {
-    canonical: 'https://www.homedesignenglish.com/dubai-property',
+    canonical: 'https://dubai.homedesignenglish.com/dubai-property',
   },
   openGraph: {
     title: 'Dubai Property Advisor | Find the Right Property for You',
     description: 'Free Dubai property buying cost calculator, area guides, and personalized property recommendations.',
-    url: 'https://www.homedesignenglish.com/dubai-property',
+    url: 'https://dubai.homedesignenglish.com/dubai-property',
     siteName: 'Home Design English',
     type: 'website',
     images: [{ url: '/images/hero/hero-uae.webp', width: 1200, height: 630, alt: 'Dubai Property Investment Guide' }],
@@ -91,13 +91,13 @@ export default function DubaiPropertyPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://www.homedesignenglish.com/"
+        "item": "https://dubai.homedesignenglish.com/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Dubai Property",
-        "item": "https://www.homedesignenglish.com/dubai-property"
+        "item": "https://dubai.homedesignenglish.com/dubai-property"
       }
     ]
   };

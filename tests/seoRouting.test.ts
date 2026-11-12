@@ -24,6 +24,16 @@ function parseIndiaCostSlug(slug: string) {
   };
 }
 
+function parseDubaiBuySlug(slug: string) {
+  if (!slug) return null;
+  const match = slug.match(/^(apartments|villas|townhouses|penthouses|off-plan-properties)-for-sale-in-(.+)$/);
+  if (!match) return null;
+  return {
+    propertyType: match[1],
+    areaSlug: match[2],
+  };
+}
+
 describe('SEO Routing & Slug Parsers', () => {
   it('correctly parses all 9 USA Real Estate pSEO route patterns', () => {
     const tools = [
@@ -68,9 +78,21 @@ describe('SEO Routing & Slug Parsers', () => {
     });
   });
 
+  it('correctly parses all 5 Dubai Property buy route patterns', () => {
+    const types = ['apartments', 'villas', 'townhouses', 'penthouses', 'off-plan-properties'];
+    types.forEach((type) => {
+      const slug = `${type}-for-sale-in-dubai-marina`;
+      const parsed = parseDubaiBuySlug(slug);
+      expect(parsed).not.toBeNull();
+      expect(parsed?.propertyType).toBe(type);
+      expect(parsed?.areaSlug).toBe('dubai-marina');
+    });
+  });
+
   it('returns null for invalid or malicious slug formats', () => {
     expect(parseUsaRealEstateSlug('invalid-slug')).toBeNull();
     expect(parseUsaRealEstateSlug('')).toBeNull();
     expect(parseIndiaCostSlug('unknown-in-mumbai')).toBeNull();
+    expect(parseDubaiBuySlug('invalid-type-for-sale-in-dubai-marina')).toBeNull();
   });
 });

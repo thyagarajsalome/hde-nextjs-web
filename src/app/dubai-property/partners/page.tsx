@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   description: 'Join the Home Design English (HDE) Dubai RERA Partner Network. Receive pre-qualified buyer and investor leads from India, UK, and worldwide with zero upfront fees.',
   keywords: 'dubai real estate broker partner, rera agent network, dubai property leads, dubai co-brokerage referral, dubai broker referral agreement',
   alternates: {
-    canonical: 'https://www.homedesignenglish.com/dubai-property/partners',
+    canonical: 'https://dubai.homedesignenglish.com/dubai-property/partners',
   },
   openGraph: {
     title: 'RERA Broker Partner Network | HDE Dubai Property',
     description: 'Receive verified buyer inquiries from India, UK, and worldwide. Zero upfront costs. Performance-based referral program.',
-    url: 'https://www.homedesignenglish.com/dubai-property/partners',
+    url: 'https://dubai.homedesignenglish.com/dubai-property/partners',
     siteName: 'Home Design English',
     type: 'website',
   },
@@ -56,19 +56,19 @@ export default function DubaiPartnersPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://www.homedesignenglish.com/"
+        "item": "https://dubai.homedesignenglish.com/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Dubai Property",
-        "item": "https://www.homedesignenglish.com/dubai-property"
+        "item": "https://dubai.homedesignenglish.com/dubai-property"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": "Partner Network",
-        "item": "https://www.homedesignenglish.com/dubai-property/partners"
+        "item": "https://dubai.homedesignenglish.com/dubai-property/partners"
       }
     ]
   };
