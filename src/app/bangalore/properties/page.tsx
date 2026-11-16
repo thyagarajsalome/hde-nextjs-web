@@ -1,8 +1,9 @@
 // src/app/bangalore/properties/page.tsx
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { RealEstateProperty, ListingIntent, PropertyCategory, BhkType } from "@/types/realEstate";
 import { RealEstateService } from "@/services/realEstateService";
 import PropertyCard from "@/components/real-estate/PropertyCard";
@@ -11,18 +12,68 @@ import CrossSellBanner from "@/components/real-estate/CrossSellBanner";
 import { BANGALORE_LOCALITIES } from "@/data/bangaloreLocalities";
 import { useUser } from "@/context/UserContext";
 
-export default function BangalorePropertiesPage() {
+function BangalorePropertiesContent() {
   const { user } = useUser();
   const isAdmin = Boolean(user && user.email?.toLowerCase() === "thyagaraja1983@gmail.com");
+  const searchParams = useSearchParams();
+
+  // Read URL query parameters if present
+  const paramCategory = searchParams.get("category");
+  const paramIntent = searchParams.get("intent");
+  const paramLocality = searchParams.get("locality") || "";
+
+  const validCategories: (PropertyCategory | "all")[] = [
+    "flat",
+    "villa",
+    "plot",
+    "independent_house",
+    "penthouse",
+    "all",
+  ];
+  const parsedCategory: PropertyCategory | "all" = validCategories.includes(paramCategory as any)
+    ? (paramCategory as PropertyCategory)
+    : "all";
+
+  const normalizedIntent: ListingIntent | null =
+    paramIntent === "buy" || paramIntent === "sale"
+      ? "sale"
+      : paramIntent === "rent"
+      ? "rent"
+      : null;
+
+  const parsedIntent: ListingIntent = normalizedIntent ?? (parsedCategory === "plot" ? "sale" : "rent");
+
   const [properties, setProperties] = useState<RealEstateProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Filter states
-  const [intent, setIntent] = useState<ListingIntent>("rent");
-  const [category, setCategory] = useState<PropertyCategory | "all">("all");
+  const [intent, setIntent] = useState<ListingIntent>(parsedIntent);
+  const [category, setCategory] = useState<PropertyCategory | "all">(parsedCategory);
   const [bhk, setBhk] = useState<BhkType | "all">("all");
-  const [locality, setLocality] = useState<string>("");
+  const [locality, setLocality] = useState<string>(paramLocality);
   const [selectedZone, setSelectedZone] = useState<string>("All");
+
+  // Keep state synchronized if URL search parameters update
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    const int = searchParams.get("intent");
+    const loc = searchParams.get("locality");
+
+    if (cat && validCategories.includes(cat as any)) {
+      setCategory(cat as PropertyCategory);
+      if (!int && cat === "plot") {
+        setIntent("sale");
+      }
+    }
+    if (int === "buy" || int === "sale") {
+      setIntent("sale");
+    } else if (int === "rent") {
+      setIntent("rent");
+    }
+    if (loc !== null) {
+      setLocality(loc);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchProps = async () => {
@@ -676,5 +727,19 @@ export default function BangalorePropertiesPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function BangalorePropertiesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4165af]"></div>
+        </div>
+      }
+    >
+      <BangalorePropertiesContent />
+    </Suspense>
   );
 }

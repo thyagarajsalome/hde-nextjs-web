@@ -360,7 +360,8 @@ export default async function HousePlanSeoPage({ params }: Props) {
 
           <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
             <Link
-              href="/bangalore/properties?category=plot"
+              href="/bangalore/properties?category=plot&intent=sale"
+              rel="nofollow"
               className="px-5 py-3 rounded-xl bg-[#4165AF] hover:bg-[#355393] text-white font-extrabold text-xs shadow-xs transition no-underline flex items-center justify-center gap-2"
             >
               <i className="fas fa-search-location"></i>
