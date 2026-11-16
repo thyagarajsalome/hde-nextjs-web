@@ -36,6 +36,12 @@ export function middleware(request: NextRequest) {
   const isDubai = host.startsWith('dubai.') || host.includes('dubai.localhost');
   const isIndia = !isUS && !isDubai;
 
+  // 0. LEGACY ROUTE REDIRECTS (e.g. obsolete /home-planning -> /plans)
+  if (pathname === '/home-planning' || pathname === '/home-planning-concept' || pathname === '/concept') {
+    const targetUrl = new URL('/plans', 'https://www.homedesignenglish.com');
+    return NextResponse.redirect(targetUrl, 301);
+  }
+
   // 1. USA SUBDOMAIN ROUTING
   if (isUS) {
     // Check if India-only feature is requested on US domain

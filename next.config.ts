@@ -48,37 +48,20 @@ const nextConfig: NextConfig = {
         destination: '/blog/winter-home-improvement-projects-cost-checklist',
         permanent: true,
       },
-    ];
-  },
-  async rewrites() {
-    return [
       {
         source: '/home-planning',
-        destination: '/concept/index.html',
-      },
-      {
-        source: '/concept',
-        destination: '/concept/index.html',
+        destination: '/plans',
+        permanent: true,
       },
       {
         source: '/home-planning-concept',
-        destination: '/concept/index.html',
+        destination: '/plans',
+        permanent: true,
       },
       {
-        source: '/styles.css',
-        destination: '/concept/styles.css',
-      },
-      {
-        source: '/script.js',
-        destination: '/concept/script.js',
-      },
-      {
-        source: '/vendor/:path*',
-        destination: '/concept/vendor/:path*',
-      },
-      {
-        source: '/assets/:path*',
-        destination: '/concept/assets/:path*',
+        source: '/concept',
+        destination: '/plans',
+        permanent: true,
       },
     ];
   },
