@@ -17,11 +17,21 @@ if (!SUPABASE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const TABLES = [
-  'dubai_leads',
-  'dubai_agents',
   'profiles',
+  'projects',
   'user_projects',
-  'hero_banners'
+  'licenses',
+  'professionals',
+  'hero_banners',
+  'house_plans',
+  'real_estate_properties',
+  'property_scout_leads',
+  'kitchen_designs',
+  'bathroom_designs',
+  'cad_tutorials',
+  'pseo_locations',
+  'dubai_leads',
+  'dubai_agents'
 ];
 
 async function runBackup() {

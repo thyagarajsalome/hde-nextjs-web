@@ -15,44 +15,67 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up PostgreSQL 16 client
+      - name: Set up PostgreSQL client
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y wget ca-certificates gnupg
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update -qq
-          sudo apt-get install -y postgresql-client-16
+          sudo apt-get install -y postgresql-client
 
       - name: Create Database Backup Dump
         id: dump
         env:
           DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://ncontvjtfhsabphxfuhb.supabase.co' }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
-          if [ -z "$DB_URL" ]; then
-            echo "::error::SUPABASE_DB_URL secret is not set. Please add it to your GitHub Repository Secrets."
-            exit 1
-          fi
-
           TIMESTAMP=$(date +'%Y-%m-%d_%H%M%S')
           BACKUP_FILE="supabase_backup_${TIMESTAMP}.sql.gz"
-          
-          echo "Creating compressed database dump..."
-          # Dump all schemas, data, and sequences with clean recreate flags
-          pg_dump "$DB_URL" \
-            --clean \
-            --if-exists \
-            --no-owner \
-            --no-privileges \
-            | gzip > "$BACKUP_FILE"
 
-          FILE_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
-          echo "backup_file=$BACKUP_FILE" >> $GITHUB_OUTPUT
-          echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
-          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
-          echo "Successfully generated $BACKUP_FILE (Size: $FILE_SIZE)"
+          if [ -n "$DB_URL" ]; then
+            echo "Creating compressed full PostgreSQL database dump via pg_dump..."
+            pg_dump "$DB_URL" \
+              --clean \
+              --if-exists \
+              --no-owner \
+              --no-privileges \
+              | gzip > "$BACKUP_FILE"
+
+            FILE_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+            echo "backup_file=$BACKUP_FILE" >> $GITHUB_OUTPUT
+            echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
+            echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+            echo "has_backup=true" >> $GITHUB_OUTPUT
+            echo "Successfully generated $BACKUP_FILE (Size: $FILE_SIZE)"
+          elif [ -n "$SUPABASE_KEY" ]; then
+            echo "SUPABASE_DB_URL not found; falling back to table-level backup via Supabase API..."
+            npm install @supabase/supabase-js dotenv
+            NEXT_PUBLIC_SUPABASE_URL="$SUPABASE_URL" SUPABASE_SERVICE_ROLE_KEY="$SUPABASE_KEY" node scripts/backup-db.mjs
+            BACKUP_TAR="supabase_tables_${TIMESTAMP}.tar.gz"
+            tar -czf "$BACKUP_TAR" backups/
+            FILE_SIZE=$(ls -lh "$BACKUP_TAR" | awk '{print $5}')
+            echo "backup_file=$BACKUP_TAR" >> $GITHUB_OUTPUT
+            echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
+            echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+            echo "has_backup=true" >> $GITHUB_OUTPUT
+            echo "Successfully generated $BACKUP_TAR (Size: $FILE_SIZE)"
+          else
+            echo "has_backup=false" >> $GITHUB_OUTPUT
+            echo "::warning::SUPABASE_DB_URL is not configured in GitHub Repository Secrets."
+            echo "### ⚠️ Supabase Database Backup Notice: Missing Credentials" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The daily backup job needs your Supabase connection string to export your database." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "#### How to connect (Takes 1 minute):" >> $GITHUB_STEP_SUMMARY
+            echo "1. Go to your [Supabase Database Settings](https://supabase.com/dashboard/project/ncontvjtfhsabphxfuhb/settings/database)." >> $GITHUB_STEP_SUMMARY
+            echo "2. Scroll down to **Connection String** -> select **URI** (or Connection Pooling)." >> $GITHUB_STEP_SUMMARY
+            echo "3. Copy the URI string: \`postgresql://postgres.ncontvjtfhsabphxfuhb:[YOUR-PASSWORD]@aws-0-[region].pooler.supabase.com:6543/postgres\`" >> $GITHUB_STEP_SUMMARY
+            echo "4. In this GitHub repo, go to **Settings** > **Secrets and variables** > **Actions** > click **New repository secret**." >> $GITHUB_STEP_SUMMARY
+            echo "5. Set **Name** to \`SUPABASE_DB_URL\` and **Secret** to your URI string." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Once added, click **Run workflow** under the Actions tab to test your first automated backup!" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Save Backup as Secure GitHub Artifact
+        if: steps.dump.outputs.has_backup == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: database-backup-${{ steps.dump.outputs.timestamp }}
@@ -61,6 +84,7 @@ jobs:
           if-no-files-found: error
 
       - name: Post Backup Summary
+        if: steps.dump.outputs.has_backup == 'true'
         run: |
           echo "### 🛡️ Supabase Database Backup Successful" >> $GITHUB_STEP_SUMMARY
           echo "- **Timestamp:** ${{ steps.dump.outputs.timestamp }} (UTC)" >> $GITHUB_STEP_SUMMARY
