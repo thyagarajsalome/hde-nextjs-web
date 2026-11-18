@@ -265,7 +265,7 @@ export default function PostPropertyPage() {
           }
         } catch (imgErr: any) {
           console.error("Upload error for photo", i, imgErr);
-          throw new Error(`Photo upload failed: ${imgErr.message || "Server error"}`);
+          throw new Error(`Photo upload failed: ${imgErr.message || "Server error"}`, { cause: imgErr });
         }
       }
 

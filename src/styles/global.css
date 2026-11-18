@@ -52,11 +52,20 @@ body {
 }
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   color: var(--secondary-color);
   line-height: 1.2;
+  text-wrap: balance;
+}
+
+p,
+blockquote {
+  text-wrap: pretty;
 }
 section {
   padding: 4rem 0;

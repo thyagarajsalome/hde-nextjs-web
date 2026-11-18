@@ -284,7 +284,7 @@ export default function AdminKitchenGalleryPage() {
           console.warn('R2 upload skipped or failed:', uploadErr);
           // Fallback: If R2 is not yet configured, allow temporary preview URL or prompt
           if (!imageUrl) {
-            throw new Error(`Cloudflare R2 upload error: ${uploadErr.message}. Make sure R2 environment variables are configured in .env or provide an image URL.`);
+            throw new Error(`Cloudflare R2 upload error: ${uploadErr.message}. Make sure R2 environment variables are configured in .env or provide an image URL.`, { cause: uploadErr });
           }
         }
       }

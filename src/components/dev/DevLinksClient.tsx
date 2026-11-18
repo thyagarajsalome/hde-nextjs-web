@@ -152,12 +152,7 @@ export default function DevLinksClient({ usCities, inCities, dubaiAreas, blogPos
 
   // Group filtered URLs by their group (City or Category)
   const groupedUrls = useMemo(() => {
-    const groups: Record<string, typeof filteredUrls> = {};
-    filteredUrls.forEach(item => {
-      if (!groups[item.group]) groups[item.group] = [];
-      groups[item.group].push(item);
-    });
-    return groups;
+    return Object.groupBy(filteredUrls, (item) => item.group) as Record<string, typeof filteredUrls>;
   }, [filteredUrls]);
 
   // Health Check runner

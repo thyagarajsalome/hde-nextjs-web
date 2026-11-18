@@ -156,6 +156,8 @@ const SignUp = () => {
               id="email" 
               name="email" 
               type="email" 
+              autoComplete="username"
+              spellCheck={false}
               required 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
@@ -191,6 +193,7 @@ const SignUp = () => {
               id="whatsapp"
               name="whatsapp"
               type="tel"
+              autoComplete="tel"
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -211,6 +214,7 @@ const SignUp = () => {
               id="password" 
               name="password" 
               type="password" 
+              autoComplete="new-password"
               required 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
