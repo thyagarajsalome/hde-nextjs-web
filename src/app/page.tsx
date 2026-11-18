@@ -6,6 +6,8 @@ import FAQ from "@/components/layout/FAQ";
 import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import { supabase } from "@/config/supabaseClient";
 
+export const revalidate = 3600; // Cache homepage for 1 hour at edge to minimize Worker CPU usage
+
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
   const host = headerList.get("host")?.toLowerCase() || "";

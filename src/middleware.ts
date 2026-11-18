@@ -111,7 +111,21 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Edge Caching: Enable Cloudflare edge caching on public GET routes to prevent Worker CPU time limit exhaustion
+  if (
+    request.method === 'GET' &&
+    !pathname.startsWith('/admin') &&
+    !pathname.startsWith('/dashboard') &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/signin') &&
+    !pathname.startsWith('/signup')
+  ) {
+    response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+  }
+
+  return response;
 }
 
 export const config = {
