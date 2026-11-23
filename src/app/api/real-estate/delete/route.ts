@@ -1,7 +1,9 @@
 // src/app/api/real-estate/delete/route.ts
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { deleteFromR2, isR2Configured, R2_PUBLIC_URL } from '@/lib/r2';
 import { supabase } from '@/config/supabaseClient';
+import { BANGALORE_LOCALITIES } from '@/data/bangaloreLocalities';
 
 const ADMIN_EMAIL = 'thyagaraja1983@gmail.com';
 
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
     // 2. Fetch the property to verify ownership
     const { data: property, error: fetchErr } = await supabase
       .from('real_estate_properties')
-      .select('id, user_id, contact_phone, images')
+      .select('id, user_id, contact_phone, images, locality_name')
       .eq('id', propertyId)
       .maybeSingle();
 
@@ -105,6 +107,26 @@ export async function POST(request: Request) {
       console.error('Failed to delete property from database:', deleteErr);
       return NextResponse.json({ error: deleteErr.message }, { status: 500 });
     }
+
+    // Trigger on-demand cache revalidation for this locality
+    if (property?.locality_name) {
+      const loc = BANGALORE_LOCALITIES.find(
+        (l) => l.name.toLowerCase() === property.locality_name?.toLowerCase() || l.slug === property.locality_name?.toLowerCase()
+      );
+      if (loc) {
+        try {
+          revalidatePath(`/bangalore/properties-in-${loc.slug}`);
+          revalidatePath(`/bangalore/flats-for-rent-in-${loc.slug}`);
+          revalidatePath(`/bangalore/house-for-rent-in-${loc.slug}`);
+          revalidatePath(`/bangalore/plots-for-sale-in-${loc.slug}`);
+        } catch (rErr) {
+          console.warn('Delete revalidation warning:', rErr);
+        }
+      }
+    }
+    try {
+      revalidatePath('/bangalore/properties');
+    } catch (_) {}
 
     return NextResponse.json({
       success: true,

@@ -4,7 +4,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 86400; // Cache programmatic Bangalore pages for 24 hours (ISR)
+export const revalidate = 3600; // 1-hour background ISR cache + instant on-demand revalidation
 import {
   BANGALORE_LOCALITIES,
   LOCALITY_TRANSIT_PROFILES,

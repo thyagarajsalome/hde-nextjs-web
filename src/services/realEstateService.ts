@@ -237,6 +237,16 @@ export class RealEstateService {
       throw updateRes.error;
     }
 
+    if (updateRes.data && typeof window !== "undefined") {
+      fetch("/api/revalidate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          localityName: updateRes.data.locality_name,
+        }),
+      }).catch(() => {});
+    }
+
     return updateRes.data;
   }
 

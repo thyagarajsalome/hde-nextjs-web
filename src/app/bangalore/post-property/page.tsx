@@ -326,6 +326,16 @@ export default function PostPropertyPage() {
         }
       }
 
+      // Trigger instant on-demand cache revalidation for this locality
+      fetch("/api/revalidate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          localitySlug: selectedLocality.slug,
+          localityName: selectedLocality.name,
+        }),
+      }).catch((revalErr) => console.warn("On-demand revalidation ping skipped:", revalErr));
+
       setSuccessMessage(true);
       setTimeout(() => {
         router.push("/bangalore/properties");
