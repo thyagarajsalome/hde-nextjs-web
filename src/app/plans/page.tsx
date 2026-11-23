@@ -3,6 +3,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import PlanGallery from '@/features/plans/PlanGallery';
 
+export const revalidate = 86400; // Cache plans gallery for 24 hours (ISR)
+
 export const metadata: Metadata = {
   title: '100+ House Plans & 2D Floor Designs in India | HDE',
   description: 'Download 100+ architectural house plans and 2D floor designs in India. 1, 2, 3 BHK duplex layouts with parking and estimated building budgets.',

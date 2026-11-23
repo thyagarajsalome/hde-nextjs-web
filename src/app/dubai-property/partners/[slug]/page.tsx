@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { ALL_PARTNER_SEO_PAGES, PARTNER_SEO_SLUGS, AREA_PARTNER_SLUGS, B2B_GUIDE_SLUGS } from '@/data/dubaiPartnerSeoData';
 import DubaiAgentRegisterForm from '@/components/dubai/DubaiAgentRegisterForm';
 
+export const revalidate = 86400; // Cache Dubai partner pages for 24 hours (ISR)
+
 export function generateStaticParams() {
   return PARTNER_SEO_SLUGS.map((slug) => ({ slug }));
 }

@@ -3,6 +3,8 @@ import { getAllPosts } from '@/lib/mdx';
 import BlogListClient from './BlogListClient';
 import { Metadata } from 'next';
 
+export const revalidate = 86400; // Cache blog index for 24 hours (ISR)
+
 export const metadata: Metadata = {
   title: 'Construction, Interior & Real Estate Guides | HDE',
   description: 'Expert guides on house construction costs, modular kitchens, home loan EMI calculations, and property planning in India.',

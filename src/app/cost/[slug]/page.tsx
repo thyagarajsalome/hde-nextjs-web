@@ -8,6 +8,8 @@ import CalculatorFeature from "@/components/layout/CalculatorFeature";
 import CityContent, { CITIES_DATA, CityData } from "@/components/layout/CityContent";
 import { supabase } from "@/config/supabaseClient";
 
+export const revalidate = 86400; // Cache cost calculator pages for 24 hours (ISR)
+
 const USA_CITIES_FALLBACK = [
   { slug: 'dallas-texas', city_name: 'Dallas', state_name: 'Texas', country: 'USA' },
   { slug: 'miami-florida', city_name: 'Miami', state_name: 'Florida', country: 'USA' },

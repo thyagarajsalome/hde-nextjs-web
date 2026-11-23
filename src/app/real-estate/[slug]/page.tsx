@@ -2,6 +2,8 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { supabase } from '@/config/supabaseClient';
+
+export const revalidate = 86400; // Cache real estate pages for 24 hours (ISR)
 import USARentVsBuyCalculator from '@/features/construction/USARentVsBuyCalculator';
 import USAPropertyTaxCalculator from '@/features/construction/USAPropertyTaxCalculator';
 import USASalaryCalculator from '@/features/construction/USASalaryCalculator';

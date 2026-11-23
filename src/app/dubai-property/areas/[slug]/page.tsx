@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DUBAI_AREAS } from '@/data/dubaiAreas';
 
+export const revalidate = 86400; // Cache Dubai area pages for 24 hours (ISR)
+
 export function generateStaticParams() {
   return DUBAI_AREAS.map((area) => ({
     slug: area.slug,

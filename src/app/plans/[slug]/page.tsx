@@ -5,6 +5,8 @@ import Link from "next/link";
 import { HOUSE_PLAN_SEO_DATA } from "@/data/housePlanSeoData";
 import { supabase } from "@/config/supabaseClient";
 
+export const revalidate = 86400; // Cache plans for 24 hours (ISR)
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

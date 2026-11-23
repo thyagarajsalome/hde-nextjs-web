@@ -7,6 +7,8 @@ import Script from 'next/script';
 import LandUnitConverter from '@/features/tools/LandUnitConverter';
 import { TOP_CONVERSION_PAIRS, LAND_UNITS, convertUnits } from '@/data/landUnits';
 
+export const revalidate = 86400; // Cache land converter pages for 24 hours (ISR)
+
 interface PageProps {
   params: Promise<{
     slug: string;

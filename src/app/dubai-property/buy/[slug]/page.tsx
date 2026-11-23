@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { DUBAI_AREAS } from '@/data/dubaiAreas';
 import DubaiLeadForm from '@/components/dubai/DubaiLeadForm';
 
+export const revalidate = 86400; // Cache Dubai buy pages for 24 hours (ISR)
+
 const PROPERTY_TYPES = [
   { id: 'apartments', label: 'Apartments' },
   { id: 'villas', label: 'Villas' },

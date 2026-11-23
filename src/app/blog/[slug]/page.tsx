@@ -4,6 +4,8 @@ import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { Metadata } from 'next';
 
+export const revalidate = 86400; // Cache blog posts for 24 hours (ISR)
+
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((post) => ({
