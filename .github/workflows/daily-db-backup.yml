@@ -85,7 +85,7 @@ jobs:
         with:
           name: database-backup-${{ steps.dump.outputs.timestamp }}
           path: ${{ steps.dump.outputs.backup_file }}
-          retention-days: 60 # Retain backups in GitHub for 60 days
+          retention-days: 7 # Retain latest 7 days of backups to stay well within GitHub 2GB free storage limit
           if-no-files-found: error
 
       - name: Post Backup Summary
@@ -95,5 +95,5 @@ jobs:
           echo "- **Timestamp:** ${{ steps.dump.outputs.timestamp }} (UTC)" >> $GITHUB_STEP_SUMMARY
           echo "- **Filename:** \`${{ steps.dump.outputs.backup_file }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Compressed File Size:** ${{ steps.dump.outputs.file_size }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Storage:** Stored in GitHub Artifacts (Retention: 60 days)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Storage:** Stored in GitHub Artifacts (Retention: 7 days)" >> $GITHUB_STEP_SUMMARY
           echo "- **Cost:** \$0.00 (100% Free)" >> $GITHUB_STEP_SUMMARY
