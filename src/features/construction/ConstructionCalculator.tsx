@@ -1237,7 +1237,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                     className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-700 hover:to-yellow-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
                   >
                     <i className="fas fa-file-invoice-dollar text-sm"></i>
-                    <span>{hasAccessToBankReport ? "Download Official Bank Report (PDF) ✓" : "Preview & Download Bank Report (PDF) — ₹299"}</span>
+                    <span>{hasAccessToBankReport ? "Download Official Bank Report (PDF) ✓" : "Get Official Bank Report PDF — ₹299"}</span>
                   </button>
                 </div>
               </div>
@@ -1336,27 +1336,73 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
 
             {/* Modal Body */}
             <div className="p-4 sm:p-6 space-y-4 max-h-[calc(90vh-140px)] overflow-y-auto">
-              {/* Live Project Valuation Card */}
-              <div className="p-3.5 bg-gradient-to-br from-amber-500/[0.08] via-amber-50/[0.4] to-emerald-500/[0.06] dark:from-zinc-800 dark:to-zinc-800/60 rounded-2xl border border-amber-200/80 dark:border-zinc-700 space-y-2.5">
+              {/* Plan Pricing Callout (Prevents any confusion about paying construction cost) */}
+              <div className="p-3 bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl flex items-center justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-sm">
+                    <i className="fas fa-file-pdf"></i>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-black text-emerald-950 dark:text-emerald-100">
+                        Official Report Plan
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-600 text-white">
+                        One-Time
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-emerald-800/90 dark:text-emerald-300/90 mt-0.5">
+                      Pay only <strong>₹299</strong> to download your certified 2-page bank estimate. No recurring fees.
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300 leading-tight">
+                    ₹299
+                  </div>
+                  <div className="text-[10px] text-gray-400 line-through">₹2,500</div>
+                </div>
+              </div>
+
+              {/* Document Specification Preview */}
+              <div className="p-3.5 bg-slate-50 dark:bg-zinc-800/60 rounded-2xl border border-slate-200 dark:border-zinc-700 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-500 dark:text-zinc-400 font-semibold">Total Verified Loan Estimate</span>
-                  <span className="text-[11px] font-bold text-amber-800 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-950/80 px-2 py-0.5 rounded-md">
-                    Standard Valuer Schedule
+                  <span className="text-gray-700 dark:text-zinc-200 font-bold flex items-center gap-1.5">
+                    <i className="fas fa-file-contract text-amber-500"></i>
+                    <span>Figures Certified Inside Your PDF Document:</span>
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-500 dark:text-zinc-400">
+                    Bank Valuer Format
                   </span>
                 </div>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">
-                    ₹{Math.round(finalTotalCost).toLocaleString('en-IN')}
-                  </span>
-                  <div className="text-right text-[11px] text-gray-500 dark:text-zinc-400 font-medium">
-                    <span className="font-bold text-gray-800 dark:text-zinc-200">{parsedArea.toLocaleString('en-IN')} sq.ft</span>
+
+                <div className="p-2.5 bg-white dark:bg-zinc-900 rounded-xl border border-slate-200/80 dark:border-zinc-700/80 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 block">
+                      Target Construction Loan Budget:
+                    </span>
+                    <span className="text-base sm:text-lg font-black text-slate-800 dark:text-zinc-100">
+                      ₹{Math.round(finalTotalCost).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="text-right text-[11px] text-slate-500 dark:text-zinc-400">
+                    <span className="font-bold text-slate-700 dark:text-zinc-200">{parsedArea.toLocaleString('en-IN')} sq.ft</span>
                     <span className="mx-1">•</span>
-                    <span className="font-bold text-gray-800 dark:text-zinc-200">{quality.toUpperCase()} Grade</span>
+                    <span className="font-bold text-slate-700 dark:text-zinc-200">{quality.toUpperCase()} Grade</span>
+                    <div className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">For Bank Submission</div>
                   </div>
                 </div>
 
+                {/* Explicit Reassurance Callout to Eliminate Payment Confusion */}
+                <div className="flex items-start gap-2 p-2.5 bg-amber-500/10 dark:bg-amber-500/15 border border-amber-300/80 dark:border-amber-700/60 rounded-xl text-[11px] text-amber-950 dark:text-amber-200 leading-snug">
+                  <i className="fas fa-shield-alt text-amber-600 dark:text-amber-400 mt-0.5 shrink-0 text-xs"></i>
+                  <span>
+                    <strong>Important Note:</strong> You are <strong>only paying ₹299</strong> to activate and download this certified report. The <strong>₹{Math.round(finalTotalCost).toLocaleString('en-IN')}</strong> figure above is the estimated construction cost calculated for your bank loan application — you do not pay construction money to HDE.
+                  </span>
+                </div>
+
                 {/* What's included preview pills */}
-                <div className="grid grid-cols-2 gap-1.5 pt-2 border-t border-amber-200/60 dark:border-zinc-700/60 text-[10px] text-gray-600 dark:text-zinc-300">
+                <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-slate-200/70 dark:border-zinc-700/70 text-[10px] text-gray-600 dark:text-zinc-300">
                   <div className="flex items-center gap-1.5">
                     <i className="fas fa-check text-emerald-500 shrink-0"></i>
                     <span>Stage-wise civil abstract</span>
@@ -1452,7 +1498,7 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
               ) : (
                 <div className="flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-gray-500">Official Report Fee:</span>
+                    <span className="text-gray-500 font-medium">Report Activation Plan:</span>
                     <span className="ml-2 line-through text-gray-400">₹2,500</span>
                     <span className="ml-2 font-black text-slate-900 dark:text-white text-base">₹299</span>
                     <span className="ml-2 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">Save 88%</span>
@@ -1482,23 +1528,23 @@ export const ConstructionCalculator = ({ projectData }: { projectData?: any }) =
                 ) : (
                   <>
                     <i className="fas fa-lock text-xs"></i>
-                    <span>Pay ₹299 &amp; Download Official Bank Report (PDF)</span>
+                    <span>Activate Plan &amp; Download PDF — Pay ₹299</span>
                   </>
                 )}
               </button>
 
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[10px] text-gray-400 dark:text-zinc-400">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[10px] text-gray-500 dark:text-zinc-400">
                 {hasAccessToBankReport ? (
                   <span><i className="fas fa-check-circle text-emerald-500 mr-1"></i>Included with your active account • No payment required</span>
                 ) : (
                   <>
+                    <span><i className="fas fa-check text-emerald-500 mr-1"></i>One-Time Plan (₹299)</span>
+                    <span>•</span>
                     <span><i className="fas fa-shield-alt text-emerald-500 mr-1"></i>Razorpay Secure</span>
                     <span>•</span>
-                    <span>UPI (GPay, PhonePe, Paytm)</span>
+                    <span>UPI, Cards, NetBanking</span>
                     <span>•</span>
-                    <span>Cards &amp; NetBanking</span>
-                    <span>•</span>
-                    <span>Instant PDF Download</span>
+                    <span>Instant PDF</span>
                   </>
                 )}
               </div>
