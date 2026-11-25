@@ -580,17 +580,17 @@ function BangalorePropertiesContent() {
                 className="p-3.5 bg-white hover:bg-blue-50/40 rounded-xl border border-slate-200 hover:border-[#4165af]/40 transition-all text-center flex flex-col justify-between shadow-2xs"
               >
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                  <span className="text-[10px] font-normal text-slate-400 block uppercase tracking-wider">
                     {loc.zone.replace(" Bangalore", "")}
                   </span>
                   <Link
                     href={`/bangalore/house-for-rent-in-${loc.slug}`}
-                    className="text-xs font-black text-slate-900 hover:text-[#4165af] transition-colors block mt-0.5 no-underline leading-snug"
+                    className="text-xs font-medium text-slate-800 hover:text-[#4165af] transition-colors block mt-0.5 no-underline leading-snug"
                   >
                     {loc.name}
                   </Link>
                 </div>
-                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] font-bold">
+                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] font-normal">
                   <Link
                     href={`/bangalore/house-for-rent-in-${loc.slug}`}
                     className="text-[#4165af] hover:underline"
