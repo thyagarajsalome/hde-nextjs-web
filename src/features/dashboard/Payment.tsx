@@ -118,7 +118,7 @@ const Payment: React.FC<PaymentProps> = ({ user, setHasPaid }) => {
         <span style={{ fontSize: "2.5rem", fontWeight: "800", color: "#1a1a1a" }}>
           ₹{DISPLAY_PRICE}
         </span>
-        <span style={{ color: "#888", marginLeft: "5px" }}>/ monthly</span>
+        <span style={{ color: "#888", marginLeft: "5px" }}>one-time</span>
       </div>
 
       <button 
