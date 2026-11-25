@@ -14,7 +14,11 @@ import { RealEstateService } from "@/services/realEstateService";
 import PropertyCard from "@/components/real-estate/PropertyCard";
 import RealEstateFilterBar from "@/components/real-estate/RealEstateFilterBar";
 import CrossSellBanner from "@/components/real-estate/CrossSellBanner";
-import { BANGALORE_LOCALITIES } from "@/data/bangaloreLocalities";
+import {
+  BANGALORE_ZONE_FILTERS,
+  BangaloreZoneFilterId,
+  filterBangaloreLocalitiesByTab,
+} from "@/data/bangaloreLocalities";
 import { useUser } from "@/context/UserContext";
 
 const VALID_CATEGORIES: (PropertyCategory | "all")[] = [
@@ -24,14 +28,6 @@ const VALID_CATEGORIES: (PropertyCategory | "all")[] = [
   "independent_house",
   "penthouse",
   "all",
-];
-
-const ZONES = [
-  "All",
-  "Bangalore North",
-  "Bangalore South",
-  "Bangalore East",
-  "Bangalore West & Central",
 ];
 
 const RENT_BENCHMARKS = [
@@ -166,7 +162,7 @@ function BangalorePropertiesContent() {
   const [category, setCategory] = useState<PropertyCategory | "all">(parsedCategory);
   const [bhk, setBhk] = useState<BhkType | "all">("all");
   const [locality, setLocality] = useState<string>(paramLocality);
-  const [selectedZone, setSelectedZone] = useState<string>("All");
+  const [selectedZone, setSelectedZone] = useState<BangaloreZoneFilterId>("all");
 
   useEffect(() => {
     const cat = searchParams.get("category");
@@ -218,15 +214,10 @@ function BangalorePropertiesContent() {
 
   const hasActiveFilters = category !== "all" || bhk !== "all" || Boolean(locality);
 
-  const filteredLocalities = useMemo(() => {
-    if (selectedZone === "All") return BANGALORE_LOCALITIES;
-    if (selectedZone === "Bangalore West & Central") {
-      return BANGALORE_LOCALITIES.filter(
-        (loc) => loc.zone.includes("West") || loc.zone.includes("Central")
-      );
-    }
-    return BANGALORE_LOCALITIES.filter((loc) => loc.zone === selectedZone);
-  }, [selectedZone]);
+  const filteredLocalities = useMemo(
+    () => filterBangaloreLocalitiesByTab(selectedZone),
+    [selectedZone]
+  );
 
   return (
     <div className="min-h-screen bg-slate-50/40 pb-16">
@@ -484,19 +475,19 @@ function BangalorePropertiesContent() {
               </p>
             </div>
 
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-              {ZONES.map((zone) => (
+            <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+              {BANGALORE_ZONE_FILTERS.map((zone) => (
                 <button
-                  key={zone}
+                  key={zone.id}
                   type="button"
-                  onClick={() => setSelectedZone(zone)}
+                  onClick={() => setSelectedZone(zone.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                    selectedZone === zone
+                    selectedZone === zone.id
                       ? "bg-[#4165af] text-white shadow-2xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700"
                   }`}
                 >
-                  {zone.replace("Bangalore ", "")}
+                  {zone.label}
                 </button>
               ))}
             </div>

@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   BANGALORE_LOCALITIES,
   BANGALORE_ZONES,
+  BANGALORE_ZONE_FILTERS,
   LOCALITY_TRANSIT_PROFILES,
   ZONE_TRANSIT_DEFAULTS,
+  filterBangaloreLocalitiesByTab,
   getBangaloreLocalitiesByZone,
 } from '../src/data/bangaloreLocalities';
 
@@ -80,5 +82,21 @@ describe('Bangalore Localities & Regional Zone Integrity', () => {
     });
 
     expect(totalCount).toBe(BANGALORE_LOCALITIES.length);
+  });
+
+  it('returns matching localities for every corridor tab filter including North, South, East, West & Central', () => {
+    expect(filterBangaloreLocalitiesByTab('all').length).toBe(BANGALORE_LOCALITIES.length);
+
+    let sumSubZones = 0;
+    BANGALORE_ZONE_FILTERS.filter((f) => f.id !== 'all').forEach((filter) => {
+      const results = filterBangaloreLocalitiesByTab(filter.id);
+      expect(results.length, `Filter "${filter.label}" should not return empty`).toBeGreaterThan(0);
+      results.forEach((loc) => {
+        expect((filter.zones as readonly string[]).includes(loc.zone)).toBe(true);
+      });
+      sumSubZones += results.length;
+    });
+
+    expect(sumSubZones).toBe(BANGALORE_LOCALITIES.length);
   });
 });

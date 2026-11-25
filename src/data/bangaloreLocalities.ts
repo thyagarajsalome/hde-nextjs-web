@@ -149,6 +149,23 @@ export function getBangaloreLocalitiesByZone() {
   };
 }
 
+export const BANGALORE_ZONE_FILTERS = [
+  { id: "all", label: "All", zones: [] as string[] },
+  { id: "north", label: "North", zones: ["North Bangalore"] },
+  { id: "south", label: "South", zones: ["South Bangalore"] },
+  { id: "east", label: "East", zones: ["East Bangalore"] },
+  { id: "west-central", label: "West & Central", zones: ["West Bangalore", "Central Bangalore"] },
+] as const;
+
+export type BangaloreZoneFilterId = (typeof BANGALORE_ZONE_FILTERS)[number]["id"];
+
+/** Filters localities for a corridor tab; keeps zone string mapping single-sourced. */
+export function filterBangaloreLocalitiesByTab(filterId: BangaloreZoneFilterId) {
+  const entry = BANGALORE_ZONE_FILTERS.find((f) => f.id === filterId);
+  if (!entry || entry.zones.length === 0) return BANGALORE_LOCALITIES;
+  return BANGALORE_LOCALITIES.filter((loc) => (entry.zones as readonly string[]).includes(loc.zone));
+}
+
 export const LOCALITY_TRANSIT_PROFILES: Record<string, LocalityTransitProfile> = {
   // North Bangalore
   "loc-yelahanka": {
