@@ -1,10 +1,12 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import { useUser } from "../../context/UserContext";
 import { useProjectActions } from "../../hooks/useProjectActions";
 import { Card } from "../../components/ui/Card";
 import { Input } from "../../components/ui/Input";
 import Chart from "../../components/ui/Chart";
+import FlooringVisualizer from "../../components/usa/FlooringVisualizer";
 import { formatCurrency as formatCurrencyOrig } from '../../utils/currency';
 const formatCurrency = (val: number) => formatCurrencyOrig(val, 'US');
 
@@ -89,10 +91,22 @@ const USAFlooringCalculator: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
       {/* ── Left ── */}
-      <div className="space-y-5">
+      <div id="usa-flooring-inputs" className="space-y-5">
+        <div className="flex items-center justify-between gap-2 px-4 py-2.5 rounded-xl bg-blue-50/70 border border-blue-100 text-xs">
+          <span className="text-slate-700 font-medium">
+            Want to see finishes in a real room first?
+          </span>
+          <a
+            href="#usa-flooring-visualizer"
+            className="font-bold text-[#0f2042] hover:underline whitespace-nowrap shrink-0"
+          >
+            Room Visualizer ↓
+          </a>
+        </div>
         <Card title="Flooring Details (USA)">
           <form onSubmit={e => e.preventDefault()} className="space-y-5">
             <Input label="Floor Area (sq. ft.)" icon="fas fa-ruler-combined" type="number" placeholder="e.g., 800" value={area} onChange={e => setArea(e.target.value)} />
@@ -286,6 +300,41 @@ const USAFlooringCalculator: React.FC = () => {
           </div>
         )}
       </div>
+      </div>
+
+      {/* ── Interactive Room Flooring Visualizer (USA Only) ── */}
+      <section id="usa-flooring-visualizer" className="pt-6 border-t border-gray-200 scroll-mt-24 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0f2042] bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">
+              Visual Room Preview
+            </span>
+            <h3 className="text-xl font-bold text-slate-900 mt-2">
+              Interactive Flooring Visualizer
+            </h3>
+            <p className="text-xs text-slate-500">
+              Compare Hardwood, LVP, Carpet &amp; Tile finishes across Living Room and Kitchen scenes, then click to estimate your floor area.
+            </p>
+          </div>
+          <Link
+            href="/flooring-visualizer"
+            className="text-xs font-bold text-[#0f2042] hover:underline whitespace-nowrap shrink-0"
+          >
+            Open Full Page Visualizer →
+          </Link>
+        </div>
+
+        <FlooringVisualizer
+          compact
+          onApplyMaterial={(calcType) => {
+            setFlooringType(calcType);
+            document.getElementById("usa-flooring-inputs")?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }}
+        />
+      </section>
     </div>
   );
 };

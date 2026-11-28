@@ -140,6 +140,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.98,
       },
       {
+        url: `${BASE_URL}/flooring-visualizer`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.92,
+      },
+      {
         url: `${BASE_URL}/real-estate/texas`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
