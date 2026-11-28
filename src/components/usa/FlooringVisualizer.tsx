@@ -310,6 +310,28 @@ export default function FlooringVisualizer({
             <span className="text-slate-300 text-[11px]">• {materialInfo.typicalInstalledCost}</span>
             {isLoadingFloor && <i className="fas fa-circle-notch fa-spin text-[#c5a059] text-xs"></i>}
           </div>
+
+          {/* Bottom-right HDE Studio brand stamp covering image corner watermark across all viewports */}
+          <div
+            aria-hidden="true"
+            className="absolute bottom-0 right-0 z-[4] min-w-[11%] min-h-[12%] px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-tl-xl bg-white border-t border-l border-slate-200 shadow-sm flex items-center justify-center gap-1.5 sm:gap-2 pointer-events-none select-none"
+          >
+            <img
+              src="/bg-logo.png"
+              alt=""
+              width={24}
+              height={24}
+              className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0"
+            />
+            <div className="leading-none">
+              <span className="block text-[10px] sm:text-xs font-extrabold tracking-tight text-[#0f2042]">
+                HDE
+              </span>
+              <span className="hidden sm:block text-[9px] font-semibold text-slate-500">
+                Floor Studio
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Material Swatches Control Bar */}
