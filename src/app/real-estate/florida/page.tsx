@@ -21,6 +21,7 @@ const TOOLS = [
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },
   { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥' },
   { id: 'barndominium-cost', name: 'Barndominium & Barn', icon: '🌾' },
+  { id: 'flooring-cost', name: 'Flooring & Visualizer', icon: '🪵' },
 ];
 
 const CITIES = [

@@ -114,6 +114,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority: 0.8,
       });
+      realEstateRoutes.push({
+        url: `${BASE_URL}/real-estate/flooring-cost-in-${loc.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.85,
+      });
     });
 
     const blogPosts = getAllPosts();

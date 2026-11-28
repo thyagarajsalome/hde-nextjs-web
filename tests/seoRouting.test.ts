@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 function parseUsaRealEstateSlug(slug: string) {
   if (!slug) return null;
   const match = slug.match(
-    /^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost)-in-(.+)$/
+    /^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost|barndominium-cost|flooring-cost)-in-(.+)$/
   );
   if (!match) return null;
   return {
@@ -35,17 +35,20 @@ function parseDubaiBuySlug(slug: string) {
 }
 
 describe('SEO Routing & Slug Parsers', () => {
-  it('correctly parses all 9 USA Real Estate pSEO route patterns', () => {
+  it('correctly parses all 12 USA Real Estate pSEO route patterns including flooring-cost', () => {
     const tools = [
       'rent-vs-buy',
       'property-tax',
       'salary-needed-to-buy',
       'remodel-roi',
       'kitchen-remodel',
+      'bathroom-remodel',
       'home-addition',
       'swimming-pool-cost',
       'pickleball-court-cost',
       'outdoor-kitchen-cost',
+      'barndominium-cost',
+      'flooring-cost',
     ];
 
     tools.forEach((tool) => {

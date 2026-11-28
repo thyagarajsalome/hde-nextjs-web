@@ -15,6 +15,7 @@ import USAPickleballCalculator from '@/features/construction/USAPickleballCalcul
 import USAOutdoorKitchenCalculator from '@/features/construction/USAOutdoorKitchenCalculator';
 import USABathroomRemodelCalculator from '@/features/construction/USABathroomRemodelCalculator';
 import USABarndominiumCalculator from '@/features/construction/USABarndominiumCalculator';
+import USAFlooringCalculator from '@/features/construction/USAFlooringCalculator';
 import { USA_CITIES_FALLBACK } from '@/data/usaCities';
 
 interface PageProps {
@@ -53,6 +54,7 @@ export async function generateStaticParams() {
     params.push({ slug: `pickleball-court-cost-in-${loc.slug}` });
     params.push({ slug: `outdoor-kitchen-cost-in-${loc.slug}` });
     params.push({ slug: `barndominium-cost-in-${loc.slug}` });
+    params.push({ slug: `flooring-cost-in-${loc.slug}` });
   }
 
   return params;
@@ -61,7 +63,7 @@ export async function generateStaticParams() {
 // Helper to parse slug
 function parseSlug(slug: string) {
   if (!slug) return null;
-  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost|barndominium-cost)-in-(.+)$/);
+  const match = slug.match(/^(rent-vs-buy|property-tax|salary-needed-to-buy|remodel-roi|kitchen-remodel|bathroom-remodel|home-addition|swimming-pool-cost|pickleball-court-cost|outdoor-kitchen-cost|barndominium-cost|flooring-cost)-in-(.+)$/);
   if (!match) return null;
   return {
     toolType: match[1],
@@ -148,6 +150,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   } else if (toolType === 'barndominium-cost') {
     title = `Barndominium Cost in ${city}, ${state} (2026 Sq Ft Estimator)`;
     description = `2026 barndominium cost per sq ft estimator for ${city}, ${state}. Compare turn-key steel shells ($20-$35/sq ft) to fully finished custom barndo homes.`;
+  } else if (toolType === 'flooring-cost') {
+    title = `Flooring Cost & Room Visualizer in ${city}, ${state} (2026)`;
+    description = `Preview Hardwood, LVP, Tile & Carpet visually and calculate 2026 flooring installation costs per sq ft in ${city}, ${state} with labor, waste & baseboards.`;
   } else {
     title = `${toolType.replace(/-/g, ' ')} in ${city}, ${state} (2026)`;
     description = `Free 2026 real estate and construction cost calculator for ${city}, ${state}. Instant estimates and contractor breakdown.`;
@@ -212,6 +217,7 @@ const ALL_TOOLS = [
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓' },
   { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥' },
   { id: 'barndominium-cost', name: 'Barndominium Cost', icon: '🌾' },
+  { id: 'flooring-cost', name: 'Flooring & Visualizer', icon: '🪵' },
 ];
 
 function getSampleCalculation(toolType: string, cityName: string, stateName: string) {
@@ -352,6 +358,19 @@ function getSampleCalculation(toolType: string, cityName: string, stateName: str
           { label: 'Total Turn-Key Build Budget', value: '~$252,900' },
         ],
         verdict: 'Turn-key barndominiums in this area average ~$105/sq ft all-in, delivering 30-40% cost savings compared to traditional custom home builds.'
+      };
+    case 'flooring-cost':
+      return {
+        description: `Estimated 2026 installed cost for upgrading 1,000 sq ft of living room and kitchen flooring with Luxury Vinyl Plank (LVP) or Engineered Hardwood in ${cityName}, ${stateName}.`,
+        data: [
+          { label: 'Project Area', value: '1,000 sq. ft. (+10% Waste)' },
+          { label: 'Luxury Vinyl Plank (LVP) All-In', value: '$6,500 – $8,500' },
+          { label: 'Solid Hardwood (Honey Oak)', value: '$11,000 – $14,500' },
+          { label: 'Porcelain / Stone Tile', value: '$9,000 – $12,500' },
+          { label: 'Wall-to-Wall Carpet', value: '$4,200 – $5,800' },
+          { label: 'Baseboards & Transitions', value: '~$450' },
+        ],
+        verdict: 'Waterproof LVP delivers the lowest cost-to-durability ratio (~$6.50-$8.50/sq ft installed), while Honey Oak Hardwood maximizes resale value.'
       };
     default:
       return null;
@@ -498,6 +517,18 @@ function getLocalGuideContent(toolType: string, cityName: string, stateName: str
       permitInsight: `While rural agricultural parcels in ${stateName} may have fewer aesthetic HOA guidelines, residential barndominiums still require standard residential building, septic, and electrical permits in ${cityName} county jurisdictions.`,
       roiTakeaway: `Combining living quarters with a 1,000+ sq ft workshop or garage provides unmatched square-footage utility, holding strong appraised resale value across the ${stateName} acreage market.`,
     },
+    'flooring-cost': {
+      title: `Residential Flooring Costs, Material Selection & Subfloor Prep in ${cityName}`,
+      summary: `Replacing floors in ${cityName}, ${stateName} changes both daily comfort and home resale value. Choosing between waterproof Luxury Vinyl Plank (LVP), solid Honey Oak or Walnut hardwood, porcelain tile, or wall-to-wall carpet depends on room moisture exposure, subfloor flatness, and neighborhood buyer expectations across ${stateName}.`,
+      costFactors: [
+        { factor: 'Material Tier (LVP vs. Hardwood vs. Tile)', detail: `Rigid-core LVP ($3–$5/sq ft material) resists kitchen spills, while site-finished oak hardwood ($7–$10/sq ft) offers refinishing longevity.` },
+        { factor: 'Licensed Trade Installation Labor', detail: `Carpet ($1–$1.50/sq ft) and floating LVP ($2–$3/sq ft) install fastest; porcelain tile and herringbone patterns require $4.50–$6.50/sq ft labor.` },
+        { factor: 'Subfloor Leveling & Moisture Barriers', detail: `Concrete slabs in ${cityName} often need self-leveling compound and 6-mil vapor barriers before installing engineered wood or LVP.` },
+        { factor: '10–15% Waste Factor & Baseboards', detail: `Budget 10% extra planks for straight runs, 15% for diagonal or herringbone tile, plus quarter-round shoe molding and transition strips.` },
+      ],
+      permitInsight: `Cosmetic flooring replacement in ${cityName} rarely requires a city building permit, though multi-family condos often require HOA acoustic underlayment (STC/IIC) approval.`,
+      roiTakeaway: `Replacing worn carpet in main living areas with continuous waterproof LVP or light oak flooring delivers one of the fastest pre-listing cosmetic ROIs in ${cityName}.`,
+    },
   };
 
   return toolDetails[toolType] || toolDetails['rent-vs-buy'];
@@ -579,6 +610,9 @@ export default async function RealEstateToolPage({ params }: PageProps) {
   } else if (toolType === 'barndominium-cost') {
     toolName = 'Barndominium & Pole Barn Cost Estimator';
     CalculatorComponent = USABarndominiumCalculator;
+  } else if (toolType === 'flooring-cost') {
+    toolName = 'Flooring Cost & Interactive Room Visualizer';
+    CalculatorComponent = USAFlooringCalculator;
   }
 
   const faqs = [];
@@ -668,6 +702,15 @@ export default async function RealEstateToolPage({ params }: PageProps) {
     faqs.push({
       question: `Are barndominiums cheaper than traditional homes in ${location.state_name}?`,
       answer: `Yes, building a barndominium in ${location.state_name} generally saves 25% to 40% compared to traditional stick-built construction. Savings stem from clear-span pre-fabricated steel framing, rapid erection timelines, and lower exterior maintenance costs over the lifetime of the home.`
+    });
+  } else if (toolType === 'flooring-cost') {
+    faqs.push({
+      question: `How much does new flooring installation cost per sq ft in ${location.city_name}?`,
+      answer: `In ${location.city_name}, ${location.state_name}, average installed costs range from $3.50–$5.50/sq ft for carpet, $5.00–$8.00/sq ft for waterproof Luxury Vinyl Plank (LVP), $9.00–$13.00/sq ft for porcelain tile, and $10.00–$14.50/sq ft for solid hardwood including standard waste and underlayment.`
+    });
+    faqs.push({
+      question: `Can I preview hardwood, LVP, carpet, and tile styles before estimating?`,
+      answer: `Yes — use the Interactive Flooring Visualizer inside the calculator above to switch between Living Room and Kitchen scenes and compare finishes like Honey Oak, Herringbone Walnut, Weathered LVP, Marble Tile, and Carpet side by side.`
     });
   }
 

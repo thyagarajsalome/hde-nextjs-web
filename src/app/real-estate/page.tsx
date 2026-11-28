@@ -105,6 +105,14 @@ const TOOLS = [
     sampleQuery: 'barndominium-cost-in-dallas-texas',
     badge: 'Rural / Acreage',
   },
+  {
+    id: 'flooring-cost',
+    name: 'Flooring Cost & Room Visualizer',
+    icon: '🪵',
+    description: 'Preview Hardwood, LVP, Carpet & Tile finishes in real rooms and calculate material, wastage, baseboards, and US labor rates.',
+    sampleQuery: 'flooring-cost-in-austin-texas',
+    badge: 'Visual + Cost',
+  },
 ];
 
 const STATE_HUBS = [

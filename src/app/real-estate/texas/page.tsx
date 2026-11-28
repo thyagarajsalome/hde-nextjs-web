@@ -21,6 +21,7 @@ const TOOLS = [
   { id: 'pickleball-court-cost', name: 'Pickleball Court', icon: '🏓', desc: 'Post-tension concrete & surface' },
   { id: 'outdoor-kitchen-cost', name: 'Outdoor Kitchen', icon: '🔥', desc: 'Masonry island & appliances' },
   { id: 'barndominium-cost', name: 'Barndominium & Barn', icon: '🌾', desc: 'Steel shell, slab & rural utilities' },
+  { id: 'flooring-cost', name: 'Flooring & Visualizer', icon: '🪵', desc: 'LVP, hardwood, tile preview & cost' },
 ];
 
 const CITIES = [
